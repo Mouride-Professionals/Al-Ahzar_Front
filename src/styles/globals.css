@@ -1,0 +1,23 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Lexend, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+.parent {
+  background: white;
+  /* width: 100px;
+  height: 100px; */
+  padding: 10px;
+}
+
+.parent[data-isOpen='true'] {
+  width: 100%;
+  height: 200px;
+}
+
+.child {
+  border-radius: 8px;
+}
