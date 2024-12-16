@@ -1,0 +1,43 @@
+{
+  "name": "al-alzhar",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "build": "NODE_NO_WARNINGS=1 NODE_APPLICATION_BUILDING=TRUE NODE_TLS_REJECT_UNAUTHORIZED=0 next build",
+    "start": "NODE_NO_WARNINGS=1 NODE_TLS_REJECT_UNAUTHORIZED=0 next start",
+    "lint": "next lint",
+    "prettier": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@artsy/fresnel": "^6.1.0",
+    "@chakra-ui/react": "^2.4.9",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "axios": "^1.7.9",
+    "eslint": "8.32.0",
+    "eslint-config-next": "^13.0.4",
+    "formik": "^2.2.9",
+    "framer-motion": "^10.15.0",
+    "next": "^15.0.3",
+    "next-auth": "^4.24.10",
+    "node-cache": "^5.1.2",
+    "react": "^18.2.0",
+    "react-data-table-component": "^7.5.3",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
+    "react-markdown": "^8.0.5",
+    "sharp": "^0.31.3",
+    "styled-components": "^6.0.7",
+    "swr": "^2.0.0",
+    "yup": "^1.2.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.2",
+    "prettier": "^2.7.1"
+  }
+}

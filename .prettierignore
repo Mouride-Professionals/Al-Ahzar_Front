@@ -1,0 +1,7 @@
+.yarn
+.next
+.history
+.vercel
+dist
+node_modules
+_static
