@@ -34,11 +34,20 @@ module.exports = {
         },
         all_access: {
           classes: '/dashboard/classes',
+          class: {
+            detail: '/dashboard/surveillant/class/%id',
+            all: '/dashboard/surveillant/classes',
+          },
           students: {
             initial: '/dashboard/students',
             create: '/dashboard/students/create',
           },
           teachers: '/dashboard/teachers',
+          schools: {
+            all: '/dashboard/schools',
+            detail: '/dashboard/schools/%id',
+            classes: '/dashboard/schools/%id/classes',
+          },
         },
         classes: '/dashboard/classes',
         students: {
@@ -46,6 +55,11 @@ module.exports = {
           create: '/dashboard/students/create',
         },
         teachers: '/dashboard/teachers',
+        schools: {
+          all: '/dashboard/schools',
+          detail: '/dashboard/schools/%id',
+          classes: '/dashboard/schools/%id/classes',
+        },
       },
     },
     api_route: {
@@ -54,6 +68,7 @@ module.exports = {
           student: '/students',
           classroom: '/classes',
           payment: '/payments',
+          school: '/schools',
         },
         get: {
           classes: '/classes',
@@ -70,6 +85,7 @@ module.exports = {
           schools: {
             detail: '/schools/%id',
             all: '/schools',
+            classes: '/schools/%id/classes',
           },
           me: '/users/me?populate=*',
         },

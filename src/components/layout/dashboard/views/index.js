@@ -29,9 +29,6 @@ export const DesktopDashboardLayoutView = ({
 }) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
   const { data: session } = useSession();
-  console.log('roles', role);
-  
-
 
   return (
     <Stack
@@ -80,8 +77,7 @@ export const DesktopDashboardLayoutView = ({
                     </Box>
                     <Stack>
                       <Text fontSize={14} fontWeight={'700'}>
-                        {session?.user?.firstName}{' '}
-                        {session?.user?.lastName}
+                        {session?.user?.firstName} {session?.user?.lastName}
                       </Text>
                       <Text fontSize={13}>{role?.name}</Text>
                     </Stack>
@@ -89,8 +85,7 @@ export const DesktopDashboardLayoutView = ({
                 </PopoverTrigger>
                 <PopoverContent>
                   <PopoverHeader fontWeight={'semibold'}>
-                    {session?.user?.firstName}{' '}
-                    {session?.user?.lastName}
+                    {session?.user?.firstName} {session?.user?.lastName}
                   </PopoverHeader>
                   <PopoverArrow />
                   <PopoverBody>

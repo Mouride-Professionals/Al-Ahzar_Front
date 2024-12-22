@@ -1,6 +1,7 @@
 import { colors, messages, routes } from '@theme';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap, HiHome } from 'react-icons/hi';
+import { LuSchool2 } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 
 const {
@@ -28,6 +29,31 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     color: colors.secondary.regular,
     message: messages.components.menu.home,
     link: initial,
+  },
+  // school
+  ACCESS_ROUTES[role?.name]?.schools && {
+    active: [
+      ACCESS_ROUTES[role?.name]?.schools.all,
+      ACCESS_ROUTES[role?.name]?.schools?.detail,
+      ACCESS_ROUTES[role?.name]?.schools?.classes,
+    ].includes(activeLink),
+    icon: (
+      <LuSchool2
+        size={20}
+        color={
+          [
+            ACCESS_ROUTES[role?.name]?.schools.all,
+            ACCESS_ROUTES[role?.name]?.schools?.detail,
+            ACCESS_ROUTES[role?.name]?.schools?.classes,
+          ].includes(activeLink)
+            ? colors.white
+            : colors.secondary.regular
+        }
+      />
+    ),
+    color: colors.secondary.regular,
+    message: messages.components.menu.schools,
+    link: ACCESS_ROUTES[role?.name]?.schools.all,
   },
   {
     active: activeLink == ACCESS_ROUTES[role?.name]?.classes,

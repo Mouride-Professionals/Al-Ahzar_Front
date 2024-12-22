@@ -1,8 +1,6 @@
-import { Box, Grid, HStack, Heading, Stack, Text } from '@chakra-ui/react';
-import { PrimaryButton } from '@components/common/button';
-import { ClassCard } from '@components/common/cards';
+import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { messages, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
 import { serverFetch } from 'src/lib/api';
@@ -12,7 +10,7 @@ const {
     dashboard,
     class: { heading, create },
   },
-  components: { menu },
+  components: { menu, grade, intermediate, upperIntermediate },
 } = messages;
 
 export default function Classes({ classes, role }) {
@@ -22,7 +20,27 @@ export default function Classes({ classes, role }) {
       currentPage={menu.classes}
       role={role}
     >
-      <Stack w={'100%'}>
+      <ClassesList
+        groupName={grade}
+        classes={classes}
+        listOf={'grade'}
+        role={role}
+      />
+
+      <ClassesList
+        groupName={intermediate}
+        classes={classes}
+        listOf={'intermediate'}
+        role={role}
+      />
+
+      <ClassesList
+        groupName={upperIntermediate}
+        classes={classes}
+        listOf={'upperIntermediate'}
+        role={role}
+      />
+      {/* <Stack w={'100%'}>
         <HStack justifyContent={'space-between'} my={10} w={'100%'}>
           <Heading size={'md'}>{heading}</Heading>
 
@@ -57,7 +75,7 @@ export default function Classes({ classes, role }) {
             ))}
           </Grid>
         </Stack>
-      </Stack>
+      </Stack> */}
     </DashboardLayout>
   );
 }
@@ -67,17 +85,18 @@ export const getServerSideProps = async ({ req }) => {
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
-  const { role } =
-    await serverFetch({
-      uri: routes.api_route.alazhar.get.me,
-      user_token: token,
-    });
-
-  const data = await serverFetch({
-    uri: routes.api_route.alazhar.get.classes,
+  const { role } = await serverFetch({
+    uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
 
+  const data = await serverFetch({
+    uri: `${routes.api_route.alazhar.get.classes}?populate=classes.eleves`,
+
+    user_token: token,
+  });
+
+  // console.log('classe for SG', role, data, `${routes.api_route.alazhar.get.classes}&populate=classes.eleves`);
   const classes = mapClassesByLevel({ classes: data });
 
   return {

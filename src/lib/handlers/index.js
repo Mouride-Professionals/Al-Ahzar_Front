@@ -42,7 +42,7 @@ export const loginFormHandler = async ({
       );
       return;
     }
-    console.log("res", res);
+    console.log('res', res);
 
     window.location.assign(redirectOnSuccess);
   } catch (error) {
@@ -127,21 +127,16 @@ export const createClassromFormHandler = async ({
 }) => {
   const { level, letter } = data;
 
-
   getSchool({
     addOns: `filters[$and][0][id][$eq]=${school}&filters[$and][1][classes][level][$eq]=${level}&filters[$and][1][classes][letter][$eq]=${letter}&populate=classes`,
     token,
   })
     .then((resp) => {
-
-      const {
-        data: found,
-      } = resp;
+      const { data: found } = resp;
       if (found.length) {
         setSubmitting(false);
         return setFieldError('schoolCreation', 'Cette classe existe déjà');
       }
-
 
       createClassroom({
         payload: mapClassBody({ payload: { ...data, school } }),
@@ -149,11 +144,9 @@ export const createClassromFormHandler = async ({
       }).then(() => {
         action(true);
         window.location.reload();
-      })
+      });
     })
-    .catch((
-      err
-    ) => {
+    .catch((err) => {
       setFieldError(
         'schoolCreation',
         'Un problème est survenu lors de la création'

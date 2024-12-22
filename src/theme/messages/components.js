@@ -52,6 +52,7 @@ module.exports = {
         create: 'Inscrire un élève',
       },
       teachers: 'Enseignants',
+      schools: 'Établissements',
     },
     layout: {
       header: {},
@@ -77,6 +78,15 @@ module.exports = {
       intermediate: 'Classes de secondaires 1er cycle',
       upperIntermediate: 'Classes de secondaires 2ème cycle',
       create: 'Créer une classe',
+    },
+    schoolList: {
+      title: 'Liste des écoles',
+      createSchool: 'Créer une école',
+      viewDetails: 'Fiche de l école',
+      cta: {
+        filter: '',
+        export: '',
+      },
     },
     constants: {
       dataset: {

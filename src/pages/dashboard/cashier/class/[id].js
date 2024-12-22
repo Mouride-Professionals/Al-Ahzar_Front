@@ -64,11 +64,10 @@ export const getServerSideProps = async ({ query, req }) => {
   const response = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
-  })
+  });
 
-  const role  = response.role
-  console.log("roled", response);
-
+  const role = response.role;
+  console.log('roled', response);
 
   const detail = await serverFetch({
     uri: routes.api_route.alazhar.get.class.detail.replace('%id', id),

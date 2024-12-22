@@ -13,7 +13,6 @@ export const createStudent = async ({ payload, token }) => {
 };
 
 export const confirmStudent = async ({ student, payload, token }) => {
-
   return await fetcher({
     uri: routes.api_route.alazhar.update.student.replace('%id', student),
     options: {

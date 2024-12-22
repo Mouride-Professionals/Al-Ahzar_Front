@@ -11,6 +11,12 @@ module.exports = {
       students: {
         title: 'Elèves',
       },
+      teachers: {
+        title: 'Enseignants',
+      },
+      schools: {
+        title: 'Établissements',
+      },
     },
     class: {
       heading: 'Classes de primares',

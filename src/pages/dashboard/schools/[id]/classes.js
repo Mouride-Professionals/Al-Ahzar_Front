@@ -28,6 +28,7 @@ const {
 
 export default function Classes({ classes, role, schoolId, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <DashboardLayout
       title={dashboard.classes.title}
@@ -82,16 +83,17 @@ export default function Classes({ classes, role, schoolId, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
+  const { id: idSchool } = query;
 
   const {
     alazhar: {
       get: {
         me,
-        schools: { all },
+        classes: { all },
       },
     },
   } = routes.api_route;
@@ -101,18 +103,21 @@ export const getServerSideProps = async ({ req }) => {
     user_token: token,
   });
 
-  const { data: school } = await serverFetch({
-    uri: `${all}?filters[responsible][id][$eq]=${id}&populate=responsible,classes.eleves`,
+  const { data: classess } = await serverFetch({
+    uri: `classes?filters[etablissement][id][$eq]=${idSchool}&populate=eleves`,
     user_token: token,
   });
+  console.log('classessdata', classess);
 
   const classes = mapClassesByLevel({
-    classes: school[0]?.attributes?.classes,
+    classes: {
+      data: classess,
+    },
   });
 
   return {
     props: {
-      schoolId: school[0]?.id || null,
+      schoolId: idSchool || null,
       classes,
       role,
       token,

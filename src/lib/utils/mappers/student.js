@@ -28,7 +28,7 @@ export const mapStudentConfirmationBody = ({ data }) => {
 };
 
 export const mapStudentsDataTable = ({ students }) => {
-  if ((students && Array.isArray(students.data) && students.data.length)) {
+  if (students && Array.isArray(students.data) && students.data.length) {
     const { data } = students;
 
     return data.map((student) => {
@@ -104,6 +104,7 @@ const getCategory = (level) => {
 };
 
 export const mapClassesByLevel = ({ classes }) => {
+  console.log('data', classes);
   if (classes) {
     const { data } = classes;
 
@@ -114,6 +115,7 @@ export const mapClassesByLevel = ({ classes }) => {
     };
 
     // Group the data by their levels
+
     data.forEach((item) => {
       const {
         id,
@@ -121,6 +123,7 @@ export const mapClassesByLevel = ({ classes }) => {
           eleves: { data: students },
         },
       } = item;
+      console.log('mapClassesByLevel', students, id);
       const level = item.attributes.level;
       const section = item.attributes.letter;
 

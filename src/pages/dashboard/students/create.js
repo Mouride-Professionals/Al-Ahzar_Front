@@ -98,7 +98,6 @@ export const getServerSideProps = async ({ req }) => {
     user_token: token,
   });
 
-
   return {
     props: {
       role,

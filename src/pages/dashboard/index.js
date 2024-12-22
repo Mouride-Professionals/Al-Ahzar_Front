@@ -13,8 +13,6 @@ import { LuSchool2 } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-
-
 const {
   pages: {
     dashboard,
@@ -34,7 +32,7 @@ export default function Dashboard({ kpis, role, token }) {
       title: classes,
     },
     {
-      count: amount.classes.replace(`%number`, kpis[1]?.data?.length),
+      count: amount.students.replace(`%number`, kpis[1]?.data?.length),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: studentsStat,
     },
@@ -83,7 +81,6 @@ export default function Dashboard({ kpis, role, token }) {
   );
 }
 
-
 export const getServerSideProps = async ({ req }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
@@ -99,7 +96,6 @@ export const getServerSideProps = async ({ req }) => {
     };
   }
 
-
   const {
     alazhar: {
       get: {
@@ -111,7 +107,6 @@ export const getServerSideProps = async ({ req }) => {
       },
     },
   } = routes.api_route;
-
 
   const response = await serverFetch({
     uri: me,
@@ -138,8 +133,6 @@ export const getServerSideProps = async ({ req }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
   ]);
-  console.log("kpis", kpis);
-
 
   return {
     props: {
@@ -149,4 +142,3 @@ export const getServerSideProps = async ({ req }) => {
     },
   };
 };
-

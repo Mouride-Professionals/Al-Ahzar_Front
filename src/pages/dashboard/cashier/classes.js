@@ -47,7 +47,6 @@ export const getServerSideProps = async ({ req }) => {
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
-
   const {
     alazhar: {
       get: {

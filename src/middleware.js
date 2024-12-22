@@ -32,7 +32,6 @@ export async function middleware(req) {
   }
 
   if (url.pathname.includes(loginRoute) && token) {
-    console.log('tokens', token);
     url.pathname = homeRoute;
     return NextResponse.redirect(url);
   }
