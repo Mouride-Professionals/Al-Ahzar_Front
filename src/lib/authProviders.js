@@ -60,7 +60,6 @@ export const strapiProvider = {
         }
       );
       const data = await response.json();
-      console.log('response log in strapi:', data);
 
       if (!response.ok || !data.jwt)
         throw new Error(data.error.message || 'Invalid credentials');

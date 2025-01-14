@@ -1,44 +1,81 @@
-import {
-  Box,
-  HStack,
-  Stack,
-  Text,
-  WrapItem,
-} from '@chakra-ui/react';
+import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
-import { schoolCreationFormHandler } from '@handlers';
+import { schoolCreationFormHandler, schoolUpdateFormHandler } from '@handlers';
 import { colors, forms } from '@theme';
-import { mapCommuneByDepartment, mapDepartmentByRegion } from '@utils/mappers/school';
+import {
+  mapCommuneByDepartment,
+  mapDepartmentByRegion,
+} from '@utils/mappers/school';
 import { schoolCreationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
+export const CreateSchoolForm = ({
+  schools,
+  token,
+  setHasSucceeded,
+  isEdit = false,
+  initialValues = null, // Initial values for editing
+}) => {
   const router = useRouter();
 
-  // const [region, setRegion] = useState('');
-  // const [department, setDepartment] = useState('');
+  const { id: schoolId = null, attributes: schoolAttributes = {} } =
+    initialValues || {};
+
+  const [schoolData, setSchoolData] = useState(schoolAttributes || {});
   const [departments, setDepartments] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [parentSchoolOptions, setParentSchoolOptions] = useState(schools.data);
+  const [filteredParentSchools, setFilteredParentSchools] = useState([]);
+  const [selectedType, setSelectedType] = useState(schoolData?.type || '');
 
+  // Handle region and department changes
   const handleRegionChange = (selectedRegion) => {
-    // setRegion(selectedRegion);
     const departmentOptions = mapDepartmentByRegion({ region: selectedRegion });
     setDepartments(departmentOptions);
-    // setDepartment('');
     setCommunes([]);
   };
 
   const handleDepartmentChange = (selectedDepartment) => {
-    // setDepartment(selectedDepartment);
     const communeOptions = mapCommuneByDepartment({
       department: selectedDepartment,
     });
     setCommunes(communeOptions);
   };
+
+  // Update filtered options based on selected type
+  useEffect(() => {
+    if (selectedType === 'Annexe') {
+      setFilteredParentSchools(
+        parentSchoolOptions
+          .filter(
+            (school) =>
+              school.attributes.type === 'Centre' ||
+              school.attributes.type === 'Centre Secondaire'
+          )
+          .map((school) => ({
+            value: school.id,
+            name: school.attributes.name,
+          }))
+      );
+    } else if (selectedType === 'Centre Secondaire') {
+      setFilteredParentSchools(
+        parentSchoolOptions
+          .filter((school) => school.attributes.type === 'Centre')
+          .map((school) => ({
+            value: school.id,
+            name: school.attributes.name,
+          }))
+      );
+    } else {
+      setFilteredParentSchools([]);
+    }
+  }, [selectedType, parentSchoolOptions]);
+
+  // Extract inputs and messages from theme configuration
   const {
     inputs: {
       school: {
@@ -46,6 +83,7 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
           name,
           creationDate,
           type,
+          etablissementParent,
           region,
           department,
           commune,
@@ -66,25 +104,40 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
     messages: {
       school: {
         creation: {
-          info: { generalInfoMessage, addressInfoMessage, contactInfoMessage, additionalInfoMessage },
+          info: {
+            generalInfoMessage,
+            addressInfoMessage,
+            contactInfoMessage,
+            additionalInfoMessage,
+          },
         },
-      }
+      },
     },
   } = forms;
 
   return (
     <Formik
       validationSchema={schoolCreationSchema}
-      initialValues={mapFormInitialValues(schoolCreationSchema._nodes)}
+      initialValues={
+        isEdit ? schoolData : mapFormInitialValues(schoolCreationSchema._nodes)
+      }
       onSubmit={(values, { setSubmitting, setFieldError }) => {
-
-        schoolCreationFormHandler({
-          token,
-          data: values,
-          setSubmitting,
-          setFieldError,
-          hasSucceeded: setHasSucceeded,
-        });
+        isEdit
+          ? schoolUpdateFormHandler({
+              school: schoolId,
+              token,
+              data: values,
+              setSubmitting,
+              setFieldError,
+              hasSucceeded: setHasSucceeded,
+            })
+          : schoolCreationFormHandler({
+              token,
+              data: values,
+              setSubmitting,
+              setFieldError,
+              hasSucceeded: setHasSucceeded,
+            });
       }}
     >
       {({
@@ -104,7 +157,6 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
-
                   {...name}
                   errors={errors}
                   handleChange={handleChange}
@@ -126,8 +178,6 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
                 />
               </WrapItem>
 
-
-
               <WrapItem w={370}>
                 <FormInput
                   {...responsibleName}
@@ -138,15 +188,34 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
                   value={values.responsibleName}
                 />
               </WrapItem>
+            </HStack>
 
-              <WrapItem w={370}>
+            <HStack align={'center'} justifyContent={'space-between'}>
+              <WrapItem w={'50%'}>
                 <FormInput
                   {...type}
                   errors={errors}
-                  handleChange={handleChange}
+                  handleChange={(e) => {
+                    setSelectedType(e.target.value);
+                    handleChange(e);
+                  }}
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.type}
+                />
+              </WrapItem>
+
+              <WrapItem w={'50%'}>
+                <FormInput
+                  select
+                  options={filteredParentSchools}
+                  {...etablissementParent}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  isDisabled={!values.type || values.type === 'Centre'}
+                  touched={touched}
+                  value={values.etablissementParent}
                 />
               </WrapItem>
             </HStack>
@@ -159,15 +228,12 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
-
                   {...region}
                   errors={errors}
-                  handleChange={
-                    (e) => {
-                      handleRegionChange(e.target.value);
-                      handleChange(e);
-                    }
-                  }
+                  handleChange={(e) => {
+                    handleRegionChange(e.target.value);
+                    handleChange(e);
+                  }}
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.region}
@@ -180,12 +246,10 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
                   options={departments}
                   {...department}
                   errors={errors}
-                  handleChange={
-                    (e) => {
-                      handleDepartmentChange(e.target.value);
-                      handleChange(e);
-                    }
-                  }
+                  handleChange={(e) => {
+                    handleDepartmentChange(e.target.value);
+                    handleChange(e);
+                  }}
                   handleBlur={handleBlur}
                   touched={touched}
                   isDisabled={!values.region}
@@ -229,7 +293,6 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
               </WrapItem>
               <WrapItem w={370}>
                 <FormInput
-
                   {...IA}
                   errors={errors}
                   handleChange={handleChange}
@@ -257,8 +320,6 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
               {contactInfoMessage}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
-
-
               <WrapItem w={370}>
                 <FormInput
                   {...phoneFix}
@@ -307,10 +368,8 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
               {additionalInfoMessage}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
-
               <WrapItem w={370}>
                 <FormInput
-
                   {...isAlAzharLand}
                   errors={errors}
                   handleChange={handleChange}
@@ -319,7 +378,7 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
                   value={values.isAlAzharLand}
                 />
               </WrapItem>
-              <WrapItem w={'100%'} >
+              <WrapItem w={'100%'}>
                 <FormInput
                   {...note}
                   textarea
@@ -331,8 +390,6 @@ export const CreateSchoolForm = ({ token, setHasSucceeded }) => {
                 />
               </WrapItem>
             </HStack>
-
-
           </Stack>
 
           <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>

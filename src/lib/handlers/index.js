@@ -1,7 +1,12 @@
 import { persistPayment } from '@services/payment';
-import { createClassroom, createSchool, getSchool } from '@services/school';
+import {
+  createClassroom,
+  createSchool,
+  getSchool,
+  updateSchool,
+} from '@services/school';
 import { confirmStudent, createStudent } from '@services/student';
-import { createTeacher } from '@services/teacher';
+import { createTeacher, updateTeacher } from '@services/teacher';
 import { forms, routes } from '@theme';
 import { mapMonthCreationBody } from '@utils/mappers/payment';
 import { mapSchoolCreationBody } from '@utils/mappers/school';
@@ -45,7 +50,6 @@ export const loginFormHandler = async ({
       );
       return;
     }
-    console.log('res', res);
 
     window.location.assign(redirectOnSuccess);
   } catch (error) {
@@ -192,11 +196,50 @@ export const schoolCreationFormHandler = async ({
         }
       }
 
-      setFieldError('school creation', forms.messages.school.creation.errors.problem);
+      setFieldError(
+        'school creation',
+        forms.messages.school.creation.errors.problem
+      );
       return;
     });
 };
 
+// school update form handler
+
+export const schoolUpdateFormHandler = async ({
+  school,
+  data,
+  setSubmitting,
+  setFieldError,
+  hasSucceeded,
+  token,
+}) => {
+  const payload = mapSchoolCreationBody({ data });
+  updateSchool({ school, payload, token })
+    .then(() => {
+      setSubmitting(false);
+      hasSucceeded(true);
+      // window.location.reload();
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'school creation',
+            forms.messages.school.creation.errors.already_exists
+          );
+        }
+      }
+
+      setFieldError(
+        'school creation',
+        forms.messages.school.creation.errors.problem
+      );
+      return;
+    });
+};
 
 //  teacher recruitment form handler
 export const teacherRecruitmentFormHandler = async ({
@@ -224,7 +267,48 @@ export const teacherRecruitmentFormHandler = async ({
           );
         }
       }
-      setFieldError('recruitment', forms.messages.teacher.recruitment.errors.problem);
+      setFieldError(
+        'recruitment',
+        forms.messages.teacher.recruitment.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+export const teacherUpdateFormHandler = async ({
+  teacher,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapTeacherCreationBody({ data });
+
+  console.log('teacherUpdateFormHandler', payload);
+
+  updateTeacher({ teacher, payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'recruitment',
+            forms.messages.teacher.recruitment.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'recruitment',
+        forms.messages.teacher.recruitment.errors.problem
+      );
       return;
     });
 

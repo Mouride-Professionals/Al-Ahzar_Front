@@ -8,8 +8,6 @@ import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
 
 export const ClassCreationForm = ({ school, token, action }) => {
-  console.log('classCreationSchema', school, token, action);
-
   const {
     inputs: {
       class: {

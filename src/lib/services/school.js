@@ -48,6 +48,24 @@ export const createSchool = async ({ payload, token }) => {
   });
 };
 
+// createSchool
+
+export const updateSchool = async ({ school, payload, token }) => {
+  const {
+    alazhar: {
+      update: { school: updateSchool },
+    },
+  } = routes.api_route;
+  return await fetcher({
+    uri: updateSchool.replace('%id', school),
+    options: {
+      method: 'put',
+      body: payload,
+    },
+    user_token: token,
+  });
+};
+
 export const createClassroom = async ({ payload, token }) => {
   const {
     alazhar: {

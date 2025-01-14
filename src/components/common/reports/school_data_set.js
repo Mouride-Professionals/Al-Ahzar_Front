@@ -7,7 +7,7 @@ import {
   ScaleFade,
   SimpleGrid,
   Text,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
 import {
   FormExport,
@@ -26,12 +26,10 @@ import { RiSchoolFill } from 'react-icons/ri';
 import { BoxZone } from '../cards/boxZone';
 
 const ExpandedComponent = ({ data, role, user_token }) => {
-  console.log('data expanded component', data);
-
   const {
     dashboard: {
       direction: {
-        subHeader: { create: { add } },
+        schools: { create, edit },
       },
     },
   } = routes.page_route;
@@ -136,8 +134,14 @@ const ExpandedComponent = ({ data, role, user_token }) => {
               </VStack>
             </SimpleGrid>
             <HStack justifyContent="flex-end" mt={5}>
-              <Button colorScheme="teal" variant="outline">
-                Voir plus de détails
+              <Button
+                onClick={() =>
+                  router.push(`dashboard/direction/schools/${data.id}/edit`)
+                }
+                colorScheme="orange"
+                variant="outline"
+              >
+                {'Modifier'}
               </Button>
             </HStack>
           </CardBody>
@@ -147,15 +151,13 @@ const ExpandedComponent = ({ data, role, user_token }) => {
   );
 };
 
-
-export const AccessAllDataSet = ({
+export const SchoolDataSet = ({
   role,
   data = [],
   columns,
   selectedIndex = 0,
   token,
 }) => {
-
   const [filterText, setFilterText] = useState('');
 
   let filtered = [];
@@ -164,10 +166,8 @@ export const AccessAllDataSet = ({
   filtered = useMemo(() =>
     data.filter(
       (item) =>
-        item.name &&
-        item.name.toLowerCase().includes(filterText.toLowerCase())
+        item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
     )
-
   );
 
   const router = useRouter();
@@ -189,7 +189,7 @@ export const AccessAllDataSet = ({
           </Box>
           {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
           <HStack pl={4}>
-            <FormFilter onExpwort={() => { }} />
+            <FormFilter onExpwort={() => {}} />
             <FormExport onExport={() => downloadCSV(filtered)} />
           </HStack>
         </HStack>
@@ -211,7 +211,6 @@ export const AccessAllDataSet = ({
   }, [filterText, selectedIndex]);
 
   return (
-
     <DataTable
       style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
       columns={columns}
@@ -222,8 +221,7 @@ export const AccessAllDataSet = ({
       // selectableRows
       subHeaderComponent={subHeaderComponentMemo}
       expandableRows
-      expandableRowsComponent=
-      {(data) =>
+      expandableRowsComponent={(data) =>
         ExpandedComponent({ ...data, role, user_token: token })
       }
       pagination

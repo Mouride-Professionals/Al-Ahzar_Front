@@ -1,5 +1,5 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
-import { CreateTeacherForm } from '@components/forms/teacher/create';
+import { CreateSchoolForm } from '@components/forms/school/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
@@ -11,24 +11,19 @@ import { serverFetch } from 'src/lib/api';
 const {
   components: {
     cards: {
-      teacher: { recruitment, affectation, another_teacher, info },
+      school: { edit, another_school },
     },
   },
 } = messages;
 
-export default function Create({ schools, role, token }) {
+export default function Edit({ schoolData, schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
-
   const router = useRouter();
-  // return back to dashboard if hasSucceeded
-  if (hasSucceeded) {
-    router.push(routes.page_route.dashboard.direction.teachers.all);
-  }
 
   return (
     <DashboardLayout
-      title={messages.pages.dashboard.teachers.title}
-      currentPage={messages.components.menu.teachers}
+      title={messages.pages.dashboard.schools.title}
+      currentPage={messages.components.menu.schools.edit}
       role={role}
     >
       <VStack
@@ -51,8 +46,7 @@ export default function Create({ schools, role, token }) {
         >
           <BsArrowLeftShort size={40} />
           <Text fontSize={20} fontWeight={'700'}>
-            {/* {hasSucceeded ? affectation : recruitment} */}
-            {recruitment}
+            {edit}
           </Text>
         </HStack>
         <Stack
@@ -63,33 +57,48 @@ export default function Create({ schools, role, token }) {
           w={'100%'}
           minH={'35rem'}
         >
-          <CreateTeacherForm
-            {...{
-              schools,
-              setHasSucceeded,
-              token,
-            }}
-          />
+          {hasSucceeded ? (
+            router.push(routes.page_route.dashboard.direction.schools.all)
+          ) : (
+            <CreateSchoolForm
+              {...{
+                initialValues: schoolData, // Pre-fill the form with the fetched data
+                schools,
+                setHasSucceeded,
+                token,
+                isEdit: true, // Add a flag to indicate this is an edit operation
+              }}
+            />
+          )}
         </Stack>
       </VStack>
     </DashboardLayout>
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
+
+  const { id } = query; // Get the school ID from the query params
 
   const { role = null } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
 
+  // Fetch the school data for the given ID
+  const schoolData = await serverFetch({
+    uri: `${routes.api_route.alazhar.get.schools.all}/${id}`,
+    user_token: token,
+  });
+
+  // Fetch the list of schools with only their name, id, and type
+  const schoolsFilterTerms =
+    '?fields[0]=name&fields[1]=id&fields[2]=type&filters[type][$in]=Centre&filters[type][$in]=Centre Secondaire';
   const schools = await serverFetch({
-    uri:
-      routes.api_route.alazhar.get.schools.all +
-      '?fields[0]=name&fields[1]=id&fields[2]=type',
+    uri: `${routes.api_route.alazhar.get.schools.all}${schoolsFilterTerms}`,
     user_token: token,
   });
 
@@ -97,6 +106,7 @@ export const getServerSideProps = async ({ req }) => {
     props: {
       role,
       token: token,
+      schoolData: schoolData?.data || null, // Pre-fill the form with this data
       schools,
     },
   };

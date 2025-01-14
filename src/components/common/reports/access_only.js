@@ -252,14 +252,14 @@ export const DataSet = ({
   let filtered = [];
   filtered.length = data.length;
 
-  filtered = useMemo(() =>
-
-    
-    reportingFilter({
-      data,
-      position: selectedIndex,
-      needle: filterText,
-    })
+  filtered = useMemo(
+    () =>
+      reportingFilter({
+        data,
+        position: selectedIndex,
+        needle: filterText,
+      }),
+    [filtered, role?.name, router]
   );
 
   const router = useRouter();

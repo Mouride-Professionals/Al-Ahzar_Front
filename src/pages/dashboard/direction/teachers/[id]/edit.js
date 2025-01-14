@@ -1,5 +1,5 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
-import { CreateTeacherForm } from '@components/forms/teacher/create';
+import { CreateTeacherForm } from '@components/forms/teacher/create'; // Reuse form
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
@@ -11,18 +11,18 @@ import { serverFetch } from 'src/lib/api';
 const {
   components: {
     cards: {
-      teacher: { recruitment, affectation, another_teacher, info },
+      teacher: { recruitment, modification, another_teacher, info },
     },
   },
 } = messages;
 
-export default function Create({ schools, role, token }) {
+export default function Edit({ teacher, schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
 
   const router = useRouter();
-  // return back to dashboard if hasSucceeded
+  // Redirect back to dashboard if successfully edited
   if (hasSucceeded) {
-    router.push(routes.page_route.dashboard.direction.teachers.all);
+    router.back();
   }
 
   return (
@@ -51,8 +51,7 @@ export default function Create({ schools, role, token }) {
         >
           <BsArrowLeftShort size={40} />
           <Text fontSize={20} fontWeight={'700'}>
-            {/* {hasSucceeded ? affectation : recruitment} */}
-            {recruitment}
+            {modification}
           </Text>
         </HStack>
         <Stack
@@ -66,8 +65,10 @@ export default function Create({ schools, role, token }) {
           <CreateTeacherForm
             {...{
               schools,
-              setHasSucceeded,
               token,
+              setHasSucceeded,
+              initialData: teacher, // Pass preloaded teacher data
+              isEdit: true, // Indicate edit mode
             }}
           />
         </Stack>
@@ -76,27 +77,27 @@ export default function Create({ schools, role, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, params }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
-  const { role = null } = await serverFetch({
-    uri: routes.api_route.alazhar.get.me,
+  // Fetch teacher data by ID
+  const teacher = await serverFetch({
+    uri: `${routes.api_route.alazhar.get.teachers.all}/${params.id}?populate[etablissement][fields][0]=name&populate[etablissement][fields][1]=id`,
     user_token: token,
   });
 
   const schools = await serverFetch({
-    uri:
-      routes.api_route.alazhar.get.schools.all +
-      '?fields[0]=name&fields[1]=id&fields[2]=type',
+    uri: `${routes.api_route.alazhar.get.schools.all}?fields[0]=name&fields[1]=id&fields[2]=type`,
     user_token: token,
   });
 
   return {
     props: {
-      role,
+      role: session?.role || null,
       token: token,
+      teacher: teacher?.data || null, // Preload teacher data
       schools,
     },
   };

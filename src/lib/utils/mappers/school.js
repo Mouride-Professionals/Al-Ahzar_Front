@@ -1,8 +1,7 @@
-import { formatDate, formatPhoneNumber } from './formatters';
+import { formatPhoneNumber } from './formatters';
 
 // Map the school creation body
 export const mapSchoolCreationBody = ({ data }) => {
-
   return {
     data: {
       name: data.name,
@@ -22,6 +21,7 @@ export const mapSchoolCreationBody = ({ data }) => {
       responsibleName: data.responsibleName,
       city: data.city,
       postBox: data.postBox,
+      etablissementParent: data.etablissementParent || null,
     },
   };
 };
@@ -35,6 +35,7 @@ export const mapSchoolsDataTable = ({ schools }) => {
         attributes: {
           name,
           type,
+          etablissementParent,
           region,
           department,
           commune,
@@ -57,6 +58,8 @@ export const mapSchoolsDataTable = ({ schools }) => {
         id,
         name,
         type,
+        etablissementParent:
+          etablissementParent?.data?.attributes.name || 'N/A',
         region,
         department,
         commune,
@@ -64,7 +67,7 @@ export const mapSchoolsDataTable = ({ schools }) => {
         email: email || 'N/A',
         phone: formatPhoneNumber(phone || 'N/A'),
         phoneFix: phoneFix || 'N/A',
-        creationDate: creationDate || 'N/A',//formatDate(creationDate) 
+        creationDate: creationDate || 'N/A', //formatDate(creationDate)
         isAlAzharLand: isAlAzharLand ? 'Yes' : 'No',
         note: note || 'N/A',
         IA: IA || 'N/A',
@@ -130,69 +133,67 @@ export const getRegions = () => Object.keys(senegalRegions);
 // Senegal regions
 
 const senegalRegions = {
-  Dakar: ["Dakar", "Guédiawaye", "Pikine", "Rufisque"],
-  Diourbel: ["Bambey", "Diourbel", "Mbacké"],
-  Fatick: ["Fatick", "Foundiougne", "Gossas"],
-  Kaffrine: ["Birkelane", "Kaffrine", "Koungheul", "Malem Hodar"],
-  Kaolack: ["Guinguinéo", "Kaolack", "Nioro du Rip"],
-  Kédougou: ["Kédougou", "Salemata", "Saraya"],
-  Kolda: ["Kolda", "Médina Yoro Foulah", "Vélingara"],
-  Louga: ["Kébémer", "Linguère", "Louga"],
-  Matam: ["Kanel", "Matam", "Ranérou"],
-  "Saint-Louis": ["Dagana", "Podor", "Saint-Louis"],
-  Sédhiou: ["Bounkiling", "Goudomp", "Sédhiou"],
-  Tambacounda: ["Bakel", "Goudiry", "Koumpentoum", "Tambacounda"],
-  Thiès: ["M'bour", "Thiès", "Tivaouane"],
-  Ziguinchor: ["Bignona", "Oussouye", "Ziguinchor"],
+  Dakar: ['Dakar', 'Guédiawaye', 'Pikine', 'Rufisque'],
+  Diourbel: ['Bambey', 'Diourbel', 'Mbacké'],
+  Fatick: ['Fatick', 'Foundiougne', 'Gossas'],
+  Kaffrine: ['Birkelane', 'Kaffrine', 'Koungheul', 'Malem Hodar'],
+  Kaolack: ['Guinguinéo', 'Kaolack', 'Nioro du Rip'],
+  Kédougou: ['Kédougou', 'Salemata', 'Saraya'],
+  Kolda: ['Kolda', 'Médina Yoro Foulah', 'Vélingara'],
+  Louga: ['Kébémer', 'Linguère', 'Louga'],
+  Matam: ['Kanel', 'Matam', 'Ranérou'],
+  'Saint-Louis': ['Dagana', 'Podor', 'Saint-Louis'],
+  Sédhiou: ['Bounkiling', 'Goudomp', 'Sédhiou'],
+  Tambacounda: ['Bakel', 'Goudiry', 'Koumpentoum', 'Tambacounda'],
+  Thiès: ["M'bour", 'Thiès', 'Tivaouane'],
+  Ziguinchor: ['Bignona', 'Oussouye', 'Ziguinchor'],
 };
 
 const communesByDepartment = {
-  Dakar: ["Almadies", "Plateau", "Hann Bel-Air", "Grand Dakar"],
-  Guédiawaye: ["Golf Sud", "Médina Gounass", "Ndiarème Limamoulaye"],
-  Pikine: ["Pikine Est", "Pikine Nord", "Pikine Sud"],
-  Rufisque: ["Bargny", "Diamniadio", "Sangalkam"],
-  Bambey: ["Bambey", "Ngoye", "Ndiob"],
-  Diourbel: ["Diourbel", "Ndindy", "Touré Mbonde"],
-  Mbacké: ["Mbacké", "Touba", "Dahra"],
-  Fatick: ["Fatick", "Niakhar", "Diakhao"],
-  Foundiougne: ["Foundiougne", "Dionewar", "Sokone"],
-  Gossas: ["Gossas", "Mbar", "Colobane"],
-  Birkelane: ["Birkelane", "Keur Madiabel", "Nguéniène"],
-  Kaffrine: ["Kaffrine", "Koungheul", "Malem Hodar"],
-  Guinguinéo: ["Guinguinéo", "Ndiago", "Loul Sessène"],
-  Kédougou: ["Kédougou", "Salemata", "Saraya"],
-  Kolda: ["Kolda", "Médina Yoro Foulah", "Vélingara"],
-  Louga: ["Louga", "Kébémer", "Linguère"],
-  Matam: ["Matam", "Kanel", "Ranérou"],
-  "Saint-Louis": ["Saint-Louis", "Dagana", "Podor"],
-  Ziguinchor: ["Ziguinchor", "Bignona", "Oussouye"],
+  Dakar: ['Almadies', 'Plateau', 'Hann Bel-Air', 'Grand Dakar'],
+  Guédiawaye: ['Golf Sud', 'Médina Gounass', 'Ndiarème Limamoulaye'],
+  Pikine: ['Pikine Est', 'Pikine Nord', 'Pikine Sud'],
+  Rufisque: ['Bargny', 'Diamniadio', 'Sangalkam'],
+  Bambey: ['Bambey', 'Ngoye', 'Ndiob'],
+  Diourbel: ['Diourbel', 'Ndindy', 'Touré Mbonde'],
+  Mbacké: ['Mbacké', 'Touba', 'Dahra'],
+  Fatick: ['Fatick', 'Niakhar', 'Diakhao'],
+  Foundiougne: ['Foundiougne', 'Dionewar', 'Sokone'],
+  Gossas: ['Gossas', 'Mbar', 'Colobane'],
+  Birkelane: ['Birkelane', 'Keur Madiabel', 'Nguéniène'],
+  Kaffrine: ['Kaffrine', 'Koungheul', 'Malem Hodar'],
+  Guinguinéo: ['Guinguinéo', 'Ndiago', 'Loul Sessène'],
+  Kédougou: ['Kédougou', 'Salemata', 'Saraya'],
+  Kolda: ['Kolda', 'Médina Yoro Foulah', 'Vélingara'],
+  Louga: ['Louga', 'Kébémer', 'Linguère'],
+  Matam: ['Matam', 'Kanel', 'Ranérou'],
+  'Saint-Louis': ['Saint-Louis', 'Dagana', 'Podor'],
+  Ziguinchor: ['Ziguinchor', 'Bignona', 'Oussouye'],
 };
 
 export const mapDepartmentByRegion = ({ region }) => {
-
   if (!region || !senegalRegions[region]) {
     return Object.keys(communesByDepartment).map((dept) => ({
       name: dept,
-      value: dept.replace(/\s+/g, "_"),
-    }))
+      value: dept.replace(/\s+/g, '_'),
+    }));
   }
   return senegalRegions[region].map((dept) => ({
     name: dept,
-    value: dept.replace(/\s+/g, "_"),
+    value: dept.replace(/\s+/g, '_'),
   }));
 };
 
 export const mapCommuneByDepartment = ({ department }) => {
-
   if (!department || !communesByDepartment[department]) {
     return Object.keys(communesByDepartment).map((commune) => ({
       name: commune,
-      value: commune.replace(/\s+/g, "_"),
-    }))
+      value: commune.replace(/\s+/g, '_'),
+    }));
   }
   return communesByDepartment[department].map((commune) => ({
     name: commune,
-    value: commune.replace(/\s+/g, "_"),
+    value: commune.replace(/\s+/g, '_'),
   }));
 };
 
@@ -202,6 +203,22 @@ export const mapSchoolsByRegion = ({ schools }) => {
       name: school.attributes.name,
       value: school.id,
     }));
+  }
+  return [];
+};
+
+// map schools by type
+export const mapSchoolsByTypes = ({ schools, type }) => {
+  if (schools && Array.isArray(schools.data)) {
+    return schools.data.map((school) => {
+      if (school.attributes.type === type) {
+        return {
+          name: school.attributes.name,
+          value: school.id,
+        };
+      }
+      return null;
+    });
   }
   return [];
 };

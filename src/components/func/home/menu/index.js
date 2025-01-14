@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 
 export const MainMenus = ({ role }) => {
   const activeLink = usePathname();
-  
 
   return (
     <HStack

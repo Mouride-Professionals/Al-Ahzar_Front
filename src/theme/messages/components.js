@@ -44,13 +44,12 @@ module.exports = {
         },
       },
       school: {
-        publishing: "Ecole publiée",
-        creation: "Formulaire de création",
+        creation: 'Formulaire de création',
+        edit: 'Formulaire de modification',
         another_school: 'Créer une autre école',
         info: {
           success: 'Création reussie',
-          message:
-            "Vous avez créé l'école. Vous pouvez maintenant la publier.",
+          message: "Vous avez créé l'école. Vous pouvez maintenant la publier.",
           publishing:
             " Vous avez publié l'école %name. Vous pouvez maintenant créer des classes et inscrire des élèves.",
           classList: 'Liste des classes',
@@ -58,12 +57,12 @@ module.exports = {
       },
       teacher: {
         affectation: "Affectation d'enseignant",
-        hiring: "Formulaire de recrutement",
+        recruitment: 'Formulaire de recrutement',
         another_teacher: 'Recruter un autre enseignant',
         info: {
           success: 'Inscription reussie',
           message:
-            "Vous avez recruté un nouveau enseignant. Vous pouvez maintenant lui affecter  dans une école.",
+            'Vous avez recruté un nouveau enseignant. Vous pouvez maintenant lui affecter  dans une école.',
           affectation:
             "Vous avez affecté l'enseignant %firstname %lastname dans l'école %name.",
         },
@@ -78,7 +77,6 @@ module.exports = {
       },
       teachers: 'Enseignants',
       schools: 'Établissements',
-
     },
     layout: {
       header: {},
@@ -148,16 +146,14 @@ module.exports = {
           type: 'Type',
           IEF: 'IEF',
           responsible: 'Directeur',
-          // classes: 'Classes',
+          etablissementParent: 'Établissement parent',
         },
         teachers: {
           complete_name: 'Prénom et Nom',
           email: 'Email',
           phoneNumber: 'Téléphone',
-          email: 'Email',
           gender: 'Genre',
-
-
+          etablissement: 'Établissement',
         },
       },
     },

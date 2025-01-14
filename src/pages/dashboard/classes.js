@@ -96,7 +96,6 @@ export const getServerSideProps = async ({ req }) => {
     user_token: token,
   });
 
-  // console.log('classe for SG', role, data, `${routes.api_route.alazhar.get.classes}&populate=classes.eleves`);
   const classes = mapClassesByLevel({ classes: data });
 
   return {

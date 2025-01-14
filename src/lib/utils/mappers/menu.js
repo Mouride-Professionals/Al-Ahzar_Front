@@ -58,8 +58,7 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     link: ACCESS_ROUTES[role?.name]?.schools.all,
   },
   // classes not be seen by all_access
-  !ACCESS_ROUTES[role?.name]?.classes &&
-  {
+  ACCESS_ROUTES[role?.name]?.classes && {
     active: activeLink == ACCESS_ROUTES[role?.name]?.classes,
     icon: (
       <SiGoogleclassroom
@@ -76,8 +75,7 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     link: ACCESS_ROUTES[role?.name]?.classes,
   },
   // students
-  !ACCESS_ROUTES[role?.name]?.classes &&
-  {
+  !ACCESS_ROUTES[role?.name]?.students && {
     active: [
       ACCESS_ROUTES[role?.name]?.students?.create,
       ACCESS_ROUTES[role?.name]?.students?.initial,
@@ -106,7 +104,7 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     active: [
       ACCESS_ROUTES[role?.name]?.teachers.all,
       ACCESS_ROUTES[role?.name]?.teachers.detail,
-      ACCESS_ROUTES[role?.name]?.teachers.create
+      ACCESS_ROUTES[role?.name]?.teachers.create,
     ].includes(activeLink),
     icon: (
       <FaSuitcase
@@ -115,10 +113,8 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
           [
             ACCESS_ROUTES[role?.name]?.teachers.all,
             ACCESS_ROUTES[role?.name]?.teachers.detail,
-            ACCESS_ROUTES[role?.name]?.teachers.create
-
-          ]
-            .includes(activeLink)
+            ACCESS_ROUTES[role?.name]?.teachers.create,
+          ].includes(activeLink)
             ? colors.white
             : colors.secondary.regular
         }
@@ -214,4 +210,3 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
 //     };
 //   });
 // };
-

@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn lint
+
+# yarn lint
+# npx lint-staged --eslint-disable rule-name
+

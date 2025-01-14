@@ -1,5 +1,5 @@
 import { Stack, Text, Wrap } from '@chakra-ui/react';
-import { AccessAllDataSet } from '@components/common/reports/access_all';
+import { SchoolDataSet } from '@components/common/reports/school_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
@@ -16,7 +16,13 @@ import { serverFetch } from 'src/lib/api';
 const {
   pages: {
     dashboard,
-    stats: { classes, students: studentsStat, teachers, schools: schoolsStat, amount },
+    stats: {
+      classes,
+      students: studentsStat,
+      teachers,
+      schools: schoolsStat,
+      amount,
+    },
   },
   components: {
     menu,
@@ -72,7 +78,7 @@ export default function Dashboard({ kpis, role, token }) {
           </Text>
 
           <Stack bgColor={colors.white} w={'100%'}>
-            <AccessAllDataSet
+            <SchoolDataSet
               {...{ role, token }}
               data={schools}
               columns={SCHOOLS_COLUMNS}
@@ -83,7 +89,6 @@ export default function Dashboard({ kpis, role, token }) {
               columns={STUDENTS_COLUMNS}
             /> */}
           </Stack>
-
         </Wrap>
       </DashboardLayout>
     </Suspense>
@@ -111,7 +116,7 @@ export const getServerSideProps = async ({ req }) => {
         me,
         class: { all: classrooms },
         students: { all: allStudents },
-        teachers,
+        teachers: { all: teachers },
         schools: { all: allSchools },
       },
     },
@@ -121,7 +126,6 @@ export const getServerSideProps = async ({ req }) => {
     uri: me,
     user_token: token,
   });
-  // console.log('response data', response);
 
   const role = response.role;
 
@@ -140,7 +144,7 @@ export const getServerSideProps = async ({ req }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
     serverFetch({
-      uri: `${allSchools}?sort=createdAt:desc&populate=responsible`,
+      uri: `${allSchools}?sort=createdAt:desc&populate[responsible]=*&populate[etablissementParent][fields][0]=name`,
       user_token: token,
     }).catch(() => ({ data: [] })),
   ]);

@@ -2,7 +2,6 @@ const {
   classCreationSchema,
   studentRegistrationSchema,
   schoolCreationSchema,
-  teacherRecrutmentSchema,
   teacherRecruitmentSchema,
 } = require('@utils/schemas');
 const { ClassTitle } = require('@utils/tools/mappers');
@@ -209,6 +208,11 @@ module.exports = {
             select: true,
             options: mapOptions(schoolCreationSchema.fields.type._whitelist),
           },
+          etablissementParent: {
+            placeholder: 'Etablissement parent',
+            uid: 'etablissementParent',
+            type: 'text',
+          },
           IEF: {
             placeholder: 'IEF',
             uid: 'IEF',
@@ -222,7 +226,6 @@ module.exports = {
             type: 'text',
           },
 
-
           region: {
             placeholder: 'Région',
             uid: 'region',
@@ -233,7 +236,6 @@ module.exports = {
             placeholder: 'Département',
             uid: 'department',
             type: 'text',
-
           },
           commune: {
             placeholder: 'Commune',
@@ -249,7 +251,10 @@ module.exports = {
             placeholder: 'Le terrain appartient-il à Al Azhar?',
             uid: 'isAlAzharLand',
             select: true,
-            options: [{ name: 'Oui', value: true }, { name: 'Non', value: false }],
+            options: [
+              { name: 'Oui', value: true },
+              { name: 'Non', value: false },
+            ],
           },
           phoneFix: {
             placeholder: 'Téléphone Fixe',
@@ -268,7 +273,6 @@ module.exports = {
             uid: 'creationDate',
             type: 'date',
           },
-
         },
       },
       teacher: {
@@ -283,27 +287,154 @@ module.exports = {
             type: 'text',
             uid: 'firstname',
           },
-          sex: {
+          gender: {
             placeholder: 'Sexe',
-            uid: 'sex',
+            uid: 'gender',
             select: true,
             options: mapOptions(
-              teacherRecruitmentSchema.fields.sex._whitelist
+              teacherRecruitmentSchema.fields.gender._whitelist
             ),
           },
           phoneNumber: {
             placeholder: 'Téléphone',
             uid: 'phoneNumber',
-            type: 'text'
-          }
-          , email: {
+            type: 'text',
+          },
+          email: {
             placeholder: 'Email',
             uid: 'email',
-            type: 'text'
-          }
-        },
+            type: 'text',
+            grow: 2,
+          },
+          etablissement: {
+            placeholder: 'Établissement',
+            uid: 'etablissement',
+            type: 'text',
+          },
+          birthDate: {
+            placeholder: 'Date de naissance',
+            uid: 'birthDate',
+            type: 'date',
+          },
+          birthPlace: {
+            placeholder: 'Lieu de naissance',
+            uid: 'birthPlace',
+            type: 'text',
+          },
+          address: {
+            placeholder: 'Adresse',
+            uid: 'address',
+            type: 'text',
+          },
+          maritalStatus: {
+            placeholder: 'Situation matrimoniale',
+            uid: 'maritalStatus',
+            select: true,
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.maritalStatus._whitelist //to be added later
+            ),
+          },
+          academicDegree: {
+            placeholder: 'Dernier diplome',
+            uid: 'academicDegree',
+            select: true,
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.academicDegree._whitelist // to be added later
+            ),
+          },
+          professionalDegrees: {
+            placeholder: 'Diplomes professionnels',
+            uid: 'professionalDegrees',
+            type: 'text',
+          },
+          disciplines: {
+            placeholder: 'Disciplines à enseigner',
+            uid: 'disciplines',
+            type: 'text',
+          },
+          language: {
+            placeholder: 'Langue parlée',
+            uid: 'language',
+            select: true,
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.language._whitelist //to be added later
+            ),
+          },
+          subjects: {
+            placeholder: 'Matieres enseignées',
+            uid: 'subjects',
+            type: 'text',
+          },
+          contractType: {
+            placeholder: 'Type de contrat',
+            uid: 'contractType',
+            select: true,
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.contractType._whitelist //to be added later
+            ),
+          },
+          level: {
+            placeholder: 'Niveau',
+            uid: 'level',
+            select: true,
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.level._whitelist //to be added later
+            ),
+          },
+          salary: {
+            placeholder: 'Salaire',
+            uid: 'salary',
+            type: 'number',
+          },
+          contributions: {
+            placeholder: 'Contributions',
+            uid: 'contributions',
+            type: 'text',
+          },
+          registrationNumber: {
+            placeholder: 'Numéro d’immatriculation',
+            uid: 'registrationNumber',
+            type: 'text',
+          },
+          generation: {
+            placeholder: 'Génération',
+            uid: 'generation',
+            type: 'text',
+          },
+          salaryPerHour: {
+            placeholder: 'Salaire par heure',
+            uid: 'salaryPerHour',
+            type: 'number',
+          },
+          hoursNumber: {
+            placeholder: 'Nombre d’heures',
+            uid: 'hoursNumber',
+            type: 'number',
+          },
+          additionalResponsibilities: {
+            placeholder: 'Responsabilités supplémentaires',
+            uid: 'additionalResponsibilities',
+            type: 'text',
+          },
+          countryFrom: {
+            placeholder: 'Pays d’origine',
+            uid: 'countryFrom',
+            text: 'text',
+          },
+          arrivalDate: {
+            placeholder: 'Date d’arrivée',
+            uid: 'arrivalDate',
+            type: 'date',
+          },
+          previousInstitutes: {
+            placeholder: 'Institutes antérieurs',
+            uid: 'previousInstitutes',
+            type: 'text',
+          },
 
-      }
+          //end
+        },
+      },
     },
     messages: {
       login: {
@@ -335,23 +466,22 @@ module.exports = {
             already_exists: 'Cet école existe déjà',
             problem: 'Une erreur est survenue lors de la sauvegarde',
           },
-        }
-
+        },
       },
       teacher: {
         recruitment: {
           info: {
             personalInfoMessage: 'Informations personnelles',
             contactInfoMessage: 'Informations de contact',
+            contractInfoMessage: 'Informations sur le contrat',
             additionalInfoMessage: 'Informations additionnelles',
           },
           errors: {
             already_exists: 'Cet enseignant existe déjà',
             problem: 'Une erreur est survenue lors de la sauvegarde',
           },
-        }
-      }
+        },
+      },
     },
-
-  }
+  },
 };

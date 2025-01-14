@@ -67,7 +67,6 @@ export const getServerSideProps = async ({ query, req }) => {
   });
 
   const role = response.role;
-  console.log('roled', response);
 
   const detail = await serverFetch({
     uri: routes.api_route.alazhar.get.class.detail.replace('%id', id),
