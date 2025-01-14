@@ -253,6 +253,8 @@ export const DataSet = ({
   filtered.length = data.length;
 
   filtered = useMemo(() =>
+
+    
     reportingFilter({
       data,
       position: selectedIndex,

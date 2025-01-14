@@ -1,6 +1,9 @@
 const {
   classCreationSchema,
   studentRegistrationSchema,
+  schoolCreationSchema,
+  teacherRecrutmentSchema,
+  teacherRecruitmentSchema,
 } = require('@utils/schemas');
 const { ClassTitle } = require('@utils/tools/mappers');
 const mapOptions = (array) =>
@@ -168,6 +171,139 @@ module.exports = {
           },
         },
       },
+      school: {
+        creation: {
+          name: {
+            placeholder: 'Nom de l’ecole',
+            uid: 'name',
+            type: 'text',
+          },
+          address: {
+            placeholder: 'Adresse',
+            uid: 'address',
+            type: 'text',
+          },
+          city: {
+            placeholder: 'Ville/Village',
+            uid: 'city',
+            type: 'text',
+          },
+          email: {
+            placeholder: 'Email',
+            uid: 'email',
+            type: 'email',
+          },
+          postBox: {
+            placeholder: 'Boite postale',
+            uid: 'postBox',
+            type: 'text',
+          },
+          phone: {
+            placeholder: 'Téléphone',
+            uid: 'phone',
+            type: 'text',
+          },
+          type: {
+            placeholder: 'Type',
+            uid: 'type',
+            select: true,
+            options: mapOptions(schoolCreationSchema.fields.type._whitelist),
+          },
+          IEF: {
+            placeholder: 'IEF',
+            uid: 'IEF',
+            type: 'text',
+            // select: true,
+            // options: mapOptions(schoolCreationSchema.fields.IEF._whitelist),
+          },
+          responsibleName: {
+            placeholder: 'Nom du directeur',
+            uid: 'responsibleName',
+            type: 'text',
+          },
+
+
+          region: {
+            placeholder: 'Région',
+            uid: 'region',
+            select: true,
+            options: mapOptions(schoolCreationSchema.fields.region._whitelist),
+          },
+          department: {
+            placeholder: 'Département',
+            uid: 'department',
+            type: 'text',
+
+          },
+          commune: {
+            placeholder: 'Commune',
+            uid: 'commune',
+            type: 'text',
+          },
+          note: {
+            placeholder: 'Note supplémentaire sur le terrain',
+            uid: 'note',
+            type: 'text',
+          },
+          isAlAzharLand: {
+            placeholder: 'Le terrain appartient-il à Al Azhar?',
+            uid: 'isAlAzharLand',
+            select: true,
+            options: [{ name: 'Oui', value: true }, { name: 'Non', value: false }],
+          },
+          phoneFix: {
+            placeholder: 'Téléphone Fixe',
+            uid: 'phoneFix',
+            type: 'text',
+          },
+          IA: {
+            placeholder: 'IA',
+            uid: 'IA',
+            type: 'text',
+            // select: true,
+            // options: mapOptions(schoolCreationSchema.fields.IA._whitelist),
+          },
+          creationDate: {
+            placeholder: 'Date de création',
+            uid: 'creationDate',
+            type: 'date',
+          },
+
+        },
+      },
+      teacher: {
+        recruitment: {
+          lastname: {
+            placeholder: 'Nom',
+            type: 'text',
+            uid: 'lastname',
+          },
+          firstname: {
+            placeholder: 'Prénom',
+            type: 'text',
+            uid: 'firstname',
+          },
+          sex: {
+            placeholder: 'Sexe',
+            uid: 'sex',
+            select: true,
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.sex._whitelist
+            ),
+          },
+          phoneNumber: {
+            placeholder: 'Téléphone',
+            uid: 'phoneNumber',
+            type: 'text'
+          }
+          , email: {
+            placeholder: 'Email',
+            uid: 'email',
+            type: 'text'
+          }
+        },
+
+      }
     },
     messages: {
       login: {
@@ -187,6 +323,35 @@ module.exports = {
           problem: 'Une erreur est survenue lors de la sauvegarde',
         },
       },
+      school: {
+        creation: {
+          info: {
+            generalInfoMessage: 'Informations generales',
+            addressInfoMessage: 'Informations de l’adresse',
+            contactInfoMessage: 'Informations de contact',
+            additionalInfoMessage: 'Informations additionnelles',
+          },
+          errors: {
+            already_exists: 'Cet école existe déjà',
+            problem: 'Une erreur est survenue lors de la sauvegarde',
+          },
+        }
+
+      },
+      teacher: {
+        recruitment: {
+          info: {
+            personalInfoMessage: 'Informations personnelles',
+            contactInfoMessage: 'Informations de contact',
+            additionalInfoMessage: 'Informations additionnelles',
+          },
+          errors: {
+            already_exists: 'Cet enseignant existe déjà',
+            problem: 'Une erreur est survenue lors de la sauvegarde',
+          },
+        }
+      }
     },
-  },
+
+  }
 };

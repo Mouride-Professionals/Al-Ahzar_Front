@@ -1,4 +1,4 @@
-import { number, object, string } from 'yup';
+import { boolean, date, number, object, string } from 'yup';
 
 export const authenticationSchema = object({
   identifier: string().trim().required(),
@@ -40,6 +40,103 @@ const classComplexity = {
   allowedLetter: ['A', 'B', 'C', 'D', 'E', 'F'],
 };
 
+const schoolComplexity = {
+  allowedCycles: ['primaire', 'secondaire 1er cycle', 'secondaire 2eme cycle'],
+  allowedRegions: [
+    "Dakar",
+    "Diourbel",
+    "Fatick",
+    "Kaffrine",
+    "Kaolack",
+    "Kédougou",
+    "Kolda",
+    "Louga",
+    "Matam",
+    "Saint-Louis",
+    "Sédhiou",
+    "Tambacounda",
+    "Thiès",
+    "Ziguinchor"
+  ],
+  allowedDepartmentsByRegion: [
+    {
+      Dakar: [
+        'Dakar',
+        'Pikine',
+        'Rufisque',
+        'Guédiawaye',
+        'Keur Massar'
+      ],
+      Ziguinchor: ['Bignona', 'Oussouye', 'Ziguinchor'],
+      Diourbel: ['Bambey', 'Diourbel', 'Mbacké'],
+      Saint_Louis: ['Dagana', 'Podor', 'Saint - Louis'],
+      Tambacounda: ['Bakel', 'Tambacounda', 'Goudiry', 'Koumpentoum'],
+      Kaolack: ['Kaolack', 'Nioro du Rip', 'Guinguinéo'],
+      Thiês: ['Mbour', 'Thiès', 'Tivaouane'],
+      Louga: ['Kébere', 'Linguère', 'Louga'],
+      Fatick: ['Fatick', 'Foundiougne', 'Gossas'],
+      Kolda: ['Kolda', 'Vélingara', 'Médina Yoro Foulah'],
+      Matam: ['Kanel', 'Matam', 'Ranérou'],
+      Kaffrine: ['Kaffrine', 'Birkelane', 'Koungheul', 'Malem Hodar'],
+      Kédougou: ['Kédougou', 'Salemata', 'Sedhiou', 'Sikasso'],
+      Sédhiou: ['Sédhiou', 'Bounkiling', 'Goudomp'],
+    },
+  ],
+  allowedTypes: ["Centre",
+    "Centre Secondaire",
+    "Annexe"],
+  isAlAzharLand: [true, false],
+  allowedDepartments: [
+    "Bakel",
+    "Bambey",
+    "Bignona",
+    "Birkelane",
+    "Bounkiling",
+    "Dagana",
+    "Dakar",
+    "Diourbel",
+    "Fatick",
+    "Foundiougne",
+    "Gossas",
+    "Goudiry",
+    "Goudomp",
+    "Guédiawaye",
+    "Guinguinéo",
+    "Kafrine",
+    "Kaolack",
+    "Kanel",
+    "Kébémer",
+    "Kédougou",
+    "Keur Massar",
+    "Kolda",
+    "Koumpentoum",
+    "Koungheul",
+    "Linguère",
+    "Louga",
+    "M'bour",
+    "Malem Hodar",
+    "Matam",
+    "Mbacké",
+    "Médina Yoro Foulah",
+    "Nioro du Rip",
+    "Oussouye",
+    "Pikine",
+    "Podor",
+    "Ranérou",
+    "Rufisque",
+    "Saint-Louis",
+    "Salemata",
+    "Saraya",
+    "Sédhiou",
+    "Tambacounda",
+    "Thiès",
+    "Tivaouane",
+    "Vélingara",
+    "Ziguinchor"
+  ],
+
+
+}
 export const studentRegistrationSchema = object({
   firstname: string().trim().required(),
   lastname: string().trim().required(),
@@ -72,4 +169,35 @@ export const classCreationSchema = object({
   level: string().trim().oneOf(classComplexity.allowedClassLevels).required(),
   letter: string().trim().oneOf(classComplexity.allowedLetter).required(),
   schoolCreation: string(),
+});
+
+
+export const schoolCreationSchema = object({
+  name: string().trim().required(),
+  creationDate: date().required(),
+  responsibleName: string().required(),
+  type: string().trim().oneOf(schoolComplexity.allowedTypes).required(),
+  region: string().trim().oneOf(schoolComplexity.allowedRegions).required(),
+  department: string().trim().oneOf(schoolComplexity.allowedDepartments).required(),
+  commune: string().trim().required(),
+  city: string().trim().required(),
+  address: string().trim().required(),
+  IA: string().trim().required(),
+  IEF: string().trim().required(),
+  phone: number().required(),
+  phoneFix: number().required(),
+  email: string().email().required(),
+  postBox: string().trim().required(),
+  isAlAzharLand: boolean().required(),
+  note: string().trim().required(),
+
+
+});
+
+export const teacherRecruitmentSchema = object({
+  firstname: string().trim().required(),
+  lastname: string().trim().required(),
+  sex: string().trim().oneOf(AllowedSexes).required(),
+  phoneNumber: number().required(),
+  email: string().email().required()
 });

@@ -104,7 +104,6 @@ const getCategory = (level) => {
 };
 
 export const mapClassesByLevel = ({ classes }) => {
-  console.log('data', classes);
   if (classes) {
     const { data } = classes;
 
@@ -123,7 +122,6 @@ export const mapClassesByLevel = ({ classes }) => {
           eleves: { data: students },
         },
       } = item;
-      console.log('mapClassesByLevel', students, id);
       const level = item.attributes.level;
       const section = item.attributes.letter;
 

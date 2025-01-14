@@ -1,3 +1,4 @@
+
 module.exports = {
   name: 'Theming Routes File',
   themeRoutes: {
@@ -32,6 +33,7 @@ module.exports = {
             create: '/dashboard/surveillant/students/create',
           },
         },
+        //to be removed
         all_access: {
           classes: '/dashboard/classes',
           class: {
@@ -49,17 +51,32 @@ module.exports = {
             classes: '/dashboard/schools/%id/classes',
           },
         },
+        //to be removed
         classes: '/dashboard/classes',
+        //to be removed
         students: {
           initial: '/dashboard/students',
           create: '/dashboard/students/create',
         },
-        teachers: '/dashboard/teachers',
-        schools: {
-          all: '/dashboard/schools',
-          detail: '/dashboard/schools/%id',
-          classes: '/dashboard/schools/%id/classes',
+        direction: {
+          initial: '/dashboard/direction',
+          schools: {
+            all: '/dashboard/direction/schools',
+            detail: '/dashboard//direction/schools/%id',
+            create: '/dashboard/direction/schools/create',
+            classes: '/dashboard/direction/schools/%id/classes',
+          },
+          teachers: {
+            all: '/dashboard/direction/teachers',
+            detail: '/dashboard/direction/teachers/%id',
+            create: '/dashboard/direction/teachers/create',
+          },
+          students: {
+            initial: '/dashboard/direction/students',
+            create: '/dashboard/direction/students/create',
+          },
         },
+
       },
     },
     api_route: {
@@ -69,6 +86,7 @@ module.exports = {
           classroom: '/classes',
           payment: '/payments',
           school: '/schools',
+          teacher: '/teachers',
         },
         get: {
           classes: '/classes',
@@ -81,7 +99,10 @@ module.exports = {
             all: '/students?populate=classe,payments',
             detail: '/students/%id?populate=classe,payments',
           },
-          teachers: '/teachers',
+          teachers: {
+            detail: '/teachers/%id',
+            all: '/teachers',
+          },
           schools: {
             detail: '/schools/%id',
             all: '/schools',

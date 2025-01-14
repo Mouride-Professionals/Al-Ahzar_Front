@@ -1,12 +1,15 @@
 import { persistPayment } from '@services/payment';
-import { createClassroom, getSchool } from '@services/school';
+import { createClassroom, createSchool, getSchool } from '@services/school';
 import { confirmStudent, createStudent } from '@services/student';
+import { createTeacher } from '@services/teacher';
 import { forms, routes } from '@theme';
 import { mapMonthCreationBody } from '@utils/mappers/payment';
+import { mapSchoolCreationBody } from '@utils/mappers/school';
 import {
   mapStudentConfirmationBody,
   mapStudentCreationBody,
 } from '@utils/mappers/student';
+import { mapTeacherCreationBody } from '@utils/mappers/teacher';
 import { mapClassBody } from '@utils/tools/mappers';
 import { signIn } from 'next-auth/react';
 
@@ -159,4 +162,71 @@ export const monthValidationHandler = async ({ id, user_token }) => {
   const payload = mapMonthCreationBody({ payload: id });
 
   persistPayment({ payload, user_token }).then(() => window.location.reload());
+};
+
+// school creation form handler
+
+export const schoolCreationFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  hasSucceeded,
+  token,
+}) => {
+  const payload = mapSchoolCreationBody({ data });
+  createSchool({ payload, token })
+    .then(() => {
+      setSubmitting(false);
+      hasSucceeded(true);
+      // window.location.reload();
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'school creation',
+            forms.messages.school.creation.errors.already_exists
+          );
+        }
+      }
+
+      setFieldError('school creation', forms.messages.school.creation.errors.problem);
+      return;
+    });
+};
+
+
+//  teacher recruitment form handler
+export const teacherRecruitmentFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapTeacherCreationBody({ data });
+
+  createTeacher({ payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'recruitment',
+            forms.messages.teacher.recruitment.errors.already_exists
+          );
+        }
+      }
+      setFieldError('recruitment', forms.messages.teacher.recruitment.errors.problem);
+      return;
+    });
+
+  setSubmitting(false);
 };

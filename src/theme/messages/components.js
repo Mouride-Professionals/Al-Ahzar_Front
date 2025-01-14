@@ -43,6 +43,31 @@ module.exports = {
           classList: 'Liste des classes',
         },
       },
+      school: {
+        publishing: "Ecole publiée",
+        creation: "Formulaire de création",
+        another_school: 'Créer une autre école',
+        info: {
+          success: 'Création reussie',
+          message:
+            "Vous avez créé l'école. Vous pouvez maintenant la publier.",
+          publishing:
+            " Vous avez publié l'école %name. Vous pouvez maintenant créer des classes et inscrire des élèves.",
+          classList: 'Liste des classes',
+        },
+      },
+      teacher: {
+        affectation: "Affectation d'enseignant",
+        hiring: "Formulaire de recrutement",
+        another_teacher: 'Recruter un autre enseignant',
+        info: {
+          success: 'Inscription reussie',
+          message:
+            "Vous avez recruté un nouveau enseignant. Vous pouvez maintenant lui affecter  dans une école.",
+          affectation:
+            "Vous avez affecté l'enseignant %firstname %lastname dans l'école %name.",
+        },
+      },
     },
     menu: {
       home: 'Accueil',
@@ -53,6 +78,7 @@ module.exports = {
       },
       teachers: 'Enseignants',
       schools: 'Établissements',
+
     },
     layout: {
       header: {},
@@ -67,6 +93,20 @@ module.exports = {
     dataset: {
       students: {
         title: 'Liste des élèves',
+        cta: {
+          filter: '',
+          export: '',
+        },
+      },
+      schools: {
+        title: 'Liste des écoles',
+        cta: {
+          filter: '',
+          export: '',
+        },
+      },
+      teachers: {
+        title: 'Liste des enseignants',
         cta: {
           filter: '',
           export: '',
@@ -99,6 +139,25 @@ module.exports = {
           current_month: 'Mois en cours',
           paid: 'Payé',
           not_paid: 'Impayé',
+        },
+        schools: {
+          name: 'Nom',
+          address: 'Adresse',
+          email: 'Email',
+          phone: 'Téléphone',
+          type: 'Type',
+          IEF: 'IEF',
+          responsible: 'Directeur',
+          // classes: 'Classes',
+        },
+        teachers: {
+          complete_name: 'Prénom et Nom',
+          email: 'Email',
+          phoneNumber: 'Téléphone',
+          email: 'Email',
+          gender: 'Genre',
+
+
         },
       },
     },

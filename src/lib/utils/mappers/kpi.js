@@ -22,6 +22,8 @@ const {
         paid,
         not_paid,
       },
+      schools: { name, address, phone: phoneSchool, email, type, IEF, responsible },
+      teachers: { complete_name, email: teacherEmail, phoneNumber, gender, },
     },
   },
 } = messages.components;
@@ -84,3 +86,92 @@ export const STUDENTS_COLUMNS = [
     ),
   },
 ];
+
+export const SCHOOLS_COLUMNS = [
+  {
+    name: name,
+    selector: (row) => `${row.name}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+    cell: (row) => (
+      //adjust the width of the cell
+      <div style={{ width: '200px' }}>{row.name}</div>
+    ),
+  },
+  {
+    name: address,
+    selector: (row) => `${row.address}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: phoneSchool,
+    selector: (row) => `${row.phone}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: email,
+    selector: (row) => `${row.email}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: type,
+    selector: (row) => `${row.type}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: IEF,
+    selector: (row) => `${row.IEF}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: responsible,
+    selector: (row) => `${row.responsible}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  }
+
+];
+
+export const TEACHERS_COLUMNS = [
+  {
+    name: complete_name,
+    selector: (row) => `${row.lastname}, ${row.firstname}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: teacherEmail,
+    selector: (row) => `${row.email}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: phoneNumber,
+    selector: (row) => `${row.phoneNumber}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: gender,
+    selector: (row) => `${row.gender}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+];
+

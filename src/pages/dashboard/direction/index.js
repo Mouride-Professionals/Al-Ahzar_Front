@@ -20,7 +20,7 @@ const {
   },
   components: {
     menu,
-    dataset: { students: studentsDataset, schools: schoolsDataset },
+    dataset: { schools: schoolsDataset },
   },
 } = messages;
 
@@ -48,7 +48,6 @@ export default function Dashboard({ kpis, role, token }) {
     },
   ];
 
-  // const students = mapStudentsDataTable({ students: kpis[1] });
   const schools = mapSchoolsDataTable({ schools: kpis[3] });
 
   return (
@@ -68,7 +67,6 @@ export default function Dashboard({ kpis, role, token }) {
             pt={10}
           >
             {schoolsDataset.title}
-            {/* {studentsDataset.title} */}
           </Text>
 
           <Stack bgColor={colors.white} w={'100%'}>
@@ -77,11 +75,7 @@ export default function Dashboard({ kpis, role, token }) {
               data={schools}
               columns={SCHOOLS_COLUMNS}
             />
-            {/* <DataSet
-              {...{ role, token }}
-              data={students}
-              columns={STUDENTS_COLUMNS}
-            /> */}
+
           </Stack>
 
         </Wrap>

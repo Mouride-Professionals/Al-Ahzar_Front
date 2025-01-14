@@ -1,5 +1,5 @@
 import { Stack, Text } from '@chakra-ui/react';
-import { DataSet } from '@components/common/reports';
+import { DataSet } from '@components/common/reports/access_only';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
