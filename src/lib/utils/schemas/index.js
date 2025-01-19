@@ -127,6 +127,10 @@ const schoolComplexity = {
     'Ziguinchor',
   ],
 };
+const allowedIA = schoolComplexity.allowedRegions.map((region) => 'IA de ' + region);
+const allowedIEF = schoolComplexity.allowedDepartments.map((department) => 'IEF de ' + department);
+const allowedIEFbyIA = allowedIA.map((IA) => allowedIEF.filter((IEF) => IEF.startsWith(IA)));
+
 const teacherComplexity = {
   AllowedMaritalStatuses: ['Célibataire', 'Marié(e)', 'Divorçé(e)', 'Veuf(ve)'],
   AllowedAcademicDegrees: ['Baccalaureat', 'Licence', 'Master', 'Doctorat'],
@@ -187,8 +191,8 @@ export const schoolCreationSchema = object({
   commune: string().trim().required(),
   city: string().trim().required(),
   address: string().trim().required(),
-  IA: string().trim().required(),
-  IEF: string().trim().required(),
+  IA: string().trim().oneOf(allowedIA).required(),
+  IEF: string().trim().oneOf(allowedIEF).required(),
   phone: number().required(),
   phoneFix: number().required(),
   email: string().email().required(),

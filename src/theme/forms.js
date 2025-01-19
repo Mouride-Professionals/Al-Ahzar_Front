@@ -19,12 +19,14 @@ module.exports = {
         identifier: {
           label: 'Identifiant',
           placeholder: 'bayeousmane@mouridpro.com',
+          label: 'bayeousmane@mouridpro.com',
           type: 'text',
           name: 'identifier',
         },
         password: {
           label: 'Mot de passe',
           placeholder: '****************',
+          label: '****************',
           type: 'password',
           name: 'password',
         },
@@ -39,16 +41,19 @@ module.exports = {
         registration: {
           lastname: {
             placeholder: 'Nom',
+            label: 'Nom',
             type: 'text',
             uid: 'lastname',
           },
           firstname: {
             placeholder: 'Prénom',
+            label: 'Prénom',
             type: 'text',
             uid: 'firstname',
           },
           sex: {
             placeholder: 'Sexe',
+            label: 'Sexe',
             uid: 'sex',
             select: true,
             options: mapOptions(
@@ -57,51 +62,61 @@ module.exports = {
           },
           date: {
             placeholder: 'Jour',
+            label: 'Jour',
             type: 'text',
             uid: 'date',
           },
           month: {
             placeholder: 'Mois',
+            label: 'Mois',
             type: 'text',
             uid: 'month',
           },
           year: {
             placeholder: 'Année',
+            label: 'Année',
             type: 'text',
             uid: 'year',
           },
           birthplace: {
             placeholder: 'Lieu de naissance',
+            label: 'Lieu de naissance',
             type: 'text',
             uid: 'birthplace',
           },
           parent_lastname: {
             placeholder: 'Nom',
+            label: 'Nom',
             type: 'text',
             uid: 'parent_lastname',
           },
           parent_firstname: {
             placeholder: 'Prénom',
+            label: 'Prénom',
             type: 'text',
             uid: 'parent_firstname',
           },
           parent_phone: {
             placeholder: 'Numéro de télèphone',
+            label: 'Numéro de télèphone',
             type: 'text',
             uid: 'parent_phone',
           },
           level: {
             placeholder: 'Niveau',
+            label: 'Niveau',
             type: 'text',
             uid: 'level',
           },
           classroom: {
             placeholder: 'Classe',
+            label: 'Classe',
             type: 'text',
             uid: 'classroom',
           },
           class_letter: {
             placeholder: 'Lettre',
+            label: 'Lettre',
             type: 'text',
             uid: 'class_letter',
           },
@@ -109,6 +124,7 @@ module.exports = {
         confirm: {
           studentType: {
             placeholder: "Type d'élève",
+            label: "Type d'élève",
             select: true,
             uid: 'studentType',
             options: [
@@ -123,6 +139,7 @@ module.exports = {
           },
           socialCategory: {
             placeholder: 'Cas social',
+            label: 'Cas social',
             select: true,
             uid: 'socialCategory',
             options: [
@@ -143,6 +160,7 @@ module.exports = {
           },
           comment: {
             placeholder: 'Commentaire',
+            label: 'Commentaire',
             type: 'text',
             uid: 'comment',
           },
@@ -152,18 +170,21 @@ module.exports = {
         creation: {
           grade: {
             placeholder: 'Cycle',
+            label: 'Cycle',
             uid: 'grade',
             select: true,
             options: mapOptions(classCreationSchema.fields.grade._whitelist),
           },
           level: {
             placeholder: 'Niveau',
+            label: 'Niveau',
             uid: 'level',
             select: true,
             options: mapOptions(classCreationSchema.fields.level._whitelist),
           },
           letter: {
             placeholder: 'Section',
+            label: 'Section',
             uid: 'letter',
             select: true,
             options: mapOptions(classCreationSchema.fields.letter._whitelist),
@@ -174,47 +195,56 @@ module.exports = {
         creation: {
           name: {
             placeholder: 'Nom de l’ecole',
+            label: 'Nom de l’ecole',
             uid: 'name',
             type: 'text',
           },
           address: {
             placeholder: 'Adresse',
+            label: 'Adresse',
             uid: 'address',
             type: 'text',
           },
           city: {
             placeholder: 'Ville/Village',
+            label: 'Ville/Village',
             uid: 'city',
             type: 'text',
           },
           email: {
             placeholder: 'Email',
+            label: 'Email',
             uid: 'email',
             type: 'email',
           },
           postBox: {
             placeholder: 'Boite postale',
+            label: 'Boite postale',
             uid: 'postBox',
             type: 'text',
           },
           phone: {
             placeholder: 'Téléphone',
+            label: 'Téléphone',
             uid: 'phone',
             type: 'text',
           },
           type: {
             placeholder: 'Type',
+            label: 'Type',
             uid: 'type',
             select: true,
             options: mapOptions(schoolCreationSchema.fields.type._whitelist),
           },
           etablissementParent: {
             placeholder: 'Etablissement parent',
+            label: 'Etablissement parent',
             uid: 'etablissementParent',
             type: 'text',
           },
           IEF: {
             placeholder: 'IEF',
+            label: 'IEF',
             uid: 'IEF',
             type: 'text',
             // select: true,
@@ -222,33 +252,39 @@ module.exports = {
           },
           responsibleName: {
             placeholder: 'Nom du directeur',
+            label: 'Nom du directeur',
             uid: 'responsibleName',
             type: 'text',
           },
 
           region: {
             placeholder: 'Région',
+            label: 'Région',
             uid: 'region',
             select: true,
             options: mapOptions(schoolCreationSchema.fields.region._whitelist),
           },
           department: {
             placeholder: 'Département',
+            label: 'Département',
             uid: 'department',
             type: 'text',
           },
           commune: {
             placeholder: 'Commune',
+            label: 'Commune',
             uid: 'commune',
             type: 'text',
           },
           note: {
             placeholder: 'Note supplémentaire sur le terrain',
+            label: 'Note supplémentaire sur le terrain',
             uid: 'note',
             type: 'text',
           },
           isAlAzharLand: {
             placeholder: 'Le terrain appartient-il à Al Azhar?',
+            label: 'Le terrain appartient-il à Al Azhar?',
             uid: 'isAlAzharLand',
             select: true,
             options: [
@@ -258,18 +294,20 @@ module.exports = {
           },
           phoneFix: {
             placeholder: 'Téléphone Fixe',
+            label: 'Téléphone Fixe',
             uid: 'phoneFix',
             type: 'text',
           },
           IA: {
             placeholder: 'IA',
+            label: 'IA',
             uid: 'IA',
-            type: 'text',
-            // select: true,
-            // options: mapOptions(schoolCreationSchema.fields.IA._whitelist),
+            select: true,
+            options: mapOptions(schoolCreationSchema.fields.IA._whitelist),
           },
           creationDate: {
             placeholder: 'Date de création',
+            label: 'Date de création',
             uid: 'creationDate',
             type: 'date',
           },
@@ -279,16 +317,19 @@ module.exports = {
         recruitment: {
           lastname: {
             placeholder: 'Nom',
+            label: 'Nom',
             type: 'text',
             uid: 'lastname',
           },
           firstname: {
             placeholder: 'Prénom',
+            label: 'Prénom',
             type: 'text',
             uid: 'firstname',
           },
           gender: {
             placeholder: 'Sexe',
+            label: 'Sexe',
             uid: 'gender',
             select: true,
             options: mapOptions(
@@ -297,37 +338,44 @@ module.exports = {
           },
           phoneNumber: {
             placeholder: 'Téléphone',
+            label: 'Téléphone',
             uid: 'phoneNumber',
             type: 'text',
           },
           email: {
             placeholder: 'Email',
+            label: 'Email',
             uid: 'email',
             type: 'text',
             grow: 2,
           },
           etablissement: {
             placeholder: 'Établissement',
+            label: 'Établissement',
             uid: 'etablissement',
             type: 'text',
           },
           birthDate: {
             placeholder: 'Date de naissance',
+            label: 'Date de naissance',
             uid: 'birthDate',
             type: 'date',
           },
           birthPlace: {
             placeholder: 'Lieu de naissance',
+            label: 'Lieu de naissance',
             uid: 'birthPlace',
             type: 'text',
           },
           address: {
             placeholder: 'Adresse',
+            label: 'Adresse',
             uid: 'address',
             type: 'text',
           },
           maritalStatus: {
             placeholder: 'Situation matrimoniale',
+            label: 'Situation matrimoniale',
             uid: 'maritalStatus',
             select: true,
             options: mapOptions(
@@ -336,6 +384,7 @@ module.exports = {
           },
           academicDegree: {
             placeholder: 'Dernier diplome',
+            label: 'Dernier diplome',
             uid: 'academicDegree',
             select: true,
             options: mapOptions(
@@ -344,16 +393,19 @@ module.exports = {
           },
           professionalDegrees: {
             placeholder: 'Diplomes professionnels',
+            label: 'Diplomes professionnels',
             uid: 'professionalDegrees',
             type: 'text',
           },
           disciplines: {
             placeholder: 'Disciplines à enseigner',
+            label: 'Disciplines à enseigner',
             uid: 'disciplines',
             type: 'text',
           },
           language: {
             placeholder: 'Langue parlée',
+            label: 'Langue parlée',
             uid: 'language',
             select: true,
             options: mapOptions(
@@ -362,11 +414,13 @@ module.exports = {
           },
           subjects: {
             placeholder: 'Matieres enseignées',
+            label: 'Matieres enseignées',
             uid: 'subjects',
             type: 'text',
           },
           contractType: {
             placeholder: 'Type de contrat',
+            label: 'Type de contrat',
             uid: 'contractType',
             select: true,
             options: mapOptions(
@@ -375,6 +429,7 @@ module.exports = {
           },
           level: {
             placeholder: 'Niveau',
+            label: 'Niveau',
             uid: 'level',
             select: true,
             options: mapOptions(
@@ -383,51 +438,61 @@ module.exports = {
           },
           salary: {
             placeholder: 'Salaire',
+            label: 'Salaire',
             uid: 'salary',
             type: 'number',
           },
           contributions: {
             placeholder: 'Contributions',
+            label: 'Contributions',
             uid: 'contributions',
             type: 'text',
           },
           registrationNumber: {
             placeholder: 'Numéro d’immatriculation',
+            label: 'Numéro d’immatriculation',
             uid: 'registrationNumber',
             type: 'text',
           },
           generation: {
             placeholder: 'Génération',
+            label: 'Génération',
             uid: 'generation',
             type: 'text',
           },
           salaryPerHour: {
             placeholder: 'Salaire par heure',
+            label: 'Salaire par heure',
             uid: 'salaryPerHour',
             type: 'number',
           },
           hoursNumber: {
             placeholder: 'Nombre d’heures',
+            label: 'Nombre d’heures',
             uid: 'hoursNumber',
             type: 'number',
           },
           additionalResponsibilities: {
             placeholder: 'Responsabilités supplémentaires',
+            label: 'Responsabilités supplémentaires',
             uid: 'additionalResponsibilities',
             type: 'text',
           },
           countryFrom: {
             placeholder: 'Pays d’origine',
+            label: 'Pays d’origine',
             uid: 'countryFrom',
             text: 'text',
           },
           arrivalDate: {
             placeholder: 'Date d’arrivée',
+            label: 'Date d’arrivée',
             uid: 'arrivalDate',
             type: 'date',
           },
           previousInstitutes: {
             placeholder: 'Institutes antérieurs',
+            label: 'Institutes antérieurs',
             uid: 'previousInstitutes',
             type: 'text',
           },

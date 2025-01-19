@@ -11,11 +11,21 @@ const {
 } = routes;
 
 export const ACCESS_ROUTES = {
+
   Caissier: cashier,
   ['Surveillant general']: surveillant,
   ['Secretaire General']: direction,
   ['Directeur General']: direction,
   ['Directeur etablissment']: all_access,
+  isAdmin(role) {
+    return role == 'Secretaire General' || role == 'Directeur General';
+  },
+  isSurveillant(role) {
+    return role == 'Surveillant general';
+  },
+  isCashier(role) {
+    return role == 'Caissier';
+  },
 };
 
 export const DashboardMainMenu = ({ activeLink, role }) => [

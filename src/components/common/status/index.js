@@ -31,3 +31,12 @@ export const WarningComponent = ({ message }) => {
 export const LoadingComponent = () => {
   return <Spinner color={colors.primary.regular} />;
 };
+
+export const SuccessComponent = ({ message }) => {
+  return (
+    <Alert status={'success'}>
+      <AlertIcon />
+      {message || 'This component loaded successfully'}
+    </Alert>
+  );
+};

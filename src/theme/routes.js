@@ -62,7 +62,12 @@ export const themeRoutes = {
           detail: '/dashboard//direction/schools/%id',
           create: '/dashboard/direction/schools/create',
           edit: '/dashboard/direction/schools/%id/edit',
-          classes: '/dashboard/direction/schools/%id/classes',
+          classes: {
+            all: '/dashboard/direction/schools/%id/classes',
+            detail: '/dashboard/direction/schools/%id/classes/%classId',
+            create: '/dashboard/direction/schools/%id/classes/create',
+            edit: '/dashboard/direction/schools/%id/classes/%classId/edit',
+          },
         },
         teachers: {
           all: '/dashboard/direction/teachers',
@@ -74,6 +79,7 @@ export const themeRoutes = {
           initial: '/dashboard/direction/students',
           create: '/dashboard/direction/students/create',
         },
+
       },
     },
   },

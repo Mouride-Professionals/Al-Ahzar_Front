@@ -29,7 +29,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
   const {
     dashboard: {
       direction: {
-        schools: { create, edit },
+        schools: { edit, classes: { all } },
       },
     },
   } = routes.page_route;
@@ -134,9 +134,23 @@ const ExpandedComponent = ({ data, role, user_token }) => {
               </VStack>
             </SimpleGrid>
             <HStack justifyContent="flex-end" mt={5}>
+              {/* // go to the school s classes */}
               <Button
                 onClick={() =>
-                  router.push(`dashboard/direction/schools/${data.id}/edit`)
+                  router.push(
+                    all.replace('%id', data.id)
+                  )
+                }
+                colorScheme="orange"
+                variant="outline"
+              >
+                {'Classes'}
+              </Button>
+
+
+              <Button
+                onClick={() =>
+                  router.push(edit.replace('%id', data.id))
                 }
                 colorScheme="orange"
                 variant="outline"
@@ -189,7 +203,7 @@ export const SchoolDataSet = ({
           </Box>
           {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
           <HStack pl={4}>
-            <FormFilter onExpwort={() => {}} />
+            <FormFilter onExpwort={() => { }} />
             <FormExport onExport={() => downloadCSV(filtered)} />
           </HStack>
         </HStack>
@@ -209,6 +223,16 @@ export const SchoolDataSet = ({
       </HStack>
     );
   }, [filterText, selectedIndex]);
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const onRowExpand = (event) => {
+    // Close other expanded rows before expanding the current row
+    console.log('event', event);
+
+    const newExpandedRows = {};
+    newExpandedRows[event] = true;
+    setExpandedRows(newExpandedRows);
+  };
 
   return (
     <DataTable
@@ -218,12 +242,15 @@ export const SchoolDataSet = ({
       defaultCanSort
       initialState={{ sortBy: [{ id: 'name', desc: true }] }}
       subHeader
-      // selectableRows
+      subHeaderAlign="center"
+      expandOnRowClicked
+      highlightOnHover
       subHeaderComponent={subHeaderComponentMemo}
       expandableRows
       expandableRowsComponent={(data) =>
         ExpandedComponent({ ...data, role, user_token: token })
       }
+
       pagination
     />
   );

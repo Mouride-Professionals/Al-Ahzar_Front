@@ -56,6 +56,13 @@ export default function Dashboard({ kpis, role, token }) {
 
   const teachers = mapTeachersDataTable({ teachers: kpis[2] });
 
+  // take all schools with only their name, id, and type for 
+  const schools = kpis[3]?.data?.map((school) => ({
+    name: school.attributes.name,
+    id: school.id,
+  }))
+    ;
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <DashboardLayout
@@ -79,6 +86,7 @@ export default function Dashboard({ kpis, role, token }) {
             <TeacherDataSet
               {...{ role, token }}
               data={teachers}
+              schools={schools}
               columns={TEACHERS_COLUMNS}
             />
           </Stack>

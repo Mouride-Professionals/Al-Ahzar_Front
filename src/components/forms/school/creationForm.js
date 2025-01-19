@@ -6,6 +6,7 @@ import { colors, forms } from '@theme';
 import {
   mapCommuneByDepartment,
   mapDepartmentByRegion,
+  mapIEFByIA,
 } from '@utils/mappers/school';
 import { schoolCreationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
@@ -28,6 +29,10 @@ export const CreateSchoolForm = ({
   const [schoolData, setSchoolData] = useState(schoolAttributes || {});
   const [departments, setDepartments] = useState([]);
   const [communes, setCommunes] = useState([]);
+  const [IAs, setIAs] = useState([]);
+  const [IEFs, setIEFs] = useState([]);
+
+
   const [parentSchoolOptions, setParentSchoolOptions] = useState(schools.data);
   const [filteredParentSchools, setFilteredParentSchools] = useState([]);
   const [selectedType, setSelectedType] = useState(schoolData?.type || '');
@@ -46,6 +51,11 @@ export const CreateSchoolForm = ({
     setCommunes(communeOptions);
   };
 
+  //handle IA change
+  const handleIAChange = (selectedIA) => {
+    const IEFOptions = mapIEFByIA({ IA: selectedIA });
+    setIEFs(IEFOptions);
+  }
   // Update filtered options based on selected type
   useEffect(() => {
     if (selectedType === 'Annexe') {
@@ -124,20 +134,20 @@ export const CreateSchoolForm = ({
       onSubmit={(values, { setSubmitting, setFieldError }) => {
         isEdit
           ? schoolUpdateFormHandler({
-              school: schoolId,
-              token,
-              data: values,
-              setSubmitting,
-              setFieldError,
-              hasSucceeded: setHasSucceeded,
-            })
+            school: schoolId,
+            token,
+            data: values,
+            setSubmitting,
+            setFieldError,
+            hasSucceeded: setHasSucceeded,
+          })
           : schoolCreationFormHandler({
-              token,
-              data: values,
-              setSubmitting,
-              setFieldError,
-              hasSucceeded: setHasSucceeded,
-            });
+            token,
+            data: values,
+            setSubmitting,
+            setFieldError,
+            hasSucceeded: setHasSucceeded,
+          });
       }}
     >
       {({
@@ -295,7 +305,12 @@ export const CreateSchoolForm = ({
                 <FormInput
                   {...IA}
                   errors={errors}
-                  handleChange={handleChange}
+                  handleChange={
+                    (e) => {
+                      handleChange(e);
+                      handleIAChange(e.target.value);
+                    }
+                  }
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.IA}
@@ -303,10 +318,13 @@ export const CreateSchoolForm = ({
               </WrapItem>
               <WrapItem w={370}>
                 <FormInput
+                  select
+                  options={IEFs}
                   {...IEF}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  isDisabled={!values.IA}
                   touched={touched}
                   value={values.IEF}
                 />

@@ -248,6 +248,7 @@ export const DataSet = ({
   token,
 }) => {
   const [filterText, setFilterText] = useState('');
+  const router = useRouter();
 
   let filtered = [];
   filtered.length = data.length;
@@ -262,7 +263,6 @@ export const DataSet = ({
     [filtered, role?.name, router]
   );
 
-  const router = useRouter();
   const subHeaderComponentMemo = useMemo(() => {
     return (
       <HStack
@@ -311,6 +311,8 @@ export const DataSet = ({
       initialState={{ sortBy: [{ id: 'registered_at', desc: true }] }}
       subHeader
       // selectableRows
+      expandOnRowClicked
+      expandableRowsHideExpander
       subHeaderComponent={subHeaderComponentMemo}
       expandableRows
       expandableRowsComponent={(data) =>
@@ -320,3 +322,7 @@ export const DataSet = ({
     />
   );
 };
+
+
+ 
+

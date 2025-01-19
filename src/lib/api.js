@@ -75,6 +75,7 @@ export const serverFetch = async ({ uri, user_token }) => {
 // Fetcher method
 export const fetcher = async ({ uri, options = {}, user_token }) => {
   try {
+
     const { method = 'GET', body, headers, params } = options;
 
     const response = await api({
@@ -92,7 +93,7 @@ export const fetcher = async ({ uri, options = {}, user_token }) => {
   } catch (error) {
     console.error('Fetcher error:', error.response || error.message);
     throw new Error(
-      error.response?.data?.message || error.message || 'API request failed'
+      error.response?.data?.error?.message || error.message || 'API request failed'
     );
   }
 };

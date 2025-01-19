@@ -6,9 +6,16 @@ import {
   Grid,
   GridItem,
   HStack,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   ScaleFade,
   Stack,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import {
@@ -16,6 +23,7 @@ import {
   FormFilter,
   FormSearch,
 } from '@components/common/input/FormInput';
+import { assignTeacher } from '@services/teacher';
 import { colors, routes } from '@theme';
 import { downloadCSV } from '@utils/csv';
 import { reportingFilter } from '@utils/mappers/kpi';
@@ -23,12 +31,72 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { PiUserDuotone } from 'react-icons/pi';
+import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
-
 // import { colors, routes } from '@theme';
 
-const ExpandedComponent = ({ data }) => {
+const ExpandedComponent = ({ data, schools, token }) => {
   const router = useRouter();
+  const toast = useToast(
+    {
+      position: 'top-right',
+      duration: 3000,
+      isClosable: true,
+    }
+  );
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [selectedSchool, setSelectedSchool] = useState('');
+
+  const openDialog = () => setDialogOpen(true);
+  const closeDialog = () => setDialogOpen(false);
+
+
+  const handleAssign = async () => {
+    if (!selectedSchool) {
+      toast({
+        title: 'No school selected',
+        description: 'Please select a school to assign the teacher.',
+        status: 'warning',
+      })
+      return;
+    }
+    try {
+      const response = await assignTeacher({
+        teacher: data.id,
+        school: selectedSchool,
+
+        token: token,
+      });
+
+
+      if (response) {
+        console.log('response', response);
+
+
+        toast({
+          title: 'Assignment Successful',
+          description: `Teacher has been successfully assigned to ${schools.find(school => school.id === parseInt(selectedSchool))?.name}.`,
+          status: 'success',
+
+        });
+        router.refresh();
+      } else {
+        toast({
+          title: 'Assignment Failed',
+          description: 'Failed to assign the teacher. Please try again.',
+          status: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Error assigning teacher:', error);
+      toast({
+        title: 'Error Occurred',
+        description: 'An error occurred while assigning the teacher.',
+        status: 'error',
+      })
+    }
+    closeDialog();
+  };
   const {
     dashboard: {
       direction: {
@@ -65,6 +133,39 @@ const ExpandedComponent = ({ data }) => {
     createdAt,
     etablissement,
   } = data;
+  const schoolOptions = schools.map((school) => ({
+    value: school.id,
+    label: school.name,
+  }));
+
+  // const selectStyles
+  //   = {
+  //   control: (base, state) => ({
+  //     ...base,
+  //     backgroundColor: state.isFocused ? '#f7f7f7' : 'white',
+  //     borderColor: state.isFocused ? '#3182ce' : '#e2e8f0',
+  //     boxShadow: state.isFocused ? '0 0 0 1px orange' : 'none',
+  //     '&:hover': {
+  //       borderColor: '#3182ce',
+  //     },
+  //   }),
+  //   option: (base, state) => ({
+  //     ...base,
+  //     backgroundColor: state.isFocused ? '#e2e8f0' : 'white',
+  //     color: state.isFocused ? '#1a202c' : '#4a5568',
+  //     '&:active': {
+  //       backgroundColor: '#cbd5e0',
+  //     },
+  //   }),
+  //   menu: (base) => ({
+  //     ...base,
+  //     borderRadius: '8px',
+  //     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  //     zIndex: 9999,
+  //   }),
+
+
+  // };
 
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
@@ -198,7 +299,46 @@ const ExpandedComponent = ({ data }) => {
               >
                 {'Modifier'}
               </Button>
+              <Button
+                onClick={openDialog}
+                colorScheme={colors.secondary.regular}
+                variant="outline"
+              >
+                {'Affecter'}
+              </Button>
+              ,
+
+
             </HStack>
+            {/* Modal */}
+            <Modal isOpen={isDialogOpen} onClose={closeDialog} zIndex={1500}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Assign {firstname || ''} {lastname || ''} to a New School</ModalHeader>
+                <ModalBody>
+                  <Text mb={4}>
+                    <strong>Current School:</strong> {etablissement || 'Not Assigned'}
+                  </Text>
+
+                  <Select
+                    options={schoolOptions}
+                    value={schoolOptions.find((option) => option.value === selectedSchool)}
+                    onChange={(selectedOption) => setSelectedSchool(selectedOption.value)}
+                    placeholder="Select a school"
+                    isSearchable
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button onClick={closeDialog} colorScheme="gray" mr={3}>
+                    Cancel
+                  </Button>
+
+                  <Button onClick={handleAssign} colorScheme="orange" isDisabled={!selectedSchool}>
+                    Confirm
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </CardBody>
         </Card>
       </BoxZone>
@@ -209,11 +349,13 @@ const ExpandedComponent = ({ data }) => {
 export const TeacherDataSet = ({
   role,
   data = [],
+  schools,
   columns,
   selectedIndex = 0,
   token,
 }) => {
   const [filterText, setFilterText] = useState('');
+  const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
 
   let filtered = [];
   filtered.length = data.length;
@@ -245,7 +387,7 @@ export const TeacherDataSet = ({
           </Box>
           {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
           <HStack pl={4}>
-            <FormFilter onExport={() => {}} />
+            <FormFilter onExport={() => { }} />
             <FormExport onExport={() => downloadCSV(filtered)} />
           </HStack>
         </HStack>
@@ -259,12 +401,18 @@ export const TeacherDataSet = ({
             bgColor={colors.primary.regular}
             px={10}
           >
-            {'Ajouter un enseignant'}
+            {'Recruter un enseignant'}
           </Button>
+
+
         )}
       </HStack>
     );
   }, [filterText, selectedIndex]);
+  const handleRowExpandToggle = (row) => {
+    // If the row is already expanded, collapse it. Otherwise, expand it.
+    setExpandedRow((prev) => (prev?.id === row.id ? null : row));
+  };
 
   return (
     <DataTable
@@ -274,12 +422,14 @@ export const TeacherDataSet = ({
       defaultCanSort
       initialState={{ sortBy: [{ id: 'createdAt', desc: true }] }}
       subHeader
-      // selectableRows
+      expandOnRowClicked
+      expandableRowsHideExpander
       subHeaderComponent={subHeaderComponentMemo}
       expandableRows
+      expandableRowExpanded={(row) => row.id === expandedRow?.id} // Expand only the selected row
+      onRowClicked={handleRowExpandToggle} // Handle row click to expand/collapse
       expandableRowsComponent={
-        (data) => ExpandedComponent({ ...data, role, user_token: token })
-        // expandableRowsComponent={(row) => <ExpandedComponent data={row} />}
+        (data) => ExpandedComponent({ ...data, schools, token })
       }
       pagination
     />

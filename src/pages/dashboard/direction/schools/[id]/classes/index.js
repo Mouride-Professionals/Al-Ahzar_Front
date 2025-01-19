@@ -58,6 +58,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       </Modal>
 
       <ClassesList
+        schoolId={schoolId}
         groupName={grade}
         classes={classes}
         listOf={'grade'}
@@ -67,6 +68,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       />
 
       <ClassesList
+        schoolId={schoolId}
         groupName={intermediate}
         classes={classes}
         listOf={'intermediate'}
@@ -74,6 +76,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       />
 
       <ClassesList
+        schoolId={schoolId}
         groupName={upperIntermediate}
         classes={classes}
         listOf={'upperIntermediate'}

@@ -168,8 +168,25 @@ const communesByDepartment = {
   Louga: ['Louga', 'Kébémer', 'Linguère'],
   Matam: ['Matam', 'Kanel', 'Ranérou'],
   'Saint-Louis': ['Saint-Louis', 'Dagana', 'Podor'],
-  Ziguinchor: ['Ziguinchor', 'Bignona', 'Oussouye'],
+  Ziguinchor: ['Ziguinchor', 'Bignona', 'Oussouye']
 };
+const IAs = getRegions().map((region) => 'IA de ' + region);
+const IEFsByIA = {
+  'IA de Dakar': ['IEF de Dakar', 'IEF de Guédiawaye', 'IEF de Pikine', 'IEF de Rufisque'],
+  'IA de Diourbel': ['IEF de Bambey', 'IEF de Diourbel', 'IEF de Mbacké'],
+  'IA de Fatick': ['IEF de Fatick', 'IEF de Foundiougne', 'IEF de Gossas'],
+  'IA de Kaffrine': ['IEF de Birkelane', 'IEF de Kaffrine', 'IEF de Koungheul', 'IEF de Malem Hodar'],
+  'IA de Kaolack': ['IEF de Guinguineéo', 'IEF de Kaolack', 'IEF de Nioro du Rip'],
+  'IA de Kédougou': ['IEF de Kédougou', 'IEF de Salemata', 'IEF de Saraya'],
+  'IA de Kolda': ['IEF de Kolda', 'IEF de Médina Yoro Foulah', 'IEF de Vélingara'],
+  'IA de Louga': ['IEF de Kébebmer', 'IEF de Linguère', 'IEF de Louga'],
+  'IA de Matam': ['IEF de Kanel', 'IEF de Matam', 'IEF de Ranérou'],
+  'IA de Saint-Louis': ['IEF de Dagana', 'IEF de Podor', 'IEF de Saint-Louis'],
+  'IA de Ziguinchor': ['IEF de Bignona', 'IEF de Oussouye', 'IEF de Ziguinchor'],
+  'IA de Tambacounda': ['IEF de Bakel', 'IEF de Goudiry', 'IEF de Koumpentoum', 'IEF de Tambacounda'],
+  'IA de Thiès': ["IEF de M'bour", 'IEF de Thiès', 'IEF de Tivaouane'],
+  'IA de Sédhiou': ['IEF de Bignona', 'IEF de Oussouye', 'IEF de Sédhiou'],
+}
 
 export const mapDepartmentByRegion = ({ region }) => {
   if (!region || !senegalRegions[region]) {
@@ -195,6 +212,20 @@ export const mapCommuneByDepartment = ({ department }) => {
     name: commune,
     value: commune.replace(/\s+/g, '_'),
   }));
+};
+
+export const mapIEFByIA = ({ IA }) => {
+  if (!IA || !IEFsByIA[IA]) {
+    return Object.keys(IEFsByIA).map((IEF) => ({
+      name: IEF,
+      value: IEF,
+    }));
+  }
+  return IEFsByIA[IA].map((IEF) => ({
+    name: IEF,
+    value: IEF,
+  }));
+
 };
 
 export const mapSchoolsByRegion = ({ schools }) => {

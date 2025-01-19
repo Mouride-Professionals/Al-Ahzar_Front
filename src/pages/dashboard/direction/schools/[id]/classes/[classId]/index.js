@@ -55,23 +55,23 @@ export default function Class({ detail, role }) {
 }
 
 export const getServerSideProps = async ({ query, req }) => {
-  const { id } = query;
+  const { classId: id } = query;
 
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
-  const response = await serverFetch({
+  const { role } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
-
-  const role = response.role;
 
   const detail = await serverFetch({
     uri: routes.api_route.alazhar.get.class.detail.replace('%id', id),
     user_token: token,
   });
+
+  console.log('detail', detail);
 
   return {
     props: {
