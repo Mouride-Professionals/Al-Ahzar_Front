@@ -30,6 +30,7 @@ export default function Edit({ teacher, schools, role, token }) {
       title={messages.pages.dashboard.teachers.title}
       currentPage={messages.components.menu.teachers}
       role={role}
+      token={token}
     >
       <VStack
         borderStyle={'solid'}

@@ -6,7 +6,6 @@ import { colors, messages, routes } from '@theme';
 import { TEACHERS_COLUMNS } from '@utils/mappers/kpi';
 import { mapTeachersDataTable } from '@utils/mappers/teacher';
 import { getToken } from 'next-auth/jwt';
-import { Suspense } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
@@ -64,35 +63,34 @@ export default function Dashboard({ kpis, role, token }) {
     ;
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DashboardLayout
-        title={dashboard.initial.title}
-        currentPage={menu.classes}
-        role={role}
-      >
-        <Wrap mt={10} spacing={20.01}>
-          <Statistics cardStats={cardStats} />
+    <DashboardLayout
+      title={dashboard.initial.title}
+      currentPage={menu.classes}
+      role={role}
+      token={token}
+    >
+      <Wrap mt={10} spacing={20.01}>
+        <Statistics cardStats={cardStats} />
 
-          <Text
-            color={colors.secondary.regular}
-            fontSize={20}
-            fontWeight={'700'}
-            pt={10}
-          >
-            {teachersDataset.title}
-          </Text>
+        <Text
+          color={colors.secondary.regular}
+          fontSize={20}
+          fontWeight={'700'}
+          pt={10}
+        >
+          {teachersDataset.title}
+        </Text>
 
-          <Stack bgColor={colors.white} w={'100%'}>
-            <TeacherDataSet
-              {...{ role, token }}
-              data={teachers}
-              schools={schools}
-              columns={TEACHERS_COLUMNS}
-            />
-          </Stack>
-        </Wrap>
-      </DashboardLayout>
-    </Suspense>
+        <Stack bgColor={colors.white} w={'100%'}>
+          <TeacherDataSet
+            {...{ role, token }}
+            data={teachers}
+            schools={schools}
+            columns={TEACHERS_COLUMNS}
+          />
+        </Stack>
+      </Wrap>
+    </DashboardLayout>
   );
 }
 

@@ -195,12 +195,14 @@ const ExpandedComponent = ({ data, schools, token }) => {
                     <Text fontWeight={'bold'} fontSize={'lg'}>
                       {firstname} {lastname}
                     </Text>
-                    <Text color={colors.secondary.light}>
-                      Gender: {gender || 'N/A'}
-                    </Text>
-                    <Text color={colors.secondary.light}>
-                      Joined On: {new Date(createdAt).toLocaleDateString()}
-                    </Text>
+                    {gender && (
+                      <Text color={colors.secondary.regular}>Gender: {gender}</Text>
+                    )}
+                    {createdAt && (
+                      <Text color={colors.secondary.regular}>
+                        Joined On: {new Date(createdAt).toLocaleDateString()}
+                      </Text>
+                    )}
                   </Stack>
                 </HStack>
               </GridItem>
@@ -214,21 +216,21 @@ const ExpandedComponent = ({ data, schools, token }) => {
               >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Contact Details</Text>
-                  <Text>Email: {email || 'N/A'}</Text>
-                  <Text>Phone: {phoneNumber || 'N/A'}</Text>
-                  <Text>Address: {address || 'N/A'}</Text>
+                  {email && <Text>Email: {email}</Text>}
+                  {phoneNumber && <Text>Phone: {phoneNumber}</Text>}
+                  {address && <Text>Address: {address}</Text>}
                 </Stack>
               </GridItem>
-              {/* Personal Information */}
 
+              {/* Personal Information */}
               <GridItem>
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Personal Details</Text>
-                  <Text>Birth Date: {birthDate || 'N/A'}</Text>
-                  <Text>Birth Place: {birthPlace || 'N/A'}</Text>
-                  <Text>Marital Status: {maritalStatus || 'N/A'}</Text>
-                  <Text>Language: {language || 'N/A'}</Text>
-                  <Text>Subjects: {subjects || 'N/A'}</Text>
+                  {birthDate && <Text>Birth Date: {birthDate}</Text>}
+                  {birthPlace && <Text>Birth Place: {birthPlace}</Text>}
+                  {maritalStatus && <Text>Marital Status: {maritalStatus}</Text>}
+                  {language && <Text>Language: {language}</Text>}
+                  {subjects && <Text>Subjects: {subjects}</Text>}
                 </Stack>
               </GridItem>
             </Grid>
@@ -244,14 +246,14 @@ const ExpandedComponent = ({ data, schools, token }) => {
               >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Professional Details</Text>
-                  <Text>Institution: {etablissement || 'N/A'}</Text>
-                  <Text>Disciplines: {disciplines || 'N/A'}</Text>
-                  <Text>Academic Degree: {academicDegree || 'N/A'}</Text>
-                  <Text>
-                    Professional Degrees: {professionalDegrees || 'N/A'}
-                  </Text>
-                  <Text>Contract Type: {contractType || 'N/A'}</Text>
-                  <Text>Level: {level || 'N/A'}</Text>
+                  {etablissement && <Text>Institution: {etablissement}</Text>}
+                  {disciplines && <Text>Disciplines: {disciplines}</Text>}
+                  {academicDegree && <Text>Academic Degree: {academicDegree}</Text>}
+                  {professionalDegrees && (
+                    <Text>Professional Degrees: {professionalDegrees}</Text>
+                  )}
+                  {contractType && <Text>Contract Type: {contractType}</Text>}
+                  {level && <Text>Level: {level}</Text>}
                 </Stack>
               </GridItem>
 
@@ -264,32 +266,32 @@ const ExpandedComponent = ({ data, schools, token }) => {
               >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Work Details</Text>
-                  <Text>Salary: {salary || 'N/A'}</Text>
-                  <Text>Salary Per Hour: {salaryPerHour || 'N/A'}</Text>
-                  <Text>Hours Per Week: {hoursNumber || 'N/A'}</Text>
-                  <Text>
-                    Additional Responsibilities:{' '}
-                    {additionalResponsibilities || 'N/A'}
-                  </Text>
+                  {salary && <Text>Salary: {salary}</Text>}
+                  {salaryPerHour && <Text>Salary Per Hour: {salaryPerHour}</Text>}
+                  {hoursNumber && <Text>Hours Per Week: {hoursNumber}</Text>}
+                  {additionalResponsibilities && (
+                    <Text>Additional Responsibilities: {additionalResponsibilities}</Text>
+                  )}
                 </Stack>
               </GridItem>
-              {/* Other Details */}
 
+              {/* Other Details */}
               <GridItem>
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Additional Information</Text>
-                  <Text>
-                    Registration Number: {registrationNumber || 'N/A'}
-                  </Text>
-                  <Text>Generation: {generation || 'N/A'}</Text>
-                  <Text>Country of Origin: {countryFrom || 'N/A'}</Text>
-                  <Text>Arrival Date: {arrivalDate || 'N/A'}</Text>
-                  <Text>
-                    Previous Institutes: {previousInstitutes || 'N/A'}
-                  </Text>
+                  {registrationNumber && (
+                    <Text>Registration Number: {registrationNumber}</Text>
+                  )}
+                  {generation && <Text>Generation: {generation}</Text>}
+                  {countryFrom && <Text>Country of Origin: {countryFrom}</Text>}
+                  {arrivalDate && <Text>Arrival Date: {arrivalDate}</Text>}
+                  {previousInstitutes && (
+                    <Text>Previous Institutes: {previousInstitutes}</Text>
+                  )}
                 </Stack>
               </GridItem>
             </Grid>
+
             {/* Modify Button */}
             <HStack justifyContent={'flex-end'} mt={6}>
               <Button

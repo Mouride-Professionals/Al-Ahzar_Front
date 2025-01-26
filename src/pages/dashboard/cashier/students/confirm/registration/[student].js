@@ -40,6 +40,7 @@ export default function StudentConfirmation({ studentDetail, role, token }) {
       title={dashboard.students.title}
       currentPage={menu.students.create}
       role={role}
+      token={token}
     >
       <RegistrationFormLayout message={confirmation}>
         {hasSucceeded ? (

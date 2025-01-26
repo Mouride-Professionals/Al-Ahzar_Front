@@ -6,7 +6,6 @@ import { colors, messages, routes } from '@theme';
 import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
 import { mapSchoolsDataTable } from '@utils/mappers/school';
 import { getToken } from 'next-auth/jwt';
-import { Suspense } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
@@ -57,11 +56,11 @@ export default function Dashboard({ kpis, role, token }) {
   const schools = mapSchoolsDataTable({ schools: kpis[3] });
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
       <DashboardLayout
         title={dashboard.initial.title}
         currentPage={menu.classes}
         role={role}
+        token={token}
       >
         <Wrap mt={10} spacing={20.01}>
           <Statistics cardStats={cardStats} />
@@ -84,7 +83,6 @@ export default function Dashboard({ kpis, role, token }) {
           </Stack>
         </Wrap>
       </DashboardLayout>
-    </Suspense>
   );
 }
 

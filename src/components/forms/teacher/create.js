@@ -1,4 +1,4 @@
-import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
+import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Stack, Text, VStack, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import {
@@ -10,6 +10,8 @@ import { teacherRecruitmentSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Select from 'react-select';
 
 export const CreateTeacherForm = ({
   schools,
@@ -19,11 +21,32 @@ export const CreateTeacherForm = ({
   isEdit = false,
 }) => {
   const router = useRouter();
+
   const { id, attributes: teacherData } = initialData;
   const schoolOptions = schools.data.map((school) => ({
     name: school.attributes.name,
     value: school.id,
   }));
+  const [selectedContractType, setSelectedContractType] = useState(
+    teacherData?.contractType || '');
+  const professionalDegreeOptions = {
+    options: [
+      { value: 'degree1', label: 'Degree 1' },
+      { value: 'degree2', label: 'Degree 2' },
+      { value: 'degree3', label: 'Degree 3' },
+    ],
+  };
+  const contractTypeOptions = [
+    { name: 'Permanent', value: 'Disponible' },
+    { name: 'Temporary', value: 'Temps Partiel' },
+    { name: 'Foreign', value: 'Etranger' },
+    { name: 'StateEmployee', value: 'Employé Etat' },
+  ];
+  const isPermanent = selectedContractType === contractTypeOptions[0].value;
+  const isTemporary = selectedContractType === contractTypeOptions[1].value;
+  const isForeign = selectedContractType === contractTypeOptions[2].value;
+  const isStateEmployee = selectedContractType === contractTypeOptions[3].value;
+
 
   // Set default initial values based on the mode
   const initialValues = mapFormInitialValues(
@@ -82,7 +105,29 @@ export const CreateTeacherForm = ({
       },
     },
   } = forms;
+  const customStyles = {
+    container: (base) => ({
+      ...base,
+      width: '100%',
+    }),
+    control: (base) => ({
 
+      ...base,
+      borderColor: colors.gray.regular,
+      backgroundColor: colors.white,
+      height: 50,
+      with: '100%',
+      boxShadow: 'none',
+      '&:hover': {
+        borderColor: 'blue.500',
+      },
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: 'blue.100',
+      color: 'blue.700',
+    }),
+  };
   return (
     <Formik
       validationSchema={teacherRecruitmentSchema}
@@ -90,20 +135,20 @@ export const CreateTeacherForm = ({
       onSubmit={(values, { setSubmitting, setFieldError }) => {
         isEdit
           ? teacherUpdateFormHandler({
-              teacher: id,
-              data: values,
-              setSubmitting,
-              setFieldError,
-              token,
-              hasSucceeded: setHasSucceeded,
-            })
+            teacher: id,
+            data: values,
+            setSubmitting,
+            setFieldError,
+            token,
+            hasSucceeded: setHasSucceeded,
+          })
           : teacherRecruitmentFormHandler({
-              token,
-              data: values,
-              setSubmitting,
-              setFieldError,
-              hasSucceeded: setHasSucceeded,
-            });
+            token,
+            data: values,
+            setSubmitting,
+            setFieldError,
+            hasSucceeded: setHasSucceeded,
+          });
       }}
     >
       {({
@@ -240,16 +285,76 @@ export const CreateTeacherForm = ({
                 />
               </WrapItem>
 
-              <WrapItem w={'70%'}>
-                <FormInput
-                  {...professionalDegrees}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.professionalDegrees}
-                />
-              </WrapItem>
+              
+                <WrapItem w={'100%'} >
+                  <FormControl py={2} isInvalid={errors['professionalDegrees']}>
+                        <FormLabel fontWeight={'bold'}>{professionalDegrees.label}</FormLabel>
+                  <Select
+                    isMulti
+                    closeMenuOnSelect={false}
+
+                    isSearchable
+                    options={professionalDegrees.options} // Options should be an array of { label, value } objects
+                    onChange={(selectedOptions) => {
+                      handleChange({
+                        target: {
+                          name: 'professionalDegrees', // Ensure this matches your Formik field name
+                          value: selectedOptions ? selectedOptions.map((option) => option.value) : [], // Map selected options to their values
+                        },
+                      });
+                    }}
+                    onBlur={handleBlur}
+                    value={
+                      Array.isArray(values.professionalDegrees)
+                        ? values.professionalDegrees.map((degree) =>
+                          professionalDegrees.options.find((option) => option.value === degree)
+                        )
+                        : [] // Fallback to empty array if not an array
+                    } // Map current values to React-Select format
+                    placeholder="Select professional degrees"
+                    className="react-select"
+                    classNamePrefix="react-select"
+
+                    styles={{
+                      container: (base) => ({
+                        ...base,
+                        width: '100%',
+                      }),
+                      control: (base, state) => ({
+                        ...base,
+                        backgroundColor: colors.white,
+                        borderColor: errors[professionalDegrees.uid] && touched[professionalDegrees.uid] ? colors.red.regular : colors.gray.regular,
+                        boxShadow: state.isFocused ? `0 0 0 1px ${colors.secondary.regular}` : 'none',
+                        '&:hover': {
+                          borderColor: errors[professionalDegrees.uid] && touched[professionalDegrees.uid] ? colors.red.regular : colors.gray.dark,
+                        },
+                        minHeight: '50px',
+                      }),
+                      valueContainer: (base) => ({
+                        ...base,
+                        padding: '0 12px',
+                      }),
+                      placeholder: (base) => ({
+                        ...base,
+                        color: colors.gray.dark,
+                      }),
+                      input: (base) => ({
+                        ...base,
+                        fontSize: '14px',
+                      }),
+                      menu: (base) => ({
+                        ...base,
+                        zIndex: 5,
+                      }),
+                    }}
+                  />
+
+                    {errors[professionalDegrees.uid] && touched[professionalDegrees.uid] && (
+                      <FormErrorMessage>{errors[professionalDegrees.uid]}</FormErrorMessage>
+                    )}
+                    </FormControl>
+                </WrapItem>
+                 
             </HStack>
           </Stack>
 
@@ -317,17 +422,20 @@ export const CreateTeacherForm = ({
             </Text>
 
             <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+              <WrapItem w={'100%'}>
                 <FormInput
                   {...contractType}
                   errors={errors}
-                  handleChange={handleChange}
+                  handleChange={(e) => {
+                    setSelectedContractType(e.target.value)
+                    handleChange(e)
+                  }}
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.contractType}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              {isPermanent && <WrapItem w={370}>
                 <FormInput
                   defaultValue={0}
                   {...salary}
@@ -337,7 +445,31 @@ export const CreateTeacherForm = ({
                   touched={touched}
                   value={values.salary}
                 />
-              </WrapItem>
+              </WrapItem>}
+
+              {isStateEmployee && <WrapItem w={370}>
+                <FormInput
+                  {...registrationNumber}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.registrationNumber}
+                />
+              </WrapItem>}
+              {isStateEmployee && <WrapItem w={370}>
+                <FormInput
+                  {...generation}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.generation}
+                />
+              </WrapItem>}
+            </HStack>
+            {isTemporary && <HStack align={'center'} justifyContent={'space-between'} pt={5}>
+
               <WrapItem w={370}>
                 <FormInput
                   defaultValue={0}
@@ -351,38 +483,6 @@ export const CreateTeacherForm = ({
               </WrapItem>
               <WrapItem w={370}>
                 <FormInput
-                  {...arrivalDate}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.arrivalDate}
-                />
-              </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={370}>
-                <FormInput
-                  {...registrationNumber}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.registrationNumber}
-                />
-              </WrapItem>
-              <WrapItem w={370}>
-                <FormInput
-                  {...generation}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.generation}
-                />
-              </WrapItem>
-              <WrapItem w={370}>
-                <FormInput
                   defaultValue={0}
                   {...salaryPerHour}
                   errors={errors}
@@ -390,6 +490,29 @@ export const CreateTeacherForm = ({
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.salaryPerHour}
+                />
+              </WrapItem>
+              <WrapItem w={'100%'}>
+                <FormInput
+                  {...additionalResponsibilities}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.additionalResponsibilities}
+                />
+              </WrapItem>
+            </HStack>}
+
+            {isForeign && <HStack align={'center'} justifyContent={'space-between'} pt={5}>
+              <WrapItem w={370}>
+                <FormInput
+                  {...arrivalDate}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.arrivalDate}
                 />
               </WrapItem>
               <WrapItem w={370}>
@@ -402,19 +525,7 @@ export const CreateTeacherForm = ({
                   value={values.countryFrom}
                 />
               </WrapItem>
-            </HStack>
 
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={'100%'}>
-                <FormInput
-                  {...additionalResponsibilities}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.additionalResponsibilities}
-                />
-              </WrapItem>
               <WrapItem w={'100%'}>
                 <FormInput
                   {...previousInstitutes}
@@ -425,7 +536,7 @@ export const CreateTeacherForm = ({
                   value={values.previousInstitutes}
                 />
               </WrapItem>
-            </HStack>
+            </HStack>}
           </Stack>
 
           {/* Actions */}

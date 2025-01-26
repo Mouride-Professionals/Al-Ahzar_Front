@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { SchoolYearProvider } from '@utils/context/school_year_context';
 import { SessionProvider } from 'next-auth/react';
 import Head from 'next/head';
 import { MediaContextProvider } from '../lib/utils/media';
@@ -24,7 +25,10 @@ function AlAzhar({ Component, pageProps: { session, ...pageProps } }) {
           <title>{process.env.NEXT_PUBLIC_SITENAME}</title>
         </Head>
         <MediaContextProvider disableDynamicMediaQueries>
-          <Component {...pageProps} />
+          <SchoolYearProvider>
+            <Component {...pageProps} />
+          </SchoolYearProvider>
+
         </MediaContextProvider>
       </ChakraProvider>
     </SessionProvider>

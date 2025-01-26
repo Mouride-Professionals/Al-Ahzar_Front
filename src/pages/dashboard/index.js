@@ -3,10 +3,12 @@ import { SchoolDataSet } from '@components/common/reports/school_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
+import { useSchoolYear } from '@utils/context/school_year_context';
 import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
 import { mapSchoolsDataTable } from '@utils/mappers/school';
 import { getToken } from 'next-auth/jwt';
-import { Suspense } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
@@ -31,6 +33,9 @@ const {
 } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
+  const { schoolYear } = useSchoolYear();
+  const router = useRouter();
+
   const cardStats = [
     {
       count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
@@ -54,44 +59,47 @@ export default function Dashboard({ kpis, role, token }) {
     },
   ];
 
+  useEffect(() => {
+    console.log(schoolYear);
+    // router.reload();
+  }, [schoolYear]);
   // const students = mapStudentsDataTable({ students: kpis[1] });
   const schools = mapSchoolsDataTable({ schools: kpis[3] });
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DashboardLayout
-        title={dashboard.initial.title}
-        currentPage={menu.classes}
-        role={role}
-      >
-        <Wrap mt={10} spacing={20.01}>
-          <Statistics cardStats={cardStats} />
+    <DashboardLayout
+      title={dashboard.initial.title}
+      currentPage={menu.classes}
+      role={role}
+      token={token}
+    >
+      <Wrap mt={10} spacing={20.01}>
+        <Statistics cardStats={cardStats} />
 
-          <Text
-            color={colors.secondary.regular}
-            fontSize={20}
-            fontWeight={'700'}
-            pt={10}
-          >
-            {schoolsDataset.title}
-            {/* {studentsDataset.title} */}
-          </Text>
+        <Text
+          color={colors.secondary.regular}
+          fontSize={20}
+          fontWeight={'700'}
+          pt={10}
+        >
+          {schoolsDataset.title}
+          {/* {studentsDataset.title} */}
+        </Text>
 
-          <Stack bgColor={colors.white} w={'100%'}>
-            <SchoolDataSet
-              {...{ role, token }}
-              data={schools}
-              columns={SCHOOLS_COLUMNS}
-            />
-            {/* <DataSet
+        <Stack bgColor={colors.white} w={'100%'}>
+          <SchoolDataSet
+            {...{ role, token }}
+            data={schools}
+            columns={SCHOOLS_COLUMNS}
+          />
+          {/* <DataSet
               {...{ role, token }}
               data={students}
               columns={STUDENTS_COLUMNS}
             /> */}
-          </Stack>
-        </Wrap>
-      </DashboardLayout>
-    </Suspense>
+        </Stack>
+      </Wrap>
+    </DashboardLayout>
   );
 }
 
@@ -99,7 +107,10 @@ export const getServerSideProps = async ({ req }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
 
+
   const token = session?.accessToken; // Ensure token exists in session
+  console.log('token', token);
+
 
   if (!token) {
     return {
@@ -118,6 +129,7 @@ export const getServerSideProps = async ({ req }) => {
         students: { all: allStudents },
         teachers: { all: teachers },
         schools: { all: allSchools },
+        school_years: { all: schoolYears },
       },
     },
   } = routes.api_route;
@@ -131,12 +143,12 @@ export const getServerSideProps = async ({ req }) => {
 
   const kpis = await Promise.all([
     serverFetch({
-      uri: classrooms.split('pageSize')[0],
+      uri: classrooms.split('pageSize')[0] ,
       user_token: token,
     }),
 
     serverFetch({
-      uri: allStudents,
+      uri: allStudents ,
       user_token: token,
     }),
     serverFetch({
@@ -147,7 +159,13 @@ export const getServerSideProps = async ({ req }) => {
       uri: `${allSchools}?sort=createdAt:desc&populate[responsible]=*&populate[etablissementParent][fields][0]=name`,
       user_token: token,
     }).catch(() => ({ data: [] })),
+
+    // serverFetch({
+    //   uri: schoolYears,
+    //   user_token: token,
+    // }),
   ]);
+console.log('kpis', kpis[0]);
 
   return {
     props: {

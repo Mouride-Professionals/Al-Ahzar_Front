@@ -3,12 +3,13 @@ import { messages, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
 import { serverFetch } from 'src/lib/api';
 
-export default function Students({ role }) {
+export default function Students({ role ,token}) {
   return (
     <DashboardLayout
       title={messages.pages.dashboard.students.title}
       currentPage={messages.components.menu.students.initial}
       role={role}
+      token={token}
     ></DashboardLayout>
   );
 }

@@ -227,7 +227,6 @@ export const SchoolDataSet = ({
 
   const onRowExpand = (event) => {
     // Close other expanded rows before expanding the current row
-    console.log('event', event);
 
     const newExpandedRows = {};
     newExpandedRows[event] = true;
@@ -244,6 +243,8 @@ export const SchoolDataSet = ({
       subHeader
       subHeaderAlign="center"
       expandOnRowClicked
+      expandableRowsHideExpander
+
       highlightOnHover
       subHeaderComponent={subHeaderComponentMemo}
       expandableRows

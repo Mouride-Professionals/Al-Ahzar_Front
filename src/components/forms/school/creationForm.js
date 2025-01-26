@@ -37,6 +37,7 @@ export const CreateSchoolForm = ({
   const [filteredParentSchools, setFilteredParentSchools] = useState([]);
   const [selectedType, setSelectedType] = useState(schoolData?.type || '');
 
+ 
   // Handle region and department changes
   const handleRegionChange = (selectedRegion) => {
     const departmentOptions = mapDepartmentByRegion({ region: selectedRegion });
@@ -56,6 +57,8 @@ export const CreateSchoolForm = ({
     const IEFOptions = mapIEFByIA({ IA: selectedIA });
     setIEFs(IEFOptions);
   }
+
+
   // Update filtered options based on selected type
   useEffect(() => {
     if (selectedType === 'Annexe') {

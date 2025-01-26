@@ -34,6 +34,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       title={dashboard.classes.title}
       currentPage={menu.classes}
       role={role}
+      token={token}
     >
       <Modal size={'2xl'} onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
@@ -96,7 +97,7 @@ export const getServerSideProps = async ({ req, query }) => {
     alazhar: {
       get: {
         me,
-        classes: { all },
+        class: { all },
       },
     },
   } = routes.api_route;
@@ -107,7 +108,7 @@ export const getServerSideProps = async ({ req, query }) => {
   });
 
   const classesData = await serverFetch({
-    uri: `classes?filters[etablissement][id][$eq]=${idSchool}&populate=eleves`,
+    uri: `${all}?filters[etablissement][id][$eq]=${idSchool}&populate=eleves`,
     user_token: token,
   });
 

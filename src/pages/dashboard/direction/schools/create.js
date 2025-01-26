@@ -26,6 +26,7 @@ export default function Create({ schools, role, token }) {
       title={messages.pages.dashboard.schools.title}
       currentPage={messages.components.menu.schools.create}
       role={role}
+      token={token}
     >
       <VStack
         borderStyle={'solid'}

@@ -1,5 +1,7 @@
+const filterBySchoolYear = '?filters[schoolYear][isActive]=true&';
 export const name = 'Theming Routes File';
 export const themeRoutes = {
+
   page_route: {
     initial: '/',
     auth: {
@@ -91,25 +93,30 @@ export const themeRoutes = {
         payment: '/payments',
         school: '/schools',
         teacher: '/teachers',
+        school_year: '/school-years',
       },
       get: {
         classes: '/classes',
         class: {
-          all: '/classes?populate=eleves.payments&pageSize=100',
-          detail: '/classes/%id?populate=eleves,eleves.payments,etablissement',
+          all: `/classes${filterBySchoolYear}populate=eleves.payments&pageSize=100`,
+          detail: `/classes/%id${filterBySchoolYear}populate=eleves,eleves.payments,etablissement`,
         },
         students: {
-          all: '/students?populate=classe,payments',
+          all: `/students${'?filters[classe][schoolYear][isActive]=true'}?populate=classe,payments`,
           detail: '/students/%id?populate=classe,payments',
         },
         teachers: {
           detail: '/teachers/%id',
-          all: '/teachers',
+          all: `/teachers`,
         },
         schools: {
           detail: '/schools/%id',
           all: '/schools',
           classes: '/schools/%id/classes',
+        },
+        school_years: {
+          all: '/school-years',
+          detail: '/school-years/%id',
         },
         me: '/users/me?populate=*',
       },
@@ -117,6 +124,8 @@ export const themeRoutes = {
         student: '/students/%id',
         school: '/schools/%id',
         teacher: '/teachers/%id',
+        school_year: '/school-years/%id',
+
       },
     },
   },

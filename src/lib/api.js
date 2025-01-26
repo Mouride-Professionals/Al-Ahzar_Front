@@ -44,7 +44,7 @@ api.interceptors.response.use(
           'Erreur 401 : Non autorisé. Veuillez vérifier vos identifiants.'
         );
         // Rediriger vers la page de login ou effectuer une déconnexion
-        window.location.href = '/auth/login'; // Redirect on token expiration
+        // window.location.href = '/auth/login'; // Redirect on token expiration
       } else if (status === 404) {
         console.error('Erreur 404 : Ressource introuvable.');
       } else if (status >= 500) {
@@ -59,6 +59,7 @@ api.interceptors.response.use(
 
 //    serverFetcher method
 export const serverFetch = async ({ uri, user_token }) => {
+  
   try {
     const response = await api.get(uri, {
       headers: {

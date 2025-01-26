@@ -1,4 +1,4 @@
-import { boolean, date, number, object, string } from 'yup';
+import { array, boolean, date, number, object, string } from 'yup';
 
 export const authenticationSchema = object({
   identifier: string().trim().required(),
@@ -134,6 +134,7 @@ const allowedIEFbyIA = allowedIA.map((IA) => allowedIEF.filter((IEF) => IEF.star
 const teacherComplexity = {
   AllowedMaritalStatuses: ['Célibataire', 'Marié(e)', 'Divorçé(e)', 'Veuf(ve)'],
   AllowedAcademicDegrees: ['Baccalaureat', 'Licence', 'Master', 'Doctorat'],
+  AllowedProfessionalDegrees: ['BTS','BAC','BAC+2','BAC+3','BAC+4','BAC+5'],
   AllowedLanguages: ['Francais', 'Anglais', 'Arabe', 'Wolof'],
   AllowedContractTypes: [
     'Disponible',
@@ -201,41 +202,88 @@ export const schoolCreationSchema = object({
   note: string().trim().required(),
 });
 
+
 export const teacherRecruitmentSchema = object({
-  firstname: string().trim().required(),
-  lastname: string().trim().required(),
-  gender: string().oneOf(AllowedSexes).required(),
-  phoneNumber: number().required(),
-  email: string().email().required(),
-  etablissement: string().required(),
-  birthDate: date().required(),
-  birthPlace: string().trim().required(),
-  address: string().trim().required(),
+  firstname: string().trim().required('Firstname is required'),
+  lastname: string().trim().required('Lastname is required'),
+  gender: string()
+    .oneOf(AllowedSexes, 'Invalid gender')
+    .required('Gender is required'),
+  phoneNumber: string().trim().required('Phone number is required'),
+  email: string().email('Invalid email').required('Email is required'),
+  etablissement: string().required('Etablissement is required'),
+  birthDate: date().required('Birth date is required'),
+  birthPlace: string().trim().required('Birth place is required'),
+  address: string().trim().required('Address is required'),
   maritalStatus: string()
     .trim()
-    .oneOf(teacherComplexity.AllowedMaritalStatuses)
-    .required(),
+    .oneOf(teacherComplexity.AllowedMaritalStatuses, 'Invalid marital status')
+    .required('Marital status is required'),
   academicDegree: string()
     .trim()
-    .oneOf(teacherComplexity.AllowedAcademicDegrees)
-    .required(),
-  professionalDegrees: string().trim().optional(),
-  disciplines: string().trim().required(),
-  language: string().oneOf(teacherComplexity.AllowedLanguages).required(),
-  subjects: string().trim().required(),
+    .oneOf(teacherComplexity.AllowedAcademicDegrees, 'Invalid academic degree')
+    .required('Academic degree is required'),
+  professionalDegrees: array()
+    .of(string())
+    .min(1, 'At least one professional degree must be selected.')
+    .required('Professional degrees are required.'),
+  disciplines: string().trim().required('Disciplines are required'),
+  language: string()
+    .oneOf(teacherComplexity.AllowedLanguages, 'Invalid language')
+    .required('Language is required'),
+  subjects: string().trim().required('Subjects are required'),
   contractType: string()
     .trim()
-    .oneOf(teacherComplexity.AllowedContractTypes)
-    .required(),
-  level: string().oneOf(teacherComplexity.AllowedLevels).required(),
-  salary: number().optional(),
-  contributions: number().optional(),
-  registrationNumber: string().trim().optional(),
-  generation: string().trim().optional(),
-  salaryPerHour: number().optional(),
-  hoursNumber: number().optional(),
-  additionalResponsibilities: string().trim().optional(),
-  countryFrom: string().trim().optional(),
-  arrivalDate: date().optional(),
-  previousInstitutes: string().trim().optional(),
+    .oneOf(teacherComplexity.AllowedContractTypes, 'Invalid contract type')
+    .required('Contract type is required'),
+  level: string()
+    .oneOf(teacherComplexity.AllowedLevels, 'Invalid level')
+    .required('Level is required'),
+  salary: number().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[0],
+    then: (schema) => schema.required('Salary is required for contract type "Disponible"'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  contributions: number().notRequired(),
+  registrationNumber: string().trim().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[1],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  generation: string().trim().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[1],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  salaryPerHour: number().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[2],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  hoursNumber: number().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[2],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  additionalResponsibilities: string().trim().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[2],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  countryFrom: string().trim().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[3],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  arrivalDate: date().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[3],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  previousInstitutes: string().trim().when('contractType', {
+    is: teacherComplexity.AllowedContractTypes[3],
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
+

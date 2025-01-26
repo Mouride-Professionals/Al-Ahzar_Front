@@ -33,6 +33,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       title={dashboard.classes.title}
       currentPage={menu.classes}
       role={role}
+      token={token}
     >
       <Modal size={'2xl'} onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />

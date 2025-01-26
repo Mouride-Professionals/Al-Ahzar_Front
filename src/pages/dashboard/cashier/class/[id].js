@@ -30,7 +30,7 @@ const {
   },
 } = messages;
 
-export default function Class({ detail, role }) {
+export default function Class({ detail, role ,token}) {
   const { school, _class, students } = mapDetail(detail.data.attributes);
 
   return (
@@ -38,6 +38,7 @@ export default function Class({ detail, role }) {
       title={establishment.replace('%name', `${school} - ${_class}`)}
       currentPage={menu.classes}
       role={role}
+      token={token}
     >
       <Text
         color={colors.secondary.regular}

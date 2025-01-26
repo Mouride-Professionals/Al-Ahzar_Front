@@ -395,7 +395,17 @@ module.exports = {
             placeholder: 'Diplomes professionnels',
             label: 'Diplomes professionnels',
             uid: 'professionalDegrees',
-            type: 'text',
+            select: true,
+            options: [
+              { value: 'bts', label: 'BTS (Brevet de Technicien Supérieur)' },
+              { value: 'dut', label: 'DUT (Diplôme Universitaire de Technologie)' },
+              { value: 'licence_pro', label: 'Licence Professionnelle' },
+              { value: 'cap', label: 'CAP (Certificat d’Aptitude Professionnelle)' },
+              { value: 'bt', label: 'BT (Brevet de Technicien)' },
+              { value: 'master_pro', label: 'Master Professionnel' },
+              { value: 'ccna', label: 'Cisco Certified Network Associate (CCNA)' },
+              { value: 'mcse', label: 'Microsoft Certified Solutions Expert (MCSE)' },
+            ],
           },
           disciplines: {
             placeholder: 'Disciplines à enseigner',

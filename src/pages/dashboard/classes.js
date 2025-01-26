@@ -13,12 +13,14 @@ const {
   components: { menu, grade, intermediate, upperIntermediate },
 } = messages;
 
-export default function Classes({ classes, role }) {
+export default function Classes({ classes, role ,token}) {
   return (
     <DashboardLayout
       title={dashboard.classes.title}
       currentPage={menu.classes}
       role={role}
+      token={token}
+      
     >
       <ClassesList
         groupName={grade}
