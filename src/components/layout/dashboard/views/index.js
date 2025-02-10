@@ -17,7 +17,6 @@ import { MenuBreadcrumb } from '@components/common/menu';
 import { SchoolYearSelector } from '@components/common/school_year_selector';
 import { MainMenus } from '@components/func/home/menu';
 import { colors, images } from '@theme';
-import { getToken } from 'next-auth/jwt';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { BiPlusCircle } from 'react-icons/bi';
@@ -33,7 +32,7 @@ export const DesktopDashboardLayoutView = ({
   const { isOpen, onToggle, onClose } = useDisclosure();
   const { data: session } = useSession();
 
-  
+
   return (
     <Stack
       direction={'column'}
@@ -65,8 +64,7 @@ export const DesktopDashboardLayoutView = ({
               justifyContent={'space-between'}
               w={'auto'}
             >
-              <SchoolYearSelector  token={token} />
-
+              <SchoolYearSelector token={token} />
               <BiPlusCircle size={25} />
               <BsBell size={25} />
               <Popover

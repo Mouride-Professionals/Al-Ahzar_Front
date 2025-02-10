@@ -281,7 +281,7 @@ export const DataSet = ({
           </Box>
           {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
           <HStack pl={4}>
-            <FormFilter onExpwort={() => {}} />
+            <FormFilter onExpwort={() => { }} />
             <FormExport onExport={() => downloadCSV(filtered)} />
           </HStack>
         </HStack>
@@ -289,7 +289,7 @@ export const DataSet = ({
         {role?.name != 'Caissier' && (
           <Button
             onClick={() =>
-              router.push(routes.page_route.dashboard.students.create)
+              router.push(routes.page_route.dashboard.surveillant.students.create)
             }
             colorScheme={'orange'}
             bgColor={colors.primary.regular}
@@ -324,5 +324,5 @@ export const DataSet = ({
 };
 
 
- 
+
 

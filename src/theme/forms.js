@@ -411,7 +411,23 @@ module.exports = {
             placeholder: 'Disciplines à enseigner',
             label: 'Disciplines à enseigner',
             uid: 'disciplines',
-            type: 'text',
+            select: true,
+            options: [
+              { value: 'etudes_islamiques', label: 'Études Islamiques (Tafsir, Hadith, Fiqh, Aqida)' },
+              { value: 'memorisation_coran', label: 'Mémorisation et Interprétation du Coran (Tahfiz)' },
+              { value: 'langue_arabe', label: 'Langue et Littérature Arabe (Nahw, Sarf, Balagha)' },
+              { value: 'histoire_islam', label: 'Histoire de l’Islam et des Savants Musulmans' },
+              { value: 'spiritualite_soufisme', label: 'Spiritualité et Soufisme (Enseignements de Cheikh Ahmadou Bamba)' },
+              { value: 'francais', label: 'Français (Lecture, Grammaire, Rédaction)' },
+              { value: 'mathematiques', label: 'Mathématiques (Arithmétique, Algèbre, Géométrie)' },
+              { value: 'sciences_naturelles', label: 'Sciences Naturelles (Biologie, Physique, Chimie)' },
+              { value: 'geographie', label: 'Géographie (Sénégal, Afrique, Monde)' },
+              { value: 'histoire', label: 'Histoire (Histoire du Sénégal et Universelle)' },
+              { value: 'anglais', label: 'Anglais (Introduction et Approfondissement)' },
+              { value: 'informatique', label: 'Informatique et Technologie (Programmation, Bureautique)' },
+              { value: 'education_civique', label: 'Éducation Civique et Morale' },
+              { value: 'formation_professionnelle', label: 'Formation Technique et Professionnelle (Couture, Menuiserie, Agriculture)' }
+            ]
           },
           language: {
             placeholder: 'Langue parlée',
@@ -426,7 +442,23 @@ module.exports = {
             placeholder: 'Matieres enseignées',
             label: 'Matieres enseignées',
             uid: 'subjects',
-            type: 'text',
+            select: true,
+            options: [
+              { value: 'etudes_islamiques', label: 'Études Islamiques (Tafsir, Hadith, Fiqh, Aqida)' },
+              { value: 'memorisation_coran', label: 'Mémorisation et Interprétation du Coran (Tahfiz)' },
+              { value: 'langue_arabe', label: 'Langue et Littérature Arabe (Nahw, Sarf, Balagha)' },
+              { value: 'histoire_islam', label: 'Histoire de l’Islam et des Savants Musulmans' },
+              { value: 'spiritualite_soufisme', label: 'Spiritualité et Soufisme (Enseignements de Cheikh Ahmadou Bamba)' },
+              { value: 'francais', label: 'Français (Lecture, Grammaire, Rédaction)' },
+              { value: 'mathematiques', label: 'Mathématiques (Arithmétique, Algèbre, Géométrie)' },
+              { value: 'sciences_naturelles', label: 'Sciences Naturelles (Biologie, Physique, Chimie)' },
+              { value: 'geographie', label: 'Géographie (Sénégal, Afrique, Monde)' },
+              { value: 'histoire', label: 'Histoire (Histoire du Sénégal et Universelle)' },
+              { value: 'anglais', label: 'Anglais (Introduction et Approfondissement)' },
+              { value: 'informatique', label: 'Informatique et Technologie (Programmation, Bureautique)' },
+              { value: 'education_civique', label: 'Éducation Civique et Morale' },
+              { value: 'formation_professionnelle', label: 'Formation Technique et Professionnelle (Couture, Menuiserie, Agriculture)' }
+            ]
           },
           contractType: {
             placeholder: 'Type de contrat',
@@ -510,6 +542,34 @@ module.exports = {
           //end
         },
       },
+      schoolYear: {
+        creation: {
+          name: {
+            placeholder: 'Titre de l’annee scolaire',
+            label: 'Titre de l’annee scolaire',
+            uid: 'name',
+            type: 'text',
+          },
+          startDate: {
+            placeholder: 'Date de debut',
+            label: 'Date de debut',
+            uid: 'startDate',
+            type: 'date',
+          },
+          endDate: {
+            placeholder: 'Date de fin',
+            label: 'Date de fin',
+            uid: 'endDate',
+            type: 'date',
+          },
+          description: {
+            placeholder: 'Description',
+            label: 'Description',
+            uid: 'description',
+            type: 'text',
+          },
+        },
+      }
     },
     messages: {
       login: {
@@ -553,6 +613,17 @@ module.exports = {
           },
           errors: {
             already_exists: 'Cet enseignant existe déjà',
+            problem: 'Une erreur est survenue lors de la sauvegarde',
+          },
+        },
+      },
+      schoolYear: {
+        creation: {
+          info: {
+            generalInfoMessage: 'Informations generales',
+          },
+          errors: {
+            already_exists: 'Cette année scolaire existe deja',
             problem: 'Une erreur est survenue lors de la sauvegarde',
           },
         },

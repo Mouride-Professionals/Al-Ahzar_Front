@@ -30,7 +30,7 @@ const {
   },
 } = messages;
 
-export default function Class({ detail, role ,token}) {
+export default function Class({ detail, role, token }) {
   const { school, _class, students } = mapDetail(detail.data.attributes);
 
   return (
@@ -76,6 +76,7 @@ export const getServerSideProps = async ({ query, req }) => {
     props: {
       detail,
       role,
+      token,
     },
   };
 };

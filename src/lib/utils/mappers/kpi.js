@@ -307,3 +307,50 @@ export const TEACHERS_COLUMNS = [
   //   reorder: true,
   // },
 ];
+
+export const SCHOOL_YEAR_COLUMNS = [
+  {
+    name: 'Titre',
+    selector: (row) => `${row.name || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Date de début',
+    selector: (row) => `${row.startDate || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Date de fin',
+    selector: (row) => `${row.endDate || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+
+  {
+    name: 'Statut',
+    selector: (row) => `${row.isActive ? 'Actif' : 'Inactif'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Etat',
+    selector: (row) => `${row.isCurrent ? 'En cours' : (row.isEnded ? 'Clôturé' : 'A venir')}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+
+  },
+  {
+    name: 'Description',
+    selector: (row) => `${row.description || 'No description'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+];

@@ -1,4 +1,4 @@
-import { array, boolean, date, number, object, string } from 'yup';
+import { array, boolean, date, number, object, ref, string } from 'yup';
 
 export const authenticationSchema = object({
   identifier: string().trim().required(),
@@ -133,8 +133,8 @@ const allowedIEFbyIA = allowedIA.map((IA) => allowedIEF.filter((IEF) => IEF.star
 
 const teacherComplexity = {
   AllowedMaritalStatuses: ['Célibataire', 'Marié(e)', 'Divorçé(e)', 'Veuf(ve)'],
-  AllowedAcademicDegrees: ['Baccalaureat', 'Licence', 'Master', 'Doctorat'],
-  AllowedProfessionalDegrees: ['BTS','BAC','BAC+2','BAC+3','BAC+4','BAC+5'],
+  AllowedAcademicDegrees: ["Baccalauréat", "Licence", "Master", "Doctorat"],
+  AllowedProfessionalDegrees: ['BTS', 'BAC', 'BAC+2', 'BAC+3', 'BAC+4', 'BAC+5'],
   AllowedLanguages: ['Francais', 'Anglais', 'Arabe', 'Wolof'],
   AllowedContractTypes: [
     'Disponible',
@@ -225,13 +225,19 @@ export const teacherRecruitmentSchema = object({
     .required('Academic degree is required'),
   professionalDegrees: array()
     .of(string())
-    .min(1, 'At least one professional degree must be selected.')
+    .min(0, 'At least one professional degree must be selected.')
     .required('Professional degrees are required.'),
-  disciplines: string().trim().required('Disciplines are required'),
+  disciplines: array()
+    .of(string())
+    .min(0, 'At least one discipline must be selected.')
+    .required('Disciplines are required.'),
   language: string()
     .oneOf(teacherComplexity.AllowedLanguages, 'Invalid language')
     .required('Language is required'),
-  subjects: string().trim().required('Subjects are required'),
+  subjects: array()
+    .of(string())
+    .min(0, 'At least one subject must be selected.')
+    .required('Subjects are required.'),
   contractType: string()
     .trim()
     .oneOf(teacherComplexity.AllowedContractTypes, 'Invalid contract type')
@@ -239,11 +245,13 @@ export const teacherRecruitmentSchema = object({
   level: string()
     .oneOf(teacherComplexity.AllowedLevels, 'Invalid level')
     .required('Level is required'),
-  salary: number().when('contractType', {
-    is: teacherComplexity.AllowedContractTypes[0],
-    then: (schema) => schema.required('Salary is required for contract type "Disponible"'),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  salary: number()
+    .default(0)
+    .when('contractType', {
+      is: teacherComplexity.AllowedContractTypes[0],
+      then: (schema) => schema.required('Salary is required for contract type "Disponible"'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   contributions: number().notRequired(),
   registrationNumber: string().trim().when('contractType', {
     is: teacherComplexity.AllowedContractTypes[1],
@@ -255,16 +263,20 @@ export const teacherRecruitmentSchema = object({
     then: (schema) => schema.required(),
     otherwise: (schema) => schema.notRequired(),
   }),
-  salaryPerHour: number().when('contractType', {
-    is: teacherComplexity.AllowedContractTypes[2],
-    then: (schema) => schema.required(),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-  hoursNumber: number().when('contractType', {
-    is: teacherComplexity.AllowedContractTypes[2],
-    then: (schema) => schema.required(),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  salaryPerHour: number()
+    .default(0)
+    .when('contractType', {
+      is: teacherComplexity.AllowedContractTypes[2],
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  hoursNumber: number()
+    .default(0)
+    .when('contractType', {
+      is: teacherComplexity.AllowedContractTypes[2],
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   additionalResponsibilities: string().trim().when('contractType', {
     is: teacherComplexity.AllowedContractTypes[2],
     then: (schema) => schema.required(),
@@ -285,5 +297,28 @@ export const teacherRecruitmentSchema = object({
     then: (schema) => schema.required(),
     otherwise: (schema) => schema.notRequired(),
   }),
+});
+
+export const schoolYearSchema = object({
+  name: string().trim().required('Le nom de l\'année scolaire est requis'),
+  startDate: date().required('La date de début est requise'),
+  endDate: date().min(ref('startDate'), 'La date de fin doit être ultérieure à la date de début')
+    // .max(ref('startDate'), 'La durée de l\'année scolaire ne peut pas dépasser 12 mois')
+    // .test(
+    //   'max-12-months',
+    //   'La durée de l\'année scolaire ne peut pas dépasser 12 mois',
+    //   (endDate, context) => {
+    //     if (!endDate) return false;
+    //     const startDate = context.parent.startDate;
+    //     if (!startDate) return false;
+
+    //     const diffInMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+    //       (endDate.getMonth() - startDate.getMonth());
+
+    //     return diffInMonths >= 15;
+    //   }
+    // )
+    .required('La date de fin est requise'),
+  description: string().trim().required('La description est requise'),
 });
 

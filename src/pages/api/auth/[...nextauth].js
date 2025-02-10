@@ -9,11 +9,10 @@ export const authOptions = {
     CredentialsProvider(strapiProvider),
   ],
   pages: {
-    signIn: '/user/auth', // Page personnalisée de connexion (optionnel)
+    signIn: '/user/auth',
   },
   callbacks: {
     async jwt({ token, user }) {
-      // Ajouter le token JWT de l'utilisateur après l'authentification
       if (user) {
         token.id = user.id;
         token.username = user.username;
@@ -21,11 +20,13 @@ export const authOptions = {
         token.lastName = user.lastName;
         token.email = user.email;
         token.accessToken = user.token;
+        token.schoolYear = user.schoolYear || null; // Store schoolYear in token
+
       }
       return token;
     },
     async session({ session, token }) {
-      // Ajouter les informations utilisateur à la session
+      // add user to session
       session.user = {
         id: token.id,
         username: token.username,
@@ -34,8 +35,11 @@ export const authOptions = {
         email: token.email,
         accessToken: token.accessToken,
       };
+      session.schoolYear = token.schoolYear || null; // Attach schoolYear to session
+
       return session;
     },
+
   },
 };
 

@@ -28,6 +28,28 @@ const api = axios.create({
 //         return Promise.reject(error);
 //     }
 // );
+export let activeSchoolYear = null; // Store the school year globally
+
+// Function to update school year dynamically
+export const setAxiosSchoolYear = (schoolYear) => {
+  activeSchoolYear = schoolYear;
+};
+
+// api.interceptors.request.use(async (config) => {
+//   // Fetch the active school year from localStorage or API
+
+
+
+//   // Append schoolYear to requests that need it
+//   if (config.url.includes('%activeSchoolYear') && activeSchoolYear) {
+//     config.url = config.url.replace('%activeSchoolYear', activeSchoolYear);
+
+
+//   }
+
+//   return config;
+// }, (error) => Promise.reject(error));
+
 
 // Middleware pour gérer les erreurs des réponses API
 api.interceptors.response.use(
@@ -59,7 +81,7 @@ api.interceptors.response.use(
 
 //    serverFetcher method
 export const serverFetch = async ({ uri, user_token }) => {
-  
+
   try {
     const response = await api.get(uri, {
       headers: {
@@ -75,6 +97,7 @@ export const serverFetch = async ({ uri, user_token }) => {
 
 // Fetcher method
 export const fetcher = async ({ uri, options = {}, user_token }) => {
+
   try {
 
     const { method = 'GET', body, headers, params } = options;

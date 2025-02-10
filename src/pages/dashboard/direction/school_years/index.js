@@ -1,19 +1,17 @@
 import { Stack, Text, Wrap } from '@chakra-ui/react';
-import { SchoolDataSet } from '@components/common/reports/school_data_set';
+import { SchoolYearDataSet } from '@components/common/reports/school_year_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
-import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
-import { mapSchoolsDataTable } from '@utils/mappers/school';
+import { SCHOOL_YEAR_COLUMNS } from '@utils/mappers/kpi';
+import { mapSchoolYearsDataTable } from '@utils/mappers/school_year';
 import { getToken } from 'next-auth/jwt';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
-import customRedirect from '../api/auth/redirect';
 
 const {
   pages: {
@@ -21,20 +19,18 @@ const {
     stats: {
       classes,
       students: studentsStat,
-      teachers,
+      teachers: teachersStat,
       schools: schoolsStat,
       amount,
     },
   },
   components: {
     menu,
-    dataset: { students: studentsDataset, schools: schoolsDataset },
+    dataset: { schools: schoolsDataset },
   },
 } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
-  const router = useRouter();
-
   const cardStats = [
     {
       count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
@@ -49,7 +45,7 @@ export default function Dashboard({ kpis, role, token }) {
     {
       count: amount.teachers.replace(`%number`, kpis[2]?.data?.length ?? 0),
       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-      title: teachers,
+      title: teachersStat,
     },
     {
       count: amount.schools.replace(`%number`, kpis[3]?.data?.length),
@@ -58,11 +54,7 @@ export default function Dashboard({ kpis, role, token }) {
     },
   ];
 
-  useEffect(() => {
-    // customRedirect();
-
-  }, []);
-  const schools = mapSchoolsDataTable({ schools: kpis[3] });
+  const schoolYears = mapSchoolYearsDataTable({ schoolYears: kpis[4] });
 
   return (
     <DashboardLayout
@@ -81,20 +73,16 @@ export default function Dashboard({ kpis, role, token }) {
           pt={10}
         >
           {schoolsDataset.title}
-          {/* {studentsDataset.title} */}
         </Text>
 
         <Stack bgColor={colors.white} w={'100%'}>
-          <SchoolDataSet
-            {...{ role, token }}
-            data={schools}
-            columns={SCHOOLS_COLUMNS}
-          />
-          {/* <DataSet
+          <Suspense fallback={<div>Loading...</div>}>
+            <SchoolYearDataSet
               {...{ role, token }}
-              data={students}
-              columns={STUDENTS_COLUMNS}
-            /> */}
+              data={schoolYears}
+              columns={SCHOOL_YEAR_COLUMNS}
+            />
+          </Suspense>
         </Stack>
       </Wrap>
     </DashboardLayout>
@@ -104,7 +92,6 @@ export default function Dashboard({ kpis, role, token }) {
 export const getServerSideProps = async ({ req }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
-
 
   const token = session?.accessToken; // Ensure token exists in session
 
@@ -152,16 +139,14 @@ export const getServerSideProps = async ({ req }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
     serverFetch({
-      uri: `${allSchools}?sort=createdAt:desc&populate[responsible]=*&populate[etablissementParent][fields][0]=name`,
+      uri: `${allSchools}?sort=createdAt:desc&populate=responsible`,
       user_token: token,
     }).catch(() => ({ data: [] })),
-
-    // serverFetch({
-    //   uri: schoolYears,
-    //   user_token: token,
-    // }),
+    serverFetch({
+      uri: schoolYears,
+      user_token: token,
+    }).catch(() => ({ data: [] })),
   ]);
-  console.log('kpis', kpis[2]);
 
   return {
     props: {

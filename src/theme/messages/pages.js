@@ -17,6 +17,9 @@ module.exports = {
       schools: {
         title: 'Établissements',
       },
+      school_years: {
+        title: 'Années scolaires',
+      },
     },
     class: {
       heading: 'Classes de primares',

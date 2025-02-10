@@ -67,6 +67,15 @@ module.exports = {
             "Vous avez affecté l'enseignant %firstname %lastname dans l'école %name.",
         },
       },
+      school_year: {
+        creation: 'Formulaire de création',
+        edit: 'Formulaire de modification',
+        info: {
+          success: 'Création reussie',
+          message:
+            "Vous avez créé l'année scolaire.",
+        },
+      },
     },
     menu: {
       home: 'Accueil',
@@ -77,6 +86,7 @@ module.exports = {
       },
       teachers: 'Enseignants',
       schools: 'Établissements',
+      school_years: 'Années',
     },
     layout: {
       header: {},

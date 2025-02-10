@@ -92,28 +92,34 @@ export const getServerSideProps = async ({ req }) => {
     alazhar: {
       get: {
         me,
-        schools: { all },
+        classes: allClasses
       },
     },
   } = routes.api_route;
-
-  const { id, role } = await serverFetch({
+  // Fetch responsible user to get their school ID and role
+  const userResponse = await serverFetch({
     uri: me,
     user_token: token,
   });
+  console.log('userResponse', userResponse);
+  
 
-  const { data: school } = await serverFetch({
-    uri: `${all}?filters[responsible][id][$eq]=${id}&populate=responsible,classes.eleves`,
+  const { role, etablissement_responsible: { id: schoolId } } = userResponse;
+
+  // Fetch only classes that belong to the active school year
+  const classesResponse = await serverFetch({
+    uri: `${allClasses}?filters[etablissement][id][$eq]=${schoolId}&filters[schoolYear][isActive][$eq]=true&populate=schoolYear,eleves`,
     user_token: token,
   });
 
   const classes = mapClassesByLevel({
-    classes: school[0]?.attributes?.classes,
+    classes: classesResponse,
   });
+
 
   return {
     props: {
-      schoolId: school[0]?.id || null,
+      schoolId: schoolId,
       classes,
       role,
       token,

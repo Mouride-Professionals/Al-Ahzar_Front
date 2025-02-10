@@ -4,6 +4,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { SchoolYearProvider } from '@utils/context/school_year_context';
 import { SessionProvider } from 'next-auth/react';
 import Head from 'next/head';
+import { Suspense } from 'react';
 import { MediaContextProvider } from '../lib/utils/media';
 
 const colors = {
@@ -24,11 +25,14 @@ function AlAzhar({ Component, pageProps: { session, ...pageProps } }) {
         <Head>
           <title>{process.env.NEXT_PUBLIC_SITENAME}</title>
         </Head>
-        <MediaContextProvider disableDynamicMediaQueries>
-          <SchoolYearProvider>
-            <Component {...pageProps} />
-          </SchoolYearProvider>
 
+        <MediaContextProvider disableDynamicMediaQueries>
+          <Suspense fallback={<div>Loading...</div>}>
+            <SchoolYearProvider>
+              <Component {...pageProps} />
+            </SchoolYearProvider>
+
+          </Suspense>
         </MediaContextProvider>
       </ChakraProvider>
     </SessionProvider>

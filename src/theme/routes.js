@@ -1,4 +1,3 @@
-const filterBySchoolYear = '?filters[schoolYear][isActive]=true&';
 export const name = 'Theming Routes File';
 export const themeRoutes = {
 
@@ -11,51 +10,26 @@ export const themeRoutes = {
     dashboard: {
       initial: '/dashboard',
       cashier: {
-        class: {
+        initial: '/dashboard/cashier',
+        classes: {
           all: '/dashboard/cashier/classes',
-          detail: '/dashboard/cashier/class/%id',
+          detail: '/dashboard/cashier/classes/%id',
         },
-        classes: '/dashboard/cashier/classes',
         students: {
           initial: '/dashboard/cashier/students',
           confirm: '/dashboard/cashier/students/confirm/registration/{student}',
         },
       },
       surveillant: {
-        classes: '/dashboard/surveillant/classes',
-        class: {
-          detail: '/dashboard/surveillant/class/%id',
+        initial: '/dashboard/surveillant',
+        classes: {
+          detail: '/dashboard/surveillant/classes/%id',
           all: '/dashboard/surveillant/classes',
         },
         students: {
           initial: '/dashboard/surveillant/students',
           create: '/dashboard/surveillant/students/create',
         },
-      },
-      //to be removed
-      all_access: {
-        classes: '/dashboard/classes',
-        class: {
-          detail: '/dashboard/surveillant/class/%id',
-          all: '/dashboard/surveillant/classes',
-        },
-        students: {
-          initial: '/dashboard/students',
-          create: '/dashboard/students/create',
-        },
-        teachers: '/dashboard/teachers',
-        schools: {
-          all: '/dashboard/schools',
-          detail: '/dashboard/schools/%id',
-          classes: '/dashboard/schools/%id/classes',
-        },
-      },
-      //to be removed
-      classes: '/dashboard/classes',
-      //to be removed
-      students: {
-        initial: '/dashboard/students',
-        create: '/dashboard/students/create',
       },
       direction: {
         initial: '/dashboard/direction',
@@ -81,6 +55,13 @@ export const themeRoutes = {
           initial: '/dashboard/direction/students',
           create: '/dashboard/direction/students/create',
         },
+        school_years: {
+          all: '/dashboard/direction/school_years',
+          detail: '/dashboard/direction/school_years/%id',
+          create: '/dashboard/direction/school_years/create',
+          edit: '/dashboard/direction/school_years/%id/edit',
+
+        },
 
       },
     },
@@ -98,11 +79,14 @@ export const themeRoutes = {
       get: {
         classes: '/classes',
         class: {
-          all: `/classes${filterBySchoolYear}populate=eleves.payments&pageSize=100`,
-          detail: `/classes/%id${filterBySchoolYear}populate=eleves,eleves.payments,etablissement`,
+          // all: `/classes?filters[schoolYear][id][$eq]=%activeSchoolYear&populate=eleves.payments&pageSize=100`,
+          all: `/classes?filters[schoolYear][isActive][$eq]=true&populate=eleves.payments&pageSize=100`,
+          detail: `/classes/%id?filters[schoolYear][isActive][$eq]=true&populate=eleves,eleves.payments,etablissement`,
+          // detail: `/classes/%id?filters[schoolYear][id][$eq]=%activeSchoolYear&populate=eleves,eleves.payments,etablissement`,
         },
         students: {
-          all: `/students${'?filters[classe][schoolYear][isActive]=true'}?populate=classe,payments`,
+          all: `/students?filters[classe][schoolYear][isActive][$eq]=true&populate=classe,payments`,
+          // all: `/students?filters[classe][schoolYear][id][$eq]=%activeSchoolYear&populate=classe,payments`,
           detail: '/students/%id?populate=classe,payments',
         },
         teachers: {

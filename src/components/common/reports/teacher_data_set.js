@@ -67,12 +67,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
 
         token: token,
       });
-
-
       if (response) {
-        console.log('response', response);
-
-
         toast({
           title: 'Assignment Successful',
           description: `Teacher has been successfully assigned to ${schools.find(school => school.id === parseInt(selectedSchool))?.name}.`,
@@ -230,7 +225,10 @@ const ExpandedComponent = ({ data, schools, token }) => {
                   {birthPlace && <Text>Birth Place: {birthPlace}</Text>}
                   {maritalStatus && <Text>Marital Status: {maritalStatus}</Text>}
                   {language && <Text>Language: {language}</Text>}
-                  {subjects && <Text>Subjects: {subjects}</Text>}
+                  {subjects && (
+                    <Text>
+                      <strong>Subjects:</strong> {subjects.join(',  ')}
+                    </Text>)}
                 </Stack>
               </GridItem>
             </Grid>
@@ -247,10 +245,16 @@ const ExpandedComponent = ({ data, schools, token }) => {
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Professional Details</Text>
                   {etablissement && <Text>Institution: {etablissement}</Text>}
-                  {disciplines && <Text>Disciplines: {disciplines}</Text>}
-                  {academicDegree && <Text>Academic Degree: {academicDegree}</Text>}
+                  {disciplines?.length > 0 && (
+                    <Text>
+                      <strong>Disciplines:</strong> {disciplines.join(', ')}
+                    </Text>
+                  )} {academicDegree && <Text>Academic Degree: {academicDegree}</Text>}
                   {professionalDegrees && (
-                    <Text>Professional Degrees: {professionalDegrees}</Text>
+                    <Text>
+                      <strong>Professional Degrees:</strong>{' '}
+                      {professionalDegrees.join(', ')}
+                    </Text>
                   )}
                   {contractType && <Text>Contract Type: {contractType}</Text>}
                   {level && <Text>Level: {level}</Text>}

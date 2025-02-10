@@ -27,13 +27,10 @@ export const SchoolYearSelector = ({ token }) => {
                 uri: allSchoolYears,
                 user_token: token,
             })
-
             setSchoolYears(response.data);
             const current = schoolYears?.find((year) => year.attributes?.isActive);
             setCurrentSchoolYear(current?.id);
             setSchoolYear(current?.id);// Update the school year in the context
-
-
         } catch (error) {
             console.error('Error fetching school years:', error);
         } finally {
@@ -41,12 +38,10 @@ export const SchoolYearSelector = ({ token }) => {
         }
     };
     useEffect(() => {
-
         fetchSchoolYears();
     }, [token]);
 
     const handleSchoolYearChange = async (selectedYear) => {
-
         setLoading(true);
         try {
             const response = await fetcher({
@@ -63,7 +58,6 @@ export const SchoolYearSelector = ({ token }) => {
             });
 
             setSchoolYear(response.data.id);// Update the school year in the context
-
             fetchSchoolYears();
             setCurrentSchoolYear(response.data.id);
         } catch (error) {
@@ -73,11 +67,10 @@ export const SchoolYearSelector = ({ token }) => {
             setLoading(false);
         }
     };
-    // console.log('token in selector', schoolYears, currentSchoolYear);
 
     return (
         <VStack w={'40%'} spacing={1} align="left">
-            <Text fontWeight="bold">School Year</Text>
+            <Text fontWeight="hairline">Année scolaire</Text>
             <Select
                 options={schoolYears.map((year) => ({
                     value: year.id,

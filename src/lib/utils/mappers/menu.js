@@ -1,7 +1,6 @@
 import { colors, messages, routes } from '@theme';
 import { FaSuitcase } from 'react-icons/fa';
-import { HiAcademicCap, HiHome } from 'react-icons/hi';
-import { LuSchool } from 'react-icons/lu';
+import { HiAcademicCap, HiOutlineHome } from 'react-icons/hi';
 import { SiGoogleclassroom } from 'react-icons/si';
 
 const {
@@ -31,50 +30,26 @@ export const ACCESS_ROUTES = {
 export const DashboardMainMenu = ({ activeLink, role }) => [
   // home
   {
-    active: activeLink == initial,
+    active: activeLink == ACCESS_ROUTES[role?.name]?.initial,
     icon: (
-      <HiHome
+      <HiOutlineHome
         size={20}
-        color={activeLink == initial ? colors.white : colors.secondary.regular}
+        color={activeLink == ACCESS_ROUTES[role?.name]?.initial ? colors.white : colors.secondary.regular}
       />
     ),
     color: colors.secondary.regular,
     message: messages.components.menu.home,
-    link: initial,
+    link: ACCESS_ROUTES[role?.name]?.initial,
   },
-  // school
-  ACCESS_ROUTES[role?.name]?.schools && {
-    active: [
-      ACCESS_ROUTES[role?.name]?.schools.all,
-      ACCESS_ROUTES[role?.name]?.schools?.detail,
-      ACCESS_ROUTES[role?.name]?.schools?.classes,
-    ].includes(activeLink),
-    icon: (
-      <LuSchool
-        size={20}
-        color={
-          [
-            ACCESS_ROUTES[role?.name]?.schools.all,
-            ACCESS_ROUTES[role?.name]?.schools?.detail,
-            ACCESS_ROUTES[role?.name]?.schools?.classes,
-          ].includes(activeLink)
-            ? colors.white
-            : colors.secondary.regular
-        }
-      />
-    ),
-    color: colors.secondary.regular,
-    message: messages.components.menu.schools,
-    link: ACCESS_ROUTES[role?.name]?.schools.all,
-  },
+
   // classes not be seen by all_access
-  ACCESS_ROUTES[role?.name]?.classes && {
-    active: activeLink == ACCESS_ROUTES[role?.name]?.classes,
+  ACCESS_ROUTES[role?.name]?.classes && ACCESS_ROUTES[role?.name]?.classes.all && {
+    active: activeLink == ACCESS_ROUTES[role?.name]?.classes.all,
     icon: (
       <SiGoogleclassroom
         size={20}
         color={
-          activeLink == ACCESS_ROUTES[role?.name]?.classes
+          activeLink == ACCESS_ROUTES[role?.name]?.classes.all
             ? colors.white
             : colors.secondary.regular
         }
@@ -82,7 +57,7 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     ),
     color: colors.secondary.regular,
     message: messages.components.menu.classes,
-    link: ACCESS_ROUTES[role?.name]?.classes,
+    link: ACCESS_ROUTES[role?.name]?.classes.all,
   },
   // students
   !ACCESS_ROUTES[role?.name]?.students && {
@@ -133,6 +108,30 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     color: colors.secondary.regular,
     message: messages.components.menu.teachers,
     link: ACCESS_ROUTES[role?.name]?.teachers.all,
+  },
+  ACCESS_ROUTES[role?.name]?.school_years && {
+    active: [
+      ACCESS_ROUTES[role?.name]?.school_years.all,
+      ACCESS_ROUTES[role?.name]?.school_years.detail,
+      ACCESS_ROUTES[role?.name]?.school_years.create,
+    ].includes(activeLink),
+    icon: (
+      <FaSuitcase
+        size={20}
+        color={
+          [
+            ACCESS_ROUTES[role?.name]?.school_years.all,
+            ACCESS_ROUTES[role?.name]?.school_years.detail,
+            ACCESS_ROUTES[role?.name]?.school_years.create,
+          ].includes(activeLink)
+            ? colors.white
+            : colors.secondary.regular
+        }
+      />
+    ),
+    color: colors.secondary.regular,
+    message: messages.components.menu.school_years,
+    link: ACCESS_ROUTES[role?.name]?.school_years.all,
   },
 ];
 

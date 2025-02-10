@@ -1,4 +1,4 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Stack, Text, VStack, WrapItem } from '@chakra-ui/react';
+import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import {
@@ -285,10 +285,10 @@ export const CreateTeacherForm = ({
                 />
               </WrapItem>
 
-              
-                <WrapItem w={'100%'} >
-                  <FormControl py={2} isInvalid={errors['professionalDegrees']}>
-                        <FormLabel fontWeight={'bold'}>{professionalDegrees.label}</FormLabel>
+
+              <WrapItem w={'100%'} >
+                <FormControl py={2} isInvalid={errors['professionalDegrees']}>
+                  <FormLabel fontWeight={'bold'}>{professionalDegrees.label}</FormLabel>
                   <Select
                     isMulti
                     closeMenuOnSelect={false}
@@ -349,12 +349,12 @@ export const CreateTeacherForm = ({
                     }}
                   />
 
-                    {errors[professionalDegrees.uid] && touched[professionalDegrees.uid] && (
-                      <FormErrorMessage>{errors[professionalDegrees.uid]}</FormErrorMessage>
-                    )}
-                    </FormControl>
-                </WrapItem>
-                 
+                  {errors[professionalDegrees.uid] && touched[professionalDegrees.uid] && (
+                    <FormErrorMessage>{errors[professionalDegrees.uid]}</FormErrorMessage>
+                  )}
+                </FormControl>
+              </WrapItem>
+
             </HStack>
           </Stack>
 
@@ -378,15 +378,72 @@ export const CreateTeacherForm = ({
                 />
               </WrapItem>
 
-              <WrapItem w={'100%'}>
-                <FormInput
-                  {...disciplines}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.disciplines}
-                />
+              <WrapItem w={'100%'} >
+                <FormControl py={2} isInvalid={errors['disciplines']}>
+                  <FormLabel fontWeight={'bold'}>{disciplines.label}</FormLabel>
+                  <Select
+                    isMulti
+                    closeMenuOnSelect={false}
+                    isSearchable
+                    options={disciplines.options} // Options should be an array of { label, value } objects
+                    onChange={(selectedOptions) => {
+                      handleChange({
+                        target: {
+                          name: 'disciplines', // Ensure this matches your Formik field name
+                          value: selectedOptions ? selectedOptions.map((option) => option.value) : [], // Map selected options to their values
+                        },
+                      });
+                    }}
+                    onBlur={handleBlur}
+                    value={
+                      Array.isArray(values.disciplines)
+                        ? values.disciplines.map((degree) =>
+                          disciplines.options.find((option) => option.value === degree)
+                        )
+                        : [] // Fallback to empty array if not an array
+                    } // Map current values to React-Select format
+                    placeholder="Selectionner des disciplines"
+                    className="react-select"
+                    classNamePrefix="react-select"
+
+                    styles={{
+                      container: (base) => ({
+                        ...base,
+                        width: '100%',
+                      }),
+                      control: (base, state) => ({
+                        ...base,
+                        backgroundColor: colors.white,
+                        borderColor: errors[disciplines.uid] && touched[disciplines.uid] ? colors.red.regular : colors.gray.regular,
+                        boxShadow: state.isFocused ? `0 0 0 1px ${colors.secondary.regular}` : 'none',
+                        '&:hover': {
+                          borderColor: errors[disciplines.uid] && touched[disciplines.uid] ? colors.red.regular : colors.gray.dark,
+                        },
+                        minHeight: '50px',
+                      }),
+                      valueContainer: (base) => ({
+                        ...base,
+                        padding: '0 12px',
+                      }),
+                      placeholder: (base) => ({
+                        ...base,
+                        color: colors.gray.dark,
+                      }),
+                      input: (base) => ({
+                        ...base,
+                        fontSize: '14px',
+                      }),
+                      menu: (base) => ({
+                        ...base,
+                        zIndex: 5,
+                      }),
+                    }}
+                  />
+
+                  {errors[disciplines.uid] && touched[disciplines.uid] && (
+                    <FormErrorMessage>{errors[disciplines.uid]}</FormErrorMessage>
+                  )}
+                </FormControl>
               </WrapItem>
             </HStack>
 
@@ -402,15 +459,73 @@ export const CreateTeacherForm = ({
                 />
               </WrapItem>
 
-              <WrapItem w={'100%'}>
-                <FormInput
-                  {...subjects}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.subjects}
-                />
+              <WrapItem w={'100%'} >
+                <FormControl py={2} isInvalid={errors['subjects']}>
+                  <FormLabel fontWeight={'bold'}>{subjects.label}</FormLabel>
+                  <Select
+                    isMulti
+                    closeMenuOnSelect={false}
+
+                    isSearchable
+                    options={subjects.options} // Options should be an array of { label, value } objects
+                    onChange={(selectedOptions) => {
+                      handleChange({
+                        target: {
+                          name: 'subjects', // Ensure this matches your Formik field name
+                          value: selectedOptions ? selectedOptions.map((option) => option.value) : [], // Map selected options to their values
+                        },
+                      });
+                    }}
+                    onBlur={handleBlur}
+                    value={
+                      Array.isArray(values.subjects)
+                        ? values.subjects.map((degree) =>
+                          subjects.options.find((option) => option.value === degree)
+                        )
+                        : [] // Fallback to empty array if not an array
+                    } // Map current values to React-Select format
+                    placeholder="Sélectionner des matières enseignées"
+                    className="react-select"
+                    classNamePrefix="react-select"
+
+                    styles={{
+                      container: (base) => ({
+                        ...base,
+                        width: '100%',
+                      }),
+                      control: (base, state) => ({
+                        ...base,
+                        backgroundColor: colors.white,
+                        borderColor: errors[subjects.uid] && touched[subjects.uid] ? colors.red.regular : colors.gray.regular,
+                        boxShadow: state.isFocused ? `0 0 0 1px ${colors.secondary.regular}` : 'none',
+                        '&:hover': {
+                          borderColor: errors[subjects.uid] && touched[subjects.uid] ? colors.red.regular : colors.gray.dark,
+                        },
+                        minHeight: '50px',
+                      }),
+                      valueContainer: (base) => ({
+                        ...base,
+                        padding: '0 12px',
+                      }),
+                      placeholder: (base) => ({
+                        ...base,
+                        color: colors.gray.dark,
+                      }),
+                      input: (base) => ({
+                        ...base,
+                        fontSize: '14px',
+                      }),
+                      menu: (base) => ({
+                        ...base,
+                        zIndex: 5,
+                      }),
+                    }}
+                  />
+
+                  {errors[subjects.uid] && touched[subjects.uid] && (
+                    <FormErrorMessage>{errors[subjects.uid]}</FormErrorMessage>
+                  )}
+                </FormControl>
               </WrapItem>
             </HStack>
           </Stack>

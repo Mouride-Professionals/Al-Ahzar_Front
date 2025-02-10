@@ -1,19 +1,15 @@
-import { Stack, Text, Wrap } from '@chakra-ui/react';
-import { SchoolDataSet } from '@components/common/reports/school_data_set';
+import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
+import { DataSet } from '@components/common/reports/student_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
-import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
-import { mapSchoolsDataTable } from '@utils/mappers/school';
+import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
+import { mapStudentsDataTable } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
-import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
-import customRedirect from '../api/auth/redirect';
 
 const {
   pages: {
@@ -46,33 +42,24 @@ export default function Dashboard({ kpis, role, token }) {
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: studentsStat,
     },
-    {
-      count: amount.teachers.replace(`%number`, kpis[2]?.data?.length ?? 0),
-      icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-      title: teachers,
-    },
-    {
-      count: amount.schools.replace(`%number`, kpis[3]?.data?.length),
-      icon: <LuSchool color={colors.primary.regular} size={25} />,
-      title: schoolsStat,
-    },
+
+
   ];
 
-  useEffect(() => {
-    // customRedirect();
 
-  }, []);
-  const schools = mapSchoolsDataTable({ schools: kpis[3] });
+  const students = mapStudentsDataTable({ students: kpis[1] });
 
   return (
     <DashboardLayout
       title={dashboard.initial.title}
-      currentPage={menu.classes}
+      currentPage={menu.home}
       role={role}
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
-        <Statistics cardStats={cardStats} />
+        <HStack w={'100%'}>
+          <Statistics cardStats={cardStats} />
+        </HStack>
 
         <Text
           color={colors.secondary.regular}
@@ -80,21 +67,16 @@ export default function Dashboard({ kpis, role, token }) {
           fontWeight={'700'}
           pt={10}
         >
-          {schoolsDataset.title}
-          {/* {studentsDataset.title} */}
+          {studentsDataset.title}
         </Text>
 
         <Stack bgColor={colors.white} w={'100%'}>
-          <SchoolDataSet
+
+          <DataSet
             {...{ role, token }}
-            data={schools}
-            columns={SCHOOLS_COLUMNS}
+            data={students}
+            columns={STUDENTS_COLUMNS}
           />
-          {/* <DataSet
-              {...{ role, token }}
-              data={students}
-              columns={STUDENTS_COLUMNS}
-            /> */}
         </Stack>
       </Wrap>
     </DashboardLayout>
@@ -124,8 +106,6 @@ export const getServerSideProps = async ({ req }) => {
         class: { all: classrooms },
         students: { all: allStudents },
         teachers: { all: teachers },
-        schools: { all: allSchools },
-        school_years: { all: schoolYears },
       },
     },
   } = routes.api_route;
@@ -151,17 +131,8 @@ export const getServerSideProps = async ({ req }) => {
       uri: teachers,
       user_token: token,
     }).catch(() => ({ data: [] })),
-    serverFetch({
-      uri: `${allSchools}?sort=createdAt:desc&populate[responsible]=*&populate[etablissementParent][fields][0]=name`,
-      user_token: token,
-    }).catch(() => ({ data: [] })),
 
-    // serverFetch({
-    //   uri: schoolYears,
-    //   user_token: token,
-    // }),
   ]);
-  console.log('kpis', kpis[2]);
 
   return {
     props: {

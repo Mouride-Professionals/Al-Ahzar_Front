@@ -125,15 +125,12 @@ export const getServerSideProps = async ({ req }) => {
     uri: me,
     user_token: token,
   });
-  // console.log('response data', response);
   const role = response.role;
-
   const kpis = await Promise.all([
     serverFetch({
       uri: classrooms.split('pageSize')[0],
       user_token: token,
     }),
-
     serverFetch({
       uri: allStudents,
       user_token: token,

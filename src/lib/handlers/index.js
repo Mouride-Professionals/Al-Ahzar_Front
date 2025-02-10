@@ -5,11 +5,13 @@ import {
   getSchool,
   updateSchool,
 } from '@services/school';
+import { createSchoolYear, updateSchoolYear } from '@services/school_year';
 import { confirmStudent, createStudent } from '@services/student';
 import { createTeacher, updateTeacher } from '@services/teacher';
 import { forms, routes } from '@theme';
 import { mapMonthCreationBody } from '@utils/mappers/payment';
 import { mapSchoolCreationBody } from '@utils/mappers/school';
+import { mapSchoolYearCreationBody } from '@utils/mappers/school_year';
 import {
   mapStudentConfirmationBody,
   mapStudentCreationBody,
@@ -17,6 +19,7 @@ import {
 import { mapTeacherCreationBody } from '@utils/mappers/teacher';
 import { mapClassBody } from '@utils/tools/mappers';
 import { signIn } from 'next-auth/react';
+import customRedirect from 'src/pages/api/auth/redirect';
 
 /**
  *
@@ -42,6 +45,7 @@ export const loginFormHandler = async ({
       redirect: false,
     });
 
+
     if (!res || res.error) {
       setSubmitting(false);
       setFieldError(
@@ -51,7 +55,7 @@ export const loginFormHandler = async ({
       return;
     }
 
-    window.location.assign(redirectOnSuccess);
+    customRedirect();
   } catch (error) {
     console.log(error);
     setSubmitting(false);
@@ -251,6 +255,8 @@ export const teacherRecruitmentFormHandler = async ({
 }) => {
   const payload = mapTeacherCreationBody({ data });
 
+  console.log('payload', payload);
+
   createTeacher({ payload, token })
     .then(() => {
       hasSucceeded(true);
@@ -287,7 +293,6 @@ export const teacherUpdateFormHandler = async ({
 }) => {
   const payload = mapTeacherCreationBody({ data });
 
-  console.log('teacherUpdateFormHandler', payload);
 
   updateTeacher({ teacher, payload, token })
     .then(() => {
@@ -308,6 +313,78 @@ export const teacherUpdateFormHandler = async ({
       setFieldError(
         'recruitment',
         forms.messages.teacher.recruitment.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+
+export const schoolYearCreationFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapSchoolYearCreationBody({ data });
+
+  createSchoolYear({ payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'School year creation',
+            forms.messages.schoolYear.creation.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'School year creation',
+        forms.messages.schoolYear.creation.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+export const schoolYearUpdateFormHandler = async ({
+  schoolYear,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapSchoolYearCreationBody({ data });
+
+  updateSchoolYear({ schoolYear, payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'School year creation',
+            forms.messages.schoolYear.creation.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'School year creation',
+        forms.messages.schoolYear.creation.errors.problem
       );
       return;
     });
