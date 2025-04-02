@@ -85,7 +85,7 @@ export const getServerSideProps = async ({ req, params }) => {
 
   // Fetch teacher data by ID
   const teacher = await serverFetch({
-    uri: `${routes.api_route.alazhar.get.teachers.all}/${params.id}?populate[etablissement][fields][0]=name&populate[etablissement][fields][1]=id`,
+    uri: `${routes.api_route.alazhar.get.teachers.all}/${params.id}?populate[school][fields][0]=name&populate[school][fields][1]=id`,
     user_token: token,
   });
 

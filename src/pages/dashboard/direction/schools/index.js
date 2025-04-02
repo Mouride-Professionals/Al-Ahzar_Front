@@ -176,7 +176,7 @@ export default function SchoolsDashboard({ kpis, role, token }) {
   ];
 
   const schools = mapSchoolsDataTable({ schools: kpis[3] });
-
+ 
   return (
     <DashboardPage
       title={dashboard.initial.title}

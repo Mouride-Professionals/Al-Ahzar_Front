@@ -14,6 +14,7 @@ import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
@@ -57,6 +58,7 @@ export default function Classes({ classes, role, schoolId, token }) {
           </ModalBody>
         </ModalContent>
       </Modal>
+      
 
       <ClassesList
         schoolId={schoolId}
@@ -87,17 +89,18 @@ export default function Classes({ classes, role, schoolId, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req, query }) => {
+export const getServerSideProps = async ({ req,res, query }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
   const { id: idSchool } = query;
+  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
   const {
     alazhar: {
       get: {
         me,
-        class: { all },
+        classes: {all: classrooms },
       },
     },
   } = routes.api_route;
@@ -108,7 +111,7 @@ export const getServerSideProps = async ({ req, query }) => {
   });
 
   const classesData = await serverFetch({
-    uri: `${all}?filters[etablissement][id][$eq]=${idSchool}&populate=eleves`,
+    uri: classrooms.replace('%schoolId', idSchool).replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
 

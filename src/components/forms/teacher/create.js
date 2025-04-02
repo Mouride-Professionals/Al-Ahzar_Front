@@ -29,13 +29,7 @@ export const CreateTeacherForm = ({
   }));
   const [selectedContractType, setSelectedContractType] = useState(
     teacherData?.contractType || '');
-  const professionalDegreeOptions = {
-    options: [
-      { value: 'degree1', label: 'Degree 1' },
-      { value: 'degree2', label: 'Degree 2' },
-      { value: 'degree3', label: 'Degree 3' },
-    ],
-  };
+ 
   const contractTypeOptions = [
     { name: 'Permanent', value: 'Disponible' },
     { name: 'Temporary', value: 'Temps Partiel' },
@@ -54,9 +48,9 @@ export const CreateTeacherForm = ({
     teacherData
   );
 
-  //initialize the etablissement field with the school of the teacher
+  //initialize the school field with the school of the teacher
   if (isEdit) {
-    initialValues.etablissement = teacherData.etablissement.data.id;
+    initialValues.school = teacherData.school.data.id;
   }
 
   const {
@@ -68,7 +62,7 @@ export const CreateTeacherForm = ({
           gender,
           phoneNumber,
           email,
-          etablissement,
+          school,
           birthDate,
           birthPlace,
           address,
@@ -369,12 +363,12 @@ export const CreateTeacherForm = ({
                 <FormInput
                   select={true}
                   options={schoolOptions}
-                  {...etablissement}
+                  {...school}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   touched={touched}
-                  value={values.etablissement}
+                  value={values.school}
                 />
               </WrapItem>
 

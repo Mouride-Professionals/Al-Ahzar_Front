@@ -7,11 +7,18 @@ export const authenticationSchema = object({
 });
 
 const AllowedSexes = ['Homme', 'Femme'];
+const AllowedRoles = ['Directeur Géneral', 'Sécretaraire Géneral', 'Caissier', 'Surveillant Géneral'];
 const AllowedStudentTypes = [
-  'Hafiz',
   'Ancien Redoublant',
   'Ancien Passant',
   'Nouveau',
+];
+const AllowedPaymentTypes = [
+  'Mensualité',
+  'Inscription',
+  'Blouse',
+  'Contribution des parents',
+  'Examen',
 ];
 const AllowedSocialCategories = [
   'Non',
@@ -162,10 +169,21 @@ export const studentRegistrationSchema = object({
   registration: string(),
 });
 
-export const studentConfirmationchema = object({
-  studentType: string().trim().oneOf(AllowedStudentTypes).required(),
-  socialCategory: string().trim().oneOf(AllowedSocialCategories).required(),
-  comment: string().trim(),
+export const studentConfirmationSchema = object({
+  // studentType: string().trim().oneOf(AllowedStudentTypes).required(),
+  // socialCategory: string().trim().oneOf(AllowedSocialCategories).required(),
+  // comment: string().trim(),
+  amount: number().required().label('Montant total'),
+  monthOf: date().label('Mois de paiement'),
+  paymentDetail: object({
+    monthlyFee: number().label('Frais de la mensualité'),
+    enrollmentFee: number().label('Frais de l`inscription'),
+    blouseFee: number().label('Frais de la blouse'),
+    examFee: number().label('Frais de l`examen'),
+    parentContributionFee: number().label('Frais de la cotisation des parents'),
+  }),
+
+
 });
 
 export const passwordRecoverySchema = object({
@@ -199,7 +217,19 @@ export const schoolCreationSchema = object({
   email: string().email().required(),
   postBox: string().trim().required(),
   isAlAzharLand: boolean().required(),
-  note: string().trim().required(),
+  note: string().trim(),
+});
+
+// user schema creation 
+export const userCreationSchema = object({
+  username: string().trim().required(),
+  firstname: string().trim().required(),
+  lastname: string().trim().required(),
+  email: string().email().required(),
+  password: string().trim().required(),
+  role: string()
+    .oneOf(AllowedRoles, 'Invalid role')
+    .required('Role is required'),
 });
 
 
@@ -211,7 +241,7 @@ export const teacherRecruitmentSchema = object({
     .required('Gender is required'),
   phoneNumber: string().trim().required('Phone number is required'),
   email: string().email('Invalid email').required('Email is required'),
-  etablissement: string().required('Etablissement is required'),
+  school: string().required('Etablissement is required'),
   birthDate: date().required('Birth date is required'),
   birthPlace: string().trim().required('Birth place is required'),
   address: string().trim().required('Address is required'),

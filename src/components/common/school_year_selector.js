@@ -1,17 +1,19 @@
 import { Text, VStack } from '@chakra-ui/react';
 import { colors, routes } from '@theme';
 import { useSchoolYear } from '@utils/context/school_year_context';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { fetcher, serverFetch } from 'src/lib/api';
+import { serverFetch } from 'src/lib/api';
+import customRedirect from 'src/pages/api/auth/redirect';
 
 export const SchoolYearSelector = ({ token }) => {
     const router = useRouter();
     const { schoolYear, setSchoolYear } = useSchoolYear();
 
     const [schoolYears, setSchoolYears] = useState([]);
-    const [currentSchoolYear, setCurrentSchoolYear] = useState(null);
+    const [currentSchoolYear, setCurrentSchoolYear] = useState(Cookies.get('selectedSchoolYear') || null);
     const [loading, setLoading] = useState(false);
     const {
         alazhar: {
@@ -22,15 +24,20 @@ export const SchoolYearSelector = ({ token }) => {
     } = routes.api_route;
     // Fetch school years and current school year
     const fetchSchoolYears = async () => {
+        setLoading(true);
         try {
             const response = await serverFetch({
                 uri: allSchoolYears,
                 user_token: token,
             })
+
             setSchoolYears(response.data);
-            const current = schoolYears?.find((year) => year.attributes?.isActive);
-            setCurrentSchoolYear(current?.id);
-            setSchoolYear(current?.id);// Update the school year in the context
+            const current = schoolYears?.find((year) => year.attributes?.isCurrent);
+            if (current) {
+                setCurrentSchoolYear(current.id);
+                setSchoolYear(current.id); // Update the school year in the context
+                Cookies.set('selectedSchoolYear', current?.id); // Save the selected school year to cookies
+            }
         } catch (error) {
             console.error('Error fetching school years:', error);
         } finally {
@@ -38,34 +45,23 @@ export const SchoolYearSelector = ({ token }) => {
         }
     };
     useEffect(() => {
-        fetchSchoolYears();
+        const savedSchoolYear = Cookies.get('selectedSchoolYear');
+
+        if (savedSchoolYear) {
+            setCurrentSchoolYear(savedSchoolYear);
+            setSchoolYear(savedSchoolYear);
+        }
+        if (schoolYears.length === 0 || !savedSchoolYear) {
+            fetchSchoolYears();
+        }
     }, [token]);
 
-    const handleSchoolYearChange = async (selectedYear) => {
-        setLoading(true);
-        try {
-            const response = await fetcher({
-                uri: routes.api_route.alazhar.update.school_year.replace('%id', selectedYear),
-                user_token: token,
-                options: {
-                    method: 'PUT',
-                    body: {
-                        data: {
-                            isActive: true,
-                        },
-                    },
-                },
-            });
+    const handleSchoolYearChange = (selectedYear) => {
+        setSchoolYear(selectedYear);// Update the school year in the context
+        setCurrentSchoolYear(selectedYear);
+        Cookies.set('selectedSchoolYear', selectedYear); // Save the selected school year to cookies
+        customRedirect();
 
-            setSchoolYear(response.data.id);// Update the school year in the context
-            fetchSchoolYears();
-            setCurrentSchoolYear(response.data.id);
-        } catch (error) {
-            console.error('Error updating school year:', error);
-        } finally {
-            router.reload();
-            setLoading(false);
-        }
     };
 
     return (
@@ -77,14 +73,15 @@ export const SchoolYearSelector = ({ token }) => {
                     label: `${year.attributes.name}`,
                 }))}
                 value={schoolYears
-                    .filter((year) => year.attributes.isActive)
+                    .filter((year) => year.id == currentSchoolYear)
                     .map((year) => ({
                         value: year.id,
+
                         label: `${year.attributes.name}`,
                     }))}
                 onChange={(e) => handleSchoolYearChange(e.value)}
-                isDisabled={loading}
-                // isLoading={loading}
+                // isDisabled={loading}
+                isLoading={loading}
                 bgColor="white"
                 classNamePrefix="react-select"
                 styles={{

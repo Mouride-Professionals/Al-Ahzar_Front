@@ -4,7 +4,8 @@ import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
-import { mapStudentsDataTable } from '@utils/mappers/student';
+import { mapStudentsDataTable, mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/router';
 import { HiAcademicCap } from 'react-icons/hi';
@@ -28,7 +29,7 @@ const {
   },
 } = messages;
 
-export default function Dashboard({ kpis, role, token }) {
+export default function Dashboard({ kpis, role, token,schoolId }) {
   const router = useRouter();
 
   const cardStats = [
@@ -47,8 +48,13 @@ export default function Dashboard({ kpis, role, token }) {
   ];
 
 
-  const students = mapStudentsDataTable({ students: kpis[1] });
-
+  const students = mapStudentsDataTableForEnrollments({ enrollments: kpis[1] });
+  const classrooms = kpis[0]?.data?.map((classroom) => ({
+    id: classroom.id,
+    cycle: classroom.attributes.cycle,
+    level: classroom.attributes.level,
+    letter: classroom.attributes.letter,
+  }));
   return (
     <DashboardLayout
       title={dashboard.initial.title}
@@ -73,9 +79,10 @@ export default function Dashboard({ kpis, role, token }) {
         <Stack bgColor={colors.white} w={'100%'}>
 
           <DataSet
-            {...{ role, token }}
+            {...{ role, token, schoolId }}
             data={students}
             columns={STUDENTS_COLUMNS}
+            classrooms={classrooms}
           />
         </Stack>
       </Wrap>
@@ -83,13 +90,13 @@ export default function Dashboard({ kpis, role, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req,res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
 
 
   const token = session?.accessToken; // Ensure token exists in session
-
+  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
   if (!token) {
     return {
       redirect: {
@@ -103,7 +110,7 @@ export const getServerSideProps = async ({ req }) => {
     alazhar: {
       get: {
         me,
-        class: { all: classrooms },
+        classes: { all: classrooms },
         students: { all: allStudents },
         teachers: { all: teachers },
       },
@@ -119,12 +126,12 @@ export const getServerSideProps = async ({ req }) => {
 
   const kpis = await Promise.all([
     serverFetch({
-      uri: classrooms.split('pageSize')[0],
+      uri: classrooms.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', response.school?.id),
       user_token: token,
     }),
 
     serverFetch({
-      uri: allStudents,
+      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', response.school?.id),  
       user_token: token,
     }),
     serverFetch({
@@ -139,6 +146,7 @@ export const getServerSideProps = async ({ req }) => {
       kpis,
       role,
       token,
+      schoolId: response?.school?.id
     },
   };
 };

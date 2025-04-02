@@ -37,7 +37,7 @@ export const CreateSchoolForm = ({
   const [filteredParentSchools, setFilteredParentSchools] = useState([]);
   const [selectedType, setSelectedType] = useState(schoolData?.type || '');
 
- 
+
   // Handle region and department changes
   const handleRegionChange = (selectedRegion) => {
     const departmentOptions = mapDepartmentByRegion({ region: selectedRegion });
@@ -96,7 +96,7 @@ export const CreateSchoolForm = ({
           name,
           creationDate,
           type,
-          etablissementParent,
+          parentSchool,
           region,
           department,
           commune,
@@ -222,13 +222,13 @@ export const CreateSchoolForm = ({
                 <FormInput
                   select
                   options={filteredParentSchools}
-                  {...etablissementParent}
+                  {...parentSchool}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   isDisabled={!values.type || values.type === 'Centre'}
                   touched={touched}
-                  value={values.etablissementParent}
+                  value={values.parentSchool}
                 />
               </WrapItem>
             </HStack>

@@ -1,10 +1,11 @@
-import { Stack, Text, Wrap } from '@chakra-ui/react';
+import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { TeacherDataSet } from '@components/common/reports/teacher_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { TEACHERS_COLUMNS } from '@utils/mappers/kpi';
 import { mapTeachersDataTable } from '@utils/mappers/teacher';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
@@ -70,8 +71,9 @@ export default function Dashboard({ kpis, role, token }) {
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
-        <Statistics cardStats={cardStats} />
-
+        <HStack w={'100%'}>
+          <Statistics cardStats={cardStats} />
+        </HStack>
         <Text
           color={colors.secondary.regular}
           fontSize={20}
@@ -94,11 +96,13 @@ export default function Dashboard({ kpis, role, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
 
   const token = session?.accessToken; // Ensure token exists in session
+  const cookies = new Cookies(req, res);
+  const activeSchoolYear = cookies.get('selectedSchoolYear');
 
   if (!token) {
     return {
@@ -113,8 +117,8 @@ export const getServerSideProps = async ({ req }) => {
     alazhar: {
       get: {
         me,
-        class: { all: classrooms },
-        students: { all: allStudents },
+        classes: { allWithoutSchoolId: classrooms },
+        students: { allWithoutSchoolId: allStudents },
         teachers: { all: allTeachers },
         schools: { all: allSchools },
       },
@@ -128,15 +132,15 @@ export const getServerSideProps = async ({ req }) => {
   const role = response.role;
   const kpis = await Promise.all([
     serverFetch({
-      uri: classrooms.split('pageSize')[0],
+      uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
     }),
     serverFetch({
-      uri: allStudents,
+      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
     }),
     serverFetch({
-      uri: allTeachers + '?sort=createdAt:desc&populate=etablissement',
+      uri: allTeachers + '?sort=createdAt:desc&populate=school',
       user_token: token,
     }).catch(() => ({ data: [] })),
     serverFetch({

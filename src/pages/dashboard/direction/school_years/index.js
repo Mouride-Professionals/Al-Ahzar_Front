@@ -1,10 +1,11 @@
-import { Stack, Text, Wrap } from '@chakra-ui/react';
+import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { SchoolYearDataSet } from '@components/common/reports/school_year_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { SCHOOL_YEAR_COLUMNS } from '@utils/mappers/kpi';
 import { mapSchoolYearsDataTable } from '@utils/mappers/school_year';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { Suspense } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
@@ -64,7 +65,9 @@ export default function Dashboard({ kpis, role, token }) {
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
+        <HStack w={'100%'}>
         <Statistics cardStats={cardStats} />
+        </HStack>
 
         <Text
           color={colors.secondary.regular}
@@ -89,11 +92,13 @@ export default function Dashboard({ kpis, role, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
 
   const token = session?.accessToken; // Ensure token exists in session
+  const cookies = new Cookies(req, res);
+  const activeSchoolYear = cookies.get('selectedSchoolYear');
 
   if (!token) {
     return {
@@ -108,8 +113,8 @@ export const getServerSideProps = async ({ req }) => {
     alazhar: {
       get: {
         me,
-        class: { all: classrooms },
-        students: { all: allStudents },
+        classes: { allWithoutSchoolId: classrooms },
+        students: { allWithoutSchoolId: allStudents },
         teachers: { all: teachers },
         schools: { all: allSchools },
         school_years: { all: schoolYears },
@@ -126,12 +131,12 @@ export const getServerSideProps = async ({ req }) => {
 
   const kpis = await Promise.all([
     serverFetch({
-      uri: classrooms.split('pageSize')[0],
+      uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
     }),
 
     serverFetch({
-      uri: allStudents,
+      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
     }),
     serverFetch({

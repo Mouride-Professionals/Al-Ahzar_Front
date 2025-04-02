@@ -9,7 +9,7 @@ import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 
-export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
+export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear }) => {
   const router = useRouter();
   const cycles_options = mapToOptions({
     data: mapClassesAndLetters({ classes }).cycles,
@@ -20,6 +20,7 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
   const sections_options = mapToOptions({
     data: mapClassesAndLetters({ classes }).sections,
   });
+
 
   const {
     inputs: {
@@ -44,7 +45,7 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
     messages: {
       registration: {
         info: {
-          bitrhPlaceMessage,
+          birthPlaceMessage,
           classInfoMessage,
           personalInfoMessage,
           tutorInfoMessage,
@@ -60,7 +61,9 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
       onSubmit={(values, { setSubmitting, setFieldError }) => {
         registrationFormHandler({
           token,
-          data: values,
+          data: {
+            ...values, schoolYear
+          },
           setSubmitting,
           setFieldError,
           hasSucceeded: setHasSucceeded,
@@ -120,7 +123,7 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
 
           <Stack pt={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {bitrhPlaceMessage}
+              {birthPlaceMessage}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={230}>
@@ -177,6 +180,16 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
+                  {...parent_firstname}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.parent_firstname}
+                />
+              </WrapItem>
+              <WrapItem w={370}>
+                <FormInput
                   {...parent_lastname}
                   errors={errors}
                   handleChange={handleChange}
@@ -186,16 +199,7 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token }) => {
                 />
               </WrapItem>
 
-              <WrapItem w={370}>
-                <FormInput
-                  {...parent_firstname}
-                  errors={errors}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  touched={touched}
-                  value={values.parent_firstname}
-                />
-              </WrapItem>
+
               <WrapItem w={370}>
                 <FormInput
                   {...parent_phone}

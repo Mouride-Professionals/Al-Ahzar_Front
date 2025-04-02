@@ -28,7 +28,7 @@ export const mapTeacherCreationBody = ({ data }) => {
       countryFrom: data.countryFrom,
       arrivalDate: data.arrivalDate,
       previousInstitutes: data.previousInstitutes,
-      etablissement: data.etablissement,
+      school: data.school,
     },
   };
 };
@@ -67,7 +67,7 @@ export const mapTeachersDataTable = ({ teachers }) => {
           arrivalDate,
           previousInstitutes,
           createdAt,
-          etablissement,
+          school,
         },
       } = teacher;
 
@@ -99,7 +99,7 @@ export const mapTeachersDataTable = ({ teachers }) => {
         arrivalDate: arrivalDate,
         previousInstitutes,
         createdAt: createdAt,
-        etablissement: etablissement?.data?.attributes.name,
+        school: school?.data?.attributes.name,
       };
     });
   }

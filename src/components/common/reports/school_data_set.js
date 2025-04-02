@@ -173,6 +173,8 @@ export const SchoolDataSet = ({
   token,
 }) => {
   const [filterText, setFilterText] = useState('');
+  const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
+
 
   let filtered = [];
   filtered.length = data.length;
@@ -223,16 +225,12 @@ export const SchoolDataSet = ({
       </HStack>
     );
   }, [filterText, selectedIndex]);
-  const [expandedRows, setExpandedRows] = useState({});
 
-  const onRowExpand = (event) => {
-    // Close other expanded rows before expanding the current row
 
-    const newExpandedRows = {};
-    newExpandedRows[event] = true;
-    setExpandedRows(newExpandedRows);
+  const handleRowExpandToggle = (row) => {
+    // If the row is already expanded, collapse it. Otherwise, expand it.
+    setExpandedRow((prev) => (prev?.id === row.id ? null : row));
   };
-
   return (
     <DataTable
       style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
@@ -248,6 +246,10 @@ export const SchoolDataSet = ({
       highlightOnHover
       subHeaderComponent={subHeaderComponentMemo}
       expandableRows
+      expandableRowExpanded={(row) => row.id === expandedRow?.id} // Expand only the selected row
+      onRowClicked={handleRowExpandToggle} // Handle row click to expand/collapse
+
+
       expandableRowsComponent={(data) =>
         ExpandedComponent({ ...data, role, user_token: token })
       }

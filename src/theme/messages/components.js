@@ -1,3 +1,5 @@
+const { use } = require("react");
+
 module.exports = {
   name: 'Components Messages',
   themeComponentsMessages: {
@@ -46,14 +48,25 @@ module.exports = {
       school: {
         creation: 'Formulaire de création',
         edit: 'Formulaire de modification',
-        another_school: 'Créer une autre école',
+        another_school: 'Créer un autre établissement',
         info: {
           success: 'Création reussie',
-          message: "Vous avez créé l'école. Vous pouvez maintenant la publier.",
+          message: "Vous avez créé l'établissement.\n Vous pouvez maintenant créer des classes et inscrire des élèves.",
           publishing:
-            " Vous avez publié l'école %name. Vous pouvez maintenant créer des classes et inscrire des élèves.",
+            " Vous avez créé l'établissement .\n Vous pouvez maintenant créer des classes et inscrire des élèves.",
           classList: 'Liste des classes',
         },
+      },
+      user: {
+        creation: 'Formulaire de création',
+        edit: 'Formulaire de modification',
+        another_user: 'Créer un autre utilisateur',
+        info: {
+          success: 'Création reussie',
+          message: 'Vous avez créé un nouvel utilisateur.',
+          publishing:
+            "Vous avez publié l'utilisateur %firstname %lastname. Vous pouvez maintenant lui affecter un rôle.",
+        }
       },
       teacher: {
         affectation: "Affectation d'enseignant",
@@ -80,10 +93,12 @@ module.exports = {
     menu: {
       home: 'Accueil',
       classes: 'Classes',
+      finance: 'Finance',
       students: {
         initial: 'Elèves',
         create: 'Inscrire un élève',
       },
+      users: 'Administration',
       teachers: 'Enseignants',
       schools: 'Établissements',
       school_years: 'Années',
@@ -120,12 +135,20 @@ module.exports = {
           export: '',
         },
       },
+      users: {
+        title: 'Liste des utilisateurs',
+        cta: {
+          filter: '',
+          export: '',
+        },
+      },
     },
     classList: {
       grade: 'Classes de primares',
       intermediate: 'Classes de secondaires 1er cycle',
       upperIntermediate: 'Classes de secondaires 2ème cycle',
       create: 'Créer une classe',
+      noClasses: 'Aucune classe.\n Veuillez créez une classe pour commencer.',
     },
     schoolList: {
       title: 'Liste des écoles',
@@ -156,14 +179,14 @@ module.exports = {
           type: 'Type',
           IEF: 'IEF',
           responsible: 'Directeur',
-          etablissementParent: 'Établissement parent',
+          parentSchool: 'Établissement parent',
         },
         teachers: {
           complete_name: 'Prénom et Nom',
           email: 'Email',
           phoneNumber: 'Téléphone',
           gender: 'Genre',
-          etablissement: 'Établissement',
+          school: 'Établissement',
         },
       },
     },

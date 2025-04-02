@@ -3,16 +3,16 @@ import { DataSet } from '@components/common/reports/student_data_set';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
-import { mapStudentsDataTable } from '@utils/mappers/student';
+import {  mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
 import { serverFetch } from 'src/lib/api';
 
 const mapDetail = (payload) => ({
-  school: payload.etablissement.data.attributes.name,
+  school: payload.school.data.attributes.name,
   _class: `${payload.level} ${payload.letter}`,
-  students: mapStudentsDataTable({
-    students: {
-      ...payload.eleves,
+  students: mapStudentsDataTableForEnrollments({
+    enrollments: {
+      ...payload.enrollments,
       defaultLevel: `${payload.level} ${payload.letter}`,
     },
   }),
@@ -30,7 +30,7 @@ const {
   },
 } = messages;
 
-export default function Class({ detail, role ,token}) {
+export default function Class({ detail, role, token }) {
   const { school, _class, students } = mapDetail(detail.data.attributes);
 
   return (
@@ -70,7 +70,7 @@ export const getServerSideProps = async ({ query, req }) => {
   const role = response.role;
 
   const detail = await serverFetch({
-    uri: routes.api_route.alazhar.get.class.detail.replace('%id', id),
+    uri: routes.api_route.alazhar.get.classes.detail.replace('%id', id),
     user_token: token,
   });
 
@@ -78,6 +78,7 @@ export const getServerSideProps = async ({ query, req }) => {
     props: {
       detail,
       role,
+      token,
     },
   };
 };

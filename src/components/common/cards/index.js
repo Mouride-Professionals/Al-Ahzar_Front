@@ -106,10 +106,63 @@ export const RegistrationCard = ({ title, message, cta }) => {
     </VStack>
   );
 };
+export const SchoolCreationCard = ({ title, message, cta }) => {
+  const router = useRouter();
+
+  return (
+    <VStack
+      py={10}
+      px={8}
+      alignItems={'flex-start'}
+      flex={1}
+      flexGrow={1}
+      h={'100%'}
+    >
+      <HStack pb={10}>
+        <Stack
+          alignItems={'center'}
+          justifyContent={'center'}
+          borderRadius={'50%'}
+          bgColor={colors.secondary.soft}
+          w={120}
+          h={120}
+        >
+          <BsCheck size={60} />
+        </Stack>
+
+        <Stack pl={15} w={'50%'}>
+          <Text
+            color={colors.secondary.regular}
+            fontSize={20}
+            fontWeight={'700'}
+          >
+            {title}
+          </Text>
+          <Text color={colors.gray.sport} fontSize={14}>
+            {message}
+          </Text>
+        </Stack>
+      </HStack>
+
+      <Divider />
+
+      <Stack pt={10} direction={'row'} justifyContent={'flex-end'} w={'100%'}>
+        <HStack justifyContent={'flex-end'} w={'40%'}>
+          <SecondaryButton message={'Terminer'} onClick={() => router.back()} />
+          <PrimaryButton
+            message={cta.message}
+            {...(cta.link && { onClick: () => router.push(cta.link) })}
+            {...(cta.quickAction && { onClick: cta.quickAction })}
+          />
+        </HStack>
+      </Stack>
+    </VStack>
+  );
+};
 
 export const StatCard = ({ icon, title, count }) => {
   return (
-    <Box bgColor={colors.white} borderRadius={10} h={95} p={5} minW={297}>
+    <Box bgColor={colors.white} borderRadius={10} h={95} p={5} minW={200}>
       <HStack>
         <VStack
           mr={2}

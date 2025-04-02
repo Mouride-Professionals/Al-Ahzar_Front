@@ -1,5 +1,6 @@
 import { Badge } from '@chakra-ui/react';
 import { colors, messages } from '@theme';
+import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
 
 export const reportingFilter = ({ data, needle }) => {
   return data.filter(
@@ -30,14 +31,14 @@ const {
         type,
         IEF,
         responsible,
-        etablissementParent,
+        parentSchool,
       },
       teachers: {
         complete_name,
         email: teacherEmail,
         phoneNumber,
         gender,
-        etablissement,
+        school,
       },
     },
   },
@@ -74,7 +75,7 @@ export const STUDENTS_COLUMNS = [
   },
   {
     name: registration,
-    selector: (row) => row.registered_at,
+    selector: (row) => row.enrollment_date,
     desc: true,
     sortable: true,
     reorder: true,
@@ -101,7 +102,50 @@ export const STUDENTS_COLUMNS = [
     ),
   },
 ];
-
+export const PAYMENTS_COLUMNS = [{
+  name: 'Date de paiement',
+  selector: row => (new Date(row.createdAt)).toLocaleDateString(
+    'fr-FR',
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }
+  ),
+  desc: true,
+  sortable: true,
+  reorder: true,
+},
+{
+  name: 'Montant (FCFA)',
+  selector: row => row.amount,
+  desc: true,
+  sortable: true,
+  reorder: true,
+  // right: true,
+},
+{
+  name: 'Type',
+  selector: row => (mapPaymentType[row.paymentType] || 'Autre'),
+  desc: true,
+  sortable: true,
+  reorder: true,
+},
+  {
+    name: 'Mensualité',
+    selector: row => row.monthOf && dateFormatter(new Date(row.monthOf)),
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+{
+  name: 'Élève',
+  selector: row => `${row.firstname} ${row.lastname}`,
+  desc: true,
+  sortable: true,
+  reorder: true,
+},
+];
 export const SCHOOLS_COLUMNS = [
   {
     name: name,
@@ -157,8 +201,8 @@ export const SCHOOLS_COLUMNS = [
     reorder: true,
   },
   {
-    name: etablissementParent,
-    selector: (row) => `${row.etablissementParent}`,
+    name: parentSchool,
+    selector: (row) => `${row.parentSchool}`,
     desc: true,
     sortable: true,
     reorder: true,
@@ -194,55 +238,15 @@ export const TEACHERS_COLUMNS = [
     sortable: true,
     reorder: true,
   },
-  // {
-  //   name: 'Sexe',
-  //   selector: (row) => `${row.gender}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
+
   {
     name: 'Établissement',
-    selector: (row) => `${row.etablissement}`,
+    selector: (row) => `${row.school}`,
     desc: true,
     sortable: true,
     reorder: true,
   },
-  // {
-  //   name: 'Date de naissance',
-  //   selector: (row) => `${row.dateOfBirth || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Lieu de naissance',
-  //   selector: (row) => `${row.birthPlace || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Situation matrimoniale',
-  //   selector: (row) => `${row.maritalStatus || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Dernier diplôme',
-  //   selector: (row) => `${row.academicDegree || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Disciplines',
-  //   selector: (row) => `${row.disciplines || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
+
   {
     name: 'Langue parlée',
     selector: (row) => `${row.language || 'N/A'}`,
@@ -250,13 +254,7 @@ export const TEACHERS_COLUMNS = [
     sortable: true,
     reorder: true,
   },
-  // {
-  //   name: 'Matières enseignées',
-  //   selector: (row) => `${row.subjects || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
+
   {
     name: 'Type de contrat',
     selector: (row) => `${row.contractType || 'N/A'}`,
@@ -271,41 +269,52 @@ export const TEACHERS_COLUMNS = [
     sortable: true,
     reorder: true,
   },
-  // {
-  //   name: 'Salaire',
-  //   selector: (row) => `${row.salary || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Salaire par heure',
-  //   selector: (row) => `${row.salaryPerHour || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Nombre d’heures',
-  //   selector: (row) => `${row.hoursNumber || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Pays d’origine',
-  //   selector: (row) => `${row.countryFrom || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
-  // {
-  //   name: 'Date d’arrivée',
-  //   selector: (row) => `${row.arrivalDate || 'N/A'}`,
-  //   desc: true,
-  //   sortable: true,
-  //   reorder: true,
-  // },
+
+];
+
+export const USER_COLUMNS = [
+  {
+    name: 'Nom',
+    selector: (row) => `${row.lastname || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Prénom',
+    selector: (row) => `${row.firstname || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Email',
+    selector: (row) => `${row.email || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Téléphone',
+    selector: (row) => `${row.phone || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Etablissement',
+    selector: (row) => `${row.school?.name || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
+  {
+    name: 'Rôle',
+    selector: (row) => `${row.role?.name || 'N/A'}`,
+    desc: true,
+    sortable: true,
+    reorder: true,
+  },
 ];
 
 export const SCHOOL_YEAR_COLUMNS = [

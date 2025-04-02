@@ -3,6 +3,7 @@ import { RegistrationCard } from '@components/common/cards';
 import { CreateStudentForm } from '@components/forms/student/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -17,7 +18,7 @@ const {
   },
 } = messages;
 
-export default function Create({ classes, role, token }) {
+export default function Create({ classes, role, token ,schoolYear}) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
 
   const router = useRouter();
@@ -75,6 +76,7 @@ export default function Create({ classes, role, token }) {
                 classes,
                 setHasSucceeded,
                 token,
+                schoolYear
               }}
             />
           )}
@@ -84,18 +86,19 @@ export default function Create({ classes, role, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
+  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
-  const { role = null } = await serverFetch({
+  const { role ,school } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
 
   const classes = await serverFetch({
-    uri: routes.api_route.alazhar.get.classes,
+    uri: routes.api_route.alazhar.get.classes.all.replace('%schoolId', school?.id).replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
 
@@ -104,6 +107,7 @@ export const getServerSideProps = async ({ req }) => {
       role,
       token: token,
       classes,
+      schoolYear: activeSchoolYear,
     },
   };
 };

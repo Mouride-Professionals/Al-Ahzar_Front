@@ -59,7 +59,7 @@ export default function Edit({ schoolData, schools, role, token }) {
           minH={'35rem'}
         >
           {hasSucceeded ? (
-            router.push(routes.page_route.dashboard.direction.schools.all)
+            router.push(routes.page_route.dashboard.direction.initial)
           ) : (
             <CreateSchoolForm
               {...{

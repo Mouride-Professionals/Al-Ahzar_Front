@@ -126,42 +126,14 @@ const ExpandedComponent = ({ data, schools, token }) => {
     arrivalDate,
     previousInstitutes,
     createdAt,
-    etablissement,
+    school,
   } = data;
   const schoolOptions = schools.map((school) => ({
     value: school.id,
     label: school.name,
   }));
 
-  // const selectStyles
-  //   = {
-  //   control: (base, state) => ({
-  //     ...base,
-  //     backgroundColor: state.isFocused ? '#f7f7f7' : 'white',
-  //     borderColor: state.isFocused ? '#3182ce' : '#e2e8f0',
-  //     boxShadow: state.isFocused ? '0 0 0 1px orange' : 'none',
-  //     '&:hover': {
-  //       borderColor: '#3182ce',
-  //     },
-  //   }),
-  //   option: (base, state) => ({
-  //     ...base,
-  //     backgroundColor: state.isFocused ? '#e2e8f0' : 'white',
-  //     color: state.isFocused ? '#1a202c' : '#4a5568',
-  //     '&:active': {
-  //       backgroundColor: '#cbd5e0',
-  //     },
-  //   }),
-  //   menu: (base) => ({
-  //     ...base,
-  //     borderRadius: '8px',
-  //     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  //     zIndex: 9999,
-  //   }),
-
-
-  // };
-
+ 
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
       <BoxZone>
@@ -244,7 +216,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
               >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>Professional Details</Text>
-                  {etablissement && <Text>Institution: {etablissement}</Text>}
+                  {school && <Text>Institution: {school}</Text>}
                   {disciplines?.length > 0 && (
                     <Text>
                       <strong>Disciplines:</strong> {disciplines.join(', ')}
@@ -312,7 +284,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
               >
                 {'Affecter'}
               </Button>
-              ,
+              
 
 
             </HStack>
@@ -323,7 +295,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
                 <ModalHeader>Assign {firstname || ''} {lastname || ''} to a New School</ModalHeader>
                 <ModalBody>
                   <Text mb={4}>
-                    <strong>Current School:</strong> {etablissement || 'Not Assigned'}
+                    <strong>Current School:</strong> {school || 'Not Assigned'}
                   </Text>
 
                   <Select

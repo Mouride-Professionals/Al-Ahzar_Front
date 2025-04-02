@@ -153,8 +153,25 @@ export const FormFilter = ({ onExport }) => (
     h={45.2}
     borderRadius={10}
     px={3}
-    onClick={(e) => onExport(e.target.value)}
+  // onClick={(e) => onExport(e.target.value)}
   >
     Filtrer
+  </Button>
+);
+
+export const StudentFilter = ({ onFilter, label ,bgColor, color}) => (
+  <Button
+    leftIcon={<CiFilter size={25} />}
+    color={color}
+    fontSize={14}
+    mr={2}
+    variant={'outline'}
+    bg={bgColor}
+    h={45.2}
+    borderRadius={10}
+    px={3}
+    onClick={onFilter}
+  >
+    {label}
   </Button>
 );

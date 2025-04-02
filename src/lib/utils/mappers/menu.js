@@ -1,7 +1,7 @@
 import { colors, messages, routes } from '@theme';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap, HiOutlineHome } from 'react-icons/hi';
-import { SiGoogleclassroom } from 'react-icons/si';
+import { SiCashapp, SiGoogleclassroom,  } from 'react-icons/si';
 
 const {
   page_route: {
@@ -59,6 +59,25 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     message: messages.components.menu.classes,
     link: ACCESS_ROUTES[role?.name]?.classes.all,
   },
+  // finance not be seen by all_access
+  ACCESS_ROUTES[role?.name]?.finance && ACCESS_ROUTES[role?.name]?.finance.initial && {
+    active: activeLink == ACCESS_ROUTES[role?.name]?.finance.initial,
+    icon: (
+      //finance and money icon
+      <
+        SiCashapp
+        size={20}
+        color={
+          activeLink == ACCESS_ROUTES[role?.name]?.finance.initial
+            ? colors.white
+            : colors.secondary.regular
+        }
+      />
+    ),
+    color: colors.secondary.regular,
+    message: messages.components.menu.finance,
+    link: ACCESS_ROUTES[role?.name]?.finance.initial,
+  },
   // students
   !ACCESS_ROUTES[role?.name]?.students && {
     active: [
@@ -84,6 +103,31 @@ export const DashboardMainMenu = ({ activeLink, role }) => [
     color: colors.secondary.regular,
     message: messages.components.menu.students.initial,
     link: ACCESS_ROUTES[role?.name]?.students.initial,
+  },
+  //users
+  ACCESS_ROUTES[role?.name]?.users && {
+    active: [
+      ACCESS_ROUTES[role?.name]?.users.all,
+      ACCESS_ROUTES[role?.name]?.users.detail,
+      ACCESS_ROUTES[role?.name]?.users.create,
+    ].includes(activeLink),
+    icon: (
+      <HiAcademicCap
+        size={20}
+        color={
+          [
+            ACCESS_ROUTES[role?.name]?.users.all,
+            ACCESS_ROUTES[role?.name]?.users.detail,
+            ACCESS_ROUTES[role?.name]?.users.create,
+          ].includes(activeLink)
+            ? colors.white
+            : colors.secondary.regular
+        }
+      />
+    ),
+    color: colors.secondary.regular,
+    message: messages.components.menu.users,
+    link: ACCESS_ROUTES[role?.name]?.users.all,
   },
   ACCESS_ROUTES[role?.name]?.teachers && {
     active: [

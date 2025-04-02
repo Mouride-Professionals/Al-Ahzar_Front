@@ -7,13 +7,11 @@ import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
 import { mapSchoolsDataTable } from '@utils/mappers/school';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
-import customRedirect from '../api/auth/redirect';
 
 const {
   pages: {
@@ -58,10 +56,7 @@ export default function Dashboard({ kpis, role, token }) {
     },
   ];
 
-  useEffect(() => {
-    // customRedirect();
 
-  }, []);
   const schools = mapSchoolsDataTable({ schools: kpis[3] });
 
   return (
@@ -121,7 +116,7 @@ export const getServerSideProps = async ({ req }) => {
     alazhar: {
       get: {
         me,
-        class: { all: classrooms },
+        classes: { allWithoutSchoolId: classrooms },
         students: { all: allStudents },
         teachers: { all: teachers },
         schools: { all: allSchools },
@@ -139,7 +134,7 @@ export const getServerSideProps = async ({ req }) => {
 
   const kpis = await Promise.all([
     serverFetch({
-      uri: classrooms.split('pageSize')[0],
+      uri: classrooms,
       user_token: token,
     }),
 
@@ -152,7 +147,7 @@ export const getServerSideProps = async ({ req }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
     serverFetch({
-      uri: `${allSchools}?sort=createdAt:desc&populate[responsible]=*&populate[etablissementParent][fields][0]=name`,
+      uri: `${allSchools}?sort=createdAt:desc&populate[responsible]=*&populate[parentSchool][fields][0]=name`,
       user_token: token,
     }).catch(() => ({ data: [] })),
 

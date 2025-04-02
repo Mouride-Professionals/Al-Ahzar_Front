@@ -21,7 +21,7 @@ export const mapSchoolCreationBody = ({ data }) => {
       responsibleName: data.responsibleName,
       city: data.city,
       postBox: data.postBox,
-      etablissementParent: data.etablissementParent || null,
+      parentSchool: data.parentSchool || null,
     },
   };
 };
@@ -35,7 +35,7 @@ export const mapSchoolsDataTable = ({ schools }) => {
         attributes: {
           name,
           type,
-          etablissementParent,
+          parentSchool,
           region,
           department,
           commune,
@@ -58,8 +58,8 @@ export const mapSchoolsDataTable = ({ schools }) => {
         id,
         name,
         type,
-        etablissementParent:
-          etablissementParent?.data?.attributes.name || 'N/A',
+        parentSchool:
+          parentSchool?.data?.attributes.name || 'N/A',
         region,
         department,
         commune,

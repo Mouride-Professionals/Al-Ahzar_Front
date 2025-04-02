@@ -1,33 +1,62 @@
 import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
-import { confirmStudentFormHandler } from '@handlers';
+import { confirmEnrollmentFormHandler } from '@handlers';
 import { colors, forms } from '@theme';
-import { studentConfirmationchema } from '@utils/schemas';
+import { studentConfirmationSchema } from '@utils/schemas';
+import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
+import { useRouter } from 'next/router';
 
 export const StudentConfirmationForm = ({
+  enrollment,
   student,
   setHasSucceeded,
   token,
 }) => {
+  const router = useRouter();
+  const {
+    id,
+    attributes: {
+      student: {
+        data: {
+          id: studentId,
+          attributes: { firstname, lastname, type },
+        },
+      },
+      class: {
+        data: {
+          attributes: { level, letter },
+        },
+      },
+    },
+  } = student;
   const {
     inputs: {
-      student: { confirm },
+      student: { confirm: {
+        amount,
+        monthOf,
+        paymentDetail: {
+          monthlyFee,
+          enrollmentFee,
+          blouseFee,
+          examFee,
+          parentContributionFee
+        }
+      } },
     },
   } = forms;
 
   return (
     <Formik
-      validationSchema={studentConfirmationchema}
-      initialValues={{
-        studentType: '',
-        socialCategory: '',
-        comment: '',
-      }}
+      validationSchema={studentConfirmationSchema}
+      initialValues={mapFormInitialValues(
+        studentConfirmationSchema._nodes
+      )}
       onSubmit={(values, { setSubmitting, setFieldError }) => {
-        confirmStudentFormHandler({
-          student,
+        confirmEnrollmentFormHandler({
+          enrollment: enrollment,
+          student: studentId,
           token,
           data: values,
           setSubmitting,
@@ -44,49 +73,109 @@ export const StudentConfirmationForm = ({
         handleBlur,
         handleSubmit,
         isSubmitting,
-        /* and other goodies */
       }) => (
         <Stack px={10} py={10}>
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              Informations personnelles
+              Informations de l'Élève
+            </Text>
+            <HStack align={'center'} justifyContent={'space-between'}>
+              <WrapItem w={370}>
+                <Text fontSize="md">
+                  <strong>Nom:</strong> {firstname} {lastname}
+                </Text>
+              </WrapItem>
+              <WrapItem w={370}>
+                <Text fontSize="md">
+                  <strong>Type:</strong> {type}
+                </Text>
+              </WrapItem>
+              <WrapItem w={370}>
+                <Text fontSize="md">
+                  <strong>Classe:</strong> {level} {letter}
+                </Text>
+              </WrapItem>
+            </HStack>
+          </Stack>
+          <Stack mt={5}>
+            <Text color={colors.secondary.regular} fontWeight={'700'}>
+              Les détails du paiement
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
-                  {...confirm.studentType}
+                  {...amount}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   touched={touched}
-                  value={values.studentType}
+                  value={values.amount}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
-                  {...confirm.socialCategory}
+                  {...enrollmentFee}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   touched={touched}
-                  value={values.socialCategory}
+                  value={values.enrollmentFee}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
-                  {...confirm.comment}
+                  {...monthOf}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   touched={touched}
-                  value={values.comment}
+                  value={values.monthOf}
+                />
+              </WrapItem>
+            </HStack>
+            <HStack mt={5} align={'center'} justifyContent={'space-between'}>
+              <WrapItem w={370}>
+                <FormInput
+                  {...monthlyFee}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.monthlyFee}
+                />
+              </WrapItem>
+              <WrapItem w={370}>
+                <FormInput
+                  {...examFee}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.examFee}
+                />
+              </WrapItem>
+              <WrapItem w={370}>
+                <FormInput
+                  {...blouseFee}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.blouseFee}
+                />
+              </WrapItem>
+              <WrapItem w={370}>
+                <FormInput
+                  {...parentContributionFee}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.parentContributionFee}
                 />
               </WrapItem>
             </HStack>
           </Stack>
-
           <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
             <Box w={'15%'} mr={5}>
               <SecondaryButton

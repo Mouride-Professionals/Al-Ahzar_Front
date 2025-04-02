@@ -25,7 +25,7 @@ export const updateTeacher = async ({ teacher, payload, token }) => {
 export const assignTeacher = async ({ teacher, school, token }) => {
   const payload = {
     data: {
-      etablissement: school,
+      school: school,
     },
   }
   return await fetcher({

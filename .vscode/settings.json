@@ -5,5 +5,13 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
-  "cSpell.words": ["alazhar", "Annexe", "chakra", "kpis", "strapi"]
+  "cSpell.words": [
+    "alazhar",
+    "Annexe",
+    "chakra",
+    "firstname",
+    "kpis",
+    "lastname",
+    "strapi"
+  ]
 }

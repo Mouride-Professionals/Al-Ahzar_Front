@@ -17,7 +17,7 @@ export const mapSchoolYearsDataTable = ({ schoolYears }) => {
     return schoolYears.data.map((schoolYear) => {
       const {
         id,
-        attributes: { name, startDate, endDate, description, isActive, isCurrent , isEnded },
+        attributes: { name, startDate, endDate, description, isCurrent , isEnded },
       } = schoolYear;
       return {
         id,
@@ -25,7 +25,6 @@ export const mapSchoolYearsDataTable = ({ schoolYears }) => {
         startDate,
         endDate,
         description,
-        isActive,
         isCurrent,
         isEnded
 

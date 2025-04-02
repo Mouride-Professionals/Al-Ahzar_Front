@@ -1,3 +1,4 @@
+
 export const name = 'Theming Routes File';
 export const themeRoutes = {
 
@@ -18,6 +19,11 @@ export const themeRoutes = {
         students: {
           initial: '/dashboard/cashier/students',
           confirm: '/dashboard/cashier/students/confirm/registration/{student}',
+
+        },
+        finance: {
+          initial: '/dashboard/cashier/finance',
+          // detail: '/dashboard/cashier/classes/%id',
         },
       },
       surveillant: {
@@ -29,6 +35,8 @@ export const themeRoutes = {
         students: {
           initial: '/dashboard/surveillant/students',
           create: '/dashboard/surveillant/students/create',
+          resubscribe: '/dashboard/surveillant/students/{student}/resubscribe',
+
         },
       },
       direction: {
@@ -51,6 +59,12 @@ export const themeRoutes = {
           create: '/dashboard/direction/teachers/create',
           edit: '/dashboard/direction/teachers/%id/edit',
         },
+        users: {
+          all: '/dashboard/direction/users',
+          detail: '/dashboard/direction/users/%id',
+          create: '/dashboard/direction/users/create',
+          edit: '/dashboard/direction/users/%id/edit',
+        },
         students: {
           initial: '/dashboard/direction/students',
           create: '/dashboard/direction/students/create',
@@ -62,6 +76,10 @@ export const themeRoutes = {
           edit: '/dashboard/direction/school_years/%id/edit',
 
         },
+        finance: {
+          initial: '/dashboard/direction/finance',
+          // detail: '/dashboard/cashier/classes/%id',
+        },
 
       },
     },
@@ -70,28 +88,34 @@ export const themeRoutes = {
     alazhar: {
       create: {
         student: '/students',
+        enrollment: '/enrollments',
         classroom: '/classes',
         payment: '/payments',
         school: '/schools',
         teacher: '/teachers',
         school_year: '/school-years',
+        user: '/users',
       },
       get: {
-        classes: '/classes',
-        class: {
-          // all: `/classes?filters[schoolYear][id][$eq]=%activeSchoolYear&populate=eleves.payments&pageSize=100`,
-          all: `/classes?filters[schoolYear][isActive][$eq]=true&populate=eleves.payments&pageSize=100`,
-          detail: `/classes/%id?filters[schoolYear][isActive][$eq]=true&populate=eleves,eleves.payments,etablissement`,
-          // detail: `/classes/%id?filters[schoolYear][id][$eq]=%activeSchoolYear&populate=eleves,eleves.payments,etablissement`,
+        classes: {
+          all: `/classes?filters[school][id][$eq]=%schoolId&filters[schoolYear][id][$eq]=%activeSchoolYear&populate=enrollments.student`,
+          allWithoutSchoolId: `/classes?filters[schoolYear][id][$eq]=%activeSchoolYear&populate=enrollments.student`,
+          detail: `/classes/%id?populate=enrollments.student,enrollments.payments,school,enrollments.schoolYear`,
         },
+
         students: {
-          all: `/students?filters[classe][schoolYear][isActive][$eq]=true&populate=classe,payments`,
-          // all: `/students?filters[classe][schoolYear][id][$eq]=%activeSchoolYear&populate=classe,payments`,
-          detail: '/students/%id?populate=classe,payments',
+          allWithoutSchoolYear: `/enrollments?filters[class][school][id][$eq]=%schoolId&filters[class][schoolYear][id][$lt]=%activeSchoolYear&sort=enrollmentDate:desc&populate=student,payments,class,schoolYear`,
+          all: `/enrollments?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[class][school][id][$eq]=%schoolId&sort=enrollmentDate:desc&populate=student,payments,class,schoolYear`,
+          allWithoutSchoolId: `/enrollments?filters[schoolYear][id][$eq]=%activeSchoolYear&sort=enrollmentDate:desc&populate=student,payments,class,schoolYear`,
+          detail: '/enrollments/%id?populate=class,student,payments,schoolYear',
         },
         teachers: {
           detail: '/teachers/%id',
           all: `/teachers`,
+        },
+        users: {
+          detail: '/users/%id',
+          all: `/users`,
         },
         schools: {
           detail: '/schools/%id',
@@ -102,6 +126,11 @@ export const themeRoutes = {
           all: '/school-years',
           detail: '/school-years/%id',
         },
+        finance: {
+          all: '/payments?filters[enrollment][schoolYear][id][$eq]=%activeSchoolYear&filters[enrollment][class][school][id][$eq]=%schoolId&sort=createdAt:desc&populate=enrollment.student,payment_detail',
+          stats: '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
+          statsWithoutSchoolId: '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
+        },
         me: '/users/me?populate=*',
       },
       update: {
@@ -109,6 +138,7 @@ export const themeRoutes = {
         school: '/schools/%id',
         teacher: '/teachers/%id',
         school_year: '/school-years/%id',
+        user: '/users/%id',
 
       },
     },

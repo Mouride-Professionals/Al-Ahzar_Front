@@ -1,4 +1,5 @@
-import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
+import { HStack, Stack, VStack } from '@chakra-ui/react';
+import { SchoolCreationCard } from '@components/common/cards';
 import { CreateSchoolForm } from '@components/forms/school/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
@@ -47,9 +48,9 @@ export default function Create({ schools, role, token }) {
           w={'100%'}
         >
           <BsArrowLeftShort size={40} />
-          <Text fontSize={20} fontWeight={'700'}>
+          {/* <Text fontSize={20} fontWeight={'700'}>
             {hasSucceeded ? publishing : creation}
-          </Text>
+          </Text> */}
         </HStack>
         <Stack
           bgColor={colors.white}
@@ -59,8 +60,18 @@ export default function Create({ schools, role, token }) {
           w={'100%'}
           minH={'35rem'}
         >
+
           {hasSucceeded ? (
-            router.push(routes.page_route.dashboard.direction.schools.all)
+            <SchoolCreationCard
+              cta={{
+                message: another_school,
+                // link: routes.page_route.dashboard.direction.schools.create,
+                quickAction: () => setHasSucceeded(false),
+              }}
+              title={info.success}
+              message={info.message}
+            />
+            // router.push(routes.page_route.dashboard.direction.initial)
           ) : (
             <CreateSchoolForm
               {...{

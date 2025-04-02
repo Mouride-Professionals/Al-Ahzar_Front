@@ -1,11 +1,12 @@
 import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
-import { createClassromFormHandler } from '@handlers';
+import { createClassroomFormHandler } from '@handlers';
 import { colors, forms } from '@theme';
 import { classCreationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
+import Cookies from 'js-cookie';
 
 export const ClassCreationForm = ({ school, token, action }) => {
   const {
@@ -16,14 +17,17 @@ export const ClassCreationForm = ({ school, token, action }) => {
     },
   } = forms;
 
+  const schoolYear =  Cookies.get('selectedSchoolYear');
+  
   return (
     <Formik
       validationSchema={classCreationSchema}
       initialValues={mapFormInitialValues(classCreationSchema._nodes)}
       onSubmit={(values, { setSubmitting, setFieldError }) => {
-        createClassromFormHandler({
+        createClassroomFormHandler({
           token,
           school,
+          schoolYear,
           data: values,
           setSubmitting,
           setFieldError,

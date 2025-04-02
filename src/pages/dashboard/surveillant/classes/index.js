@@ -14,6 +14,7 @@ import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
@@ -83,16 +84,17 @@ export default function Classes({ classes, role, schoolId, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
+  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
   const {
     alazhar: {
       get: {
         me,
-        classes: allClasses
+        classes: { all: classrooms },
       },
     },
   } = routes.api_route;
@@ -102,11 +104,11 @@ export const getServerSideProps = async ({ req }) => {
     user_token: token,
   });
 
-  const { role, etablissement_responsible: { id: schoolId } } = userResponse;
+  const { role, school: { id: schoolId } } = userResponse;
 
   // Fetch only classes that belong to the active school year
   const classesResponse = await serverFetch({
-    uri: `${allClasses}?filters[etablissement][id][$eq]=${schoolId}&filters[schoolYear][isActive][$eq]=true&populate=schoolYear,eleves`,
+    uri: classrooms.replace('%schoolId', schoolId).replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
 

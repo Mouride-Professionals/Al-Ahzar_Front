@@ -1,10 +1,11 @@
 export const mapClassBody = ({ payload }) => {
-  const { level, letter, grade, name, school } = payload;
+  const { level, letter, grade, name, school, schoolYear } = payload;
   return {
     data: {
       cycle: grade,
       name,
-      etablissement: school,
+      school: school,
+      schoolYear: schoolYear,
       level,
       letter,
     },
@@ -59,3 +60,12 @@ export const dateFormatter = (date) => {
   });
   return formatter.format(date);
 };
+
+export const mapPaymentType = {
+    'monthly': 'Mensualité',
+    'enrollment': 'Inscription',
+    'blouse': 'Blouse',
+    'parentContribution': 'Contribution des parents',
+    'exam': 'Examen',
+    'other': 'Autre',
+  };
