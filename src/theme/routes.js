@@ -95,6 +95,7 @@ export const themeRoutes = {
         teacher: '/teachers',
         school_year: '/school-years',
         user: '/users',
+        expense: '/expenses',
       },
       get: {
         classes: {
@@ -130,6 +131,11 @@ export const themeRoutes = {
           all: '/payments?filters[enrollment][schoolYear][id][$eq]=%activeSchoolYear&filters[enrollment][class][school][id][$eq]=%schoolId&sort=createdAt:desc&populate=enrollment.student,payment_detail',
           stats: '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
           statsWithoutSchoolId: '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
+        },
+        expenses: {
+          all: '/expenses?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId&sort=createdAt:desc&populate=school,schoolYear',
+          stats: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
+          statsWithoutSchoolId: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
         },
         me: '/users/me?populate=*',
       },

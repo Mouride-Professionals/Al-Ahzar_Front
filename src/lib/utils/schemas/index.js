@@ -8,7 +8,7 @@ export const authenticationSchema = object({
 
 const AllowedSexes = ['Homme', 'Femme'];
 const AllowedRoles = ['Directeur Géneral', 'Sécretaraire Géneral', 'Caissier', 'Surveillant Géneral'];
-const AllowedStudentTypes = [
+const AllowedEnrollmentTypes = [
   'Ancien Redoublant',
   'Ancien Passant',
   'Nouveau',
@@ -46,7 +46,19 @@ const classComplexity = {
   ],
   allowedLetter: ['A', 'B', 'C', 'D', 'E', 'F'],
 };
+const allowedExpenseCategory = [
+  "Services Publics",
+  "Salaires",
+  "Fournitures",
+  "Entretien",
+  "Transport",
+  "Activités Parascolaires",
+  "Équipements",
+  "Formation",
+  "Autres",
 
+
+];
 const schoolComplexity = {
   allowedCycles: ['primaire', 'secondaire 1er cycle', 'secondaire 2eme cycle'],
   allowedRegions: [
@@ -153,26 +165,25 @@ const teacherComplexity = {
 };
 
 export const studentRegistrationSchema = object({
-  firstname: string().trim().required(),
-  lastname: string().trim().required(),
-  sex: string().trim().oneOf(AllowedSexes).required(),
-  date: number().max(31).required(),
+  firstname: string().trim().required('Firstname is required'),
+  lastname: string().trim().required('Lastname is required'),
+  sex: string().trim().oneOf(AllowedSexes).required('Sex is required'),
+  socialCategory: string().trim().oneOf(AllowedSocialCategories).required('Social category is required'),
+  date: number().max(31).required('Date is required'),
   month: number().max(12).required(),
   year: number().min(1990).required(),
-  birthplace: string().trim().required(),
-  parent_lastname: string().trim().required(),
-  parent_firstname: string().trim().required(),
-  parent_phone: number().required(),
+  birthplace: string().trim().required('Birthplace is required'),
+  parent_lastname: string().trim().required('Parent lastname is required'),
+  parent_firstname: string().trim().required('Parent firstname is required'),
+  parent_phone: number().required('Phone number is required'),
   level: string().trim().required(),
   classroom: string().trim().required(),
-  class_letter: string().trim().required(),
+  class_letter: string().trim().required('Class letter is required'),
   registration: string(),
 });
 
 export const studentConfirmationSchema = object({
-  // studentType: string().trim().oneOf(AllowedStudentTypes).required(),
-  // socialCategory: string().trim().oneOf(AllowedSocialCategories).required(),
-  // comment: string().trim(),
+
   amount: number().required().label('Montant total'),
   monthOf: date().label('Mois de paiement'),
   paymentDetail: object({
@@ -185,6 +196,13 @@ export const studentConfirmationSchema = object({
 
 
 });
+
+export const enrollmentSchema = object({
+  classroom: string().trim().required(),
+  enrollmentType: string().trim().oneOf(AllowedEnrollmentTypes).required('Enrollment type is required'),
+  socialCategory: string().trim().oneOf(AllowedSocialCategories).required('Social category is required'),
+});
+
 
 export const passwordRecoverySchema = object({
   email: string().email().required(),
@@ -352,3 +370,24 @@ export const schoolYearSchema = object({
   description: string().trim().required('La description est requise'),
 });
 
+export const expenseSchema = object({
+  expenseDate: date()
+    .required("La date est requise")
+    .typeError("Veuillez entrer une date valide"),
+  amount: number()
+    .required("Le montant est requis")
+    .min(0, "Le montant doit être positif")
+    .typeError("Veuillez entrer un montant valide"),
+  category: string()
+    .required("La catégorie est requise")
+    .oneOf(allowedExpenseCategory,
+      "Catégorie invalide"
+    ),
+  description: string().optional(),
+  // school: number()
+  //   .required("L'école est requise")
+  //   .typeError("Veuillez sélectionner une école"),
+  // schoolYear: number()
+  //   .required("L'année scolaire est requise")
+  //   .typeError("Veuillez sélectionner une année scolaire"),
+});

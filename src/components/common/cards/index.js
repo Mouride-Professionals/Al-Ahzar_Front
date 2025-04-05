@@ -162,7 +162,7 @@ export const SchoolCreationCard = ({ title, message, cta }) => {
 
 export const StatCard = ({ icon, title, count }) => {
   return (
-    <Box bgColor={colors.white} borderRadius={10} h={95} p={5} minW={200}>
+    <Box bgColor={colors.white} borderRadius={10} h={95} p={5} minW={200} >
       <HStack>
         <VStack
           mr={2}

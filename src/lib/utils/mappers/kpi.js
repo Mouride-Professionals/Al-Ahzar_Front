@@ -146,6 +146,46 @@ export const PAYMENTS_COLUMNS = [{
   reorder: true,
 },
 ];
+// @utils/mappers/kpi.js
+export const EXPENSES_COLUMNS = [
+  {
+    name: "Date",
+   selector: row => (new Date(row.createdAt)).toLocaleDateString(
+      'fr-FR',
+      {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }
+    ),
+    sortable: true,
+    id: "expenseDate",
+  },
+  {
+    name: "Montant",
+    selector: (row) => `${row.amount} FCFA`,
+    sortable: true,
+    id: "amount",
+  },
+  {
+    name: "Catégorie",
+    selector: (row) => row.category,
+    sortable: true,
+    id: "category",
+  },
+  {
+    name: "École",
+    selector: (row) => row.school || "N/A",
+    sortable: true,
+    id: "school",
+  },
+  {
+    name: "Année Scolaire",
+    selector: (row) => row.schoolYear || "N/A",
+    sortable: true,
+    id: "schoolYear",
+  },
+];
 export const SCHOOLS_COLUMNS = [
   {
     name: name,

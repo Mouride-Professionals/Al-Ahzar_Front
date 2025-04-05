@@ -29,6 +29,7 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
           firstname,
           lastname,
           sex,
+          socialCategory,
           date,
           month,
           year,
@@ -85,7 +86,7 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {personalInfoMessage}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
+            <HStack align={'center'} justifyContent={'space-between'} gap={8}>
               <WrapItem w={370}>
                 <FormInput
                   {...firstname}
@@ -116,6 +117,16 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.sex}
+                />
+              </WrapItem>
+              <WrapItem w={370}>
+                <FormInput
+                  {...socialCategory}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  touched={touched}
+                  value={values.socialCategory}
                 />
               </WrapItem>
             </HStack>

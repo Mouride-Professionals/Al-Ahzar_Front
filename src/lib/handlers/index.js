@@ -1,3 +1,4 @@
+import { createExpense } from '@services/expense';
 import { persistPayment } from '@services/payment';
 import {
   createClassroom,
@@ -10,6 +11,7 @@ import { confirmStudent, createPayment, createStudent, enrollStudent } from '@se
 import { createTeacher, updateTeacher } from '@services/teacher';
 import { createUser } from '@services/user';
 import { forms, routes } from '@theme';
+import { mapExpenseCreationBody } from '@utils/mappers/expense';
 import { mapMonthCreationBody } from '@utils/mappers/payment';
 import { mapSchoolCreationBody } from '@utils/mappers/school';
 import { mapSchoolYearCreationBody } from '@utils/mappers/school_year';
@@ -74,15 +76,17 @@ export const registrationFormHandler = async ({
   hasSucceeded,
 }) => {
   try {
-    const payload = mapStudentCreationBody({ data });
+    const studentPayload = mapStudentCreationBody({ data });
 
-    const student = await createStudent({ payload, token });
+    const student = await createStudent({ payload: studentPayload, token });
     // Enroll student
     const enrollmentPayload = mapStudentEnrollmentBody({
       data: {
         studentId: student.data.id,
-        classId: payload.data.classe,
-        schoolYearId: payload.data.schoolYear,
+        classId: studentPayload.data.classe,
+        schoolYearId: studentPayload.data.schoolYear,
+        socialCategory: studentPayload.data.socialStatus,
+        enrollmentType: 'Nouveau',
       },
     });
     await enrollStudent({ payload: enrollmentPayload, token });
@@ -153,7 +157,7 @@ export const confirmEnrollmentFormHandler = async ({
             monthOf: paymentType === 'monthly' ? data.monthOf : null,
           }
         });
-        console.log(`Extra payment payload for ${feeKey}:`, extraPaymentPayload);
+        // console.log(`Extra payment payload for ${feeKey}:`, extraPaymentPayload);
         await createPayment({
           payload: extraPaymentPayload,
           token,
@@ -255,8 +259,8 @@ export const studentEnrollmentFormHandler = async ({
   hasSucceeded,
 }) => {
   try {
+    data.classId = data.classroom;
     const payload = mapStudentEnrollmentBody({ data });
-    console.log('enroll', payload);
 
     await enrollStudent({ payload, token });
     hasSucceeded(true);
@@ -578,3 +582,34 @@ export const schoolYearUpdateFormHandler = async ({
 
   setSubmitting(false);
 };
+
+export const expenseCreationFormHandler = async ({
+  token,
+  data,
+  setSubmitting,
+  setFieldError,
+  hasSucceeded,
+}) => {
+  try {
+    console.log("data", data);
+
+    const payload = mapExpenseCreationBody({ data });
+    console.log("payload", payload);
+
+    await createExpense({ token, payload });
+    hasSucceeded(true);
+  } catch (err) {
+    console.error("Error creating expense:", err);
+    if (err?.data) {
+      const { data: errorData } = err.data;
+      // If errorData.message exists, use it, else fall back to a standard error message.
+      setFieldError("expense creation", errorData?.message || "Erreur lors de la création de la dépense");
+    } else {
+      setFieldError("general", err?.message || "Erreur lors de la création de la dépense");
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+

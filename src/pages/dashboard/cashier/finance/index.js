@@ -5,22 +5,33 @@ import {
     HStack,
     Spinner,
     Stack,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
     Text,
     useToast,
-    Wrap
-} from '@chakra-ui/react';
-import { PaymentDataSet } from '@components/common/reports/payment_data_set';
-import { Statistics } from '@components/func/lists/Statistic';
-import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
-import { PAYMENTS_COLUMNS } from '@utils/mappers/kpi';
-import { mapPaymentsDataTable } from '@utils/mappers/payment';
-import { mapPaymentType } from '@utils/tools/mappers';
-import { getToken } from 'next-auth/jwt';
-import { useEffect, useState } from 'react';
-import { FaCalendarCheck, FaCalendarPlus, FaRegCalendarAlt } from 'react-icons/fa';
-import { HiAcademicCap } from 'react-icons/hi';
-import { SiCashapp } from 'react-icons/si';
+    Wrap,
+} from "@chakra-ui/react";
+import { ExpenseDataSet } from "@components/common/reports/expense_data_set";
+import { PaymentDataSet } from "@components/common/reports/payment_data_set";
+import { Statistics } from "@components/func/lists/Statistic";
+import { DashboardLayout } from "@components/layout/dashboard";
+import { colors, messages, routes } from "@theme";
+import { mapExpensesDataTable } from "@utils/mappers/expense";
+import { EXPENSES_COLUMNS, PAYMENTS_COLUMNS } from "@utils/mappers/kpi";
+import { mapPaymentsDataTable } from "@utils/mappers/payment";
+import { mapPaymentType } from "@utils/tools/mappers";
+import { getToken } from "next-auth/jwt";
+import { useEffect, useState } from "react";
+import {
+    FaCalendarCheck,
+    FaCalendarPlus,
+    FaRegCalendarAlt,
+} from "react-icons/fa";
+import { HiAcademicCap } from "react-icons/hi";
+import { SiCashapp } from "react-icons/si";
 import {
     Bar,
     BarChart,
@@ -30,58 +41,87 @@ import {
     ResponsiveContainer,
     Tooltip,
     XAxis,
-    YAxis
-} from 'recharts';
-import { serverFetch } from 'src/lib/api';
+    YAxis,
+} from "recharts";
+import { serverFetch } from "src/lib/api";
 
 const { pages: { dashboard, stats: { classes, amount } }, components: { menu } } = messages;
 
 const getMonthName = (num) => {
     const date = new Date();
     date.setMonth(num - 1);
-    return date.toLocaleString('default', { month: 'short' });
+    return date.toLocaleString("default", { month: "short" });
 };
 
-
-
-const FinanceDashboard = ({ role, token, kpis }) => {
+const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, expenseKpis }) => {
     const toast = useToast();
     const [loading, setLoading] = useState(true);
-    const [summary, setSummary] = useState();
+    const [activeTab, setActiveTab] = useState("payments"); // "payments" or "expenses"
+    const [paymentSummary, setPaymentSummary] = useState();
+    const [expenseSummary, setExpenseSummary] = useState();
     const [chartData, setChartData] = useState([]);
     const [pieData, setPieData] = useState([]);
     const [transactions, setTransactions] = useState([]);
+    const [hasSucceeded, setHasSucceeded] = useState(false);
 
-    const payments = mapPaymentsDataTable({ payments: kpis[0] });
+    const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
+    const expenses = mapExpensesDataTable({ expenses: expenseKpis[0] });
 
-    // If kpis is available from getServerSideProps, initialize the state
+    // Initialize state with payment and expense KPIs
     useEffect(() => {
-        if (kpis) {
-            setSummary(kpis[1]);
+        if (paymentKpis && expenseKpis) {
+            // Payments
+            setPaymentSummary(paymentKpis[1]);
             setTransactions(payments);
 
-            // Expected months (November (11) to July (7)) – adjust as needed
             const expectedMonths = [11, 12, 1, 2, 3, 4, 5, 6, 7];
-            const monthlyData = kpis[1]?.monthlyBreakdown || [];
-            const paymentTypeData = kpis[1]?.paymentTypeBreakdown || [];
-            console.log('paymentTypeData', paymentTypeData);
-            
-          const  pieData = paymentTypeData.map((item) => ({
-                name: mapPaymentType[item.paymentType],
-                value: item.total
-            }));
-            setPieData(pieData);
-            const expectedChartData = expectedMonths.map((m) => {
-                const found = monthlyData.find(item => item.month === m);
-                return {
-                    month: getMonthName(m),
-                    amount: found ? found.total : 0,
-                };
-            });
-            setChartData(expectedChartData);
+            const paymentMonthlyData = paymentKpis[1]?.monthlyBreakdown || [];
+            const paymentTypeData = paymentKpis[1]?.paymentTypeBreakdown || [];
+
+            // Expenses
+            setExpenseSummary(expenseKpis[1]);
+            const expenseMonthlyData = expenseKpis[1]?.monthlyBreakdown || [];
+            const expenseCategoryData = expenseKpis[1]?.totalByCategory || {};
+
+            // Switch data based on active tab
+            const updateChartData = (data, isExpense = false) => {
+                const chart = expectedMonths.map((m) => {
+                    const found = data.find((item) => item.month === m);
+                    return {
+                        month: getMonthName(m),
+                        amount: found ? found.total : 0,
+                    };
+                });
+                setChartData(chart);
+            };
+
+            const updatePieData = (data, isExpense = false) => {
+                if (isExpense) {
+                    const pie = Object.entries(data).map(([category, total]) => ({
+                        name: category,
+                        value: total,
+                    }));
+                    setPieData(pie);
+                } else {
+                    const pie = data.map((item) => ({
+                        name: mapPaymentType[item.paymentType],
+                        value: item.total,
+                    }));
+                    setPieData(pie);
+                }
+            };
+
+            if (activeTab === "payments") {
+                updateChartData(paymentMonthlyData);
+                updatePieData(paymentTypeData);
+            } else {
+                updateChartData(expenseMonthlyData, true);
+                updatePieData(expenseCategoryData, true);
+            }
+
             setLoading(false);
         }
-    }, [kpis]);
+    }, [paymentKpis, expenseKpis, activeTab, hasSucceeded]);
 
     if (loading) {
         return (
@@ -92,45 +132,80 @@ const FinanceDashboard = ({ role, token, kpis }) => {
     }
 
     // Finance card statistics
-    const financeCardStats = [
+    const paymentStats = [
         {
-            count: amount.finance.replace(`%number`, summary?.yearPaymentTotal ?? 0),
+            count: amount.finance.replace(`%number`, paymentSummary?.yearPaymentTotal ?? 0),
             icon: <SiCashapp color={colors.primary.regular} size={25} />,
             title: "Encaissements Annuel",
         },
         {
-            count: amount.finance.replace(`%number`, summary?.enrollmentPaymentTotal ?? 0),
+            count: amount.finance.replace(`%number`, paymentSummary?.enrollmentPaymentTotal ?? 0),
             icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
             title: "Total Inscriptions",
         },
         {
-            count: amount.finance.replace(`%number`, summary?.monthlyPaymentTotal ?? 0),
+            count: amount.finance.replace(`%number`, paymentSummary?.monthlyPaymentTotal ?? 0),
             icon: <FaCalendarPlus color={colors.primary.regular} size={25} />,
             title: "Total Mensualités",
         },
         {
-            count: amount.finance.replace(`%number`, summary?.previousMonthPaymentTotal ?? 0),
+            count: amount.finance.replace(`%number`, paymentSummary?.previousMonthPaymentTotal ?? 0),
             icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
             title: "Mois Précédent",
         },
         {
-            count: amount.finance.replace(`%number`, summary?.currentMonthPaymentTotal ?? 0),
+            count: amount.finance.replace(`%number`, paymentSummary?.currentMonthPaymentTotal ?? 0),
             icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
             title: "Mois En Cours",
         },
     ];
 
-   
-    const pieColors = [colors.primary.regular, colors.primary.light, colors.secondary.regular, colors.gray.regular, colors.green.regular, colors.black, colors.red.regular];
+    const expenseStats = [
+        {
+            count: amount.finance.replace(`%number`, expenseSummary?.yearExpenseTotal ?? 0),
+            icon: <SiCashapp color={colors.primary.regular} size={25} />,
+            title: "Dépenses Annuelles",
+        },
+        {
+            count: amount.finance.replace(`%number`, expenseSummary?.currentMonthExpenseTotal ?? 0),
+            icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
+            title: "Mois En Cours",
+        },
+        {
+            count: amount.finance.replace(`%number`, expenseSummary?.previousMonthExpenseTotal ?? 0),
+            icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
+            title: "Mois Précédent",
+        },
+        {
+            count: amount.finance.replace(`%number`, expenseSummary?.salaryExpenseTotal ?? 0),
+            icon: <SiCashapp color={colors.primary.regular} size={25} />,
+            title: "Salaires",
+        },
+        {
+            count: amount.finance.replace(`%number`, expenseSummary?.totalByCategory?.Maintenance ?? 0),
+            icon: <SiCashapp color={colors.primary.regular} size={25} />,
+            title: "Maintenances",
+        },
+
+    ];
+    // console.log('expenseSummary',expenseSummary);
+
+    const pieColors = [
+        colors.primary.regular,
+        colors.primary.light,
+        colors.secondary.regular,
+        colors.gray.regular,
+        colors.green.regular,
+        colors.black,
+        colors.red.regular,
+    ];
+
     const renderCustomizedLabel = (props) => {
         const { cx, cy, midAngle, innerRadius, outerRadius, index } = props;
         const RADIAN = Math.PI / 180;
-        // Position for slice name: halfway between inner and outer radius
         const rName = innerRadius + (outerRadius - innerRadius) * 0.5;
         const xName = cx + rName * Math.cos(-midAngle * RADIAN);
         const yName = cy + rName * Math.sin(-midAngle * RADIAN);
-
-        // Position for amount: outside the slice by adding an offset to the outer radius
         const offset = 20;
         const rAmount = outerRadius + offset;
         const xAmount = cx + rAmount * Math.cos(-midAngle * RADIAN);
@@ -138,7 +213,6 @@ const FinanceDashboard = ({ role, token, kpis }) => {
 
         return (
             <g>
-               
                 <text
                     x={xAmount}
                     y={yAmount}
@@ -147,11 +221,12 @@ const FinanceDashboard = ({ role, token, kpis }) => {
                     dominantBaseline="central"
                     fontSize={12}
                 >
-                    {`${pieData[index].name}: ${Number(pieData[index].value).toLocaleString() + " FCFA"}`}
+                    {`${pieData[index].name}: ${Number(pieData[index].value).toLocaleString()} FCFA`}
                 </text>
             </g>
         );
     };
+
     return (
         <DashboardLayout
             title={dashboard.finance.title}
@@ -159,62 +234,132 @@ const FinanceDashboard = ({ role, token, kpis }) => {
             role={role}
             token={token}
         >
-            <Wrap mt={10} spacing={20.01}>
-                <HStack w="100%">
-                    <Statistics cardStats={financeCardStats} />
-                </HStack>
-                <Text
-                    color={colors.secondary.regular}
-                    fontSize={20}
-                    fontWeight="700"
+                <Tabs mt={5}
+                    variant="soft-rounded"
+                    colorScheme={"orange"}
+                    onChange={(index) => setActiveTab(index === 0 ? "payments" : "expenses")}
                 >
-                    Historique des Transactions
-                </Text>
-                <Stack bgColor={colors.white} w="100%">
-                    <PaymentDataSet
-                        role={role}
-                        data={transactions}
-                        columns={PAYMENTS_COLUMNS}
-                        token={token}
-                    />
-                </Stack>
-                <HStack w="100%">
-                    {/* Bar Chart Section */}
-                    <Box mb={8} p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                        <Heading size="md" mb={4}>Tendance des paiements mensuels</Heading>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={chartData}>
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip />
-                                <Bar dataKey="amount" fill="#3182CE" barSize={20} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </Box>
-                </HStack>
-                <HStack w="100%">
-                    {/* Pie Chart Section */}
-                    <Box mb={8} p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                        <Heading size="md" mb={4}>Répartition des Encaissements Annuels</Heading>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie
-                                    dataKey="value"
-                                    data={pieData}
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={140}
-                                    label={renderCustomizedLabel}
-                                >
-                                    {pieData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={pieColors[index]} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </Box>
-                </HStack>
-            </Wrap>
+                    <TabList ml={4} >
+                        <Tab color={activeTab === "payments" ? colors.white : colors.primary.regular}>Paiements</Tab>
+                        <Tab color={activeTab === "expenses" ? colors.white : colors.primary.regular} >Dépenses</Tab>
+                    </TabList>
+
+                    <TabPanels >
+                        {/* Payments Tab */}
+                        <TabPanel >
+                        <Wrap  spacing={20.01}>
+
+                            <HStack w="100%">
+                                <Statistics cardStats={paymentStats} />
+                            </HStack>
+                            <Text color={colors.secondary.regular} fontSize={20} fontWeight="700">
+                                Historique des Transactions
+                            </Text>
+                            <Stack bgColor={colors.white} w="100%">
+                                <PaymentDataSet
+                                    role={role}
+                                    data={transactions}
+                                    columns={PAYMENTS_COLUMNS}
+                                    token={token}
+                                />
+                            </Stack>
+                            <HStack w="100%">
+                                <Box mb={8} p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
+                                    <Heading size="md" mb={4}>Tendance des paiements mensuels</Heading>
+                                    <ResponsiveContainer width="100%" height={300}>
+                                        <BarChart data={chartData}>
+                                            <XAxis dataKey="month" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Bar dataKey="amount" fill="#3182CE" barSize={20} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </Box>
+                            </HStack>
+                            <HStack w="100%">
+                                <Box mb={8} p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
+                                    <Heading size="md" mb={4}>Répartition des Encaissements Annuels</Heading>
+                                    <ResponsiveContainer width="100%" height={350}>
+                                        <PieChart>
+                                            <Pie
+                                                dataKey="value"
+                                                data={pieData}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={140}
+                                                label={renderCustomizedLabel}
+                                            >
+                                                {pieData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={pieColors[index]} />
+                                                ))}
+                                            </Pie>
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </Box>
+                            </HStack>
+
+                        </Wrap>
+                        </TabPanel>
+
+                        {/* Expenses Tab */}
+                        <TabPanel >
+                        <Wrap  spacing={20.01}>
+                            <HStack w="100%">
+                                <Statistics cardStats={expenseStats} />
+                            </HStack>
+                            <Text color={colors.secondary.regular} fontSize={20} fontWeight="700">
+                                Historique des Dépenses
+                            </Text>
+                            <Stack bgColor={colors.white} w="100%">
+                                <ExpenseDataSet
+                                    role={role}
+                                    data={expenses}
+                                    columns={EXPENSES_COLUMNS}
+                                    token={token}
+                                    schoolId={schoolId}
+                                    schoolYearId={schoolYearId}
+                                    setHasSucceeded={setHasSucceeded}
+                                />
+                            </Stack>
+                            <HStack w="100%">
+                                <Box  p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
+                                    <Heading size="md" mb={4}>Tendance des dépenses mensuelles</Heading>
+                                    <ResponsiveContainer width="100%" height={300}>
+                                        <BarChart data={chartData}>
+                                            <XAxis dataKey="month" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Bar dataKey="amount" fill="#E53E3E" barSize={20} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </Box>
+                            </HStack>
+                            <HStack w="100%">
+                                <Box p={5}  borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
+                                    <Heading size="md" mb={4}>Répartition des Dépenses par Catégorie</Heading>
+                                    <ResponsiveContainer width="100%" height={350}>
+                                        <PieChart>
+                                            <Pie
+                                                dataKey="value"
+                                                data={pieData}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={140}
+                                                label={renderCustomizedLabel}
+                                            >
+                                                {pieData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={pieColors[index]} />
+                                                ))}
+                                            </Pie>
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </Box>
+                            </HStack>
+                            </Wrap>
+
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
         </DashboardLayout>
     );
 };
@@ -225,20 +370,28 @@ export const getServerSideProps = async ({ req, res }) => {
     const secret = process.env.NEXTAUTH_SECRET;
     const session = await getToken({ req, secret });
     const token = session?.accessToken;
-    const Cookies = require('cookies');
+    const Cookies = require("cookies");
     const cookies = new Cookies(req, res);
-    const activeSchoolYear = cookies.get('selectedSchoolYear');
+    const activeSchoolYear = cookies.get("selectedSchoolYear");
 
     if (!token) {
         return {
             redirect: {
-                destination: '/user/auth',
+                destination: "/user/auth",
                 permanent: false,
             },
         };
     }
 
-    const { alazhar: { get: { me, finance: { all: payments, stats: financeStats } } } } = routes.api_route;
+    const {
+        alazhar: {
+            get: {
+                me,
+                finance: { all: payments, stats: financeStats },
+                expenses: { all: expenses, stats: expenseStats }, // Add this to your routes
+            },
+        },
+    } = routes.api_route;
 
     const response = await serverFetch({
         uri: me,
@@ -247,24 +400,38 @@ export const getServerSideProps = async ({ req, res }) => {
     const role = response.role;
     const schoolId = response.school.id;
 
-    // Fetch KPIs for payments and finance stats
-    const kpis = await Promise.all([
-        serverFetch({
-            uri: payments.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', schoolId),
-            user_token: token,
-        }),
-        serverFetch({
-            uri: financeStats.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', schoolId),
-            user_token: token,
-        }),
+    // Fetch KPIs for payments and expenses
+    const [paymentKpis, expenseKpis] = await Promise.all([
+        Promise.all([
+            serverFetch({
+                uri: payments.replace("%activeSchoolYear", activeSchoolYear).replace("%schoolId", schoolId),
+                user_token: token,
+            }),
+            serverFetch({
+                uri: financeStats.replace("%activeSchoolYear", activeSchoolYear).replace("%schoolId", schoolId),
+                user_token: token,
+            }),
+        ]),
+        Promise.all([
+            serverFetch({
+                uri: expenses.replace("%activeSchoolYear", activeSchoolYear).replace("%schoolId", schoolId),
+                user_token: token,
+            }),
+            serverFetch({
+                uri: expenseStats.replace("%activeSchoolYear", activeSchoolYear).replace("%schoolId", schoolId),
+                user_token: token,
+            }), // Adjust if you have a separate endpoint for expense list vs stats
+        ]),
     ]);
 
     return {
         props: {
             role,
             token,
-            kpis,
+            schoolId,
+            schoolYearId: activeSchoolYear,
+            paymentKpis,
+            expenseKpis,
         },
     };
 };
-

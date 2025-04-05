@@ -20,8 +20,8 @@ import {
   FormSearch,
   StudentFilter
 } from '@components/common/input/FormInput';
-import ReEnrollmentModal from '@components/forms/student/enrollmentForm';
 import MonthlyPaymentModal from '@components/forms/student/monthlyPaymentForm';
+import ReEnrollmentModal from '@components/modals/enrollmentModal';
 import { monthlyPaymentFormHandler, studentEnrollmentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
 import { downloadCSV } from '@utils/csv';
@@ -189,7 +189,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
     return dateB - dateA;
   });
 
-  
+
 
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
@@ -387,15 +387,16 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 
             {/* re_enrollment modal */}
             <ReEnrollmentModal
+              token={user_token}
               isOpen={isDialogOpen}
               onClose={closeDialog}
               firstname={firstname}
               lastname={lastname}
               level={level}
+              student={data.id}
               classroomOptions={classroomOptions}
               selectedClassroom={selectedClassroom}
               setSelectedClassroom={setSelectedClassroom}
-              handleReEnrollment={handleReEnrollment}
             />
 
             {/* monthly payment modal */}

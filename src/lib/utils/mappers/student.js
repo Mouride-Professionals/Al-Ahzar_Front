@@ -7,6 +7,7 @@ export const mapStudentCreationBody = ({ data }) => {
       firstname: data.firstname,
       lastname: data.lastname,
       gender: data.sex,
+      socialStatus: data.socialCategory,
       dateOfBirth: formatDate(data),
       birthPlace: data.birthplace,
       tutorLastname: data.parent_lastname,
@@ -25,6 +26,10 @@ export const mapStudentEnrollmentBody = ({ data }) => {
       student: data.studentId, // Assuming you have the student ID in the data
       class: data.classId, // Assuming you have the class ID in the data
       schoolYear: data.schoolYearId, // Assuming you have the school year ID in the data
+      socialStatus: data.socialCategory,
+      enrollmentType: data.enrollmentType,
+
+
     },
   };
 };
