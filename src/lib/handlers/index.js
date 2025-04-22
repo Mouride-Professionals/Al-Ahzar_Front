@@ -1,14 +1,31 @@
+import { createExpense } from '@services/expense';
 import { persistPayment } from '@services/payment';
-import { createClassroom, getSchool } from '@services/school';
-import { confirmStudent, createStudent } from '@services/student';
-import { forms, routes } from '@theme';
-import { mapMonthCreationBody } from '@utils/mappers/payment';
 import {
+  createClassroom,
+  createSchool,
+  getSchool,
+  updateSchool,
+} from '@services/school';
+import { createSchoolYear, updateSchoolYear } from '@services/school_year';
+import { confirmStudent, createPayment, createStudent, enrollStudent } from '@services/student';
+import { createTeacher, updateTeacher } from '@services/teacher';
+import { createUser } from '@services/user';
+import { forms, routes } from '@theme';
+import { mapExpenseCreationBody } from '@utils/mappers/expense';
+import { mapMonthCreationBody } from '@utils/mappers/payment';
+import { mapSchoolCreationBody } from '@utils/mappers/school';
+import { mapSchoolYearCreationBody } from '@utils/mappers/school_year';
+import {
+  mapPaymentBody,
   mapStudentConfirmationBody,
   mapStudentCreationBody,
+  mapStudentEnrollmentBody
 } from '@utils/mappers/student';
+import { mapTeacherCreationBody } from '@utils/mappers/teacher';
+import { mapUserCreationBody } from '@utils/mappers/user';
 import { mapClassBody } from '@utils/tools/mappers';
 import { signIn } from 'next-auth/react';
+import customRedirect from 'src/pages/api/auth/redirect';
 
 /**
  *
@@ -34,6 +51,7 @@ export const loginFormHandler = async ({
       redirect: false,
     });
 
+
     if (!res || res.error) {
       setSubmitting(false);
       setFieldError(
@@ -42,9 +60,8 @@ export const loginFormHandler = async ({
       );
       return;
     }
-    console.log("res", res);
 
-    window.location.assign(redirectOnSuccess);
+    customRedirect();
   } catch (error) {
     console.log(error);
     setSubmitting(false);
@@ -58,31 +75,114 @@ export const registrationFormHandler = async ({
   token,
   hasSucceeded,
 }) => {
-  const payload = mapStudentCreationBody({ data });
+  try {
+    const studentPayload = mapStudentCreationBody({ data });
 
-  createStudent({ payload, token })
-    .then(() => {
-      hasSucceeded(true);
-      setSubmitting(false);
-    })
-    .catch((err) => {
-      if (err?.data) {
-        const { data } = err?.data;
-        setSubmitting(false);
-        if (data?.message?.includes('exists')) {
-          return setFieldError(
-            'registration',
-            forms.messages.registration.errors.already_exists
-          );
-        }
-      }
-      setFieldError('registration', forms.messages.registration.errors.problem);
-      return;
+    const student = await createStudent({ payload: studentPayload, token });
+    // Enroll student
+    const enrollmentPayload = mapStudentEnrollmentBody({
+      data: {
+        studentId: student.data.id,
+        classId: studentPayload.data.classe,
+        schoolYearId: studentPayload.data.schoolYear,
+        socialCategory: studentPayload.data.socialStatus,
+        enrollmentType: 'Nouveau',
+      },
     });
-
-  setSubmitting(false);
+    await enrollStudent({ payload: enrollmentPayload, token });
+    hasSucceeded(true);
+  } catch (err) {
+    if (err?.data) {
+      const { data } = err?.data;
+      if (data?.message?.includes('exists')) {
+        setFieldError(
+          'registration',
+          forms.messages.registration.errors.already_exists
+        );
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError('registration', forms.messages.registration.errors.problem);
+  } finally {
+    setSubmitting(false);
+  }
 };
 
+
+export const confirmEnrollmentFormHandler = async ({
+  enrollment,
+  student,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  setHasSucceeded,
+}) => {
+  try {
+
+    // Map the primary enrollment payment data
+    const enrollmentPaymentPayload = mapPaymentBody({
+      data: {
+        amount: data.enrollmentFee,
+        enrollmentId: enrollment,
+        paymentType: 'enrollment',
+      }
+    });
+    console.log('payment payload', enrollmentPaymentPayload);
+
+    // Create the primary enrollment payment
+    const payment = await createPayment({
+      payload: enrollmentPaymentPayload,
+      token,
+    });
+
+    // Define a mapping from fee keys to their associated payment types
+    const feeMapping = {
+      monthlyFee: 'monthly',
+      blouseFee: 'blouse',
+      examFee: 'exam',
+      parentContributionFee: 'parentContribution'
+    };
+
+    // For each additional fee, create a separate payment record if a fee is provided.
+    for (const [feeKey, paymentType] of Object.entries(feeMapping)) {
+      const feeValue = data[feeKey];
+      if (feeValue != null && feeValue !== 0) {
+        const extraPaymentPayload = mapPaymentBody({
+          data: {
+            amount: feeValue,
+            enrollmentId: enrollment,
+            paymentType: paymentType,
+            monthOf: paymentType === 'monthly' ? data.monthOf : null,
+          }
+        });
+        // console.log(`Extra payment payload for ${feeKey}:`, extraPaymentPayload);
+        await createPayment({
+          payload: extraPaymentPayload,
+          token,
+        });
+      }
+    }
+
+    setHasSucceeded(true);
+  } catch (err) {
+    if (err?.data) {
+      const { data } = err?.data;
+      if (data?.message?.includes('exists')) {
+        setFieldError(
+          'payment',
+          forms.messages.payment.errors.already_exists
+        );
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError('payment', forms.messages.payment.errors.problem);
+  } finally {
+    setSubmitting(false);
+  }
+};
 export const confirmStudentFormHandler = async ({
   student,
   data,
@@ -91,6 +191,7 @@ export const confirmStudentFormHandler = async ({
   token,
   setHasSucceeded,
 }) => {
+
   const payload = mapStudentConfirmationBody({ data });
 
   confirmStudent({ payload, token, student })
@@ -116,9 +217,74 @@ export const confirmStudentFormHandler = async ({
 
   setSubmitting(false);
 };
+// handle monthly payment
 
-export const createClassromFormHandler = async ({
+
+export const monthlyPaymentFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  setHasSucceeded,
+}) => {
+  try {
+    const payload = mapPaymentBody({ data: { ...data, paymentType: 'monthly' } });
+
+    await createPayment({ payload, token });
+    setHasSucceeded(true);
+  } catch (err) {
+    if (err?.data) {
+      const { data } = err?.data;
+      if (data?.message?.includes('exists')) {
+        setFieldError(
+          'payment',
+          forms.messages.payment.errors.already_exists
+        );
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError('payment', forms.messages.payment.errors.problem);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+// handle student enrollment
+export const studentEnrollmentFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  try {
+    data.classId = data.classroom;
+    const payload = mapStudentEnrollmentBody({ data });
+
+    await enrollStudent({ payload, token });
+    hasSucceeded(true);
+  } catch (err) {
+    if (err?.data) {
+      const { data } = err?.data;
+      if (data?.message?.includes('exists')) {
+        setFieldError(
+          'enrollment',
+          forms.messages.enrollment.errors.already_exists
+        );
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError('enrollment', forms.messages.registration.errors.problem);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+export const createClassroomFormHandler = async ({
   school,
+  schoolYear,
   data,
   setSubmitting,
   setFieldError,
@@ -129,31 +295,25 @@ export const createClassromFormHandler = async ({
 
 
   getSchool({
-    addOns: `filters[$and][0][id][$eq]=${school}&filters[$and][1][classes][level][$eq]=${level}&filters[$and][1][classes][letter][$eq]=${letter}&populate=classes`,
+    addOns: `filters[$and][0][id][$eq]=${school}&filters[$and][1][classes][schoolYear][id][$eq]=${schoolYear}&filters[$and][1][classes][level][$eq]=${level}&filters[$and][1][classes][letter][$eq]=${letter}&populate=classes`,
     token,
   })
     .then((resp) => {
-
-      const {
-        data: found,
-      } = resp;
+      const { data: found } = resp;
       if (found.length) {
         setSubmitting(false);
         return setFieldError('schoolCreation', 'Cette classe existe déjà');
       }
 
-
       createClassroom({
-        payload: mapClassBody({ payload: { ...data, school } }),
+        payload: mapClassBody({ payload: { ...data, school, schoolYear } }),
         token,
       }).then(() => {
         action(true);
         window.location.reload();
-      })
+      });
     })
-    .catch((
-      err
-    ) => {
+    .catch((err) => {
       setFieldError(
         'schoolCreation',
         'Un problème est survenu lors de la création'
@@ -167,3 +327,310 @@ export const monthValidationHandler = async ({ id, user_token }) => {
 
   persistPayment({ payload, user_token }).then(() => window.location.reload());
 };
+
+// school creation form handler
+
+export const schoolCreationFormHandler = async ({
+  data,
+  bannerFile,
+  setSubmitting,
+  setFieldError,
+  hasSucceeded,
+  token,
+}) => {
+  const formData = new FormData();
+  const payload = mapSchoolCreationBody({ data });
+  // Append text fields
+  formData.append('data', JSON.stringify(payload));
+
+  // Append the banner file if provided
+  if (bannerFile) {
+    formData.append("files.banner", bannerFile, bannerFile.name);
+  }
+
+
+  createSchool({ payload: formData, token })
+    .then(() => {
+      setSubmitting(false);
+      hasSucceeded(true);
+      // window.location.reload();
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'school creation',
+            forms.messages.school.creation.errors.already_exists
+          );
+        }
+      }
+
+      setFieldError(
+        'school creation',
+        forms.messages.school.creation.errors.problem
+      );
+      return;
+    });
+};
+
+// school update form handler
+
+export const schoolUpdateFormHandler = async ({
+  school,
+  data,
+  bannerFile,
+  setSubmitting,
+  setFieldError,
+  hasSucceeded,
+  token,
+}) => {
+  const payload = mapSchoolCreationBody({ data });
+
+  const formData = new FormData();
+  // Append text fields
+  formData.append('data', JSON.stringify(payload));
+
+  // Append the banner file if provided
+  if (bannerFile) {
+    formData.append("files.banner", bannerFile, bannerFile.name);
+  }
+
+  updateSchool({ school, payload: formData, token })
+    .then(() => {
+      setSubmitting(false);
+      hasSucceeded(true);
+      // window.location.reload();
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'school creation',
+            forms.messages.school.creation.errors.already_exists
+          );
+        }
+      }
+
+      setFieldError(
+        'school creation',
+        forms.messages.school.creation.errors.problem
+      );
+      return;
+    });
+};
+// user creation form handler
+export const userCreationFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+
+  const payload = mapUserCreationBody({ data });
+
+  createUser({ payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'registration',
+            forms.messages.registration.errors.already_exists
+          );
+        }
+      }
+
+      setFieldError('registration', forms.messages.registration.errors.problem);
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+//  teacher recruitment form handler
+export const teacherRecruitmentFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapTeacherCreationBody({ data });
+
+  console.log('payload', payload);
+
+  createTeacher({ payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'recruitment',
+            forms.messages.teacher.recruitment.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'recruitment',
+        forms.messages.teacher.recruitment.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+export const teacherUpdateFormHandler = async ({
+  teacher,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapTeacherCreationBody({ data });
+
+
+  updateTeacher({ teacher, payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'recruitment',
+            forms.messages.teacher.recruitment.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'recruitment',
+        forms.messages.teacher.recruitment.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+
+export const schoolYearCreationFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapSchoolYearCreationBody({ data });
+
+  createSchoolYear({ payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'School year creation',
+            forms.messages.schoolYear.creation.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'School year creation',
+        forms.messages.schoolYear.creation.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+export const schoolYearUpdateFormHandler = async ({
+  schoolYear,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  const payload = mapSchoolYearCreationBody({ data });
+
+  updateSchoolYear({ schoolYear, payload, token })
+    .then(() => {
+      hasSucceeded(true);
+      setSubmitting(false);
+    })
+    .catch((err) => {
+      if (err?.data) {
+        const { data } = err?.data;
+        setSubmitting(false);
+        if (data?.message?.includes('exists')) {
+          return setFieldError(
+            'School year creation',
+            forms.messages.schoolYear.creation.errors.already_exists
+          );
+        }
+      }
+      setFieldError(
+        'School year creation',
+        forms.messages.schoolYear.creation.errors.problem
+      );
+      return;
+    });
+
+  setSubmitting(false);
+};
+
+export const expenseCreationFormHandler = async ({
+  token,
+  data,
+  setSubmitting,
+  setFieldError,
+  hasSucceeded,
+}) => {
+  try {
+    console.log("data", data);
+
+    const payload = mapExpenseCreationBody({ data });
+    console.log("payload", payload);
+
+    await createExpense({ token, payload });
+    hasSucceeded(true);
+  } catch (err) {
+    console.error("Error creating expense:", err);
+    if (err?.data) {
+      const { data: errorData } = err.data;
+      // If errorData.message exists, use it, else fall back to a standard error message.
+      setFieldError("expense creation", errorData?.message || "Erreur lors de la création de la dépense");
+    } else {
+      setFieldError("general", err?.message || "Erreur lors de la création de la dépense");
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+

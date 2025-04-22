@@ -1,8 +1,8 @@
 // pages/_document.js
 
 import { ColorModeScript } from '@chakra-ui/react';
-import { mediaStyles } from '@utils/media';
 import { Head, Html, Main, NextScript } from 'next/document';
+import { mediaStyles } from '../lib/utils/media';
 
 export default function Document() {
   return (

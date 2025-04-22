@@ -37,8 +37,6 @@ export const useMockedData = ({ sample, size }) => {
           return rand.key === mk;
         });
 
-        console.log(found);
-
         if (enumeration) {
           newMock[mk] = randomStringFromEnum(enumeration);
         } else {

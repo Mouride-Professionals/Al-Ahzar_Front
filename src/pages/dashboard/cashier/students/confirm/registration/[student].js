@@ -22,24 +22,30 @@ export default function StudentConfirmation({ studentDetail, role, token }) {
   const {
     id,
     attributes: {
-      firstname,
-      lastname,
-      classe: {
+      student: {
+        data: {
+          id: studentId,
+          attributes: { firstname, lastname, type },
+        },
+      },
+      class: {
         data: {
           attributes: { level, letter },
         },
       },
-      type,
     },
   } = studentDetail;
 
-  const [hasSucceeded, setHasSucceeded] = useState(type || false);
+  console.log('studentDetail', studentDetail);
+  
+  const [hasSucceeded, setHasSucceeded] = useState( false);
 
   return (
     <DashboardLayout
       title={dashboard.students.title}
       currentPage={menu.students.create}
       role={role}
+      token={token}
     >
       <RegistrationFormLayout message={confirmation}>
         {hasSucceeded ? (
@@ -50,12 +56,13 @@ export default function StudentConfirmation({ studentDetail, role, token }) {
               .replace('%classname', `${level}${letter}`)}
             cta={{
               message: info.classList,
-              link: ACCESS_ROUTES[role?.name].class.all,
+              link: ACCESS_ROUTES[role?.name].classes.all,
             }}
           />
         ) : (
           <StudentConfirmationForm
-            student={id}
+            enrollment={id}
+            student={studentDetail}
             token={token}
             hasSucceeded={hasSucceeded}
             setHasSucceeded={setHasSucceeded}
@@ -81,6 +88,8 @@ export const getServerSideProps = async ({ query, req }) => {
     uri: routes.api_route.alazhar.get.students.detail.replace('%id', student),
     user_token: token,
   });
+
+  // console.log('studentDetail', studentDetail);
 
   return {
     props: {

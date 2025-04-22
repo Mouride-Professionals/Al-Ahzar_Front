@@ -14,6 +14,7 @@ import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
+import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
@@ -33,6 +34,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       title={dashboard.classes.title}
       currentPage={menu.classes}
       role={role}
+      token={token}
     >
       <Modal size={'2xl'} onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
@@ -82,39 +84,42 @@ export default function Classes({ classes, role, schoolId, token }) {
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
+  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
   const {
     alazhar: {
       get: {
         me,
-        schools: { all },
+        classes: { all: classrooms },
       },
     },
   } = routes.api_route;
-
-  const { id, role } = await serverFetch({
+  // Fetch responsible user to get their school ID and role
+  const userResponse = await serverFetch({
     uri: me,
     user_token: token,
   });
 
+  const { role, school: { id: schoolId } } = userResponse;
 
-
-  const { data: school } = await serverFetch({
-    uri: `${all}?filters[responsible][id][$eq]=${id}&populate=responsible,classes.eleves`,
+  // Fetch only classes that belong to the active school year
+  const classesResponse = await serverFetch({
+    uri: classrooms.replace('%schoolId', schoolId).replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
 
   const classes = mapClassesByLevel({
-    classes: school[0]?.attributes?.classes,
+    classes: classesResponse,
   });
+
 
   return {
     props: {
-      schoolId: school[0]?.id || null,
+      schoolId: schoolId,
       classes,
       role,
       token,

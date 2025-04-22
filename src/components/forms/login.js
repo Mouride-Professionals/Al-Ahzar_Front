@@ -30,7 +30,7 @@ export const LoginForm = () => {
             data: values,
             setSubmitting,
             setFieldError,
-            redirectOnSuccess: '/dashboard',
+            redirectOnSuccess: '/dashboard/direction',
           });
         }}
       >

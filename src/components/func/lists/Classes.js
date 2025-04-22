@@ -10,12 +10,14 @@ const { create } = messages.components.classList;
 
 export const ClassesList = ({
   groupName,
+  schoolId = null,
   classes,
   listOf,
   withCreation,
   role,
   action,
 }) => {
+
   return (
     <Stack w={'100%'}>
       <HStack justifyContent={'space-between'} my={10} w={'100%'}>
@@ -44,7 +46,13 @@ export const ClassesList = ({
               <Grid mt={5} gap={3} gridTemplateColumns={'repeat(4, 1fr)'}>
                 {_class.sections.map((section, index) => (
                   <ClassCard
-                    goTo={ACCESS_ROUTES[role.name].class.detail.replace(
+                    goTo={ACCESS_ROUTES.isAdmin(role.name) ? ACCESS_ROUTES[role.name].schools.classes.detail.replace(
+                      '%id',
+                      schoolId
+                    ).replace(
+                      '%classId',
+                      _class.classId[index]
+                    ) : ACCESS_ROUTES[role.name].classes.detail.replace(
                       '%id',
                       _class.classId[index]
                     )}

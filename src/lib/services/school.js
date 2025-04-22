@@ -28,8 +28,42 @@ export const getSchool = async ({ addOns, school, token }) => {
     uri: schoolRoute,
     user_token: token,
   });
+};
 
+// createSchool
 
+export const createSchool = async ({ payload, token }) => {
+  const {
+    alazhar: {
+      create: { school },
+    },
+  } = routes.api_route;
+  return await fetcher({
+    uri: school,
+    options: {
+      method: 'POST',
+      body: payload,
+    },
+    user_token: token,
+  });
+};
+
+// createSchool
+
+export const updateSchool = async ({ school, payload, token }) => {
+  const {
+    alazhar: {
+      update: { school: updateSchool },
+    },
+  } = routes.api_route;
+  return await fetcher({
+    uri: updateSchool.replace('%id', school),
+    options: {
+      method: 'put',
+      body: payload,
+    },
+    user_token: token,
+  });
 };
 
 export const createClassroom = async ({ payload, token }) => {

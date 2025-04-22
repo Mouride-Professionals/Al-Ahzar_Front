@@ -14,24 +14,33 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MenuBreadcrumb } from '@components/common/menu';
+import { SchoolYearSelector } from '@components/common/school_year_selector';
 import { MainMenus } from '@components/func/home/menu';
 import { colors, images } from '@theme';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { useState } from 'react';
 import { BiPlusCircle } from 'react-icons/bi';
 import { BsBell, BsHeart } from 'react-icons/bs';
 
 export const DesktopDashboardLayoutView = ({
   title,
+  banner = '',
   children,
   currentPage,
   role,
+  token,
 }) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
   const { data: session } = useSession();
-  console.log('roles', role);
-  
-
+  // const [banner, setBanner] = useState({
+  //   src: banner != '' ? `${process.env.NEXT_PUBLIC_API_URL}${banner}` : images.logo.src,
+  //   alt: 'Banner image',
+  // });
+  const logo = {
+    src: images.logo.src,
+    alt: 'Logo image',
+  }
 
   return (
     <Stack
@@ -51,7 +60,8 @@ export const DesktopDashboardLayoutView = ({
           >
             <HStack alignItems={'center'} w={'70%'}>
               <Box h={70.01} w={80.01} pos={'relative'}>
-                <Image {...images.logo} alt={'logo'} fill />
+
+                <Image {...logo} alt={'logo'} fill />
               </Box>
 
               {/* Menu Bar */}
@@ -64,6 +74,7 @@ export const DesktopDashboardLayoutView = ({
               justifyContent={'space-between'}
               w={'auto'}
             >
+              <SchoolYearSelector token={token} />
               <BiPlusCircle size={25} />
               <BsBell size={25} />
               <Popover
@@ -80,8 +91,7 @@ export const DesktopDashboardLayoutView = ({
                     </Box>
                     <Stack>
                       <Text fontSize={14} fontWeight={'700'}>
-                        {session?.user?.firstName}{' '}
-                        {session?.user?.lastName}
+                        {session?.user?.firstName} {session?.user?.lastName}
                       </Text>
                       <Text fontSize={13}>{role?.name}</Text>
                     </Stack>
@@ -89,8 +99,7 @@ export const DesktopDashboardLayoutView = ({
                 </PopoverTrigger>
                 <PopoverContent>
                   <PopoverHeader fontWeight={'semibold'}>
-                    {session?.user?.firstName}{' '}
-                    {session?.user?.lastName}
+                    {session?.user?.firstName} {session?.user?.lastName}
                   </PopoverHeader>
                   <PopoverArrow />
                   <PopoverBody>

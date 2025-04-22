@@ -14,7 +14,69 @@ export const mapMonthCreationBody = ({ payload }) => {
     data: {
       monthOf: formattedDate,
       isPaid: false,
-      eleve: payload,
+      student: payload,
     },
   };
+};
+
+///payment data table
+export const mapPaymentsDataTable = ({ payments }) => {
+  if (payments && Array.isArray(payments.data) && payments.data.length) {
+    return payments.data.map((payment) => {
+      const {
+        id,
+        attributes: {
+          monthOf,
+          amount,
+          isPaid,
+          paymentType,
+          enrollment: {
+            data: {
+              id: enrollmentId,
+              attributes: {
+                student: {
+                  data: {
+                    id: studentId,
+                    attributes: {
+                      firstname,
+                      lastname,
+                      tutorFirstname,
+                      tutorLastname,
+                      tutorPhoneNumber,
+                      type,
+                      socialStatus,
+                      registrationComment,
+                      createdAt,
+                    },
+                  },
+                },
+              },
+            },
+          },
+
+
+
+        },
+      } = payment;
+      return {
+        id,
+        monthOf,
+        amount,
+        isPaid,
+        paymentType,
+        enrollmentId,
+        studentId,
+        firstname,
+        lastname,
+        tutorFirstname,
+        tutorLastname,
+        tutorPhoneNumber,
+        type,
+        socialStatus,
+        registrationComment,
+        createdAt,
+      };
+    });
+  }
+  return [];
 };

@@ -14,7 +14,7 @@ export default function Register() {
         subtitle={messages.components.authentication.register.heading.subtitle}
         specifics={messages.components.authentication.register.specifics}
       >
-        {/* <RegistrationForm /> */}
+        {/* <RegistrationForm/> */}
       </AuthenticationLayoutForm>
     </AuthenticationLayout>
   );

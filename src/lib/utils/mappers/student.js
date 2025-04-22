@@ -7,12 +7,29 @@ export const mapStudentCreationBody = ({ data }) => {
       firstname: data.firstname,
       lastname: data.lastname,
       gender: data.sex,
+      socialStatus: data.socialCategory,
       dateOfBirth: formatDate(data),
       birthPlace: data.birthplace,
       tutorLastname: data.parent_lastname,
       tutorFirstname: data.parent_firstname,
       tutorPhoneNumber: data.parent_phone,
       classe: data.class_letter,
+      schoolYear: data.schoolYear,
+    },
+  };
+};
+
+export const mapStudentEnrollmentBody = ({ data }) => {
+  return {
+    data: {
+      enrollmentDate: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+      student: data.studentId, // Assuming you have the student ID in the data
+      class: data.classId, // Assuming you have the class ID in the data
+      schoolYear: data.schoolYearId, // Assuming you have the school year ID in the data
+      socialStatus: data.socialCategory,
+      enrollmentType: data.enrollmentType,
+
+
     },
   };
 };
@@ -23,12 +40,39 @@ export const mapStudentConfirmationBody = ({ data }) => {
       type: data.studentType,
       socialStatus: data.socialCategory,
       registrationComment: data.comment,
+
+
+    },
+  };
+};
+export const mapPaymentBody = ({ data }) => {
+  return {
+    data: {
+      amount: data.amount,
+      monthOf: data.monthOf,
+      enrollment: data.enrollmentId,
+      paymentType: data.paymentType,
+      motive: data.motive,
+      comment: data.comment,
+    },
+  };
+};
+
+export const mapPaymentDetailBody = ({ data }) => {
+  return {
+    data: {
+      payment: data.paymentId,
+      monthlyFee: data.monthlyFee,
+      enrollmentFee: data.enrollmentFee,
+      blouseFee: data.blouseFee,
+      examFee: data.examFee,
+      parentContributionFee: data.parentContributionFee,
     },
   };
 };
 
 export const mapStudentsDataTable = ({ students }) => {
-  if ((students && Array.isArray(students.data) && students.data.length)) {
+  if (students && Array.isArray(students.data) && students.data.length) {
     const { data } = students;
 
     return data.map((student) => {
@@ -85,6 +129,88 @@ export const mapStudentsDataTable = ({ students }) => {
     });
   }
 };
+export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
+  if (enrollments && Array.isArray(enrollments.data) && enrollments.data.length) {
+    const { data } = enrollments;
+
+    return data.map((enrollment) => {
+
+      const {
+        id,
+        attributes: {
+          enrollmentDate,
+          schoolYear: {
+            data: {
+              id: schoolYearId,
+            } },
+          student: {
+            data: {
+              id: studentId,
+              attributes: {
+                firstname,
+                lastname,
+                tutorFirstname,
+                tutorLastname,
+                tutorPhoneNumber,
+                type,
+                socialStatus,
+                registrationComment,
+
+                createdAt,
+              },
+            },
+          },
+          payments,
+          class: classroom,
+
+        },
+      } = enrollment;
+
+      let formattedLevel = enrollments.defaultLevel || 'N/A';
+
+      if (classroom?.data) {
+        const {
+          data: {
+            attributes: {
+              level,
+              letter
+            },
+          }
+        } = classroom;
+        formattedLevel = `${level} ${letter}`;
+      }
+      const currentMonth = new Date().toLocaleDateString().split('/')[0];
+
+      const isCurrentMonthPaid = payments?.data?.find(
+        (rp) =>
+          new Date(rp.attributes.monthOf).toLocaleDateString().split('/')[0] ===
+          currentMonth
+      )
+        ? true
+        : false;
+
+      return {
+        id: studentId,
+        firstname,
+        lastname,
+        schoolYear: schoolYearId,
+        level: formattedLevel,
+        parent_firstname: tutorFirstname,
+        parent_lastname: tutorLastname,
+        parent_phone: formatPhoneNumber(tutorPhoneNumber),
+        type,
+        socialStatus,
+        registrationComment,
+        registered_at: createdAt.split('T')[0].split('-').reverse().join('/'),
+        enrollment_date: enrollmentDate.split('T')[0].split('-').reverse().join('/'),
+        enrollment_id: id,
+        payments,
+        isCurrentMonthPaid,
+      };
+    });
+  }
+  return [];
+};
 
 // Helper function to find the appropriate category for the level
 const gradeLevels = ['CI', 'CP', 'CE1', 'CE2', 'CM1', 'CM2'];
@@ -118,11 +244,11 @@ export const mapClassesByLevel = ({ classes }) => {
       const {
         id,
         attributes: {
-          eleves: { data: students },
+          level,
+          letter,
+          enrollments: { data: enrollments },
         },
       } = item;
-      const level = item.attributes.level;
-      const section = item.attributes.letter;
 
       const category = getCategory(level);
       if (category) {
@@ -131,15 +257,15 @@ export const mapClassesByLevel = ({ classes }) => {
         );
 
         if (existingLevel) {
-          existingLevel.students.push(students.length);
+          existingLevel.students.push(enrollments.length);
           existingLevel.classId.push(id);
-          existingLevel.sections.push(section);
+          existingLevel.sections.push(letter);
         } else {
           transformedData[category].push({
             classId: [id],
-            students: [students.length],
+            students: [enrollments.length],
             name: level,
-            sections: [section],
+            sections: [letter],
           });
         }
       }

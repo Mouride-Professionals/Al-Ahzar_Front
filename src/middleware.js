@@ -1,6 +1,7 @@
 import { routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
+import customRedirect from './pages/api/auth/redirect';
 
 // Limit the middleware to paths starting with `/api/`
 export const config = {
@@ -32,9 +33,9 @@ export async function middleware(req) {
   }
 
   if (url.pathname.includes(loginRoute) && token) {
-    console.log('tokens', token);
-    url.pathname = homeRoute;
-    return NextResponse.redirect(url);
+    // url.pathname = homeRoute;
+    // return NextResponse.redirect(url);
+    customRedirect();
   }
 
   // Additionnal verifications

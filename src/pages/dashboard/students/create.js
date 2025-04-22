@@ -27,6 +27,7 @@ export default function Create({ classes, role, token }) {
       title={messages.pages.dashboard.students.title}
       currentPage={messages.components.menu.students.create}
       role={role}
+      token={token}
     >
       <VStack
         borderStyle={'solid'}
@@ -97,7 +98,6 @@ export const getServerSideProps = async ({ req }) => {
     uri: routes.api_route.alazhar.get.classes,
     user_token: token,
   });
-
 
   return {
     props: {
