@@ -2,13 +2,9 @@ import { routes } from '@theme';
 import { fetcher } from 'src/lib/api';
 
 export const createUser = async ({ payload, token }) => {
-    console.log('createUser before', payload, token);
     const { data: newPayload } = payload;
-    console.log('createUser after', newPayload, token);
 
     return await fetcher({
-        // uri: routes.api_route.alazhar.create.user,
-
         uri: '/auth/local/register',
         options: {
             method: 'POST',

@@ -19,7 +19,6 @@ export default async function customRedirect() {
 
     const role = response.role;
 
-    console.log('role', role);
 
     const {
         dashboard: { direction: {
@@ -57,7 +56,7 @@ export default async function customRedirect() {
             redirectPath = direction;
             break;
         case 'Directeur etablissment':
-            redirectPath = direction;
+            redirectPath = cashier;
             break;
         default:
             redirectPath = '/user/auth';

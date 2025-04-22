@@ -2,6 +2,7 @@ import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateUserForm } from '@components/forms/user/create'; // new form for user creation
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
+import { ROLES } from '@utils/roles';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -22,7 +23,7 @@ const {
     components: { menu: { users: menuUsers } },
 } = messages;
 
-export default function Create({ schools, role, token }) {
+export default function Create({ schools, role, token, roles }) {
     const [hasSucceeded, setHasSucceeded] = useState(false);
     const router = useRouter();
 
@@ -73,6 +74,8 @@ export default function Create({ schools, role, token }) {
                             schools,
                             setHasSucceeded,
                             token,
+                            role,
+                            roles,
                         }}
                     />
                 </Stack>
@@ -99,12 +102,33 @@ export const getServerSideProps = async ({ req }) => {
             '?fields[0]=name&fields[1]=id&fields[2]=type',
         user_token: token,
     });
+    //Fetch all roles
+    const {roles} = await serverFetch({
+        uri: `${routes.api_route.alazhar.get.roles}?fields[0]=name&fields[1]=id&fields[2]=type`,
+        user_token: token,
+    });
+    
+    // Filter  the roles that are  in ROLES only
+    const allowedRoles = Object.values(ROLES);
+    
+    const filteredRoles = roles.filter(
+        (role) => allowedRoles.includes(role.name) && role.name !== ROLES.DIRECTEUR_GENERAL
+    );
+    console.log('allowedRoles', allowedRoles,  filteredRoles);
+    // Map the filtered roles to a more usable format.
+    const mappedRoles = filteredRoles.map((role) => ({
+        name: role.name,
+        value: role.id,
+    }));
+
+console.log('mappedRoles', mappedRoles);
 
     return {
         props: {
             role,
             token,
             schools,
+            roles: mappedRoles,
         },
     };
 };

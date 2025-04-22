@@ -8,8 +8,9 @@ import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 
-export const CreateUserForm = ({ schools, setHasSucceeded, token, initialData = {}, isEdit = false }) => {
+export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initialData = {}, isEdit = false }) => {
     const router = useRouter();
+    // const [roles, setRoles] = useState([]);
 
     // For edit mode, you might get initialData as a user object; otherwise, use an empty object.
     const initialValues = mapFormInitialValues(
@@ -41,6 +42,9 @@ export const CreateUserForm = ({ schools, setHasSucceeded, token, initialData = 
         name: school.attributes.name,
         value: school.id,
     }));
+
+
+  
     return (
         <Formik
             validationSchema={userCreationSchema}
@@ -130,7 +134,8 @@ export const CreateUserForm = ({ schools, setHasSucceeded, token, initialData = 
                             <WrapItem w={370}>
                                 <FormInput
                                     {...role}
-                                    type="password"
+                                    options={roles}
+
                                     errors={errors}
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}

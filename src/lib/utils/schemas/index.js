@@ -7,7 +7,7 @@ export const authenticationSchema = object({
 });
 
 const AllowedSexes = ['Homme', 'Femme'];
-const AllowedRoles = ['Directeur Géneral', 'Sécretaraire Géneral', 'Caissier', 'Surveillant Géneral'];
+const AllowedRoles = ['Directeur Géneral', 'Sécretaraire Géneral', 'Caissier', 'Surveillant Géneral', 'Directeur etablissment'];
 const AllowedEnrollmentTypes = [
   'Ancien Redoublant',
   'Ancien Passant',
@@ -245,9 +245,7 @@ export const userCreationSchema = object({
   lastname: string().trim().required(),
   email: string().email().required(),
   password: string().trim().required(),
-  role: string()
-    .oneOf(AllowedRoles, 'Invalid role')
-    .required('Role is required'),
+  role: string().trim().required('Role is required'),
 });
 
 

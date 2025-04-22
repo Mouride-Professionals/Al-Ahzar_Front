@@ -1,10 +1,10 @@
-import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
+import { Box, HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, images, messages, routes } from '@theme';
 import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
-import { mapStudentsDataTable, mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/router';
@@ -29,7 +29,7 @@ const {
   },
 } = messages;
 
-export default function Dashboard({ kpis, role, token,schoolId }) {
+export default function Dashboard({ kpis, role, token, schoolId }) {
   const router = useRouter();
 
   const cardStats = [
@@ -63,9 +63,36 @@ export default function Dashboard({ kpis, role, token,schoolId }) {
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
-        <HStack w={'100%'}>
-          <Statistics cardStats={cardStats} />
-        </HStack>
+        {/* <Box
+          position="relative"
+          w="100%"
+          p={6}
+          borderRadius="md"
+          bg={
+            // ? `url(${process.env.NEXT_PUBLIC_API_URL}${currentSchool.attributes.banner.data.attributes.url})`
+            // : 
+            // "gray.100"
+            images.logo.src
+          }
+          bgSize="cover"
+          bgPosition="center"
+          _before={{
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bg: "rgba(255, 255, 255, 0.5)", // Semi-transparent overlay for readability
+            borderRadius: "md",
+          }}
+        > */}
+          <HStack w={'100%'}>
+
+            <Statistics cardStats={cardStats} />
+          </HStack>
+        {/* </Box> */}
+       
 
         <Text
           color={colors.secondary.regular}
@@ -90,7 +117,7 @@ export default function Dashboard({ kpis, role, token,schoolId }) {
   );
 }
 
-export const getServerSideProps = async ({ req,res }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
 
@@ -131,7 +158,7 @@ export const getServerSideProps = async ({ req,res }) => {
     }),
 
     serverFetch({
-      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', response.school?.id),  
+      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', response.school?.id),
       user_token: token,
     }),
     serverFetch({

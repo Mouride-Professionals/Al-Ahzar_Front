@@ -156,7 +156,7 @@ export const getServerSideProps = async ({ req }) => {
     //   user_token: token,
     // }),
   ]);
-  console.log('kpis', kpis[2]);
+  console.log('kpis', kpis[3]);
 
   return {
     props: {

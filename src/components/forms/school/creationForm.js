@@ -23,6 +23,7 @@ export const CreateSchoolForm = ({
 }) => {
   const router = useRouter();
 
+
   const { id: schoolId = null, attributes: schoolAttributes = {} } =
     initialValues || {};
 
@@ -31,6 +32,7 @@ export const CreateSchoolForm = ({
   const [communes, setCommunes] = useState([]);
   const [IAs, setIAs] = useState([]);
   const [IEFs, setIEFs] = useState([]);
+  const [bannerFile, setBannerFile] = useState(null); // Store the selected file
 
 
   const [parentSchoolOptions, setParentSchoolOptions] = useState(schools.data);
@@ -96,6 +98,7 @@ export const CreateSchoolForm = ({
           name,
           creationDate,
           type,
+          banner,
           parentSchool,
           region,
           department,
@@ -139,6 +142,7 @@ export const CreateSchoolForm = ({
           ? schoolUpdateFormHandler({
             school: schoolId,
             token,
+            bannerFile,
             data: values,
             setSubmitting,
             setFieldError,
@@ -147,6 +151,7 @@ export const CreateSchoolForm = ({
           : schoolCreationFormHandler({
             token,
             data: values,
+            bannerFile,
             setSubmitting,
             setFieldError,
             hasSucceeded: setHasSucceeded,
@@ -204,6 +209,17 @@ export const CreateSchoolForm = ({
             </HStack>
 
             <HStack align={'center'} justifyContent={'space-between'}>
+              <WrapItem w={370}>
+                <FormInput
+                  {...banner}
+                  type="file"
+                  accept="image/*"
+                  errors={errors}
+                  handleChange={(e) => setBannerFile(e.target.files[0])} // Store file in state
+                  handleBlur={handleBlur}
+                  touched={touched}
+                />
+              </WrapItem>
               <WrapItem w={'50%'}>
                 <FormInput
                   {...type}

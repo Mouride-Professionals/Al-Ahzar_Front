@@ -332,13 +332,24 @@ export const monthValidationHandler = async ({ id, user_token }) => {
 
 export const schoolCreationFormHandler = async ({
   data,
+  bannerFile,
   setSubmitting,
   setFieldError,
   hasSucceeded,
   token,
 }) => {
+  const formData = new FormData();
   const payload = mapSchoolCreationBody({ data });
-  createSchool({ payload, token })
+  // Append text fields
+  formData.append('data', JSON.stringify(payload));
+
+  // Append the banner file if provided
+  if (bannerFile) {
+    formData.append("files.banner", bannerFile, bannerFile.name);
+  }
+
+
+  createSchool({ payload: formData, token })
     .then(() => {
       setSubmitting(false);
       hasSucceeded(true);
@@ -369,13 +380,24 @@ export const schoolCreationFormHandler = async ({
 export const schoolUpdateFormHandler = async ({
   school,
   data,
+  bannerFile,
   setSubmitting,
   setFieldError,
   hasSucceeded,
   token,
 }) => {
   const payload = mapSchoolCreationBody({ data });
-  updateSchool({ school, payload, token })
+
+  const formData = new FormData();
+  // Append text fields
+  formData.append('data', JSON.stringify(payload));
+
+  // Append the banner file if provided
+  if (bannerFile) {
+    formData.append("files.banner", bannerFile, bannerFile.name);
+  }
+
+  updateSchool({ school, payload: formData, token })
     .then(() => {
       setSubmitting(false);
       hasSucceeded(true);
@@ -410,7 +432,6 @@ export const userCreationFormHandler = async ({
 }) => {
 
   const payload = mapUserCreationBody({ data });
-  console.log('user data', payload);
 
   createUser({ payload, token })
     .then(() => {

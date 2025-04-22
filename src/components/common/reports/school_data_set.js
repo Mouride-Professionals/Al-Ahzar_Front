@@ -14,15 +14,15 @@ import {
   FormFilter,
   FormSearch,
 } from '@components/common/input/FormInput';
-import { colors, routes } from '@theme';
+import { colors, images, routes } from '@theme';
 import { downloadCSV } from '@utils/csv';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
 import { BsFillCalendarDateFill } from 'react-icons/bs';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
-import { RiSchoolFill } from 'react-icons/ri';
 import { BoxZone } from '../cards/boxZone';
 
 const ExpandedComponent = ({ data, role, user_token }) => {
@@ -34,6 +34,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
     },
   } = routes.page_route;
   const {
+    banner = null,
     name = 'N/A',
     type = 'Unknown',
     region = 'Unknown',
@@ -50,7 +51,11 @@ const ExpandedComponent = ({ data, role, user_token }) => {
     responsibleName = 'Unassigned',
   } = data;
 
+  console.log('schoolBannerUrl', banner);
   const router = useRouter();
+  const schoolBannerUrl = banner === null
+    ? images.logo.src // Fallback to default logo
+    : images.logo.src; // `${process.env.NEXT_PUBLIC_API_URL}${banner?.data?.attributes.url}`;
 
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
@@ -58,7 +63,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
         <Card variant="outline" w="100%" bg="white">
           <CardBody>
             <HStack spacing={5}>
-              <Box
+              {/* <Box
                 w={50}
                 h={50}
                 borderRadius="full"
@@ -67,7 +72,14 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 alignItems="center"
                 justifyContent="center"
               >
-                <RiSchoolFill color="teal" size={30} />
+                <RiSchoolFill color="orange" size={30} />
+              </Box> */}
+              <Box h={70.01} w={80.01} pos={'relative'}>
+                <Image src={schoolBannerUrl}
+                  alt={name}
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
               </Box>
               <VStack align="start">
                 <Text fontWeight="bold" fontSize="lg">

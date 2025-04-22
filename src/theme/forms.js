@@ -322,6 +322,10 @@ module.exports = {
             uid: 'phone',
             type: 'text',
           },
+          banner: {
+            placeholder: "Logo de l'école", label: "Photo de l'école",
+            uid: "banner", type: "file"
+          },
           type: {
             placeholder: 'Type',
             label: 'Type',
@@ -449,9 +453,9 @@ module.exports = {
             label: 'Role',
             uid: 'role',
             select: true,
-            options: mapOptions(
-              userCreationSchema.fields.role._whitelist
-            ),
+            // options: mapOptions(
+            //   userCreationSchema.fields.role._whitelist
+            // ),
           },
           school: {
             placeholder: 'Établissement',

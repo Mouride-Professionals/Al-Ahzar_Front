@@ -154,11 +154,12 @@ export const getServerSideProps = async ({ req, res }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
     serverFetch({
-      uri: `${allSchools}?sort=createdAt:desc&populate=responsible`,
+      uri: `${allSchools}?sort=createdAt:desc&populate=responsible,banner`,
       user_token: token,
     }).catch(() => ({ data: [] })),
   ]);
- 
+  // console.log('kpis', kpis[4].data[1]['attributes']);
+
 
 
   return {

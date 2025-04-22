@@ -51,9 +51,9 @@ export const mapSchoolsDataTable = ({ schools }) => {
           responsibleName,
           city,
           postBox,
+          banner,
         },
       } = school;
-
       return {
         id,
         name,
@@ -75,6 +75,7 @@ export const mapSchoolsDataTable = ({ schools }) => {
         responsibleName: responsibleName || 'N/A',
         city: city || 'N/A',
         postBox: postBox || 'N/A',
+        banner
       };
     });
   }

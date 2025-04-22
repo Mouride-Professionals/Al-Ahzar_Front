@@ -7,7 +7,7 @@ export const mapUserCreationBody = ({ data }) => {
             password: data.password,           // required (Strapi will hash it)
             firstname: data.firstname,         // optional first name
             lastname: data.lastname,           // optional last name
-            confirmed: data.confirmed ?? false, // default false if not provided
+            confirmed: data.confirmed ?? true, // default false if not provided
             blocked: data.blocked ?? false,
             role: data.role,                   // either an object or id; adjust as needed
             school: data.school,
