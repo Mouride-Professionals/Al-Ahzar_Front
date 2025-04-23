@@ -25,7 +25,7 @@ import { mapTeacherCreationBody } from '@utils/mappers/teacher';
 import { mapUserCreationBody } from '@utils/mappers/user';
 import { mapClassBody } from '@utils/tools/mappers';
 import { signIn } from 'next-auth/react';
-import customRedirect from 'src/pages/api/auth/redirect';
+import useCustomRedirect from '../auth/redirect';
 
 /**
  *
@@ -35,6 +35,38 @@ import customRedirect from 'src/pages/api/auth/redirect';
  * @param {route} redirectOnSuccess
  * @returns
  */
+// export const loginFormHandler = async ({
+//   data,
+//   setSubmitting,
+//   setFieldError,
+//   redirectOnSuccess = '/',
+// }) => {
+//   const { identifier, password } = data;
+
+//   try {
+//     const res = await signIn('strapi', {
+//       username: identifier,
+//       password,
+//       callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
+//       redirect: false,
+//     });
+
+
+//     if (!res || res.error) {
+//       setSubmitting(false);
+//       setFieldError(
+//         'authentication',
+//         forms.messages.login.errors.not_authorized
+//       );
+//       return;
+//     }
+
+//     useCustomRedirect();
+//   } catch (error) {
+//     console.log(error);
+//     setSubmitting(false);
+//   }
+// };
 export const loginFormHandler = async ({
   data,
   setSubmitting,
@@ -51,20 +83,22 @@ export const loginFormHandler = async ({
       redirect: false,
     });
 
-
     if (!res || res.error) {
       setSubmitting(false);
       setFieldError(
         'authentication',
         forms.messages.login.errors.not_authorized
       );
-      return;
+      return { error: res?.error || 'Authentication failed' };
     }
 
-    customRedirect();
-  } catch (error) {
-    console.log(error);
     setSubmitting(false);
+    return { success: true, callbackUrl: redirectOnSuccess };
+  } catch (error) {
+    console.error('Login error:', error);
+    setSubmitting(false);
+    setFieldError('authentication', 'An unexpected error occurred');
+    return { error: error.message };
   }
 };
 

@@ -6,11 +6,11 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { serverFetch } from 'src/lib/api';
-import customRedirect from 'src/pages/api/auth/redirect';
 
 export const SchoolYearSelector = ({ token }) => {
     const router = useRouter();
     const { schoolYear, setSchoolYear } = useSchoolYear();
+    const [triggerRedirect, setTriggerRedirect] = useState(false);
 
     const [schoolYears, setSchoolYears] = useState([]);
     const [currentSchoolYear, setCurrentSchoolYear] = useState(Cookies.get('selectedSchoolYear') || null);
@@ -19,6 +19,7 @@ export const SchoolYearSelector = ({ token }) => {
         alazhar: {
             get: {
                 school_years: { all: allSchoolYears },
+                me: meEndpoint,
             },
         },
     } = routes.api_route;
@@ -55,12 +56,74 @@ export const SchoolYearSelector = ({ token }) => {
             fetchSchoolYears();
         }
     }, [token]);
+    const fetchUserRole = async () => {
+        try {
+            const response = await serverFetch({
+                uri: meEndpoint,
+                user_token: token,
+            });
+
+            const role = response.role;
+            if (!role) {
+                signOut({ redirect: false });
+                router.push('/user/auth');
+                return;
+            }
+            const {
+                dashboard: {
+                    direction: { initial: direction },
+                    surveillant: { initial: surveillant },
+                    cashier: { initial: cashier },
+                },
+            } = routes.page_route;
+
+
+            let redirectPath = '/user/auth';
+            switch (role.name) {
+                case 'Caissier':
+                    redirectPath = cashier;
+                    break;
+                case 'Secretaire General':
+                case 'Directeur General':
+                    redirectPath = direction;
+                    break;
+                case 'Surveillant general':
+                    redirectPath = surveillant;
+                    break;
+                case 'Directeur etablissment':
+                    redirectPath = cashier;
+                    break;
+                default:
+                    redirectPath = '/user/auth';
+            }
+
+            router.push(redirectPath);
+        } catch (error) {
+            console.error('Error fetching user role:', error);
+            signOut({ redirect: false });
+            router.push('/user/auth');
+        }
+    }
+    useEffect(() => {
+        if (!triggerRedirect) return;
+
+        if (!token) {
+            signOut({ redirect: false });
+            router.push('/user/auth');
+            return;
+        }
+
+
+
+        fetchUserRole();
+        setTriggerRedirect(false);
+    }, [triggerRedirect, router, token]);
 
     const handleSchoolYearChange = (selectedYear) => {
         setSchoolYear(selectedYear);// Update the school year in the context
         setCurrentSchoolYear(selectedYear);
         Cookies.set('selectedSchoolYear', selectedYear); // Save the selected school year to cookies
-        customRedirect();
+        setTriggerRedirect(true);
 
     };
 

@@ -162,8 +162,8 @@ import { SiGoogleclassroom } from "react-icons/si";
 import { serverFetch } from "src/lib/api";
 
 const {
-  pages: { dashboard },
-  stats: { classes, students, teachers, schools: schoolsStat, amount },
+  pages: { dashboard, stats: { classes, students, teachers, schools: schoolsStat, amount }, },
+  
   components: { menu, dataset: schoolsDataset },
 } = messages;
 

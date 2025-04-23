@@ -77,7 +77,7 @@ export const StudentConfirmationForm = ({
         <Stack px={10} py={10}>
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              Informations de l'Élève
+              {"Informations de l'Élève"}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>

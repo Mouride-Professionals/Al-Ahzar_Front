@@ -45,7 +45,7 @@ export const mapFormInitialValues = (schemaNodes, initialData = {}) => {
 
   // Override default values with initialData if provided
   Object.keys(initialData).forEach((key) => {
-    if (initialValues.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(initialValues, key)(key)) {
       initialValues[key] = initialData[key] ?? initialValues[key];
     }
   });

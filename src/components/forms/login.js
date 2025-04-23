@@ -1,3 +1,4 @@
+'use client';
 import {
   Box,
   Button,
@@ -14,11 +15,26 @@ import { authenticationSchema } from '@schemas';
 import { colors, forms } from '@theme';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { VscEye } from 'react-icons/vsc';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import useCustomRedirect from 'src/lib/auth/redirect';
 
 export const LoginForm = () => {
   const { passwordType, passwordTypeToggler } = usePasswordType();
+  const { status } = useSession();
+  const router = useRouter();
+
+  // Use custom redirect for authenticated users
+  useCustomRedirect();
+
+  // Fallback redirect for authenticated users
+  // useEffect(() => {
+  //   if (status === 'authenticated') {
+  //     router.push('/dashboard'); // Adjust to your default dashboard route
+  //   }
+  // }, [status, router]);
 
   return (
     <Box pt={3} w={'100%'}>
@@ -30,7 +46,11 @@ export const LoginForm = () => {
             data: values,
             setSubmitting,
             setFieldError,
-            redirectOnSuccess: '/dashboard/direction',
+            redirectOnSuccess: '/dashboard/direction', // Updated to dashboard
+          }).then((result) => {
+            if (result.success) {
+              router.push(result.callbackUrl);
+            }
           });
         }}
       >
@@ -42,7 +62,6 @@ export const LoginForm = () => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          /* and other goodies */
         }) => (
           <Fragment>
             <FormControl isInvalid={errors.identifier}>
@@ -97,14 +116,6 @@ export const LoginForm = () => {
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               )}
             </FormControl>
-
-            {/* <HStack justifyContent={'flex-end'} w={'100%'}>
-              <Link href={'/'}>
-                <Text color={colors.primary.regular} fontWeight={'bold'}>
-                  {forms.inputs.login.specifics.forgotten_password}
-                </Text>
-              </Link>
-            </HStack> */}
 
             <FormControl py={5}>
               <Button

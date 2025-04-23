@@ -100,30 +100,7 @@ export const CreateExpenseForm = ({
                                 />
                             </WrapItem>
                         </HStack>
-                        {/* <HStack align="center" justifyContent="space-between">
-                            <WrapItem w={370}>
-                                <FormSelect
-                                    {...school}
-                                    options={schoolOptions}
-                                    errors={errors}
-                                    handleChange={handleChange}
-                                    handleBlur={handleBlur}
-                                    touched={touched}
-                                    value={values.school}
-                                />
-                            </WrapItem>
-                            <WrapItem w={370}>
-                                <FormSelect
-                                    {...schoolYear}
-                                    options={schoolYearOptions}
-                                    errors={errors}
-                                    handleChange={handleChange}
-                                    handleBlur={handleBlur}
-                                    touched={touched}
-                                    value={values.schoolYear}
-                                />
-                            </WrapItem>
-                        </HStack> */}
+                       
                         <HStack align="center" justifyContent="space-between">
                             <WrapItem w="100%">
                                 <FormInput

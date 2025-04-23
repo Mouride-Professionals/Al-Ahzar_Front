@@ -10,7 +10,6 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
-import { monthlyPaymentSchema } from '@utils/schemas';
 import { Form, Formik } from 'formik';
 
 const MonthlyPaymentModal = ({
@@ -27,7 +26,7 @@ const MonthlyPaymentModal = ({
                 <ModalHeader>Effectuer un paiement mensuel</ModalHeader>
                 <ModalBody>
                     <Formik
-                        validationSchema={monthlyPaymentSchema}
+                        // validationSchema={monthlyPaymentSchema}
                         initialValues={initialValues}
                         onSubmit={async (values, { setSubmitting, setFieldError }) => {
                             // Extract the year-month (YYYY-MM) from the selected date.

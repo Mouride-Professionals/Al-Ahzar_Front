@@ -29,7 +29,7 @@ const ReEnrollmentModal = ({
                 </ModalHeader>
                 <ModalBody>
                     <Text mb={4}>
-                        <strong>Réinscrire l'élève dans la classe:</strong>{' '}
+                        <strong>{"Réinscrire l'élève dans la classe:"}</strong>{' '}
                         {classroomOptions.find(
                             (option) => option.value === selectedClassroom
                         )?.label || '...'}

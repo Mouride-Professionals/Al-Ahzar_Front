@@ -130,7 +130,6 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     value={values.password}
                                 />
                             </WrapItem>
-                            //role
                             <WrapItem w={370}>
                                 <FormInput
                                     {...role}

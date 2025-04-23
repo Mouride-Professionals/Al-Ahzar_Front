@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, HStack, Stack, Text, VStack, WrapItem } from "@chakra-ui/react";
+import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Stack, Text, VStack, WrapItem } from "@chakra-ui/react";
 import { SecondaryButton } from "@components/common/button";
 import { FormInput, FormSubmit } from "@components/common/input/FormInput";
 import { studentEnrollmentFormHandler } from "@handlers"; // updated handler for enrollment

@@ -22,14 +22,12 @@ module.exports = {
         identifier: {
           label: 'Identifiant',
           placeholder: 'bayeousmane@mouridpro.com',
-          label: 'bayeousmane@mouridpro.com',
           type: 'text',
           name: 'identifier',
         },
         password: {
           label: 'Mot de passe',
           placeholder: '****************',
-          label: '****************',
           type: 'password',
           name: 'password',
         },
