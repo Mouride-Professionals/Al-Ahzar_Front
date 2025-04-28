@@ -11,7 +11,7 @@ export default function useCustomRedirect() {
     const [role, setRole] = useState(null); // State to store the role
 
     useEffect(() => {
-        if (status === 'loading') return;
+        // if (status === 'loading') return;
 
         const token = session?.user?.accessToken;
 
@@ -38,7 +38,7 @@ export default function useCustomRedirect() {
         }
 
         fetchUserRole();
-    }, [status, session, router]);
+    }, [ session, router]);
 
     useEffect(() => {
         if (!role) return; // Wait until the role is fetched

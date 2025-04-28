@@ -15,10 +15,10 @@ import { authenticationSchema } from '@schemas';
 import { colors, forms } from '@theme';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
-import { Fragment, useEffect } from 'react';
-import { VscEye } from 'react-icons/vsc';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Fragment } from 'react';
+import { VscEye } from 'react-icons/vsc';
 import useCustomRedirect from 'src/lib/auth/redirect';
 
 export const LoginForm = () => {
@@ -29,7 +29,7 @@ export const LoginForm = () => {
   // Use custom redirect for authenticated users
   useCustomRedirect();
 
-  
+
 
   return (
     <Box pt={3} w={'100%'}>
@@ -43,12 +43,11 @@ export const LoginForm = () => {
             setFieldError,
             redirectOnSuccess: '/dashboard', // Updated to dashboard
           })
-
-          // .then((result) => {
-          //   if (result.success) {
-          //     router.push(result.callbackUrl);
-          //   }
-          // });
+            .then((result) => {
+              if (result.success) {
+                router.push(result.callbackUrl);
+              }
+            });
         }}
       >
         {({

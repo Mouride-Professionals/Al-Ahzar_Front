@@ -10,7 +10,7 @@ import { createSchoolYear, updateSchoolYear } from '@services/school_year';
 import { confirmStudent, createPayment, createStudent, enrollStudent } from '@services/student';
 import { createTeacher, updateTeacher } from '@services/teacher';
 import { createUser } from '@services/user';
-import { forms } from '@theme';
+import { forms, routes } from '@theme';
 import { mapExpenseCreationBody } from '@utils/mappers/expense';
 import { mapMonthCreationBody } from '@utils/mappers/payment';
 import { mapSchoolCreationBody } from '@utils/mappers/school';
@@ -34,39 +34,6 @@ import { signIn } from 'next-auth/react';
  * @param {route} redirectOnSuccess
  * @returns
  */
-export const loginFormHandler = async ({
-  data,
-  setSubmitting,
-  setFieldError,
-  redirectOnSuccess = '/',
-}) => {
-  const { identifier, password } = data;
-
-  try {
-    const res = await signIn('strapi', {
-      username: identifier,
-      password,
-      // callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
-      redirect: false,
-    });
-
-
-    if (!res || res.error) {
-      setSubmitting(false);
-      setFieldError(
-        'authentication',
-        forms.messages.login.errors.not_authorized
-      );
-      return;
-    }
-
-    setSubmitting(false);
-    // return ;
-  } catch (error) {
-    console.log(error);
-    setSubmitting(false);
-  }
-};
 // export const loginFormHandler = async ({
 //   data,
 //   setSubmitting,
@@ -79,9 +46,10 @@ export const loginFormHandler = async ({
 //     const res = await signIn('strapi', {
 //       username: identifier,
 //       password,
-//       callbackUrl: `${process.env.NEXTAUTH_URL}${routes.page_route.auth.initial}`,
+//       // callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
 //       redirect: false,
 //     });
+
 
 //     if (!res || res.error) {
 //       setSubmitting(false);
@@ -89,18 +57,50 @@ export const loginFormHandler = async ({
 //         'authentication',
 //         forms.messages.login.errors.not_authorized
 //       );
-//       return { error: res?.error || 'Authentication failed' };
+//       return;
 //     }
 
 //     setSubmitting(false);
-//     return { success: true, callbackUrl: redirectOnSuccess };
+//     // return ;
 //   } catch (error) {
-//     console.error('Login error:', error);
+//     console.log(error);
 //     setSubmitting(false);
-//     setFieldError('authentication', 'An unexpected error occurred');
-//     return { error: error.message };
 //   }
 // };
+export const loginFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  redirectOnSuccess = '/',
+}) => {
+  const { identifier, password } = data;
+
+  try {
+    const res = await signIn('strapi', {
+      username: identifier,
+      password,
+      callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
+      redirect: false,
+    });
+
+    if (!res || res.error) {
+      setSubmitting(false);
+      setFieldError(
+        'authentication',
+        forms.messages.login.errors.not_authorized
+      );
+      return { error: res?.error || 'Authentication failed' };
+    }
+
+    setSubmitting(false);
+    return { success: true, callbackUrl: redirectOnSuccess };
+  } catch (error) {
+    console.error('Login error:', error);
+    setSubmitting(false);
+    setFieldError('authentication', 'An unexpected error occurred');
+    return { error: error.message };
+  }
+};
 
 export const registrationFormHandler = async ({
   data,
