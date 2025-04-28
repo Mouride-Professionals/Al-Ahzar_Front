@@ -31,6 +31,15 @@ export const SchoolYearSelector = ({ token }) => {
                 uri: allSchoolYears,
                 user_token: token,
             })
+            
+            if (!response || response.data.length === 0) {
+                setCurrentSchoolYear(null);
+                setSchoolYear(null); // Update the school year in the context
+                Cookies.remove('selectedSchoolYear'); // Remove the selected school year from cookies
+
+                console.error('No school years found');
+                return;
+            }
 
             setSchoolYears(response.data);
             const current = schoolYears?.find((year) => year.attributes?.isCurrent);

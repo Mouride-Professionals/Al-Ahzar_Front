@@ -19,6 +19,7 @@ export default function useCustomRedirect() {
             return router.push('/user/auth');
         }
 
+
         async function fetchUserRole() {
             try {
                 const response = await serverFetch({
@@ -71,6 +72,6 @@ export default function useCustomRedirect() {
 
         router.push(redirectPath);
 
-       
+
     }, [role, router]);
 }

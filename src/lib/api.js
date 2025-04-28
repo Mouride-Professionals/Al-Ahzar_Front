@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crée une instance Axios avec la configuration de base
 const api = axios.create({
-  baseURL: process.env.STRAPI_BASE_URL || 'http://localhost:1338/api', //'http://109.123.246.253:1338/api', // URL de base pour les appels API
+  baseURL: process.env.STRAPI_BASE_URL|| 'https://al-ahzar-backend.onrender.com/api', //'http://109.123.246.253:1338/api', // URL de base pour les appels API
   timeout: 10000, // Temps limite pour une requête
   headers: {
     'Content-Type': 'application/json',
@@ -76,6 +76,7 @@ api.interceptors.response.use(
 
 //    serverFetcher method
 export const serverFetch = async ({ uri, user_token }) => {
+  // console.log('STRAPI_BASE_URL:', process.env.NEXT_PUBLIC_STRAPI_BASE_URL);
 
   try {
     const response = await api.get(uri, {
@@ -111,7 +112,7 @@ export const fetcher = async ({ uri, options = {}, user_token }) => {
     return response.data;
   } catch (error) {
     console.error('Fetcher error:', error.response || error.message);
-    throw  Error(
+    throw Error(
       error.response?.data?.error?.message || error.message || 'API request failed'
     );
   }

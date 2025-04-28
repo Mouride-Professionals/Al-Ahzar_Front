@@ -29,12 +29,7 @@ export const LoginForm = () => {
   // Use custom redirect for authenticated users
   useCustomRedirect();
 
-  // Fallback redirect for authenticated users
-  // useEffect(() => {
-  //   if (status === 'authenticated') {
-  //     router.push('/dashboard'); // Adjust to your default dashboard route
-  //   }
-  // }, [status, router]);
+  
 
   return (
     <Box pt={3} w={'100%'}>
@@ -47,11 +42,12 @@ export const LoginForm = () => {
             setSubmitting,
             setFieldError,
             redirectOnSuccess: '/dashboard/direction', // Updated to dashboard
-          }).then((result) => {
-            if (result.success) {
-              router.push(result.callbackUrl);
-            }
-          });
+          })
+          // .then((result) => {
+          //   if (result.success) {
+          //     router.push(result.callbackUrl);
+          //   }
+          // });
         }}
       >
         {({
