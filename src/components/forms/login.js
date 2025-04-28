@@ -41,7 +41,7 @@ export const LoginForm = () => {
             data: values,
             setSubmitting,
             setFieldError,
-            redirectOnSuccess: '/', // Updated to dashboard
+            redirectOnSuccess: '/dashboard', // Updated to dashboard
           })
 
           // .then((result) => {
