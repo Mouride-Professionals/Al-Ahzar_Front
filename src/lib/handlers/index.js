@@ -372,15 +372,16 @@ export const schoolCreationFormHandler = async ({
   hasSucceeded,
   token,
 }) => {
-  const payload = mapSchoolCreationBody({ data });
+  // Map the school creation payload
+  let payload = mapSchoolCreationBody({ data });
+
+  // If a banner file is provided, use FormData for the payload
   if (bannerFile && bannerFile.size !== 0) {
-    data.banner = bannerFile;
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload.data));
-    formData.append("files.banner", bannerFile, bannerFile.name);
+    formData.append('files.banner', bannerFile, bannerFile.name);
     payload = formData;
   }
-
 
 
 
@@ -388,7 +389,6 @@ export const schoolCreationFormHandler = async ({
     .then(() => {
       setSubmitting(false);
       hasSucceeded(true);
-      // window.location.reload();
     })
     .catch((err) => {
       if (err?.data) {
@@ -421,7 +421,7 @@ export const schoolUpdateFormHandler = async ({
   hasSucceeded,
   token,
 }) => {
-  const payload = mapSchoolCreationBody({ data });
+  let payload = mapSchoolCreationBody({ data });
 
   if (bannerFile) {
     const formData = new FormData();
