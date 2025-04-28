@@ -43,11 +43,11 @@ export const LoginForm = () => {
             setFieldError,
             redirectOnSuccess: '/dashboard/direction', // Updated to dashboard
           })
-          // .then((result) => {
-          //   if (result.success) {
-          //     router.push(result.callbackUrl);
-          //   }
-          // });
+          .then((result) => {
+            if (result.success) {
+              router.push(result.callbackUrl);
+            }
+          });
         }}
       >
         {({
