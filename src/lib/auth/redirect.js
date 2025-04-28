@@ -41,7 +41,7 @@ export default function useCustomRedirect() {
     }, [status, session, router]);
 
     useEffect(() => {
-        // if (!role) return; // Wait until the role is fetched
+        if (!role) return; // Wait until the role is fetched
 
         const {
             dashboard: {
@@ -71,8 +71,7 @@ export default function useCustomRedirect() {
             default:
                 redirectPath = '/user/auth';
         }
-        console.log('Redirecting to:', redirectPath);
-        
+console.log('Redirecting to:', redirectPath);
 
         router.push(redirectPath);
 
