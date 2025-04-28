@@ -321,7 +321,7 @@ module.exports = {
             type: 'text',
           },
           banner: {
-            placeholder: "Logo de l'école", label: "Photo de l'école",
+            placeholder: "Logo de l'école", label: "Logo de l'école",
             uid: "banner", type: "file"
           },
           type: {

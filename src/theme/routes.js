@@ -137,6 +137,7 @@ export const themeRoutes = {
           stats: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
           statsWithoutSchoolId: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
         },
+        
         me: '/users/me?populate=*',
         roles: '/users-permissions/roles',
       },

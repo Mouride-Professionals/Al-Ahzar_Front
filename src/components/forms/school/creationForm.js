@@ -209,7 +209,7 @@ export const CreateSchoolForm = ({
             </HStack>
 
             <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+              {/* <WrapItem w={370}>
                 <FormInput
                   {...banner}
                   type="file"
@@ -219,7 +219,7 @@ export const CreateSchoolForm = ({
                   handleBlur={handleBlur}
                   touched={touched}
                 />
-              </WrapItem>
+              </WrapItem> */}
               <WrapItem w={'50%'}>
                 <FormInput
                   {...type}

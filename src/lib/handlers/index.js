@@ -372,18 +372,19 @@ export const schoolCreationFormHandler = async ({
   hasSucceeded,
   token,
 }) => {
-  const formData = new FormData();
   const payload = mapSchoolCreationBody({ data });
-  // Append text fields
-  formData.append('data', JSON.stringify(payload));
-
-  // Append the banner file if provided
-  if (bannerFile) {
+  if (bannerFile && bannerFile.size !== 0) {
+    data.banner = bannerFile;
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload.data));
     formData.append("files.banner", bannerFile, bannerFile.name);
+    payload = formData;
   }
 
 
-  createSchool({ payload: formData, token })
+
+
+  createSchool({ payload, token })
     .then(() => {
       setSubmitting(false);
       hasSucceeded(true);
@@ -422,16 +423,14 @@ export const schoolUpdateFormHandler = async ({
 }) => {
   const payload = mapSchoolCreationBody({ data });
 
-  const formData = new FormData();
-  // Append text fields
-  formData.append('data', JSON.stringify(payload));
-
-  // Append the banner file if provided
   if (bannerFile) {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
     formData.append("files.banner", bannerFile, bannerFile.name);
+    payload = formData;
   }
 
-  updateSchool({ school, payload: formData, token })
+  updateSchool({ school, payload, token })
     .then(() => {
       setSubmitting(false);
       hasSucceeded(true);
@@ -501,7 +500,6 @@ export const teacherRecruitmentFormHandler = async ({
 }) => {
   const payload = mapTeacherCreationBody({ data });
 
-  console.log('payload', payload);
 
   createTeacher({ payload, token })
     .then(() => {

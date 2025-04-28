@@ -104,6 +104,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
   const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
+  console.log('token', token);
 
 
   if (!token) {
