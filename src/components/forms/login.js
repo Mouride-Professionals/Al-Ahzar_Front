@@ -41,13 +41,14 @@ export const LoginForm = () => {
             data: values,
             setSubmitting,
             setFieldError,
-            redirectOnSuccess: '/dashboard/direction', // Updated to dashboard
+            redirectOnSuccess: '/', // Updated to dashboard
           })
-          .then((result) => {
-            if (result.success) {
-              router.push(result.callbackUrl);
-            }
-          });
+
+          // .then((result) => {
+          //   if (result.success) {
+          //     router.push(result.callbackUrl);
+          //   }
+          // });
         }}
       >
         {({
