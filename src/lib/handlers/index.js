@@ -46,7 +46,7 @@ export const loginFormHandler = async ({
     const res = await signIn('strapi', {
       username: identifier,
       password,
-      // callbackUrl: redirectOnSuccess,
+      // callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
       redirect: false,
     });
 
@@ -61,6 +61,7 @@ export const loginFormHandler = async ({
     }
 
     setSubmitting(false);
+    // return ;
   } catch (error) {
     console.log(error);
     setSubmitting(false);
