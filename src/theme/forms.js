@@ -38,6 +38,58 @@ module.exports = {
           highlight: 'Sign up',
         },
       },
+      change_password: {
+        current_password: {
+          label: 'Mot de passe actuel',
+          placeholder: '****************',
+          type: 'password',
+          name: 'currentPassword',
+        },
+        new_password: {
+          label: 'Nouveau mot de passe',
+          placeholder: '****************',
+          type: 'password',
+          name: 'newPassword',
+        },
+        confirm_password: {
+          label: 'Confirmer le mot de passe',
+          placeholder: '****************',
+          type: 'password',
+          name: 'confirmPassword',
+        },
+        submit: 'Changer le mot de passe',
+        specifics: {
+          current_password: 'Current Password',
+          new_password: 'New Password',
+          confirm_password: 'Confirm Password',
+          highlight: 'Change Password',
+        },
+
+      },
+      forgot_password: {
+        email: {
+          label: 'Email',
+          placeholder: 'Entrez votre email',
+          type: 'email',
+          name: 'email',
+        },
+        submit: 'Envoyer',
+      },
+      reset_password: {
+        password: {
+          label: 'Nouveau mot de passe',
+          placeholder: '****************',
+          type: 'password',
+          name: 'password',
+        },
+        confirm_password: {
+          label: 'Confirmer le mot de passe',
+          placeholder: '****************',
+          type: 'password',
+          name: 'confirmPassword',
+        },
+        submit: 'Réinitialiser le mot de passe',
+      },
       student: {
         registration: {
           lastname: {

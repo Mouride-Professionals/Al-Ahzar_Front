@@ -28,7 +28,6 @@ export default function useCustomRedirect() {
                 });
 
                 setRole(response.role); // Set the role in state
-           console.log('User role:', response.role);
            
             } catch (error) {
                 console.error('Error fetching user role:', error);
@@ -71,7 +70,6 @@ export default function useCustomRedirect() {
             default:
                 redirectPath = '/user/auth';
         }
-console.log('Redirecting to:', redirectPath);
 
         router.push(redirectPath);
 

@@ -22,7 +22,7 @@ export const DesktopLayoutView = ({ children }) => {
           bgColor={colors.white}
           pt={5}
           borderRadius={8}
-          h={'60%'}
+          h={'auto'}
           w={'50%'}
         >
           <Image

@@ -16,10 +16,10 @@ import {
 import { MenuBreadcrumb } from '@components/common/menu';
 import { SchoolYearSelector } from '@components/common/school_year_selector';
 import { MainMenus } from '@components/func/home/menu';
-import { colors, images } from '@theme';
+import { colors, images, routes } from '@theme';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { BiPlusCircle } from 'react-icons/bi';
 import { BsBell, BsHeart } from 'react-icons/bs';
 
@@ -33,6 +33,7 @@ export const DesktopDashboardLayoutView = ({
 }) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
   const { data: session } = useSession();
+  const router = useRouter();
   // const [banner, setBanner] = useState({
   //   src: banner != '' ? `${process.env.NEXT_PUBLIC_API_URL}${banner}` : images.logo.src,
   //   alt: 'Banner image',
@@ -103,7 +104,16 @@ export const DesktopDashboardLayoutView = ({
                   </PopoverHeader>
                   <PopoverArrow />
                   <PopoverBody>
-                    <Box _hover={{ cursor: 'pointer' }} onClick={signOut}>
+                    {/* Settings Option */}
+                    <Box
+                      _hover={{ cursor: 'pointer', color: colors.primary.regular }}
+                      onClick={() => router.push(routes.page_route.dashboard.settings)}
+                      mb={2} // Add spacing between options
+                    >
+                      Paramètres
+                    </Box>
+                    {/* Logout Option */}
+                    <Box _hover={{ cursor: 'pointer', color: colors.primary.regular }} onClick={signOut}>
                       Déconnexion
                     </Box>
                   </PopoverBody>

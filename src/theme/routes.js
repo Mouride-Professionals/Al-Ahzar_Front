@@ -7,9 +7,12 @@ export const themeRoutes = {
     auth: {
       initial: '/user/auth',
       register: '/user/auth/register',
+      forgot_password: '/user/auth/forgot-password',
+      reset_password: '/user/auth/reset-password',
     },
     dashboard: {
       initial: '/dashboard',
+      settings: '/dashboard/settings',
       cashier: {
         initial: '/dashboard/cashier',
         classes: {

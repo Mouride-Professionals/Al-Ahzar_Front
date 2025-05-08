@@ -1,6 +1,7 @@
 import { Box, Heading, Stack, Text, VStack } from '@chakra-ui/react';
 import { colors } from '@theme';
 import { Media } from '@utils/media';
+import Link from 'next/link';
 import { Fragment } from 'react';
 import { DesktopLayoutView, MobileLayoutView } from './views';
 
@@ -18,10 +19,10 @@ export const AuthenticationLayout = ({ children, title }) => {
 };
 
 export const AuthenticationLayoutForm = ({
-  // redirection_route = '/',
+  redirection_route = '/',
   title,
   subtitle,
-  // specifics,
+  specifics,
   children,
 }) => {
   return (
@@ -30,7 +31,10 @@ export const AuthenticationLayoutForm = ({
       justifyContent={{ base: 'center', md: 'initial' }}
     >
       <Stack w={'100%'}>
-        <Heading color={colors.secondary.regular} textAlign={'center'}>
+        <Heading color={colors.secondary.regular} textAlign={'center'}
+          isTruncated // Ensures the title is truncated with ellipsis if it overflows
+          noOfLines={1} // Restricts to one line
+        >
           {title}
         </Heading>
         <VStack alignItems={'center'} justifyContent={'center'} w={'100%'}>
@@ -38,7 +42,9 @@ export const AuthenticationLayoutForm = ({
             <Text
               color={colors.gray.bold}
               fontSize={16}
-              noOfLines={2}
+              noOfLines={1}
+              isTruncated // Ensures the subtitle is truncated with ellipsis if it overflows
+
               mt={3}
               textAlign={'center'}
             >
@@ -51,18 +57,16 @@ export const AuthenticationLayoutForm = ({
       <VStack alignSelf={'center'} w={'70%'}>
         {children}
       </VStack>
-      {/* <Stack alignItems={'center'} pt={{ base: 0, md: 0 }} w={'100%'}>
+      <Stack alignItems={'center'} pt={{ base: 0, md: 0 }} w={'100%'}>
         <Link href={redirection_route}>
           <Text color={colors.gray.regular}>
-            <Highlight
-              query={specifics.highlight}
-              styles={{ color: colors.primary.regular, fontWeight: 'bold' }}
-            >
-              {specifics.account}
-            </Highlight>
+            {specifics.forgotten_password}{'  '}
+            <Text as="span" color={colors.primary.regular} fontWeight="bold">
+              {specifics.highlight}
+            </Text>
           </Text>
         </Link>
-      </Stack> */}
+      </Stack>
     </VStack>
   );
 };

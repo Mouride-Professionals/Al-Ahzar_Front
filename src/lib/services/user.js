@@ -5,7 +5,8 @@ export const createUser = async ({ payload, token }) => {
     const { data: newPayload } = payload;
 
     return await fetcher({
-        uri: routes.api_route.alazhar.create.user,
+        // uri: routes.api_route.alazhar.create.user,
+        uri: "/auth/local/register",
         options: {
             method: 'POST',
             body: newPayload,

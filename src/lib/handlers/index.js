@@ -24,7 +24,8 @@ import {
 import { mapTeacherCreationBody } from '@utils/mappers/teacher';
 import { mapUserCreationBody } from '@utils/mappers/user';
 import { mapClassBody } from '@utils/tools/mappers';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
+import { serverFetch } from '../api';
 
 /**
  *
@@ -67,6 +68,8 @@ import { signIn } from 'next-auth/react';
 //     setSubmitting(false);
 //   }
 // };
+
+
 export const loginFormHandler = async ({
   data,
   setSubmitting,
@@ -79,9 +82,9 @@ export const loginFormHandler = async ({
     const res = await signIn('strapi', {
       username: identifier,
       password,
-      callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
       redirect: false,
     });
+
 
     if (!res || res.error) {
       setSubmitting(false);
@@ -92,15 +95,54 @@ export const loginFormHandler = async ({
       return { error: res?.error || 'Authentication failed' };
     }
 
+    // Get session to retrieve JWT
+    const session = await getSession();
+    const token = session?.user?.accessToken;
+
+
+    if (!session || !token) {
+      setSubmitting(false);
+      setFieldError('authentication', 'Authentication failed');
+      return { error: 'Authentication failed' };
+    }
+
+    const userResponse = await serverFetch({
+      uri: routes.api_route.alazhar.get.me,
+      user_token: token,
+    });
+    
+
+    if (!userResponse) {
+      setSubmitting(false);
+      setFieldError('authentication', 'Failed to fetch user data');
+      return { error: 'Failed to fetch user data' };
+    }
+
+    const userData = await userResponse;
+    const forcePasswordChange = userData.forcePasswordChange;
+
     setSubmitting(false);
+
+    if (forcePasswordChange) {
+      sessionStorage.setItem('jwt', res.token); // Store token for change-password
+      window.location.href = 'user/change-password';
+      return;
+    }
     return { success: true, callbackUrl: redirectOnSuccess };
+
+
   } catch (error) {
     console.error('Login error:', error);
     setSubmitting(false);
-    setFieldError('authentication', 'An unexpected error occurred');
+    setFieldError(
+      'authentication',
+      'An unexpected error occurred. Please try again.'
+    );
     return { error: error.message };
+
   }
 };
+ 
 
 export const registrationFormHandler = async ({
   data,

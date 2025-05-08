@@ -49,7 +49,7 @@ export const strapiProvider = {
   async authorize(credentials) {
     try {
       const response = await fetch(
-        `${process.env.STRAPI_BASE_URL}/auth/local`,
+        `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/auth/local`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

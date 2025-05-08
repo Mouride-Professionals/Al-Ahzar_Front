@@ -1,0 +1,209 @@
+'use client';
+import {
+    Box,
+    Button,
+    FormControl,
+    FormErrorMessage,
+    FormLabel,
+    Input,
+    Text,
+    VStack,
+    useToast,
+} from '@chakra-ui/react';
+import { usePasswordType } from '@hooks';
+import { changePasswordSchema } from '@schemas';
+import { colors, forms } from '@theme';
+import { mapFormInitialValues } from '@utils/tools/mappers';
+import { Formik } from 'formik';
+import { useSession } from 'next-auth/react';
+import { Fragment } from 'react';
+import { VscEye } from 'react-icons/vsc';
+import { fetcher } from 'src/lib/api';
+
+export const ChangePasswordForm = () => {
+    const { passwordType, passwordTypeToggler } = usePasswordType();
+    const { data: session } = useSession();
+    const toast = useToast();
+
+    const handleChangePassword = async (values, { setSubmitting, setFieldError }) => {
+        if (!session?.user?.accessToken) {
+            toast({
+                title: 'Error',
+                description: 'Not authenticated',
+                status: 'error',
+                duration: 5000,
+            });
+            setSubmitting(false);
+            return;
+        }
+
+        try {
+            const response = await fetcher({
+                uri: `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/auth/change-password`,
+                options: {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        currentPassword: values.currentPassword,
+                        password: values.newPassword,
+                        passwordConfirmation: values.confirmPassword,
+                    }),
+                },
+                user_token: session.user.accessToken,
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to change password');
+            }
+
+            toast({
+                title: 'Success',
+                description: 'Password changed successfully',
+                status: 'success',
+                duration: 5000,
+            });
+        } catch (error) {
+            toast({
+                title: 'Error',
+                description: error.message || 'Failed to change password',
+                status: 'error',
+                duration: 5000,
+            });
+            setFieldError('authentication', error.message || 'Failed to change password');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
+        <Box pt={3} w={'100%'}>
+            <Formik
+                initialValues={mapFormInitialValues(changePasswordSchema._nodes)}
+                validationSchema={changePasswordSchema}
+                onSubmit={handleChangePassword}
+            >
+                {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting,
+                }) => (
+                    <Fragment>
+
+                        {/* Current Password */}
+                        <FormControl isInvalid={errors.currentPassword && touched.currentPassword} pb={5}>
+                            <FormLabel fontWeight={'bold'}>
+                                {forms.inputs.change_password.current_password.label}
+                            </FormLabel>
+                            <Input
+                                bgColor={colors.white}
+                                name={'currentPassword'}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                borderColor={colors.gray.regular}
+                                placeholder={forms.inputs.change_password.current_password.placeholder}
+                                type={'password'}
+                                value={values.currentPassword}
+                                h={50}
+                                w={'100%'}
+                            />
+                            {errors.currentPassword && touched.currentPassword && (
+                                <FormErrorMessage>{errors.currentPassword}</FormErrorMessage>
+                            )}
+                        </FormControl>
+
+                        {/* New Password */}
+                        <FormControl isInvalid={errors.newPassword && touched.newPassword} pb={5}>
+                            <FormLabel fontWeight={'bold'}>
+                                {forms.inputs.change_password.new_password.label}
+                            </FormLabel>
+                            <Box pos={'relative'}>
+                                <Input
+                                    bgColor={colors.white}
+                                    name={'newPassword'}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    borderColor={colors.gray.regular}
+                                    placeholder={forms.inputs.change_password.new_password.placeholder}
+                                    type={passwordType}
+                                    value={values.newPassword}
+                                    h={50}
+                                    w={'100%'}
+                                />
+                                <Box
+                                    onClick={passwordTypeToggler}
+                                    _hover={{ cursor: 'pointer' }}
+                                    pos={'absolute'}
+                                    right={'2.5%'}
+                                    top={'30%'}
+                                >
+                                    <VscEye size={20} />
+                                </Box>
+                            </Box>
+                            {errors.newPassword && touched.newPassword && (
+                                <FormErrorMessage>{errors.newPassword}</FormErrorMessage>
+                            )}
+                        </FormControl>
+
+                        {/* Confirm Password */}
+                        <FormControl isInvalid={errors.confirmPassword && touched.confirmPassword} pb={5}>
+                            <FormLabel fontWeight={'bold'}>
+                                {forms.inputs.change_password.confirm_password.label}
+                            </FormLabel>
+                            <Box pos={'relative'}>
+                                <Input
+                                    bgColor={colors.white}
+                                    name={'confirmPassword'}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    borderColor={colors.gray.regular}
+                                    placeholder={forms.inputs.change_password.confirm_password.placeholder}
+                                    type={passwordType}
+                                    value={values.confirmPassword}
+                                    h={50}
+                                    w={'100%'}
+                                />
+                                <Box
+                                    onClick={passwordTypeToggler}
+                                    _hover={{ cursor: 'pointer' }}
+                                    pos={'absolute'}
+                                    right={'2.5%'}
+                                    top={'30%'}
+                                >
+                                    <VscEye size={20} />
+                                </Box>
+                            </Box>
+                            {errors.confirmPassword && touched.confirmPassword && (
+                                <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
+                            )}
+                        </FormControl>
+
+                        {/* Submit Button */}
+                        <FormControl pb={5}>
+                            <Button
+                                mb={3}
+                                onClick={handleSubmit}
+                                colorScheme={'orange'}
+                                bgColor={colors.primary.regular}
+                                h={50}
+                                w={'100%'}
+                                type={'submit'}
+                                isDisabled={isSubmitting}
+                            >
+                                {forms.inputs.change_password.submit}
+                            </Button>
+                            {errors.authentication && touched.authentication && (
+                                <VStack>
+                                    <Text color={colors.error}>{errors.authentication}</Text>
+                                </VStack>
+                            )}
+                        </FormControl>
+                    </Fragment>
+                )}
+            </Formik>
+        </Box>
+    );
+};

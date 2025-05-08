@@ -11,9 +11,9 @@ module.exports = {
             'Entrez vore identifiant et votre mot de passe pour vous connecter à votre compte',
         },
         specifics: {
-          forgotten_password: 'Forgot password?',
+          forgotten_password: '',
           account: "Don't have an account? Sign up",
-          highlight: 'Sign up',
+          highlight: 'Mot de passe oublé?',
         },
       },
       register: {
@@ -22,12 +22,43 @@ module.exports = {
           subtitle: "Please enter your creds, we'll take care of the rest 😊",
         },
         specifics: {
-          forgotten_password: 'Forgot password?',
+          forgotten_password: 'Mot de passe oublé?',
           account: 'Already have an account? Sign in',
           highlight: 'Sign in',
         },
       },
+      change_password: {
+        heading: {
+          title: 'Changement de mot de passe',
+          subtitle: 'Entrez votre mot de passe actuel et le nouveau mot de passe',
+        },
+        specifics: {
+          forgotten_password: 'Vous voulez revenir à la page d\'accueil',
+          highlight: 'Annuler',
+        },
+      },
+      forgot_password: {
+        heading: {
+          title: 'Demande de reinitialisation du mot de passe',
+          subtitle: 'Entrez votre adresse email',
+        },
+        specifics: {
+          forgotten_password: 'Si vous voulez revenir à la page de connexion',
+          highlight: 'Cliquez ici',
+        },
+      },
+      reset_password: {
+        heading: {
+          title: 'Réinitialisation du mot de passe',
+          subtitle: 'Entrez votre nouveau mot de passe',
+        },
+        specifics: {
+          forgotten_password: 'Si vous voulez anuler la réinitialisation',
+          highlight: 'Cliquez ici',
+        },
+      },
     },
+
     cards: {
       class: {
         students: '%number élèves',

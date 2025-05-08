@@ -6,6 +6,16 @@ export const authenticationSchema = object({
   authentication: string().trim(),
 });
 
+export const changePasswordSchema = object({
+  currentPassword: string().trim().required(),
+  newPassword: string().trim().required(),
+  confirmPassword: string()
+    .trim()
+    .oneOf([ref('newPassword'), null], 'Passwords must match')
+    .required('Confirm password is required'),
+  authentication: string().trim(),
+})
+
 const AllowedSexes = ['Homme', 'Femme'];
 const AllowedRoles = ['Directeur Géneral', 'Sécretaraire Géneral', 'Caissier', 'Surveillant Géneral', 'Directeur etablissment'];
 const AllowedEnrollmentTypes = [
