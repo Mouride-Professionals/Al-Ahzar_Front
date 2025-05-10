@@ -9,8 +9,8 @@ import {
 import { createSchoolYear, updateSchoolYear } from '@services/school_year';
 import { confirmStudent, createPayment, createStudent, enrollStudent } from '@services/student';
 import { createTeacher, updateTeacher } from '@services/teacher';
-import { createUser } from '@services/user';
-import { forms, routes } from '@theme';
+import { createUser, updateUser } from '@services/user';
+import { forms } from '@theme';
 import { mapExpenseCreationBody } from '@utils/mappers/expense';
 import { mapMonthCreationBody } from '@utils/mappers/payment';
 import { mapSchoolCreationBody } from '@utils/mappers/school';
@@ -24,8 +24,7 @@ import {
 import { mapTeacherCreationBody } from '@utils/mappers/teacher';
 import { mapUserCreationBody } from '@utils/mappers/user';
 import { mapClassBody } from '@utils/tools/mappers';
-import { getSession, signIn } from 'next-auth/react';
-import { serverFetch } from '../api';
+import { signIn } from 'next-auth/react';
 
 /**
  *
@@ -95,39 +94,7 @@ export const loginFormHandler = async ({
       return { error: res?.error || 'Authentication failed' };
     }
 
-    // Get session to retrieve JWT
-    const session = await getSession();
-    const token = session?.user?.accessToken;
 
-
-    if (!session || !token) {
-      setSubmitting(false);
-      setFieldError('authentication', 'Authentication failed');
-      return { error: 'Authentication failed' };
-    }
-
-    const userResponse = await serverFetch({
-      uri: routes.api_route.alazhar.get.me,
-      user_token: token,
-    });
-    
-
-    if (!userResponse) {
-      setSubmitting(false);
-      setFieldError('authentication', 'Failed to fetch user data');
-      return { error: 'Failed to fetch user data' };
-    }
-
-    const userData = await userResponse;
-    const forcePasswordChange = userData.forcePasswordChange;
-
-    setSubmitting(false);
-
-    if (forcePasswordChange) {
-      sessionStorage.setItem('jwt', res.token); // Store token for change-password
-      window.location.href = 'user/change-password';
-      return;
-    }
     return { success: true, callbackUrl: redirectOnSuccess };
 
 
@@ -142,7 +109,7 @@ export const loginFormHandler = async ({
 
   }
 };
- 
+
 
 export const registrationFormHandler = async ({
   data,
@@ -205,7 +172,6 @@ export const confirmEnrollmentFormHandler = async ({
         paymentType: 'enrollment',
       }
     });
-    console.log('payment payload', enrollmentPaymentPayload);
 
     // Create the primary enrollment payment
     const payment = await createPayment({
@@ -233,7 +199,6 @@ export const confirmEnrollmentFormHandler = async ({
             monthOf: paymentType === 'monthly' ? data.monthOf : null,
           }
         });
-        // console.log(`Extra payment payload for ${feeKey}:`, extraPaymentPayload);
         await createPayment({
           payload: extraPaymentPayload,
           token,
@@ -505,32 +470,99 @@ export const userCreationFormHandler = async ({
   token,
   hasSucceeded,
 }) => {
-
-  const payload = mapUserCreationBody({ data });
-
-  createUser({ payload, token })
-    .then(() => {
-      hasSucceeded(true);
-      setSubmitting(false);
-    })
-    .catch((err) => {
-      if (err?.data) {
-        const { data } = err?.data;
-        setSubmitting(false);
-        if (data?.message?.includes('exists')) {
-          return setFieldError(
-            'registration',
-            forms.messages.registration.errors.already_exists
-          );
-        }
-      }
-
-      setFieldError('registration', forms.messages.registration.errors.problem);
-      return;
+  try {
+    // Map the user creation payload
+    //add default password to user
+    const defaultPassword = 'Passer@123';
+    const payload = mapUserCreationBody({
+      data: {
+        ...data,
+        password: defaultPassword,
+      },
     });
 
-  setSubmitting(false);
+    // Attempt to create the user and update its role
+    const user = await createUser({ payload, token });
+
+
+    const role = data.role;
+    await updateUser({
+      user: user.user.id,
+      payload: {
+        role: role,
+      },
+      token,
+
+    })
+
+    setSubmitting(false);
+    hasSucceeded(true);
+  } catch (err) {
+    console.error("Error creating user:", err);
+
+    // Handle specific error cases
+    if (err?.data) {
+      const { data: errorData } = err.data;
+
+      // Check if the error message indicates the user already exists
+      if (errorData?.message?.includes('exists')) {
+        setFieldError(
+          'registration',
+          forms.messages.registration.errors.already_exists
+        );
+        return;
+      }
+
+      // Handle other specific error messages
+      setFieldError(
+        'registration',
+        errorData?.message || forms.messages.registration.errors.problem
+      );
+    } else {
+      // Handle general errors
+      setFieldError(
+        'registration',
+        err?.message || forms.messages.registration.errors.problem
+      );
+    }
+  } finally {
+    // Ensure the submitting state is reset
+    setSubmitting(false);
+  }
 };
+// export const userCreationFormHandler = async ({
+//   data,
+//   setSubmitting,
+//   setFieldError,
+//   token,
+//   hasSucceeded,
+// }) => {
+
+//   const payload = mapUserCreationBody({ data });
+
+//   createUser({ payload, token })
+//     .then(() => {
+//       hasSucceeded(true);
+//       setSubmitting(false);
+//     })
+//     .catch((err) => {
+//       if (err?.data) {
+//         const { data } = err?.data;
+//         setSubmitting(false);
+//         if (data?.message?.includes('exists')) {
+//           return setFieldError(
+//             'registration',
+//             forms.messages.registration.errors.already_exists
+//           );
+//         }
+//       }
+
+//       setFieldError('registration', forms.messages.registration.errors.problem);
+//       return;
+//     });
+
+//   setSubmitting(false);
+// };
 
 //  teacher recruitment form handler
 export const teacherRecruitmentFormHandler = async ({
@@ -686,10 +718,8 @@ export const expenseCreationFormHandler = async ({
   hasSucceeded,
 }) => {
   try {
-    console.log("data", data);
 
     const payload = mapExpenseCreationBody({ data });
-    console.log("payload", payload);
 
     await createExpense({ token, payload });
     hasSucceeded(true);

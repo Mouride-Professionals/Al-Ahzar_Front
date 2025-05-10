@@ -32,8 +32,6 @@ export const AuthenticationLayoutForm = ({
     >
       <Stack w={'100%'}>
         <Heading color={colors.secondary.regular} textAlign={'center'}
-          isTruncated // Ensures the title is truncated with ellipsis if it overflows
-          noOfLines={1} // Restricts to one line
         >
           {title}
         </Heading>
@@ -42,8 +40,6 @@ export const AuthenticationLayoutForm = ({
             <Text
               color={colors.gray.bold}
               fontSize={16}
-              noOfLines={1}
-              isTruncated // Ensures the subtitle is truncated with ellipsis if it overflows
 
               mt={3}
               textAlign={'center'}

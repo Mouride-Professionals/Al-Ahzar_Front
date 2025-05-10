@@ -254,7 +254,7 @@ export const userCreationSchema = object({
   firstname: string().trim().required(),
   lastname: string().trim().required(),
   email: string().email().required(),
-  password: string().trim().required(),
+  // password: string().trim().required(),
   role: string().trim().required('Role is required'),
 });
 

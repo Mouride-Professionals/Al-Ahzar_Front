@@ -7,7 +7,9 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { colors, routes } from '@theme';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { RiArrowRightSLine } from 'react-icons/ri';
 
 export const MenuPill = ({ active, icon, message, link, isDisabled }) => {
@@ -43,6 +45,10 @@ export const MenuPill = ({ active, icon, message, link, isDisabled }) => {
 };
 
 export const MenuBreadcrumb = ({ currentPage }) => {
+  //get the authenticated user s school name from the cookie
+  const [schoolName] = useState(
+    Cookies.get('schoolName') || 'Direction Générale');
+
   return (
     <Breadcrumb separator={<RiArrowRightSLine />}>
       <BreadcrumbItem>
@@ -53,7 +59,18 @@ export const MenuBreadcrumb = ({ currentPage }) => {
           {process.env.NEXT_PUBLIC_SITENAME}
         </BreadcrumbLink>
       </BreadcrumbItem>
-
+      <BreadcrumbItem>
+        <BreadcrumbLink
+          href={routes.page_route.dashboard.initial}
+          color={colors.primary.regular}
+          fontWeight={'700'}
+          _hover={{ textDecoration: 'none' }}
+          _focus={{ boxShadow: 'none' }}
+          _active={{ boxShadow: 'none' }}
+        >
+          {schoolName}
+        </BreadcrumbLink>
+      </BreadcrumbItem>
       <BreadcrumbItem isCurrentPage>
         <BreadcrumbLink
           href={'#'}

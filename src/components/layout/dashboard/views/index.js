@@ -34,15 +34,13 @@ export const DesktopDashboardLayoutView = ({
   const { isOpen, onToggle, onClose } = useDisclosure();
   const { data: session } = useSession();
   const router = useRouter();
-  // const [banner, setBanner] = useState({
-  //   src: banner != '' ? `${process.env.NEXT_PUBLIC_API_URL}${banner}` : images.logo.src,
-  //   alt: 'Banner image',
-  // });
+  
   const logo = {
     src: images.logo.src,
     alt: 'Logo image',
   }
 
+  
   return (
     <Stack
       direction={'column'}

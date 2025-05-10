@@ -44,7 +44,7 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
     }));
 
 
-  
+
     return (
         <Formik
             validationSchema={userCreationSchema}
@@ -76,7 +76,7 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                         </Text>
                         <HStack align={'center'} justifyContent={'space-between'}>
 
-                            <WrapItem w={370}>
+                            <WrapItem w={"49%"}>
                                 <FormInput
                                     {...firstname}
                                     errors={errors}
@@ -86,7 +86,7 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     value={values.firstname}
                                 />
                             </WrapItem>
-                            <WrapItem w={370}>
+                            <WrapItem w={"49%"}>
                                 <FormInput
                                     {...lastname}
                                     errors={errors}
@@ -96,7 +96,10 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     value={values.lastname}
                                 />
                             </WrapItem>
-                            <WrapItem w={370}>
+                           
+                        </HStack>
+                        <HStack align={'center'} justifyContent={'space-between'} pt={5}>
+                            <WrapItem w={"49%"}>
                                 <FormInput
                                     {...username}
                                     errors={errors}
@@ -106,10 +109,7 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     value={values.username}
                                 />
                             </WrapItem>
-                        </HStack>
-                        <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-
-                            <WrapItem w={370}>
+                            <WrapItem w={"49%"}>
                                 <FormInput
                                     {...email}
                                     errors={errors}
@@ -119,7 +119,7 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     value={values.email}
                                 />
                             </WrapItem>
-                            <WrapItem w={370}>
+                            {/* <WrapItem w={370}>
                                 <FormInput
                                     {...password}
                                     type="password"
@@ -129,8 +129,16 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     touched={touched}
                                     value={values.password}
                                 />
-                            </WrapItem>
-                            <WrapItem w={370}>
+                            </WrapItem> */}
+                            
+
+
+
+
+                        </HStack>
+                        {/* Adding Role and School fields */}
+                        <HStack align={'center'} justifyContent={'space-between'} pt={5}>
+                            <WrapItem w={"49%"}>
                                 <FormInput
                                     {...role}
                                     options={roles}
@@ -142,14 +150,7 @@ export const CreateUserForm = ({ schools, roles, setHasSucceeded, token, initial
                                     value={values.role}
                                 />
                             </WrapItem>
-
-
-
-
-                        </HStack>
-                        {/* Adding Role and School fields */}
-                        <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-                            <WrapItem w={'100%'}>
+                            <WrapItem w={'49%'}>
                                 <FormInput
                                     select={true}
                                     options={schoolOptions}

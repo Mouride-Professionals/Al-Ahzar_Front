@@ -14,7 +14,6 @@ export const CreateSchoolYearForm = ({
   isEdit = false,
   initialValues = null,
 }) => {
-  console.log('initialValues', initialValues);
   
   const router = useRouter();
   const { id: schoolYearId = null, attributes: schoolYearAttributes = {} } =

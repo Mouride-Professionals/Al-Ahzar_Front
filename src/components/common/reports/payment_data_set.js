@@ -78,7 +78,6 @@ export const PaymentDataSet = ({ role, data, columns, token }) => {
     [data, filterText]
   );
   const router = useRouter();
-  console.log('filtered', filtered);
 
   const subHeaderComponentMemo = useMemo(() => (
     <HStack

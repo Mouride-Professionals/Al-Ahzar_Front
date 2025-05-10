@@ -6,8 +6,9 @@ import {
     FormErrorMessage,
     FormLabel,
     Input,
+    Text,
     VStack,
-    useToast
+    useToast,
 } from '@chakra-ui/react';
 import { AuthenticationLayout, AuthenticationLayoutForm } from '@components/layout/authentication';
 import { usePasswordType } from '@hooks';
@@ -19,11 +20,11 @@ import { VscEye } from 'react-icons/vsc';
 import { fetcher } from 'src/lib/api';
 import * as Yup from 'yup';
 
-export default function ResetPasswordPage() {
+export default function SetPasswordPage() {
     const toast = useToast();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const resetToken = searchParams.get('code'); // Get the reset token from the URL query params
+    const setPasswordToken = searchParams.get('token'); // Get the token from the URL query params
     const { passwordType, passwordTypeToggler } = usePasswordType(); // Hook for toggling password visibility
 
     // Validation schema using Yup
@@ -34,74 +35,74 @@ export default function ResetPasswordPage() {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Confirm password is required'),
-            authentication: Yup.string().trim(),
+        authentication: Yup.string().trim(),
     });
 
-    const handleResetPassword = async (values, { setSubmitting, setFieldError }) => {
-        if (!resetToken) {
-            toast({
-                title: 'Error',
-                description: 'Invalid or missing reset token',
-                status: 'error',
-                duration: 5000,
-            });
-            setSubmitting(false);
-            return;
-        }
+    const handleSetPassword = async (values, { setSubmitting, setFieldError }) => {
+        // if (!setPasswordToken) {
+        //     toast({
+        //         title: 'Error',
+        //         description: 'Invalid or missing token',
+        //         status: 'error',
+        //         duration: 5000,
+        //     });
+        //     setSubmitting(false);
+        //     return;
+        // }
 
         try {
             const response = await fetcher({
-                uri: `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/auth/reset-password`,
+                uri: `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/auth/set-password`,
                 options: {
                     method: 'POST',
                     body: JSON.stringify({
                         password: values.password,
                         passwordConfirmation: values.confirmPassword,
-                        code: resetToken, // Pass the reset token to the backend
+                        token: setPasswordToken, // Pass the token to the backend
                     }),
                 },
             });
 
             if (response.error) {
                 const errorText = await response.text();
-                throw new Error(errorText || 'Failed to reset password');
+                throw new Error(errorText || 'Failed to set password');
             }
 
             toast({
                 title: 'Success',
-                description: 'Password reset successfully',
+                description: 'Password set successfully',
                 status: 'success',
                 duration: 5000,
             });
-            // Redirect to login page or any other page after successful password reset
+
+            // Redirect to login page after successful password setup
             router.push(routes.page_route.auth.initial);
         } catch (error) {
             toast({
                 title: 'Error',
-                description: error.message || 'Failed to reset password',
+                description: error.message || 'Failed to set password',
                 status: 'error',
                 duration: 5000,
             });
-            setFieldError('authentication', error.message || 'Failed to reset password');
-
+            setFieldError('authentication', error.message || 'Failed to set password');
         } finally {
             setSubmitting(false);
         }
     };
 
     return (
-        <AuthenticationLayout title={'Reset Password'}>
+        <AuthenticationLayout title={'Set Password'}>
             <AuthenticationLayoutForm
                 redirection_route={routes.page_route.auth.initial}
-                title={messages.components.authentication.reset_password.heading.title}
-                subtitle={messages.components.authentication.reset_password.heading.subtitle}
-                specifics={messages.components.authentication.reset_password.specifics}
+                title={messages.components.authentication.set_password.heading.title}
+                subtitle={messages.components.authentication.set_password.heading.subtitle}
+                specifics={messages.components.authentication.set_password.specifics}
             >
                 <Box pt={10} w={'100%'} maxW={'400px'} mx={'auto'}>
                     <Formik
                         initialValues={{ password: '', confirmPassword: '' }}
                         validationSchema={validationSchema}
-                        onSubmit={handleResetPassword}
+                        onSubmit={handleSetPassword}
                     >
                         {({
                             values,
@@ -116,7 +117,7 @@ export default function ResetPasswordPage() {
                                 {/* New Password Field */}
                                 <FormControl isInvalid={errors.password && touched.password}>
                                     <FormLabel fontWeight={'bold'}>
-                                        {forms.inputs.reset_password.password.label || 'New Password'}
+                                        {forms.inputs.change_password.password.label || 'New Password'}
                                     </FormLabel>
                                     <Box pos={'relative'}>
                                         <Input
@@ -126,7 +127,7 @@ export default function ResetPasswordPage() {
                                             onBlur={handleBlur}
                                             borderColor={colors.gray.regular}
                                             placeholder={
-                                                forms.inputs.reset_password.password.placeholder ||
+                                                forms.inputs.change_password.password.placeholder ||
                                                 'Enter new password'
                                             }
                                             type={passwordType}
@@ -152,7 +153,7 @@ export default function ResetPasswordPage() {
                                 {/* Confirm Password Field */}
                                 <FormControl isInvalid={errors.confirmPassword && touched.confirmPassword}>
                                     <FormLabel fontWeight={'bold'}>
-                                        {forms.inputs.reset_password.confirm_password.label || 'Confirm Password'}
+                                        {'Confirm Password'}
                                     </FormLabel>
                                     <Box pos={'relative'}>
                                         <Input
@@ -162,7 +163,7 @@ export default function ResetPasswordPage() {
                                             onBlur={handleBlur}
                                             borderColor={colors.gray.regular}
                                             placeholder={
-                                                forms.inputs.reset_password.confirm_password.placeholder ||
+                                                forms.inputs.change_password.confirm_password.placeholder ||
                                                 'Confirm new password'
                                             }
                                             type={passwordType}
@@ -195,7 +196,7 @@ export default function ResetPasswordPage() {
                                     isDisabled={isSubmitting}
                                     isLoading={isSubmitting}
                                 >
-                                    {forms.inputs.reset_password.submit || 'Reset Password'}
+                                    { 'Set Password'}
                                 </Button>
                                 {errors.authentication && touched.authentication && (
                                     <VStack>

@@ -12,18 +12,19 @@ import {
 import { AuthenticationLayout, AuthenticationLayoutForm } from '@components/layout/authentication';
 import { colors, forms, messages, routes } from '@theme';
 import { Formik } from 'formik';
+import { useRouter } from 'next/router';
 import { fetcher } from 'src/lib/api';
 import * as Yup from 'yup';
 
 export default function ForgotPasswordPage() {
+    const router = useRouter();
+
     const toast = useToast(
         {
             position: 'top',
             duration: 5000,
             isClosable: true
-
         }
-
     );
 
     // Validation schema using Yup
@@ -31,6 +32,7 @@ export default function ForgotPasswordPage() {
         email: Yup.string()
             .email('Veuillez entrer une adresse email valide')
             .required('L`adresse email est requise'),
+        authentication: Yup.string().trim(),
     });
 
     const handleForgotPassword = async (values, { setSubmitting, setFieldError }) => {
@@ -43,7 +45,7 @@ export default function ForgotPasswordPage() {
                 },
             });
 
-            if (!response.ok) {
+            if (response.error) {
                 const errorText = await response.text();
                 throw new Error(errorText || 'Failed to send reset email');
             }
@@ -54,15 +56,18 @@ export default function ForgotPasswordPage() {
                 status: 'success'
             });
             // Redirect to login page
-            // window.location.href = routes.page_route.auth.initial;
-
+            setTimeout(() => {
+                router.push(routes.page_route.auth.initial);
+            }, 3000);
         } catch (error) {
             toast({
                 title: 'Error',
                 description: error.message || 'Failed to send reset email',
                 status: 'error'
             });
-            setFieldError('email', error.message || 'Failed to send reset email');
+            setFieldError('authentication', error.message || 'Failed to send reset email');
+
+            // setFieldError('email', error.message || 'Failed to send reset email');
         } finally {
             setSubmitting(false);
         }
@@ -127,6 +132,11 @@ export default function ForgotPasswordPage() {
                                 >
                                     {forms.inputs.forgot_password.submit || 'Send Reset Email'}
                                 </Button>
+                                {errors.authentication && touched.authentication && (
+                                    <VStack>
+                                        <Text color={colors.error}>{errors.authentication}</Text>
+                                    </VStack>
+                                )}
                             </VStack>
                         )}
                     </Formik>

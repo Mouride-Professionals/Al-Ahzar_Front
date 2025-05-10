@@ -21,7 +21,7 @@ module.exports = {
       login: {
         identifier: {
           label: 'Identifiant',
-          placeholder: 'bayeousmane@mouridpro.com',
+          placeholder: 'vWc4o@example.com',
           type: 'text',
           name: 'identifier',
         },

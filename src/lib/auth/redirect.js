@@ -1,7 +1,8 @@
 'use client';
 import { routes } from '@theme';
+import Cookies from 'js-cookie';
 import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { serverFetch } from '../api';
 
@@ -9,6 +10,7 @@ export default function useCustomRedirect() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [role, setRole] = useState(null); // State to store the role
+    const [forcePasswordChange, setForcePasswordChange] = useState(false); // State to store the forcePasswordChange flag
 
     useEffect(() => {
         // if (status === 'loading') return;
@@ -22,13 +24,33 @@ export default function useCustomRedirect() {
 
         async function fetchUserRole() {
             try {
-                const response = await serverFetch({
+                const userResponse = await serverFetch({
                     uri: routes.api_route.alazhar.get.me,
                     user_token: token,
                 });
 
-                setRole(response.role); // Set the role in state
-           
+
+                if (!userResponse) {
+                    console.error('No user response found');
+                    signOut({ redirect: false });
+                    router.push('/user/auth');
+                    return;
+                }
+                Cookies.set('schoolName', userResponse?.school?.name || ''); // Save the selected school name to cookies
+
+
+                setRole(userResponse.role); // Set the role in state
+
+                // Check if the user needs to change their password
+                setForcePasswordChange(userResponse.forcePasswordChange);
+
+                if (userResponse.forcePasswordChange == true) {
+                    // Redirect to change password page
+                    // signOut({ redirect: false });
+                    router.push(`${routes.page_route.dashboard.settings}?forcePasswordChange=true`);
+                    return;
+                }
+
             } catch (error) {
                 console.error('Error fetching user role:', error);
                 signOut({ redirect: false });
@@ -37,7 +59,7 @@ export default function useCustomRedirect() {
         }
 
         fetchUserRole();
-    }, [ session, router]);
+    }, [session, router]);
 
     useEffect(() => {
         if (!role) return; // Wait until the role is fetched

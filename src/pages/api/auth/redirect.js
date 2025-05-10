@@ -68,7 +68,6 @@ export default async function handler(req, res) {
 //     // Fetch the session to get the user role
 //     const session = await getSession();
 //     const token = session?.user?.accessToken;
-//     console.log('session', session);
 
 //     if (!token) {
 //         return window.location.assign('/user/auth');

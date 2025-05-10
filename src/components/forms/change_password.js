@@ -12,10 +12,12 @@ import {
 } from '@chakra-ui/react';
 import { usePasswordType } from '@hooks';
 import { changePasswordSchema } from '@schemas';
+import { updateUser } from '@services/user';
 import { colors, forms } from '@theme';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { VscEye } from 'react-icons/vsc';
 import { fetcher } from 'src/lib/api';
@@ -23,7 +25,17 @@ import { fetcher } from 'src/lib/api';
 export const ChangePasswordForm = () => {
     const { passwordType, passwordTypeToggler } = usePasswordType();
     const { data: session } = useSession();
-    const toast = useToast();
+    const router = useRouter();
+    // get forcePasswordChange from query params
+    const { forcePasswordChange } = router.query;
+    const toast = useToast(
+        {
+            position: 'top',
+            duration: 5000,
+            isClosable: true,
+            variant: 'solid'
+        }
+    );
 
     const handleChangePassword = async (values, { setSubmitting, setFieldError }) => {
         if (!session?.user?.accessToken) {
@@ -31,7 +43,6 @@ export const ChangePasswordForm = () => {
                 title: 'Error',
                 description: 'Not authenticated',
                 status: 'error',
-                duration: 5000,
             });
             setSubmitting(false);
             return;
@@ -51,23 +62,37 @@ export const ChangePasswordForm = () => {
                 user_token: session.user.accessToken,
             });
 
-            if (!response.ok) {
-                const errorText = await response.text();
+            if (response.error) {
+                const errorText = response.text();
                 throw new Error(errorText || 'Failed to change password');
+            } else {
+                //update user forcePasswordChange to false
+                const user = session.user;
+                const userResponse = await updateUser({
+                    user: user.id,
+                    payload: {
+                        forcePasswordChange: false,
+                    },
+                    token: session.user.accessToken
+                });
+                if (userResponse.error) {
+                    const errorText = userResponse.text();
+                    throw new Error(errorText || 'Failed to update user');
+                }
             }
 
             toast({
                 title: 'Success',
                 description: 'Password changed successfully',
                 status: 'success',
-                duration: 5000,
             });
+            signOut();
+
         } catch (error) {
             toast({
                 title: 'Error',
                 description: error.message || 'Failed to change password',
                 status: 'error',
-                duration: 5000,
             });
             setFieldError('authentication', error.message || 'Failed to change password');
         } finally {
@@ -94,22 +119,33 @@ export const ChangePasswordForm = () => {
                     <Fragment>
 
                         {/* Current Password */}
+
                         <FormControl isInvalid={errors.currentPassword && touched.currentPassword} pb={5}>
                             <FormLabel fontWeight={'bold'}>
                                 {forms.inputs.change_password.current_password.label}
                             </FormLabel>
-                            <Input
-                                bgColor={colors.white}
-                                name={'currentPassword'}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                borderColor={colors.gray.regular}
-                                placeholder={forms.inputs.change_password.current_password.placeholder}
-                                type={'password'}
-                                value={values.currentPassword}
-                                h={50}
-                                w={'100%'}
-                            />
+                            <Box pos={'relative'}>
+                                <Input
+                                    bgColor={colors.white}
+                                    name={'currentPassword'}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    borderColor={colors.gray.regular}
+                                    placeholder={forms.inputs.change_password.current_password.placeholder}
+                                    type={passwordType}
+                                    value={values.currentPassword}
+                                    h={50}
+                                    w={'100%'}
+                                /><Box
+                                    onClick={passwordTypeToggler}
+                                    _hover={{ cursor: 'pointer' }}
+                                    pos={'absolute'}
+                                    right={'2.5%'}
+                                    top={'30%'}
+                                >
+                                    <VscEye size={20} />
+                                </Box>
+                            </Box>
                             {errors.currentPassword && touched.currentPassword && (
                                 <FormErrorMessage>{errors.currentPassword}</FormErrorMessage>
                             )}

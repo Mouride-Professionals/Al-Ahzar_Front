@@ -93,7 +93,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
     school,
   } = data;
 
-  
+
   // Create school options (if the user can be assigned to one of the available schools).
   const schoolOptions = schools.map((school) => ({
     value: school.id,
@@ -153,7 +153,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
                   {school && (
                     <Text>Etablissement: {school.name}</Text>
                   )}
-                  {!school&&(
+                  {!school && (
                     <Text>{'Pas encore assigné'}</Text>
                   )}
                 </Stack>
@@ -173,7 +173,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
             {/* Action Buttons */}
             <HStack justifyContent={'flex-end'} mt={6}>
               <Button
-                onClick= {null}//{() => router.push(`/dashboard/direction/users/${data.id}/edit`)}
+                onClick={null}//{() => router.push(`/dashboard/direction/users/${data.id}/edit`)}
                 colorScheme="orange"
                 variant="outline"
               >
@@ -185,7 +185,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
             </HStack>
 
             {/* Modal for school assignment */}
-            
+
             <Modal isOpen={isDialogOpen} onClose={closeDialog} zIndex={1500}>
               <ModalOverlay />
               <ModalContent>

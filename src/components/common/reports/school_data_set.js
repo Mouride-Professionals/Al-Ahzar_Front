@@ -51,7 +51,6 @@ const ExpandedComponent = ({ data, role, user_token }) => {
     responsibleName = 'Unassigned',
   } = data;
 
-  console.log('schoolBannerUrl', banner);
   const router = useRouter();
   const schoolBannerUrl = banner === null
     ? images.logo.src // Fallback to default logo
