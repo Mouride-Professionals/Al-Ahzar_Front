@@ -6,6 +6,7 @@ import {
     FormErrorMessage,
     FormLabel,
     Input,
+    Text,
     VStack,
     useToast
 } from '@chakra-ui/react';
