@@ -133,11 +133,7 @@ export const getServerSideProps = async ({ req, res }) => {
         user_token: token,
     });
     const role = response.role;
-    //   const users =  await serverFetch({
-    //         uri: allUsers,
-    //         user_token: token,
-    //     });
-    //     console.log('users', users);
+   
 
     const kpis = await Promise.all([
         serverFetch({

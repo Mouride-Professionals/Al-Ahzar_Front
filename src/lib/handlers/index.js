@@ -34,41 +34,6 @@ import { signIn } from 'next-auth/react';
  * @param {route} redirectOnSuccess
  * @returns
  */
-// export const loginFormHandler = async ({
-//   data,
-//   setSubmitting,
-//   setFieldError,
-//   redirectOnSuccess = '/',
-// }) => {
-//   const { identifier, password } = data;
-
-//   try {
-//     const res = await signIn('strapi', {
-//       username: identifier,
-//       password,
-//       // callbackUrl: `${window.location.origin}${routes.page_route.auth.initial}`,
-//       redirect: false,
-//     });
-
-
-//     if (!res || res.error) {
-//       setSubmitting(false);
-//       setFieldError(
-//         'authentication',
-//         forms.messages.login.errors.not_authorized
-//       );
-//       return;
-//     }
-
-//     setSubmitting(false);
-//     // return ;
-//   } catch (error) {
-//     console.log(error);
-//     setSubmitting(false);
-//   }
-// };
-
-
 export const loginFormHandler = async ({
   data,
   setSubmitting,

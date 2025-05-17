@@ -103,7 +103,6 @@ export const getServerSideProps = async ({ req, res }) => {
     uri: me,
     user_token: token,
   });
-  // console.log('userResponse', userResponse);
 
 
   const { role, school: { id: schoolId } } = userResponse;

@@ -94,7 +94,6 @@ export const getServerSideProps = async ({ req, query }) => {
         user_token: token,
     });
 
-    // console.log('schoolYearData', schoolYearData);
     
     return {
         props: {

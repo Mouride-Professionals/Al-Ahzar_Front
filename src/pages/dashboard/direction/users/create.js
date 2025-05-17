@@ -114,14 +114,12 @@ export const getServerSideProps = async ({ req }) => {
     const filteredRoles = roles.filter(
         (role) => allowedRoles.includes(role.name) && role.name !== ROLES.DIRECTEUR_GENERAL
     );
-    console.log('allowedRoles', allowedRoles,  filteredRoles);
     // Map the filtered roles to a more usable format.
     const mappedRoles = filteredRoles.map((role) => ({
         name: role.name,
         value: role.id,
     }));
 
-console.log('mappedRoles', mappedRoles);
 
     return {
         props: {

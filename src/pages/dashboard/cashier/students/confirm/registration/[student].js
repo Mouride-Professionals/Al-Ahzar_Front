@@ -36,7 +36,6 @@ export default function StudentConfirmation({ studentDetail, role, token }) {
     },
   } = studentDetail;
 
-  console.log('studentDetail', studentDetail);
   
   const [hasSucceeded, setHasSucceeded] = useState( false);
 
@@ -89,7 +88,6 @@ export const getServerSideProps = async ({ query, req }) => {
     user_token: token,
   });
 
-  // console.log('studentDetail', studentDetail);
 
   return {
     props: {

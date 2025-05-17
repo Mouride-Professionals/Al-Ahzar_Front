@@ -313,7 +313,6 @@ export const getServerSideProps = async ({ req, res }) => {
         serverFetch({ uri: expenseStats.replace("%activeSchoolYear", activeSchoolYear), user_token: token }),
 
     ]);
-    // console.log(initialExpenseKpis,initialPaymentKpis);
 
 
     return {

@@ -188,7 +188,6 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
         },
 
     ];
-    // console.log('expenseSummary',expenseSummary);
 
     const pieColors = [
         colors.primary.regular,

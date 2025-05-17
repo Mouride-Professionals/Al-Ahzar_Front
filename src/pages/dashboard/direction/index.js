@@ -104,7 +104,6 @@ export const getServerSideProps = async ({ req, res }) => {
 
   const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
-  console.log('token', token);
 
 
   if (!token) {
@@ -159,7 +158,6 @@ export const getServerSideProps = async ({ req, res }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
   ]);
-  // console.log('kpis', kpis[4].data[1]['attributes']);
 
 
 
