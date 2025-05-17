@@ -27,7 +27,7 @@ export const LoginForm = () => {
   const router = useRouter();
 
   // Use custom redirect for authenticated users
-  useCustomRedirect();
+  // useCustomRedirect();
 
 
 

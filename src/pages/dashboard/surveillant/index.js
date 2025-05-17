@@ -18,14 +18,12 @@ const {
     stats: {
       classes,
       students: studentsStat,
-      teachers,
-      schools: schoolsStat,
       amount,
     },
   },
   components: {
     menu,
-    dataset: { students: studentsDataset, schools: schoolsDataset },
+    dataset: { students: studentsDataset, },
   },
 } = messages;
 
@@ -114,10 +112,8 @@ export const getServerSideProps = async ({ req, res }) => {
     alazhar: {
       get: {
         me,
-        users: { all: users },
         classes: { all: classrooms },
         students: { all: allStudents },
-        teachers: { all: teachers },
       },
     },
   } = routes.api_route;

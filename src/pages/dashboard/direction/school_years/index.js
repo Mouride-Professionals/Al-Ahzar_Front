@@ -13,6 +13,7 @@ import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
+import Loading from '../../loading';
 
 const {
   pages: {
@@ -58,37 +59,39 @@ export default function Dashboard({ kpis, role, token }) {
   const schoolYears = mapSchoolYearsDataTable({ schoolYears: kpis[4] });
 
   return (
-    <DashboardLayout
-      title={dashboard.initial.title}
-      currentPage={menu.classes}
-      role={role}
-      token={token}
-    >
-      <Wrap mt={10} spacing={20.01}>
-        <HStack w={'100%'}>
-        <Statistics cardStats={cardStats} />
-        </HStack>
+    <Suspense fallback={<Loading />}>
+      <DashboardLayout
+        title={dashboard.initial.title}
+        currentPage={menu.classes}
+        role={role}
+        token={token}
+      >
+        <Wrap mt={10} spacing={20.01}>
+          <HStack w={'100%'}>
+            <Statistics cardStats={cardStats} />
+          </HStack>
 
-        <Text
-          color={colors.secondary.regular}
-          fontSize={20}
-          fontWeight={'700'}
-          pt={10}
-        >
-          {schoolsDataset.title}
-        </Text>
+          <Text
+            color={colors.secondary.regular}
+            fontSize={20}
+            fontWeight={'700'}
+            pt={10}
+          >
+            {schoolsDataset.title}
+          </Text>
 
-        <Stack bgColor={colors.white} w={'100%'}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <SchoolYearDataSet
-              {...{ role, token }}
-              data={schoolYears}
-              columns={SCHOOL_YEAR_COLUMNS}
-            />
-          </Suspense>
-        </Stack>
-      </Wrap>
-    </DashboardLayout>
+          <Stack bgColor={colors.white} w={'100%'}>
+            <Suspense fallback={<div>Loading...</div>}>
+              <SchoolYearDataSet
+                {...{ role, token }}
+                data={schoolYears}
+                columns={SCHOOL_YEAR_COLUMNS}
+              />
+            </Suspense>
+          </Stack>
+        </Wrap>
+      </DashboardLayout>
+    </Suspense>
   );
 }
 

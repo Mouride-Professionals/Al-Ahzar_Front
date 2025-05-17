@@ -7,11 +7,13 @@ import { TEACHERS_COLUMNS } from '@utils/mappers/kpi';
 import { mapTeachersDataTable } from '@utils/mappers/teacher';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useEffect, useState } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
+import Loading from '../../loading';
 
 const {
   pages: {
@@ -31,6 +33,8 @@ const {
 } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
+  const [loading, setLoading] = useState(true);
+
   const cardStats = [
     {
       count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
@@ -61,7 +65,15 @@ export default function Dashboard({ kpis, role, token }) {
     name: school.attributes.name,
     id: school.id,
   }))
+    // .filter((school) => school.name !== 'المدرسة الأهلية') // filter out the school with name 'المدرسة الأهلية'
     ;
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+  //return   <Loading /> if not mounted yet
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <DashboardLayout

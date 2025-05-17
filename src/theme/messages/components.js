@@ -1,4 +1,3 @@
-const { use } = require("react");
 
 module.exports = {
   name: 'Components Messages',

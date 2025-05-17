@@ -11,7 +11,7 @@ import { serverFetch } from 'src/lib/api';
 const {
   components: {
     cards: {
-      teacher: { recruitment, modification, another_teacher, info },
+      teacher: {  modification },
     },
   },
 } = messages;

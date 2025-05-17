@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { getToken } from 'next-auth/jwt';
@@ -12,7 +12,7 @@ export default function EditUser({ user, token, role }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const res = await serverFetch({
+    await serverFetch({
       uri: `/api/users/${user.id}/update`, // Adjust to your API route
       user_token: token,
       options: {

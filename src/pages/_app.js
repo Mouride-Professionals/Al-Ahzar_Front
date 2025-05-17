@@ -38,7 +38,7 @@ function AlAzhar({ Component, pageProps: { session, ...pageProps } }) {
         </Head>
 
         <MediaContextProvider disableDynamicMediaQueries>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <SchoolYearProvider>
               <Component {...pageProps} />
             </SchoolYearProvider>
