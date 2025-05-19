@@ -31,6 +31,7 @@ import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
 import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -42,6 +43,7 @@ import { serverFetch } from 'src/lib/api';
 import { BoxZone } from '../cards/boxZone';
 
 const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
+  const t = useTranslations('components.dataset.students');
   const {
     dashboard: {
       cashier: {
@@ -244,7 +246,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                           />
                         }
                       >
-                        Valider une mensualité
+                        {t('validateMonthlyPayment')}
                       </Button>
                     </Box>
                   )}
@@ -260,18 +262,18 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                   </Text>
 
                   <Stack>
-                    <Text fontWeight={700}>{'Prise en charge'}</Text>
+                    <Text fontWeight={700}>{t('socialStatus')}</Text>
                     <Text>{socialStatus || '...'}</Text>
                   </Stack>
 
                   <Stack>
-                    <Text fontWeight={700}>{'BIO'}</Text>
+                    <Text fontWeight={700}>{t('bio')}</Text>
                     <Text>{registrationComment || '...'}</Text>
                   </Stack>
 
                   <Stack>
                     <Text fontWeight={700} fontSize={15}>
-                      {'État des paiements'}
+                      {t('paymentStatus')}
                     </Text>
                     {payment_history.length === 0 && (
                       <Stack>
@@ -283,11 +285,11 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                             colorScheme={'green'}
                             variant={'outline'}
                           >
-                            {"Valider l'inscription"}
+                            {t('validateEnrollment')}
                           </Button>
                         ) : (
                           <Text fontSize={15}>
-                            {'En attente du service financier'}
+                            {t('waitingForFinance')}
                           </Text>
                         )}
                       </Stack>
@@ -350,7 +352,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                     <Text fontWeight={'bold'}>
                       {parent_firstname} {parent_lastname}
                     </Text>
-                    <Text fontSize={15}>{'Tuteur'}</Text>
+                    <Text fontSize={15}>{t('tutor')}</Text>
                   </Stack>
                 </HStack>
                 <Stack divider={<StackDivider />} spacing={4} pt={2}>
@@ -359,7 +361,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                       query={parent_phone}
                       styles={{ fontWeight: 700 }}
                     >
-                      {`Téléphone: ${parent_phone}`}
+                      {`${t('phone')}: ${parent_phone}`}
                     </Highlight>
                   </Text>
                 </Stack>
@@ -380,7 +382,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                     />
                   }
                 >
-                  Re-inscrire
+                  {t('reEnroll')}
                 </Button>
               </Box>
             )}
@@ -485,7 +487,7 @@ export const DataSet = ({
         <HStack>
           <Box w={'60%'}>
             <FormSearch
-              placeholder={'Rechercher un élève'}
+              placeholder={t('searchPlaceholder')}
               keyUp={(e) => setFilterText(e.target.value)}
             />
           </Box>
@@ -494,7 +496,7 @@ export const DataSet = ({
             {/* <FormFilter onExport={() => { }} /> */}
             {role?.name != 'Caissier' && <StudentFilter
               onFilter={handleFilter}
-              label={getFilterLabel}
+              label={t(getFilterLabel)}
               bgColor={bgColor}
               color={color}
             />}
@@ -512,7 +514,7 @@ export const DataSet = ({
               bgColor={colors.primary.regular}
               px={10}
             >
-              {'Inscrire nouveau un élève'}
+              {t('enrollNewStudent')}
             </Button>
           </HStack>
         )}

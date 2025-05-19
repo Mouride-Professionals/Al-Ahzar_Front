@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    domains: ['localhost'],
-  },
-};
+const withNextIntl = require('next-intl/plugin')();
 
-module.exports = nextConfig;
-
-// module.exports = {
-//   eslint: {
-//     ignoreDuringBuilds: true,
-//   },
-// };
+module.exports =
+  withNextIntl({
+    reactStrictMode: true,
+    
+    i18n: {
+      locales: ['fr', 'ar'],
+      defaultLocale: 'ar',
+    },
+    images: {
+      domains: ['localhost'],
+    },
+  });

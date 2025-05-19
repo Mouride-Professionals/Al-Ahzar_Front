@@ -12,14 +12,16 @@ import {
 import { FormExport, FormFilter, FormSearch } from "@components/common/input/FormInput";
 import { ExpenseCreationModal } from "@components/modals/expenseCreationModal";
 import { downloadCSV } from "@utils/csv";
+import { ACCESS_ROUTES } from "@utils/mappers/menu";
 import { dateFormatter } from "@utils/tools/mappers";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import DataTable from "react-data-table-component";
 import { BoxZone } from "../cards/boxZone";
-import { ACCESS_ROUTES } from "@utils/mappers/menu";
 
 // ExpenseExpandedComponent: Expanded row component for expense details
 const ExpenseExpandedComponent = ({ data, token }) => {
+  const t = useTranslations('components.expenseDataSet');
   // Destructure fields from the expense record
   const { id, expenseDate, amount, category, school, schoolYear } = data;
   const formattedDate = new Date(expenseDate);
@@ -31,24 +33,24 @@ const ExpenseExpandedComponent = ({ data, token }) => {
           <CardBody>
             <Grid templateColumns="repeat(2, 1fr)" columnGap={5}>
               <GridItem>
-                <Text fontWeight="bold">Date:</Text>
+                <Text fontWeight="bold">{t('date')}</Text>
                 <Text>{dateFormatter(formattedDate)}</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">Montant:</Text>
+                <Text fontWeight="bold">{t('amount')}</Text>
                 <Text>{amount} FCFA</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">Catégorie:</Text>
+                <Text fontWeight="bold">{t('category')}</Text>
                 <Text>{category}</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">École:</Text>
-                <Text>{school?.name || "N/A"}</Text>
+                <Text fontWeight="bold">{t('school')}</Text>
+                <Text>{school?.name || t('na')}</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">Année Scolaire:</Text>
-                <Text>{schoolYear?.name || "N/A"}</Text>
+                <Text fontWeight="bold">{t('schoolYear')}</Text>
+                <Text>{schoolYear?.name || t('na')}</Text>
               </GridItem>
             </Grid>
           </CardBody>
@@ -60,6 +62,7 @@ const ExpenseExpandedComponent = ({ data, token }) => {
 
 // ExpenseDataSet component for listing expense transactions
 export const ExpenseDataSet = ({ role, data, columns, token, schoolId, schoolYearId, setHasSucceeded }) => {
+  const t = useTranslations('components.expenseDataSet');
   const [filterText, setFilterText] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
@@ -94,7 +97,7 @@ export const ExpenseDataSet = ({ role, data, columns, token, schoolId, schoolYea
         <HStack>
           <Box w="60%">
             <FormSearch
-              placeholder="Search expenses"
+              placeholder={t('searchPlaceholder')}
               keyUp={(e) => setFilterText(e.target.value)}
             />
           </Box>
@@ -104,20 +107,22 @@ export const ExpenseDataSet = ({ role, data, columns, token, schoolId, schoolYea
           </HStack>
         </HStack>
         {/* New Expense Button on top right */}
-       { ACCESS_ROUTES.isCashier(role.name) && <Button colorScheme="orange" onClick={openExpenseModal}>
-          Ajouter une dépense
-        </Button>}
+        {ACCESS_ROUTES.isCashier(role.name) && (
+          <Button colorScheme="orange" onClick={openExpenseModal}>
+            {t('addExpense')}
+          </Button>
+        )}
         <ExpenseCreationModal
           isOpen={isExpenseModalOpen}
           onClose={closeExpenseModal}
           token={token}
-          schoolId={schoolId} // Adjust accordingly
+          schoolId={schoolId}
           schoolYearId={schoolYearId}
           setHasSucceeded={setHasSucceeded}
         />
       </HStack>
     ),
-    [filterText, filtered, isExpenseModalOpen]
+    [filterText, filtered, isExpenseModalOpen, t, role]
   );
 
   const handleRowExpandToggle = (row) => {

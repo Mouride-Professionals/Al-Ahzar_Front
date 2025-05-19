@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { colors } from '@theme';
 import { ErrorMessage } from 'formik';
+import { useTranslations } from 'next-intl';
 import { BsFiletypeXlsx } from 'react-icons/bs';
 import { CiFilter } from 'react-icons/ci';
 import { FiSearch } from 'react-icons/fi';
@@ -49,7 +50,6 @@ export const FormInput = ({
   return (
     <FormControl {...(py && { py: py })} isInvalid={errors[uid]}>
       <FormLabel fontWeight={'bold'}>{label}</FormLabel>
-
       {textArea ? (
         <Textarea p={5} minH={220} maxH={220} {...inputProps} />
       ) : select ? (
@@ -63,7 +63,6 @@ export const FormInput = ({
       ) : (
         <Input {...inputProps} />
       )}
-
       {errors[uid] && touched[uid] && (
         <FormErrorMessage>{errors[uid]}</FormErrorMessage>
       )}
@@ -81,6 +80,7 @@ export const FormSubmit = ({
   pt,
   pb,
 }) => {
+  const t = useTranslations('components.formInput');
   return (
     <FormControl {...{ pt, pb }}>
       <Button
@@ -94,7 +94,7 @@ export const FormSubmit = ({
         isDisabled={isSubmitting}
         isLoading={isSubmitting}
       >
-        {submit_message}
+        {submit_message || t('submit')}
       </Button>
       {errors[uid] && touched[uid] && (
         <VStack>
@@ -112,6 +112,7 @@ export const FormSubmit = ({
 };
 
 export const FormSearch = ({ placeholder, keyUp }) => {
+  const t = useTranslations('components.formInput');
   return (
     <InputGroup>
       <InputLeftElement alignSelf={'center'} h={'100%'} width={'4.5rem'}>
@@ -119,47 +120,51 @@ export const FormSearch = ({ placeholder, keyUp }) => {
       </InputLeftElement>
       <Input
         ml={3}
-        // borderColor={colors.gray.regular}
         h={45.01}
         onKeyUp={keyUp}
-        placeholder={placeholder}
+        placeholder={placeholder || t('search')}
       />
     </InputGroup>
   );
 };
 
-export const FormExport = ({ onExport }) => (
-  <Button
-    leftIcon={<BsFiletypeXlsx size={25} />}
-    // colorScheme={'orange'}
-    color={colors.gray.regular}
-    fontSize={14}
-    variant={'outline'}
-    h={45.2}
-    borderRadius={10}
-    px={3}
-    onClick={(e) => onExport(e.target.value)}
-  >
-    Exporter la liste
-  </Button>
-);
-export const FormFilter = ({ onExport }) => (
-  <Button
-    leftIcon={<CiFilter size={25} />}
-    mr={2}
-    color={colors.gray.regular}
-    fontSize={14}
-    variant={'outline'}
-    h={45.2}
-    borderRadius={10}
-    px={3}
-  // onClick={(e) => onExport(e.target.value)}
-  >
-    Filtrer
-  </Button>
-);
+export const FormExport = ({ onExport }) => {
+  const t = useTranslations('components.formInput');
+  return (
+    <Button
+      leftIcon={<BsFiletypeXlsx size={25} />}
+      color={colors.gray.regular}
+      fontSize={14}
+      variant={'outline'}
+      h={45.2}
+      borderRadius={10}
+      px={3}
+      onClick={(e) => onExport(e.target.value)}
+    >
+      {t('export')}
+    </Button>
+  );
+};
 
-export const StudentFilter = ({ onFilter, label ,bgColor, color}) => (
+export const FormFilter = ({ onExport }) => {
+  const t = useTranslations('components.formInput');
+  return (
+    <Button
+      leftIcon={<CiFilter size={25} />}
+      mr={2}
+      color={colors.gray.regular}
+      fontSize={14}
+      variant={'outline'}
+      h={45.2}
+      borderRadius={10}
+      px={3}
+    >
+      {t('filter')}
+    </Button>
+  );
+};
+
+export const StudentFilter = ({ onFilter, label, bgColor, color }) => (
   <Button
     leftIcon={<CiFilter size={25} />}
     color={color}

@@ -22,6 +22,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BiPlusCircle } from 'react-icons/bi';
 import { BsBell, BsHeart } from 'react-icons/bs';
+import { useTranslations } from 'next-intl';
+import LanguageSwitcher from '@components/LanguageSwitcher';
 
 export const DesktopDashboardLayoutView = ({
   title,
@@ -34,21 +36,15 @@ export const DesktopDashboardLayoutView = ({
   const { isOpen, onToggle, onClose } = useDisclosure();
   const { data: session } = useSession();
   const router = useRouter();
-  
+  const t = useTranslations('components.layout.header.settings');
+
   const logo = {
     src: images.logo.src,
     alt: 'Logo image',
-  }
+  };
 
-  
   return (
-    <Stack
-      direction={'column'}
-      bgColor={colors.gray.highlight}
-      m={0}
-      h={'100%'}
-      w={'100%'}
-    >
+    <Stack direction={'column'} bgColor={colors.gray.highlight} m={0} h={'100%'} w={'100%'}>
       <Stack bgColor={colors.white} w={'100%'} py={3} px={10}>
         <Container maxW={'container.xl'}>
           <HStack
@@ -59,7 +55,6 @@ export const DesktopDashboardLayoutView = ({
           >
             <HStack alignItems={'center'} w={'70%'}>
               <Box h={70.01} w={80.01} pos={'relative'}>
-
                 <Image {...logo} alt={'logo'} fill />
               </Box>
 
@@ -74,6 +69,7 @@ export const DesktopDashboardLayoutView = ({
               w={'auto'}
             >
               <SchoolYearSelector token={token} />
+
               <BiPlusCircle size={25} />
               <BsBell size={25} />
               <Popover
@@ -108,11 +104,18 @@ export const DesktopDashboardLayoutView = ({
                       onClick={() => router.push(routes.page_route.dashboard.settings)}
                       mb={2} // Add spacing between options
                     >
-                      Paramètres
+                      {t('title')}
                     </Box>
+                    {/* Language Switcher */}
+                    <LanguageSwitcher onSwitch={onClose} />
+                    {/* Add more options here if needed */}
+                    {/* Divider */}
                     {/* Logout Option */}
-                    <Box _hover={{ cursor: 'pointer', color: colors.primary.regular }} onClick={signOut}>
-                      Déconnexion
+                    <Box
+                      _hover={{ cursor: 'pointer', color: colors.primary.regular }}
+                      onClick={signOut}
+                    >
+                      {t('logout')}
                     </Box>
                   </PopoverBody>
                 </PopoverContent>

@@ -13,6 +13,7 @@ import {
 import { AuthenticationLayout, AuthenticationLayoutForm } from '@components/layout/authentication';
 import { colors, forms, messages, routes } from '@theme';
 import { Formik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { fetcher } from 'src/lib/api';
 import * as Yup from 'yup';
@@ -74,6 +75,25 @@ export default function ForgotPasswordPage() {
         }
     };
 
+    const t =useTranslations('components.authentication.forgot_password');
+    
+    const messages = {
+        components: {
+            authentication: {
+                forgot_password: {
+                    heading: {
+                        title: t('heading.title'),
+                        subtitle: t('heading.subtitle')
+                    },
+                    specifics: {
+                        forgotten_password: t('specifics.forgotten_password'),
+                        account: t('specifics.account'),
+                        highlight: t('specifics.highlight')
+                    }
+                }
+            }
+        }
+    };
     return (
         <AuthenticationLayout title={'Login'}>
             <AuthenticationLayoutForm

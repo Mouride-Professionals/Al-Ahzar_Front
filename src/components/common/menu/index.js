@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { RiArrowRightSLine } from 'react-icons/ri';
+import { useTranslations } from 'next-intl';
 
 export const MenuPill = ({ active, icon, message, link, isDisabled }) => {
   const theming = {
@@ -45,9 +46,11 @@ export const MenuPill = ({ active, icon, message, link, isDisabled }) => {
 };
 
 export const MenuBreadcrumb = ({ currentPage }) => {
-  //get the authenticated user s school name from the cookie
+  const t = useTranslations('components.layout.breadcrumb');
+  // Get the authenticated user's school name from the cookie, fallback to translated default
   const [schoolName] = useState(
-    Cookies.get('schoolName') || 'Direction Générale');
+    Cookies.get('schoolName') || t('defaultSchool')
+  );
 
   return (
     <Breadcrumb separator={<RiArrowRightSLine />}>
@@ -56,7 +59,7 @@ export const MenuBreadcrumb = ({ currentPage }) => {
           href={routes.page_route.dashboard.initial}
           color={colors.gray.light}
         >
-          {process.env.NEXT_PUBLIC_SITENAME}
+          {t('siteName')}
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbItem>

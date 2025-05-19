@@ -6,8 +6,8 @@ import { colors, messages, routes } from '@theme';
 import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
 import { mapSchoolsDataTable } from '@utils/mappers/school';
 import Cookies from 'cookies';
-
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { FaSuitcase, FaUser } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
@@ -33,43 +33,42 @@ const {
 } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
-
+  const t = useTranslations();
 
   const cardStats = [
     {
-      count: amount.users.replace(`%number`, kpis[0]?.length),
+      count: t('pages.stats.amount.users').replace(`%number`, kpis[0]?.length),
       icon: <FaUser color={colors.primary.regular} size={25} />,
-      title: usersStat,
+      title: t('pages.stats.users'),
     },
     {
-      count: amount.classes.replace(`%number`, kpis[1]?.data?.length),
+      count: t('pages.stats.amount.classes').replace(`%number`, kpis[1]?.data?.length),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-      title: classes,
+      title: t('pages.stats.classes'),
     },
     {
-      count: amount.students.replace(`%number`, kpis[2]?.data?.length),
+      count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-      title: studentsStat,
+      title: t('pages.stats.students'),
     },
     {
-      count: amount.teachers.replace(`%number`, kpis[3]?.data?.length ?? 0),
+      count: t('pages.stats.amount.teachers').replace(`%number`, kpis[3]?.data?.length ?? 0),
       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-      title: teachers,
+      title: t('pages.stats.teachers'),
     },
     {
-      count: amount.schools.replace(`%number`, kpis[4]?.data?.length),
+      count: t('pages.stats.amount.schools').replace(`%number`, kpis[4]?.data?.length),
       icon: <LuSchool color={colors.primary.regular} size={25} />,
-      title: schoolsStat,
+      title: t('pages.stats.schools'),
     },
   ];
-
 
   const schools = mapSchoolsDataTable({ schools: kpis[4] });
 
   return (
     <DashboardLayout
-      title={dashboard.initial.title}
-      currentPage={menu.home}
+      title={t('pages.dashboard.initial.title')}
+      currentPage={t('components.menu.home')}
       role={role}
       token={token}
     >
@@ -82,7 +81,7 @@ export default function Dashboard({ kpis, role, token }) {
           fontWeight={'700'}
           pt={10}
         >
-          {schoolsDataset.title}
+          {t('components.dataset.schools.title')}
         </Text>
 
         <Stack bgColor={colors.white} w={'100%'}>
@@ -103,8 +102,6 @@ export const getServerSideProps = async ({ req, res }) => {
   const token = session?.accessToken; // Ensure token exists in session
 
   const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
-
-
 
   if (!token) {
     return {
@@ -158,8 +155,6 @@ export const getServerSideProps = async ({ req, res }) => {
       user_token: token,
     }).catch(() => ({ data: [] })),
   ]);
-
-
 
   return {
     props: {

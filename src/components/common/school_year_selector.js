@@ -2,6 +2,7 @@ import { Text, VStack } from '@chakra-ui/react';
 import { colors, routes } from '@theme';
 import { useSchoolYear } from '@utils/context/school_year_context';
 import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
@@ -31,7 +32,7 @@ export const SchoolYearSelector = ({ token }) => {
                 uri: allSchoolYears,
                 user_token: token,
             })
-            
+
             if (!response || response.data.length === 0) {
                 setCurrentSchoolYear(null);
                 setSchoolYear(null); // Update the school year in the context
@@ -136,9 +137,11 @@ export const SchoolYearSelector = ({ token }) => {
 
     };
 
+    const t = useTranslations('components.layout.header');
+
     return (
         <VStack w={'40%'} spacing={1} align="left">
-            <Text fontWeight="hairline">Année scolaire</Text>
+            <Text fontWeight="hairline">{t('schoolYearSelector.label')}</Text>
             <Select
                 options={schoolYears.map((year) => ({
                     value: year.id,

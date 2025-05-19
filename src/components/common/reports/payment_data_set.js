@@ -11,6 +11,7 @@ import {
 import { FormExport, FormFilter, FormSearch } from '@components/common/input/FormInput';
 import { downloadCSV } from '@utils/csv';
 import { dateFormatter } from '@utils/tools/mappers';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -18,6 +19,7 @@ import { BoxZone } from '../cards/boxZone';
 
 // PaymentExpandedComponent: Expanded row component for payment transactions details
 const PaymentExpandedComponent = ({ data, token }) => {
+  const t = useTranslations('components.dataset.payments');
   // Destructure fields from the payment transaction record
   // Adjust these fields to match your actual payment data structure
   const {
@@ -34,19 +36,19 @@ const PaymentExpandedComponent = ({ data, token }) => {
           <CardBody>
             <Grid templateColumns="repeat(2, 1fr)" columnGap={5}>
               <GridItem>
-                <Text fontWeight="bold">Date:</Text>
+                <Text fontWeight="bold">{t('date')}</Text>
                 <Text>{dateFormatter(paymentDate)}</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">Montant:</Text>
+                <Text fontWeight="bold">{t('amount')}</Text>
                 <Text>{amount} FCFA</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">Statut:</Text>
-                <Text>{isPaid ? 'Paid' : 'Pending'}</Text>
+                <Text fontWeight="bold">{t('status')}</Text>
+                <Text>{isPaid ? t('paid') : t('pending')}</Text>
               </GridItem>
               <GridItem>
-                <Text fontWeight="bold">Élève:</Text>
+                <Text fontWeight="bold">{t('student')}</Text>
                 <Text>{firstname} {lastname}</Text>
               </GridItem>
             </Grid>
@@ -59,6 +61,7 @@ const PaymentExpandedComponent = ({ data, token }) => {
 
 // PaymentDataSet component for listing payment transactions
 export const PaymentDataSet = ({ role, data, columns, token }) => {
+  const t = useTranslations('components.dataset.payments');
   const [filterText, setFilterText] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
   const filtered = useMemo(
@@ -90,7 +93,7 @@ export const PaymentDataSet = ({ role, data, columns, token }) => {
       <HStack>
         <Box w="60%">
           <FormSearch
-            placeholder="Search payments"
+            placeholder={t('searchPlaceholder')}
             keyUp={(e) => setFilterText(e.target.value)}
           />
         </Box>
@@ -100,7 +103,7 @@ export const PaymentDataSet = ({ role, data, columns, token }) => {
         </HStack>
       </HStack>
     </HStack>
-  ), [filterText, filtered]);
+  ), [filterText, filtered, t]);
 
   const handleRowExpandToggle = (row) => {
     setExpandedRow((prev) => (prev?.id === row.id ? null : row));

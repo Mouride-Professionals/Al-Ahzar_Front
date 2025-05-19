@@ -27,15 +27,16 @@ import { assignTeacher } from '@services/teacher';
 import { colors, routes } from '@theme';
 import { downloadCSV } from '@utils/csv';
 import { reportingFilter } from '@utils/mappers/kpi';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
-// import { colors, routes } from '@theme';
 
 const ExpandedComponent = ({ data, schools, token }) => {
+  const t = useTranslations('components.dataset.teachers');
   const router = useRouter();
   const toast = useToast(
     {
@@ -133,7 +134,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
     label: school.name,
   }));
 
- 
+
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
       <BoxZone>
@@ -141,21 +142,9 @@ const ExpandedComponent = ({ data, schools, token }) => {
           <CardBody>
             <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5}>
               {/* General Information */}
-              <GridItem
-                pr={2}
-                borderRight={1}
-                borderRightStyle={'solid'}
-                borderRightColor={colors.gray.thin}
-              >
+              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
                 <HStack spacing={5}>
-                  <VStack
-                    justifyContent={'center'}
-                    w={50}
-                    h={50}
-                    borderRadius={100}
-                    borderColor={colors.secondary.regular}
-                    borderWidth={1}
-                  >
+                  <VStack justifyContent={'center'} w={50} h={50} borderRadius={100} borderColor={colors.secondary.regular} borderWidth={1}>
                     <PiUserDuotone color={colors.secondary.regular} size={25} />
                   </VStack>
                   <Stack>
@@ -163,11 +152,11 @@ const ExpandedComponent = ({ data, schools, token }) => {
                       {firstname} {lastname}
                     </Text>
                     {gender && (
-                      <Text color={colors.secondary.regular}>Gender: {gender}</Text>
+                      <Text color={colors.secondary.regular}>{t('gender')}: {gender}</Text>
                     )}
                     {createdAt && (
                       <Text color={colors.secondary.regular}>
-                        Joined On: {new Date(createdAt).toLocaleDateString()}
+                        {t('joinedOn')}: {new Date(createdAt).toLocaleDateString()}
                       </Text>
                     )}
                   </Stack>
@@ -175,32 +164,28 @@ const ExpandedComponent = ({ data, schools, token }) => {
               </GridItem>
 
               {/* Contact Information */}
-              <GridItem
-                pr={2}
-                borderRight={1}
-                borderRightStyle={'solid'}
-                borderRightColor={colors.gray.thin}
-              >
+              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
                 <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>Contact Details</Text>
-                  {email && <Text>Email: {email}</Text>}
-                  {phoneNumber && <Text>Phone: {phoneNumber}</Text>}
-                  {address && <Text>Address: {address}</Text>}
+                  <Text fontWeight={'bold'}>{t('contactDetails')}</Text>
+                  {email && <Text>{t('email')}: {email}</Text>}
+                  {phoneNumber && <Text>{t('phone')}: {phoneNumber}</Text>}
+                  {address && <Text>{t('address')}: {address}</Text>}
                 </Stack>
               </GridItem>
 
               {/* Personal Information */}
               <GridItem>
                 <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>Personal Details</Text>
-                  {birthDate && <Text>Birth Date: {birthDate}</Text>}
-                  {birthPlace && <Text>Birth Place: {birthPlace}</Text>}
-                  {maritalStatus && <Text>Marital Status: {maritalStatus}</Text>}
-                  {language && <Text>Language: {language}</Text>}
+                  <Text fontWeight={'bold'}>{t('personalDetails')}</Text>
+                  {birthDate && <Text>{t('birthDate')}: {birthDate}</Text>}
+                  {birthPlace && <Text>{t('birthPlace')}: {birthPlace}</Text>}
+                  {maritalStatus && <Text>{t('maritalStatus')}: {maritalStatus}</Text>}
+                  {language && <Text>{t('language')}: {language}</Text>}
                   {subjects && (
                     <Text>
-                      <strong>Subjects:</strong> {subjects.join(',  ')}
-                    </Text>)}
+                      <strong>{t('subjects')}:</strong> {subjects.join(',  ')}
+                    </Text>
+                  )}
                 </Stack>
               </GridItem>
             </Grid>
@@ -208,45 +193,35 @@ const ExpandedComponent = ({ data, schools, token }) => {
             {/* Additional Details */}
             <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5} pt={5}>
               {/* Professional Information */}
-              <GridItem
-                pr={2}
-                borderRight={1}
-                borderRightStyle={'solid'}
-                borderRightColor={colors.gray.thin}
-              >
+              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
                 <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>Professional Details</Text>
-                  {school && <Text>Institution: {school}</Text>}
+                  <Text fontWeight={'bold'}>{t('professionalDetails')}</Text>
+                  {school && <Text>{t('institution')}: {school}</Text>}
                   {disciplines?.length > 0 && (
                     <Text>
-                      <strong>Disciplines:</strong> {disciplines.join(', ')}
-                    </Text>
-                  )} {academicDegree && <Text>Academic Degree: {academicDegree}</Text>}
-                  {professionalDegrees && (
-                    <Text>
-                      <strong>Professional Degrees:</strong>{' '}
-                      {professionalDegrees.join(', ')}
+                      <strong>{t('disciplines')}:</strong> {disciplines.join(', ')}
                     </Text>
                   )}
-                  {contractType && <Text>Contract Type: {contractType}</Text>}
-                  {level && <Text>Level: {level}</Text>}
+                  {academicDegree && <Text>{t('academicDegree')}: {academicDegree}</Text>}
+                  {professionalDegrees && (
+                    <Text>
+                      <strong>{t('professionalDegrees')}:</strong> {professionalDegrees.join(', ')}
+                    </Text>
+                  )}
+                  {contractType && <Text>{t('contractType')}: {contractType}</Text>}
+                  {level && <Text>{t('level')}: {level}</Text>}
                 </Stack>
               </GridItem>
 
               {/* Salary and Responsibilities */}
-              <GridItem
-                pr={2}
-                borderRight={1}
-                borderRightStyle={'solid'}
-                borderRightColor={colors.gray.thin}
-              >
+              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
                 <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>Work Details</Text>
-                  {salary && <Text>Salary: {salary}</Text>}
-                  {salaryPerHour && <Text>Salary Per Hour: {salaryPerHour}</Text>}
-                  {hoursNumber && <Text>Hours Per Week: {hoursNumber}</Text>}
+                  <Text fontWeight={'bold'}>{t('workDetails')}</Text>
+                  {salary && <Text>{t('salary')}: {salary}</Text>}
+                  {salaryPerHour && <Text>{t('salaryPerHour')}: {salaryPerHour}</Text>}
+                  {hoursNumber && <Text>{t('hoursPerWeek')}: {hoursNumber}</Text>}
                   {additionalResponsibilities && (
-                    <Text>Additional Responsibilities: {additionalResponsibilities}</Text>
+                    <Text>{t('additionalResponsibilities')}: {additionalResponsibilities}</Text>
                   )}
                 </Stack>
               </GridItem>
@@ -254,15 +229,15 @@ const ExpandedComponent = ({ data, schools, token }) => {
               {/* Other Details */}
               <GridItem>
                 <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>Additional Information</Text>
+                  <Text fontWeight={'bold'}>{t('additionalInformation')}</Text>
                   {registrationNumber && (
-                    <Text>Registration Number: {registrationNumber}</Text>
+                    <Text>{t('registrationNumber')}: {registrationNumber}</Text>
                   )}
-                  {generation && <Text>Generation: {generation}</Text>}
-                  {countryFrom && <Text>Country of Origin: {countryFrom}</Text>}
-                  {arrivalDate && <Text>Arrival Date: {arrivalDate}</Text>}
+                  {generation && <Text>{t('generation')}: {generation}</Text>}
+                  {countryFrom && <Text>{t('countryOfOrigin')}: {countryFrom}</Text>}
+                  {arrivalDate && <Text>{t('arrivalDate')}: {arrivalDate}</Text>}
                   {previousInstitutes && (
-                    <Text>Previous Institutes: {previousInstitutes}</Text>
+                    <Text>{t('previousInstitutes')}: {previousInstitutes}</Text>
                   )}
                 </Stack>
               </GridItem>
@@ -275,44 +250,41 @@ const ExpandedComponent = ({ data, schools, token }) => {
                 colorScheme="orange"
                 variant="outline"
               >
-                {'Modifier'}
+                {t('edit')}
               </Button>
               <Button
                 onClick={openDialog}
                 colorScheme={colors.secondary.regular}
                 variant="outline"
               >
-                {'Affecter'}
+                {t('assign')}
               </Button>
-              
-
-
             </HStack>
             {/* Modal */}
             <Modal isOpen={isDialogOpen} onClose={closeDialog} zIndex={1500}>
               <ModalOverlay />
               <ModalContent>
-                <ModalHeader>Assign {firstname || ''} {lastname || ''} to a New School</ModalHeader>
+                <ModalHeader>
+                  {t('assignToSchool', { firstname: firstname || '', lastname: lastname || '' })}
+                </ModalHeader>
                 <ModalBody>
                   <Text mb={4}>
-                    <strong>Current School:</strong> {school || 'Not Assigned'}
+                    <strong>{t('currentSchool')}:</strong> {school || t('notAssigned')}
                   </Text>
-
                   <Select
                     options={schoolOptions}
                     value={schoolOptions.find((option) => option.value === selectedSchool)}
                     onChange={(selectedOption) => setSelectedSchool(selectedOption.value)}
-                    placeholder="Select a school"
+                    placeholder={t('selectSchool')}
                     isSearchable
                   />
                 </ModalBody>
                 <ModalFooter>
                   <Button onClick={closeDialog} colorScheme="gray" mr={3}>
-                    Cancel
+                    {t('cancel')}
                   </Button>
-
                   <Button onClick={handleAssign} colorScheme="orange" isDisabled={!selectedSchool}>
-                    Confirm
+                    {t('confirm')}
                   </Button>
                 </ModalFooter>
               </ModalContent>
@@ -332,6 +304,7 @@ export const TeacherDataSet = ({
   selectedIndex = 0,
   token,
 }) => {
+  const t = useTranslations('components.dataset.teachers');
   const [filterText, setFilterText] = useState('');
   const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
 
@@ -359,11 +332,10 @@ export const TeacherDataSet = ({
         <HStack>
           <Box w={'60%'}>
             <FormSearch
-              placeholder={'Rechercher un enseignant'}
+              placeholder={t('searchPlaceholder')}
               keyUp={(e) => setFilterText(e.target.value)}
             />
           </Box>
-          {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
           <HStack pl={4}>
             <FormFilter onExport={() => { }} />
             <FormExport onExport={() => downloadCSV(filtered)} />
@@ -379,14 +351,12 @@ export const TeacherDataSet = ({
             bgColor={colors.primary.regular}
             px={10}
           >
-            {'Recruter un enseignant'}
+            {t('recruitTeacher')}
           </Button>
-
-
         )}
       </HStack>
     );
-  }, [filterText, selectedIndex]);
+  }, [filterText, selectedIndex, t, filtered, role, router]);
   const handleRowExpandToggle = (row) => {
     // If the row is already expanded, collapse it. Otherwise, expand it.
     setExpandedRow((prev) => (prev?.id === row.id ? null : row));

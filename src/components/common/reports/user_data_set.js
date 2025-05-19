@@ -21,6 +21,7 @@ import {
 import { FormExport, FormFilter, FormSearch } from '@components/common/input/FormInput';
 import { downloadCSV } from '@utils/csv';
 import { reportingFilter } from '@utils/mappers/kpi';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -29,6 +30,7 @@ import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
 
 const ExpandedComponent = ({ data, schools, token }) => {
+  const t = useTranslations('components.dataset.users');
   const router = useRouter();
   const toast = useToast({ position: 'top-right', duration: 3000, isClosable: true });
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -107,21 +109,9 @@ const ExpandedComponent = ({ data, schools, token }) => {
           <CardBody>
             <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5}>
               {/* General Information */}
-              <GridItem
-                pr={2}
-                borderRight={1}
-                borderRightStyle={'solid'}
-                borderRightColor={'gray.200'}
-              >
+              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={'gray.200'}>
                 <HStack spacing={5}>
-                  <VStack
-                    justifyContent={'center'}
-                    w={50}
-                    h={50}
-                    borderRadius={100}
-                    borderColor={'orange.500'}
-                    borderWidth={1}
-                  >
+                  <VStack justifyContent={'center'} w={50} h={50} borderRadius={100} borderColor={'orange.500'} borderWidth={1}>
                     <PiUserDuotone color={'orange.500'} size={25} />
                   </VStack>
                   <Stack>
@@ -134,27 +124,20 @@ const ExpandedComponent = ({ data, schools, token }) => {
                       </Text>
                     )}
                     <Text color={'gray.600'} fontSize={'sm'}>
-                      {confirmed ? 'Confirmed' : 'Not Confirmed'}{' '}
-                      {blocked && '| Blocked'}
+                      {confirmed ? t('confirmed') : t('notConfirmed')} {blocked && `| ${t('blocked')}`}
                     </Text>
                   </Stack>
                 </HStack>
               </GridItem>
 
               {/* School Relations */}
-              <GridItem
-                pr={2}
-                borderRight={1}
-                borderRightStyle={'solid'}
-                borderRightColor={'gray.200'}
-              >
+              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={'gray.200'}>
                 <Stack spacing={4}>
-
                   {school && (
-                    <Text>Etablissement: {school.name}</Text>
+                    <Text>{t('school')}: {school.name}</Text>
                   )}
                   {!school && (
-                    <Text>{'Pas encore assigné'}</Text>
+                    <Text>{t('notAssigned')}</Text>
                   )}
                 </Stack>
               </GridItem>
@@ -162,10 +145,10 @@ const ExpandedComponent = ({ data, schools, token }) => {
               {/* Additional Account Details */}
               <GridItem>
                 <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>Account Details</Text>
-                  <Text>Username: {username}</Text>
-                  <Text>Status: {confirmed ? 'Active' : 'Inactive'}</Text>
-                  <Text>Role: {data.role?.name || 'N/A'}</Text>
+                  <Text fontWeight={'bold'}>{t('accountDetails')}</Text>
+                  <Text>{t('username')}: {username}</Text>
+                  <Text>{t('status')}: {confirmed ? t('active') : t('inactive')}</Text>
+                  <Text>{t('role')}: {data.role?.name || t('na')}</Text>
                 </Stack>
               </GridItem>
             </Grid>
@@ -173,44 +156,44 @@ const ExpandedComponent = ({ data, schools, token }) => {
             {/* Action Buttons */}
             <HStack justifyContent={'flex-end'} mt={6}>
               <Button
-                onClick={null}//{() => router.push(`/dashboard/direction/users/${data.id}/edit`)}
+                onClick={null}
                 colorScheme="orange"
                 variant="outline"
               >
-                Edit
+                {t('edit')}
               </Button>
-              {school && (<Button onClick={school && openDialog} colorScheme="orange" variant="outline">
-                Assign School
-              </Button>)}
+              {school && (
+                <Button onClick={school && openDialog} colorScheme="orange" variant="outline">
+                  {t('assignSchool')}
+                </Button>
+              )}
             </HStack>
 
             {/* Modal for school assignment */}
-
             <Modal isOpen={isDialogOpen} onClose={closeDialog} zIndex={1500}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>
-                  Assign {firstname || username} {lastname || ''} to a School
+                  {t('assignToSchool', { name: firstname || username, lastname: lastname || '' })}
                 </ModalHeader>
                 <ModalBody>
                   <Text mb={4}>
-                    <strong>Current Association:</strong>{' '}
-                    {school?.name || 'None'}
+                    <strong>{t('currentAssociation')}:</strong> {school?.name || t('none')}
                   </Text>
                   <Select
                     options={schoolOptions}
                     value={schoolOptions.find((option) => option.value === selectedSchool)}
                     onChange={(selectedOption) => setSelectedSchool(selectedOption.value)}
-                    placeholder="Select a school"
+                    placeholder={t('selectSchool')}
                     isSearchable
                   />
                 </ModalBody>
                 <ModalFooter>
                   <Button onClick={closeDialog} colorScheme="gray" mr={3}>
-                    Cancel
+                    {t('cancel')}
                   </Button>
                   <Button onClick={handleAssign} colorScheme="orange" isDisabled={!selectedSchool}>
-                    Confirm
+                    {t('confirm')}
                   </Button>
                 </ModalFooter>
               </ModalContent>
@@ -223,6 +206,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
 };
 
 export const UserDataSet = ({ role, data = [], schools, columns, selectedIndex = 0, token }) => {
+  const t = useTranslations('components.dataset.users');
   const [filterText, setFilterText] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
   const filtered = useMemo(
@@ -247,7 +231,7 @@ export const UserDataSet = ({ role, data = [], schools, columns, selectedIndex =
         <HStack>
           <Box w={'60%'}>
             <FormSearch
-              placeholder={'Search for a user'}
+              placeholder={t('searchPlaceholder')}
               keyUp={(e) => setFilterText(e.target.value)}
             />
           </Box>
@@ -263,7 +247,7 @@ export const UserDataSet = ({ role, data = [], schools, columns, selectedIndex =
             bgColor={'orange.500'}
             px={10}
           >
-            Create User
+            {t('createUser')}
           </Button>
         )}
       </HStack>

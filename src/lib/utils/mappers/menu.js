@@ -1,8 +1,9 @@
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
+import { hasPermission, ROLES } from '@utils/roles';
+import { useTranslations } from 'next-intl';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap, HiOutlineHome } from 'react-icons/hi';
 import { SiCashapp, SiGoogleclassroom } from 'react-icons/si';
-import { hasPermission, ROLES } from '@utils/roles';
 
 const {
   page_route: {
@@ -35,6 +36,25 @@ export const ACCESS_ROUTES = {
 export const DashboardMainMenu = ({ activeLink, role }) => {
   const roleName = role?.name;
   const routes = ACCESS_ROUTES[roleName] || {};
+  //Internationalization
+  const t = useTranslations('components.menu');
+  const messages = {
+    components: {
+      menu: {
+        home: t('home'),
+        classes: t('classes'),
+        finance: t('finance'),
+        students: {
+          initial: t('students.initial'),
+          create: t('students.create'),
+        },
+        users: t('users'),
+        teachers: t('teachers'),
+        schools: t('schools'),
+        school_years: t('school_years'),
+      },
+    },
+  };
 
   const menuItems = [
     // Home

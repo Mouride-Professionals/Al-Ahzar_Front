@@ -16,6 +16,7 @@ import {
 } from '@components/common/input/FormInput';
 import { colors, images, routes } from '@theme';
 import { downloadCSV } from '@utils/csv';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -56,6 +57,8 @@ const ExpandedComponent = ({ data, role, user_token }) => {
     ? images.logo.src // Fallback to default logo
     : images.logo.src; // `${process.env.NEXT_PUBLIC_API_URL}${banner?.data?.attributes.url}`;
 
+  const t = useTranslations('components.constants.dataset.schools.details');
+
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
       <BoxZone>
@@ -93,15 +96,15 @@ const ExpandedComponent = ({ data, role, user_token }) => {
               <VStack align="start" spacing={3}>
                 <HStack>
                   <HiOutlineLocationMarker color="blue" size={20} />
-                  <Text>{address || 'Adresse non disponible'}</Text>
+                  <Text>{address || t('addressUnavailable')}</Text>
                 </HStack>
                 <HStack>
                   <AiOutlineMail color="blue" size={20} />
-                  <Text>{email || 'Email non disponible'}</Text>
+                  <Text>{email || t('emailUnavailable')}</Text>
                 </HStack>
                 <HStack>
                   <AiOutlinePhone color="blue" size={20} />
-                  <Text>{phone || 'Téléphone non disponible'}</Text>
+                  <Text>{phone || t('phoneUnavailable')}</Text>
                 </HStack>
                 {phoneFix && (
                   <HStack>
@@ -111,7 +114,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 )}
                 <HStack>
                   <BsFillCalendarDateFill color="blue" size={20} />
-                  <Text>Créée le : {creationDate || 'Date inconnue'}</Text>
+                  <Text>Créée le : {creationDate || t('dateUnknown')}</Text>
                 </HStack>
               </VStack>
 
@@ -129,16 +132,16 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                   </HStack>
                 )}
                 <HStack>
-                  <Text fontWeight="bold">Directeur :</Text>
+                  <Text fontWeight="bold">{t('director')} :</Text>
                   <Text>{responsibleName || 'Non assigné'}</Text>
                 </HStack>
                 <HStack>
-                  <Text fontWeight="bold">Appartenance :</Text>
-                  <Text>{isAlAzharLand ? 'Al Azhar' : 'Non Al Azhar'}</Text>
+                  <Text fontWeight="bold">{t('belonging')} :</Text>
+                  <Text>{isAlAzharLand ? t('alAzhar') : t('notAlAzhar')}</Text>
                 </HStack>
                 {note && (
                   <VStack align="start" spacing={1}>
-                    <Text fontWeight="bold">Note :</Text>
+                    <Text fontWeight="bold">{t('note')} :</Text>
                     <Text>{note}</Text>
                   </VStack>
                 )}
@@ -155,7 +158,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 colorScheme="orange"
                 variant="outline"
               >
-                {'Classes'}
+                {t('classes')}
               </Button>
 
 
@@ -166,7 +169,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 colorScheme="orange"
                 variant="outline"
               >
-                {'Modifier'}
+                {t('edit')}
               </Button>
             </HStack>
           </CardBody>
@@ -183,6 +186,7 @@ export const SchoolDataSet = ({
   selectedIndex = 0,
   token,
 }) => {
+  const t = useTranslations('components.dataset.schools');
   const [filterText, setFilterText] = useState('');
   const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
 
@@ -210,11 +214,10 @@ export const SchoolDataSet = ({
         <HStack>
           <Box w={'60%'}>
             <FormSearch
-              placeholder={'Rechercher une école'}
+              placeholder={t('searchPlaceholder')}
               keyUp={(e) => setFilterText(e.target.value)}
             />
           </Box>
-          {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
           <HStack pl={4}>
             <FormFilter onExpwort={() => { }} />
             <FormExport onExport={() => downloadCSV(filtered)} />
@@ -230,12 +233,12 @@ export const SchoolDataSet = ({
             bgColor={colors.primary.regular}
             px={10}
           >
-            {'Ajouter une école'}
+            {t('addSchool')}
           </Button>
         )}
       </HStack>
     );
-  }, [filterText, selectedIndex]);
+  }, [filterText, selectedIndex, t, role, router, filtered]);
 
 
   const handleRowExpandToggle = (row) => {

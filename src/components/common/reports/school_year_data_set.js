@@ -18,6 +18,7 @@ import {
 import { endSchoolYear, setCurrentSchoolYear } from '@services/school_year';
 import { colors, routes } from '@theme';
 import { downloadCSV } from '@utils/csv';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import DataTable from 'react-data-table-component';
@@ -27,6 +28,7 @@ import { RiCalendarEventFill } from 'react-icons/ri';
 import { BoxZone } from '../cards/boxZone';
 
 const ExpandedComponent = ({ data, token }) => {
+    const t = useTranslations('components.dataset.schoolYears');
     const {
         dashboard: {
             direction: {
@@ -133,17 +135,17 @@ const ExpandedComponent = ({ data, token }) => {
                         <SimpleGrid columns={[1, null, 2]} spacing={5} pt={3}>
                             <VStack align="start" spacing={3}>
                                 <HStack>
-                                    <Text fontWeight="bold">Statut :</Text>
+                                    <Text fontWeight="bold">{t('status')} :</Text>
                                     <Text color={isActive ? 'green.500' : 'red.500'}>
-                                        {isActive ? 'Actif' : 'Inactif'}
+                                        {isActive ? t('active') : t('inactive')}
                                     </Text>
                                 </HStack>
 
 
                                 <HStack>
-                                    <Text fontWeight="bold">Etat:</Text>
+                                    <Text fontWeight="bold">{t('state')}:</Text>
                                     <Text color={isCurrent ? 'green.500' : (isEnded ? 'red.500' : 'gray.500')}>
-                                        {isCurrent ? 'En cours' : (isEnded ? 'Terminée' : 'A venir')}
+                                        {isCurrent ? t('current') : (isEnded ? t('ended') : t('upcoming'))}
                                     </Text>
                                 </HStack>
                             </VStack>
@@ -159,33 +161,32 @@ const ExpandedComponent = ({ data, token }) => {
                         </SimpleGrid>
 
                         <HStack justifyContent="flex-end" mt={5}>
-                            {isCurrent ? <Button
-                                onClick={handleEndSchoolYear}
-                                colorScheme="red"
-                                variant="outline"
-                                disabled={isEnded}
-
-                            >
-                                {'Clôturer l\'année'}
-                            </Button> :
-
+                            {isCurrent ? (
+                                <Button
+                                    onClick={handleEndSchoolYear}
+                                    colorScheme="red"
+                                    variant="outline"
+                                    disabled={isEnded}
+                                >
+                                    {t('closeYear')}
+                                </Button>
+                            ) : (
                                 <Button
                                     onClick={handleSetCurrentSchoolYear}
                                     colorScheme="orange"
                                     variant="outline"
                                     disabled={isEnded}
                                 >
-                                    {isEnded ? 'Cette année scolaire est terminée' : 'Sélectionner comme année en cours'}
-                                </Button>}
-
+                                    {isEnded ? t('yearEnded') : t('setAsCurrent')}
+                                </Button>
+                            )}
                             <Button
                                 onClick={() => router.push(edit.replace('%id', data.id))}
                                 colorScheme="orange"
                                 variant="outline"
                                 disabled={isEnded}
-
                             >
-                                Modifier
+                                {t('edit')}
                             </Button>
                         </HStack>
                     </CardBody>
@@ -202,8 +203,9 @@ export const SchoolYearDataSet = ({
     selectedIndex = 0,
     token,
 }) => {
+    const t = useTranslations('components.dataset.schoolYears');
     const [filterText, setFilterText] = useState('');
-    const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
+    const [expandedRow, setExpandedRow] = useState(null);
 
     let filtered = [];
     filtered.length = data.length;
@@ -228,11 +230,10 @@ export const SchoolYearDataSet = ({
                 <HStack>
                     <Box w={'60%'}>
                         <FormSearch
-                            placeholder={'Rechercher une année scolaire'}
+                            placeholder={t('searchPlaceholder')}
                             keyUp={(e) => setFilterText(e.target.value)}
                         />
                     </Box>
-                    {/* onExport={() => downloadCSV(filtered[selectedIndex])} */}
                     <HStack pl={4}>
                         <FormFilter onExpwort={() => { }} />
                         <FormExport onExport={() => downloadCSV(filtered)} />
@@ -248,15 +249,14 @@ export const SchoolYearDataSet = ({
                         bgColor={colors.primary.regular}
                         px={10}
                     >
-                        {'Ajouter une annee scolaire'}
+                        {t('addSchoolYear')}
                     </Button>
                 )}
             </HStack>
         );
-    }, [filterText, selectedIndex]);
+    }, [filterText, selectedIndex, t, filtered, role, router]);
 
     const handleRowExpandToggle = (row) => {
-        // If the row is already expanded, collapse it. Otherwise, expand it.
         setExpandedRow((prev) => (prev?.id === row.id ? null : row));
     };
     return (
@@ -264,14 +264,14 @@ export const SchoolYearDataSet = ({
             style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
             columns={columns}
             data={filtered}
-            defaultSortFieldId="endDate"  // Set "endDate" as default sort column
-            defaultSortAsc={false}  // Set to false for descending order (latest first)
+            defaultSortFieldId="endDate"
+            defaultSortAsc={false}
             subHeader
             subHeaderAlign="center"
             expandOnRowClicked
             expandableRowsHideExpander
-            expandableRowExpanded={(row) => row.id === expandedRow?.id} // Expand only the selected row
-            onRowClicked={handleRowExpandToggle} // Handle row click to expand/collapse
+            expandableRowExpanded={(row) => row.id === expandedRow?.id}
+            onRowClicked={handleRowExpandToggle}
             highlightOnHover
             subHeaderComponent={subHeaderComponentMemo}
             expandableRows

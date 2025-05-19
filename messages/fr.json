@@ -1,0 +1,480 @@
+{
+    "components": {
+        "authentication": {
+            "title": "{title}",
+            "form": {
+                "specifics": {
+                    "forgotten_password": "Mot de passe oublié ?",
+                    "highlight": "Cliquez ici"
+                }
+            },
+            "login": {
+                "heading": {
+                    "title": "Connectez-vous",
+                    "subtitle": "Entrez votre identifiant et votre mot de passe pour vous connecter à votre compte"
+                },
+                "specifics": {
+                    "forgotten_password": "",
+                    "account": "Vous n'avez pas de compte ? Inscrivez-vous",
+                    "highlight": "Mot de passe oublié ?"
+                },
+                "form": {
+                    "identifier": {
+                        "label": "Email ou Nom d'utilisateur",
+                        "placeholder": "Entrez votre email ou nom d'utilisateur",
+                        "success": "Succès",
+                        "success_description": "Connexion réussie.",
+                        "error": "Erreur",
+                        "error_description": "Échec de la connexion."
+                    },
+                    "password": {
+                        "label": "Mot de passe",
+                        "placeholder": "Entrez votre mot de passe"
+                    },
+                    "submit": "Se connecter"
+                }
+            },
+            "register": {
+                "heading": {
+                    "title": "Salut 👋",
+                    "subtitle": "Entrez vos informations, nous nous occupons du reste 😊"
+                },
+                "specifics": {
+                    "forgotten_password": "Mot de passe oublié ?",
+                    "account": "Vous avez déjà un compte ? Connectez-vous",
+                    "highlight": "Se connecter"
+                }
+            },
+            "change_password": {
+                "heading": {
+                    "title": "Changement de mot de passe",
+                    "subtitle": "Entrez votre mot de passe actuel et le nouveau mot de passe"
+                },
+                "specifics": {
+                    "forgotten_password": "Vous voulez revenir à la page d'accueil",
+                    "highlight": "Annuler"
+                }
+            },
+            "forgot_password": {
+                "heading": {
+                    "title": "Demande de réinitialisation du mot de passe",
+                    "subtitle": "Entrez votre adresse email"
+                },
+                "specifics": {
+                    "forgotten_password": "Si vous voulez revenir à la page de connexion",
+                    "highlight": "Cliquez ici"
+                },
+                "form": {
+                    "email": {
+                        "label": "Adresse email",
+                        "placeholder": "Entrez votre email",
+                        "success": "Succès",
+                        "success_description": "Email de réinitialisation envoyé avec succès.",
+                        "error": "Erreur",
+                        "error_description": "Échec de l’envoi de l’email."
+                    },
+                    "submit": "Envoyer l’email de réinitialisation"
+                }
+            },
+            "reset_password": {
+                "heading": {
+                    "title": "Réinitialisation du mot de passe",
+                    "subtitle": "Entrez votre nouveau mot de passe"
+                },
+                "specifics": {
+                    "forgotten_password": "Si vous voulez annuler la réinitialisation",
+                    "highlight": "Cliquez ici"
+                },
+                "form": {
+                    "password": {
+                        "label": "Nouveau mot de passe",
+                        "placeholder": "Entrez le nouveau mot de passe",
+                        "success": "Succès",
+                        "success_description": "Mot de passe réinitialisé avec succès.",
+                        "error": "Erreur",
+                        "error_description": "Échec de la réinitialisation du mot de passe.",
+                        "error_token": "Jeton de réinitialisation invalide ou manquant."
+                    },
+                    "confirm_password": {
+                        "label": "Confirmer le mot de passe",
+                        "placeholder": "Confirmez le nouveau mot de passe"
+                    },
+                    "submit": "Réinitialiser le mot de passe"
+                }
+            }
+        },
+        "formInput": {
+            "submit": "Soumettre",
+            "search": "Rechercher",
+            "export": "Exporter la liste",
+            "filter": "Filtrer"
+        },
+        "cards": {
+            "class": {
+                "students": "{number} élèves"
+            },
+            "student": {
+                "confirmation": "Confirmation d'inscription",
+                "registration": "Formulaire d'inscription",
+                "another_student": "Inscrire un autre élève",
+                "info": {
+                    "success": "Inscription initiée",
+                    "message": "Vous avez initié l'inscription de l'élève. Le service financier se chargera de la dernière étape du processus d'inscription.",
+                    "confirmation": "Vous avez clôturé l'inscription de l'élève {firstname} {lastname} en classe de {classname}. Vous pouvez trouver la fiche de l'élève sur son profil.",
+                    "classList": "Liste des classes"
+                }
+            },
+            "school": {
+                "creation": "Formulaire de création",
+                "edit": "Formulaire de modification",
+                "another_school": "Créer un autre établissement",
+                "info": {
+                    "success": "Création réussie",
+                    "message": "Vous avez créé l'établissement.\nVous pouvez maintenant créer des classes et inscrire des élèves.",
+                    "publishing": "Vous avez créé l'établissement.\nVous pouvez maintenant créer des classes et inscrire des élèves.",
+                    "classList": "Liste des classes"
+                }
+            },
+            "user": {
+                "creation": "Formulaire de création",
+                "edit": "Formulaire de modification",
+                "another_user": "Créer un autre utilisateur",
+                "info": {
+                    "success": "Création réussie",
+                    "message": "Vous avez créé un nouvel utilisateur.",
+                    "publishing": "Vous avez publié l'utilisateur {firstname} {lastname}. Vous pouvez maintenant lui affecter un rôle."
+                }
+            },
+            "teacher": {
+                "affectation": "Affectation d'enseignant",
+                "recruitment": "Formulaire de recrutement",
+                "another_teacher": "Recruter un autre enseignant",
+                "info": {
+                    "success": "Inscription réussie",
+                    "message": "Vous avez recruté un nouveau enseignant. Vous pouvez maintenant lui affecter dans une école.",
+                    "affectation": "Vous avez affecté l'enseignant {firstname} {lastname} dans l'école {name}."
+                }
+            },
+            "school_year": {
+                "creation": "Formulaire de création",
+                "edit": "Formulaire de modification",
+                "info": {
+                    "success": "Création réussie",
+                    "message": "Vous avez créé l'année scolaire."
+                }
+            }
+        },
+        "menu": {
+            "home": "Accueil",
+            "classes": "Classes",
+            "finance": "Finance",
+            "students": {
+                "initial": "Élèves",
+                "create": "Inscrire un élève"
+            },
+            "users": "Administration",
+            "teachers": "Enseignants",
+            "schools": "Établissements",
+            "school_years": "Années"
+        },
+        "layout": {
+            "breadcrumb": {
+                "initial": "Al Azhar",
+                "classes": "Classes",
+                "schools": "Al Azhar",
+                "defaultSchool": "Direction Générale",
+                "siteName": "Al Azhar"
+            },
+            "header": {
+                "schoolYearSelector": {
+                    "label": "Année scolaire",
+                    "placeholder": "Sélectionnez une année scolaire"
+                },
+                "settings": {
+                    "title": "Paramètres",
+                    "language": "Langue",
+                    "languageSelector": {
+                        "label": "Sélectionnez une langue",
+                        "fr": "Français",
+                        "en": "English",
+                        "ar": "العربية"
+                    },
+                    "darkMode": "Mode sombre",
+                    "logout": "Déconnexion"
+                }
+            }
+        },
+        "dataset": {
+            "students": {
+                "title": "Liste des élèves",
+                "searchPlaceholder": "Rechercher un élève",
+                "validateMonthlyPayment": "Valider une mensualité",
+                "socialStatus": "Prise en charge",
+                "bio": "BIO",
+                "paymentStatus": "État des paiements",
+                "validateEnrollment": "Valider l'inscription",
+                "waitingForFinance": "En attente du service financier",
+                "reEnroll": "Re-inscrire",
+                "enrollNewStudent": "Inscrire un nouvel élève",
+                "tutor": "Tuteur",
+                "phone": "Téléphone",
+                "enrolledOn": "Inscrit le : {date}",
+                "studentsEnrolled": "Élèves inscrits",
+                "studentsNotEnrolled": "Élèves non inscrits",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "schools": {
+                "title": "Liste des écoles",
+                "searchPlaceholder": "Rechercher une école",
+                "addSchool": "Ajouter une école",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "schoolYears": {
+                "title": "Liste des années scolaires",
+                "searchPlaceholder": "Rechercher une année scolaire",
+                "addSchoolYear": "Ajouter une année scolaire",
+                "status": "Statut",
+                "active": "Actif",
+                "inactive": "Inactif",
+                "state": "État",
+                "current": "En cours",
+                "ended": "Terminée",
+                "upcoming": "À venir",
+                "closeYear": "Clôturer l'année",
+                "setAsCurrent": "Sélectionner comme année en cours",
+                "yearEnded": "Cette année scolaire est terminée",
+                "edit": "Modifier",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "teachers": {
+                "title": "Liste des enseignants",
+                "searchPlaceholder": "Rechercher un enseignant",
+                "edit": "Modifier",
+                "assign": "Affecter",
+                "assignToSchool": "Affecter {firstname} {lastname} à une nouvelle école",
+                "currentSchool": "École actuelle",
+                "notAssigned": "Non assigné",
+                "selectSchool": "Sélectionnez une école",
+                "cancel": "Annuler",
+                "confirm": "Confirmer",
+                "recruitTeacher": "Recruter un enseignant",
+                "gender": "Genre",
+                "joinedOn": "Date d'arrivée",
+                "contactDetails": "Détails du contact",
+                "email": "Email",
+                "phone": "Téléphone",
+                "address": "Adresse",
+                "personalDetails": "Détails personnels",
+                "birthDate": "Date de naissance",
+                "birthPlace": "Lieu de naissance",
+                "maritalStatus": "État civil",
+                "language": "Langue",
+                "subjects": "Matières",
+                "professionalDetails": "Détails professionnels",
+                "institution": "Établissement",
+                "disciplines": "Disciplines",
+                "academicDegree": "Diplôme académique",
+                "professionalDegrees": "Diplômes professionnels",
+                "contractType": "Type de contrat",
+                "level": "Niveau",
+                "workDetails": "Détails du travail",
+                "salary": "Salaire",
+                "salaryPerHour": "Salaire par heure",
+                "hoursPerWeek": "Heures par semaine",
+                "additionalResponsibilities": "Responsabilités supplémentaires",
+                "additionalInformation": "Informations supplémentaires",
+                "registrationNumber": "Numéro d'enregistrement",
+                "generation": "Génération",
+                "countryOfOrigin": "Pays d'origine",
+                "arrivalDate": "Date d'arrivée",
+                "previousInstitutes": "Instituts précédents",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "users": {
+                "title": "Liste des utilisateurs",
+                "searchPlaceholder": "Rechercher un utilisateur",
+                "createUser": "Créer un utilisateur",
+                "edit": "Modifier",
+                "assignSchool": "Assigner à une école",
+                "school": "Établissement",
+                "notAssigned": "Pas encore assigné",
+                "accountDetails": "Détails du compte",
+                "username": "Nom d'utilisateur",
+                "status": "Statut",
+                "active": "Actif",
+                "inactive": "Inactif",
+                "role": "Rôle",
+                "na": "N/A",
+                "confirmed": "Confirmé",
+                "notConfirmed": "Non confirmé",
+                "blocked": "Bloqué",
+                "assignToSchool": "Assigner {name} {lastname} à une école",
+                "currentAssociation": "Association actuelle",
+                "none": "Aucun",
+                "selectSchool": "Sélectionnez une école",
+                "cancel": "Annuler",
+                "confirm": "Confirmer",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "payments": {
+                "title": "Liste des paiements",
+                "searchPlaceholder": "Rechercher un paiement",
+                "date": "Date",
+                "amount": "Montant",
+                "status": "Statut",
+                "paid": "Payé",
+                "pending": "En attente",
+                "student": "Élève",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "expenses": {
+                "title": "Liste des dépenses",
+                "searchPlaceholder": "Rechercher une dépense",
+                "addExpense": "Ajouter une dépense",
+                "date": "Date",
+                "amount": "Montant",
+                "category": "Catégorie",
+                "school": "École",
+                "schoolYear": "Année Scolaire",
+                "na": "N/A",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            }
+        },
+        "classList": {
+            "grade": "Classes de primaires",
+            "intermediate": "Classes de secondaires 1er cycle",
+            "upperIntermediate": "Classes de secondaires 2ème cycle",
+            "create": "Créer une classe",
+            "noClasses": "Aucune classe.\nVeuillez créer une classe pour commencer."
+        },
+        "schoolList": {
+            "title": "Liste des écoles",
+            "createSchool": "Créer une école",
+            "viewDetails": "Fiche de l'école",
+            "cta": {
+                "filter": "",
+                "export": ""
+            }
+        },
+        "constants": {
+            "dataset": {
+                "students": {
+                    "students": "Élève",
+                    "_class": "Classe",
+                    "parents": "Parent",
+                    "phone": "Tél parent",
+                    "registration": "Inscription",
+                    "current_month": "Mois en cours",
+                    "paid": "Payé",
+                    "not_paid": "Impayé"
+                },
+                "schools": {
+                    "name": "Nom",
+                    "address": "Adresse",
+                    "email": "Email",
+                    "phone": "Téléphone",
+                    "type": "Type",
+                    "IEF": "IEF",
+                    "responsible": "Directeur",
+                    "parentSchool": "Établissement parent",
+                    "details": {
+                        "addressUnavailable": "Adresse non disponible",
+                        "emailUnavailable": "Email non disponible",
+                        "phoneUnavailable": "Téléphone non disponible",
+                        "dateUnknown": "Date inconnue",
+                        "classes": "Classes",
+                        "edit": "Modifier",
+                        "director": "Directeur :",
+                        "belonging": "Appartenance :",
+                        "note": "Note :",
+                        "alAzhar": "Al Azhar",
+                        "notAlAzhar": "Non Al Azhar"
+                    }
+                },
+                "users": {
+                    "complete_name": "Prénom et Nom",
+                    "email": "Email",
+                    "phoneNumber": "Téléphone",
+                    "gender": "Genre",
+                    "school": "Établissement"
+                },
+                "teachers": {
+                    "complete_name": "Prénom et Nom",
+                    "email": "Email",
+                    "phoneNumber": "Téléphone",
+                    "gender": "Genre",
+                    "school": "Établissement"
+                }
+            }
+        }
+    },
+    "pages": {
+        "dashboard": {
+            "initial": {
+                "title": "Tableau de bord Al-Azhar"
+            },
+            "classes": {
+                "title": "Classes Al-Azhar"
+            },
+            "students": {
+                "title": "Elèves"
+            },
+            "teachers": {
+                "title": "Enseignants"
+            },
+            "users": {
+                "title": "Utilisateurs"
+            },
+            "schools": {
+                "title": "Établissements"
+            },
+            "school_years": {
+                "title": "Années scolaires"
+            },
+            "finance": {
+                "title": "Finance"
+            }
+        },
+        "class": {
+            "heading": "Classes de primares",
+            "create": "Créer une classe",
+            "establishment": "Etablissement %name"
+        },
+        "stats": {
+            "classes": "Nombre total de classe",
+            "students": "Nombre total d'élèves",
+            "teachers": "Nombre total d'enseignants",
+            "schools": "Nombre total d'écoles",
+            "users": "Nombre total d'utilisateurs",
+            "amount": {
+                "users": "%number utilisateurs",
+                "classes": "%number classes",
+                "students": "%number élèves",
+                "teachers": "%number enseignants",
+                "schools": "%number écoles",
+                "finance": "%number FCFA"
+            }
+        }
+    }
+}
