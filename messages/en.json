@@ -1,0 +1,480 @@
+{
+    "components": {
+        "authentication": {
+            "title": "{title}",
+            "form": {
+                "specifics": {
+                    "forgotten_password": "Forgot your password?",
+                    "highlight": "Click here"
+                }
+            },
+            "login": {
+                "heading": {
+                    "title": "Sign In",
+                    "subtitle": "Enter your identifier and password to sign in to your account"
+                },
+                "specifics": {
+                    "forgotten_password": "",
+                    "account": "Don't have an account? Sign up",
+                    "highlight": "Forgot your password?"
+                },
+                "form": {
+                    "identifier": {
+                        "label": "Email or Username",
+                        "placeholder": "Enter your email or username",
+                        "success": "Success",
+                        "success_description": "Sign-in successful.",
+                        "error": "Error",
+                        "error_description": "Sign-in failed."
+                    },
+                    "password": {
+                        "label": "Password",
+                        "placeholder": "Enter your password"
+                    },
+                    "submit": "Sign In"
+                }
+            },
+            "register": {
+                "heading": {
+                    "title": "Hello 👋",
+                    "subtitle": "Enter your details, we'll handle the rest 😊"
+                },
+                "specifics": {
+                    "forgotten_password": "Forgot your password?",
+                    "account": "Already have an account? Sign in",
+                    "highlight": "Sign in"
+                }
+            },
+            "change_password": {
+                "heading": {
+                    "title": "Change Password",
+                    "subtitle": "Enter your current password and new password"
+                },
+                "specifics": {
+                    "forgotten_password": "Want to return to the homepage?",
+                    "highlight": "Cancel"
+                }
+            },
+            "forgot_password": {
+                "heading": {
+                    "title": "Password Reset Request",
+                    "subtitle": "Enter your email address"
+                },
+                "specifics": {
+                    "forgotten_password": "If you want to return to the sign-in page",
+                    "highlight": "Click here"
+                },
+                "form": {
+                    "email": {
+                        "label": "Email Address",
+                        "placeholder": "Enter your email",
+                        "success": "Success",
+                        "success_description": "Reset email sent successfully.",
+                        "error": "Error",
+                        "error_description": "Failed to send reset email."
+                    },
+                    "submit": "Send Reset Email"
+                }
+            },
+            "reset_password": {
+                "heading": {
+                    "title": "Reset Password",
+                    "subtitle": "Enter your new password"
+                },
+                "specifics": {
+                    "forgotten_password": "If you want to cancel the reset",
+                    "highlight": "Click here"
+                },
+                "form": {
+                    "password": {
+                        "label": "New Password",
+                        "placeholder": "Enter the new password",
+                        "success": "Success",
+                        "success_description": "Password reset successfully.",
+                        "error": "Error",
+                        "error_description": "Failed to reset password.",
+                        "error_token": "Invalid or missing reset token."
+                    },
+                    "confirm_password": {
+                        "label": "Confirm Password",
+                        "placeholder": "Confirm the new password"
+                    },
+                    "submit": "Reset Password"
+                }
+            }
+        },
+        "formInput": {
+            "submit": "Submit",
+            "search": "Search",
+            "export": "Export List",
+            "filter": "Filter"
+        },
+        "cards": {
+            "class": {
+                "students": "{number} students"
+            },
+            "student": {
+                "confirmation": "Enrollment Confirmation",
+                "registration": "Registration Form",
+                "another_student": "Enroll Another Student",
+                "info": {
+                    "success": "Enrollment Initiated",
+                    "message": "You have initiated the student's enrollment. The finance department will handle the final step of the enrollment process.",
+                    "confirmation": "You have finalized the enrollment of student {firstname} {lastname} in class {classname}. You can find the student's profile details.",
+                    "classList": "Class List"
+                }
+            },
+            "school": {
+                "creation": "Creation Form",
+                "edit": "Edit Form",
+                "another_school": "Create Another School",
+                "info": {
+                    "success": "Creation Successful",
+                    "message": "You have created the school.\nYou can now create classes and enroll students.",
+                    "publishing": "You have created the school.\nYou can now create classes and enroll students.",
+                    "classList": "Class List"
+                }
+            },
+            "user": {
+                "creation": "Creation Form",
+                "edit": "Edit Form",
+                "another_user": "Create Another User",
+                "info": {
+                    "success": "Creation Successful",
+                    "message": "You have created a new user.",
+                    "publishing": "You have published user {firstname} {lastname}. You can now assign them a role."
+                }
+            },
+            "teacher": {
+                "affectation": "Teacher Assignment",
+                "recruitment": "Recruitment Form",
+                "another_teacher": "Recruit Another Teacher",
+                "info": {
+                    "success": "Recruitment Successful",
+                    "message": "You have recruited a new teacher. You can now assign them to a school.",
+                    "affectation": "You have assigned teacher {firstname} {lastname} to school {name}."
+                }
+            },
+            "school_year": {
+                "creation": "Creation Form",
+                "edit": "Edit Form",
+                "info": {
+                    "success": "Creation Successful",
+                    "message": "You have created the school year."
+                }
+            }
+        },
+        "menu": {
+            "home": "Home",
+            "classes": "Classes",
+            "finance": "Finance",
+            "students": {
+                "initial": "Students",
+                "create": "Enroll a Student"
+            },
+            "users": "Administration",
+            "teachers": "Teachers",
+            "schools": "Schools",
+            "school_years": "Years"
+        },
+        "layout": {
+            "breadcrumb": {
+                "initial": "Al Azhar",
+                "classes": "Classes",
+                "schools": "Al Azhar",
+                "defaultSchool": "General Management",
+                "siteName": "Al Azhar"
+            },
+            "header": {
+                "schoolYearSelector": {
+                    "label": "School Year",
+                    "placeholder": "Select a school year"
+                },
+                "settings": {
+                    "title": "Settings",
+                    "language": "Language",
+                    "languageSelector": {
+                        "label": "Select a language",
+                        "fr": "French",
+                        "en": "English",
+                        "ar": "Arabic"
+                    },
+                    "darkMode": "Dark Mode",
+                    "logout": "Sign Out"
+                }
+            }
+        },
+        "dataset": {
+            "students": {
+                "title": "Student List",
+                "searchPlaceholder": "Search for a student",
+                "validateMonthlyPayment": "Validate Monthly Payment",
+                "socialStatus": "Supported",
+                "bio": "BIO",
+                "paymentStatus": "Payment Status",
+                "validateEnrollment": "Validate Enrollment",
+                "waitingForFinance": "Awaiting Finance Department",
+                "reEnroll": "Re-enroll",
+                "enrollNewStudent": "Enroll a New Student",
+                "tutor": "Guardian",
+                "phone": "Phone",
+                "enrolledOn": "Enrolled on: {date}",
+                "studentsEnrolled": "Enrolled Students",
+                "studentsNotEnrolled": "Non-enrolled Students",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "schools": {
+                "title": "School List",
+                "searchPlaceholder": "Search for a school",
+                "addSchool": "Add a School",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "schoolYears": {
+                "title": "School Year List",
+                "searchPlaceholder": "Search for a school year",
+                "addSchoolYear": "Add a School Year",
+                "status": "Status",
+                "active": "Active",
+                "inactive": "Inactive",
+                "state": "State",
+                "current": "Current",
+                "ended": "Ended",
+                "upcoming": "Upcoming",
+                "closeYear": "Close Year",
+                "setAsCurrent": "Set as Current Year",
+                "yearEnded": "This school year has ended",
+                "edit": "Edit",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "teachers": {
+                "title": "Teacher List",
+                "searchPlaceholder": "Search for a teacher",
+                "edit": "Edit",
+                "assign": "Assign",
+                "assignToSchool": "Assign {firstname} {lastname} to a new school",
+                "currentSchool": "Current School",
+                "notAssigned": "Not Assigned",
+                "selectSchool": "Select a School",
+                "cancel": "Cancel",
+                "confirm": "Confirm",
+                "recruitTeacher": "Recruit a Teacher",
+                "gender": "Gender",
+                "joinedOn": "Joined On",
+                "contactDetails": "Contact Details",
+                "email": "Email",
+                "phone": "Phone",
+                "address": "Address",
+                "personalDetails": "Personal Details",
+                "birthDate": "Date of Birth",
+                "birthPlace": "Place of Birth",
+                "maritalStatus": "Marital Status",
+                "language": "Language",
+                "subjects": "Subjects",
+                "professionalDetails": "Professional Details",
+                "institution": "Institution",
+                "disciplines": "Disciplines",
+                "academicDegree": "Academic Degree",
+                "professionalDegrees": "Professional Degrees",
+                "contractType": "Contract Type",
+                "level": "Level",
+                "workDetails": "Work Details",
+                "salary": "Salary",
+                "salaryPerHour": "Hourly Salary",
+                "hoursPerWeek": "Hours per Week",
+                "additionalResponsibilities": "Additional Responsibilities",
+                "additionalInformation": "Additional Information",
+                "registrationNumber": "Registration Number",
+                "generation": "Generation",
+                "countryOfOrigin": "Country of Origin",
+                "arrivalDate": "Arrival Date",
+                "previousInstitutes": "Previous Institutes",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "users": {
+                "title": "User List",
+                "searchPlaceholder": "Search for a user",
+                "createUser": "Create a User",
+                "edit": "Edit",
+                "assignSchool": "Assign to a School",
+                "school": "School",
+                "notAssigned": "Not Yet Assigned",
+                "accountDetails": "Account Details",
+                "username": "Username",
+                "status": "Status",
+                "active": "Active",
+                "inactive": "Inactive",
+                "role": "Role",
+                "na": "N/A",
+                "confirmed": "Confirmed",
+                "notConfirmed": "Not Confirmed",
+                "blocked": "Blocked",
+                "assignToSchool": "Assign {name} {lastname} to a school",
+                "currentAssociation": "Current Association",
+                "none": "None",
+                "selectSchool": "Select a School",
+                "cancel": "Cancel",
+                "confirm": "Confirm",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "payments": {
+                "title": "Payment List",
+                "searchPlaceholder": "Search for a payment",
+                "date": "Date",
+                "amount": "Amount",
+                "status": "Status",
+                "paid": "Paid",
+                "pending": "Pending",
+                "student": "Student",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            },
+            "expenses": {
+                "title": "Expense List",
+                "searchPlaceholder": "Search for an expense",
+                "addExpense": "Add an Expense",
+                "date": "Date",
+                "amount": "Amount",
+                "category": "Category",
+                "school": "School",
+                "schoolYear": "School Year",
+                "na": "N/A",
+                "cta": {
+                    "filter": "",
+                    "export": ""
+                }
+            }
+        },
+        "classList": {
+            "grade": "Primary Classes",
+            "intermediate": "Lower Secondary Classes",
+            "upperIntermediate": "Upper Secondary Classes",
+            "create": "Create a Class",
+            "noClasses": "No classes.\nPlease create a class to start."
+        },
+        "schoolList": {
+            "title": "School List",
+            "createSchool": "Create a School",
+            "viewDetails": "School Profile",
+            "cta": {
+                "filter": "",
+                "export": ""
+            }
+        },
+        "constants": {
+            "dataset": {
+                "students": {
+                    "students": "Student",
+                    "_class": "Class",
+                    "parents": "Parent",
+                    "phone": "Parent Phone",
+                    "registration": "Enrollment",
+                    "current_month": "Current Month",
+                    "paid": "Paid",
+                    "not_paid": "Unpaid"
+                },
+                "schools": {
+                    "name": "Name",
+                    "address": "Address",
+                    "email": "Email",
+                    "phone": "Phone",
+                    "type": "Type",
+                    "IEF": "IEF",
+                    "responsible": "Director",
+                    "parentSchool": "Parent School",
+                    "details": {
+                        "addressUnavailable": "Address Unavailable",
+                        "emailUnavailable": "Email Unavailable",
+                        "phoneUnavailable": "Phone Unavailable",
+                        "dateUnknown": "Date Unknown",
+                        "classes": "Classes",
+                        "edit": "Edit",
+                        "director": "Director:",
+                        "belonging": "Affiliation:",
+                        "note": "Note:",
+                        "alAzhar": "Al Azhar",
+                        "notAlAzhar": "Non Al Azhar"
+                    }
+                },
+                "users": {
+                    "complete_name": "First and Last Name",
+                    "email": "Email",
+                    "phoneNumber": "Phone",
+                    "gender": "Gender",
+                    "school": "School"
+                },
+                "teachers": {
+                    "complete_name": "First and Last Name",
+                    "email": "Email",
+                    "phoneNumber": "Phone",
+                    "gender": "Gender",
+                    "school": "School"
+                }
+            }
+        }
+    },
+    "pages": {
+        "dashboard": {
+            "initial": {
+                "title": "Al-Azhar Dashboard"
+            },
+            "classes": {
+                "title": "Al-Azhar Classes"
+            },
+            "students": {
+                "title": "Students"
+            },
+            "teachers": {
+                "title": "Teachers"
+            },
+            "users": {
+                "title": "Users"
+            },
+            "schools": {
+                "title": "Schools"
+            },
+            "school_years": {
+                "title": "School Years"
+            },
+            "finance": {
+                "title": "Finance"
+            }
+        },
+        "class": {
+            "heading": "Primary Classes",
+            "create": "Create a Class",
+            "establishment": "School %name"
+        },
+        "stats": {
+            "classes": "Total Number of Classes",
+            "students": "Total Number of Students",
+            "teachers": "Total Number of Teachers",
+            "schools": "Total Number of Schools",
+            "users": "Total Number of Users",
+            "amount": {
+                "users": "%number users",
+                "classes": "%number classes",
+                "students": "%number students",
+                "teachers": "%number teachers",
+                "schools": "%number schools",
+                "finance": "%number FCFA"
+            }
+        }
+    }
+}

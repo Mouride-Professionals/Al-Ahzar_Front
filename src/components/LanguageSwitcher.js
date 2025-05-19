@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, HStack, Text, VStack } from '@chakra-ui/react';
+import { Button, Text, VStack } from '@chakra-ui/react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 
@@ -8,6 +8,14 @@ export default function LanguageSwitcher({ onSwitch }) {
     const router = useRouter();
     const { locale, asPath } = router;
     const t = useTranslations('components.layout.header.settings');
+
+    // Add more languages here as needed
+    const languages = [
+        { code: 'fr', label: t('languageSelector.fr') },
+        { code: 'ar', label: t('languageSelector.ar') },
+        // Example for English support:
+        { code: 'en', label: t('languageSelector.en') },
+    ];
 
     const switchLanguage = (targetLocale) => {
         if (locale !== targetLocale) {
@@ -18,26 +26,20 @@ export default function LanguageSwitcher({ onSwitch }) {
 
     return (
         <VStack align="start" spacing={1} mb={2}>
-            <Text >
-                {t('language')}
-            </Text>
-            <VStack spacing={1}>
-                <Button
-                    onClick={() => switchLanguage('fr')}
-                    variant={locale === 'fr' ? 'solid' : 'ghost'}
-                    colorScheme={locale === 'fr' ? 'orange' : 'gray'}
-                    aria-current={locale === 'fr' ? 'page' : undefined}
-                >
-                    {t('languageSelector.fr')}
-                </Button>
-                <Button
-                    onClick={() => switchLanguage('ar')}
-                    variant={locale === 'ar' ? 'solid' : 'ghost'}
-                    colorScheme={locale === 'ar' ? 'orange' : 'gray'}
-                    aria-current={locale === 'ar' ? 'page' : undefined}
-                >
-                    {t('languageSelector.ar')}
-                </Button>
+            <Text>{t('language')}</Text>
+            <VStack align="stretch" spacing={1}>
+                {languages.map(({ code, label }) => (
+                    <Button
+                        key={code}
+                        onClick={() => switchLanguage(code)}
+                        variant={locale === code ? 'solid' : 'ghost'}
+                        colorScheme={locale === code ? 'orange' : 'gray'}
+                        aria-current={locale === code ? 'page' : undefined}
+                        w="100%"
+                    >
+                        {label}
+                    </Button>
+                ))}
             </VStack>
         </VStack>
     );
