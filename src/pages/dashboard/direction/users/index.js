@@ -3,10 +3,11 @@ import { UserDataSet } from '@components/common/reports/user_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
-import { USER_COLUMNS } from '@utils/mappers/kpi';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapUsersDataTable } from '@utils/mappers/user';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { FaSuitcase, FaUser } from 'react-icons/fa'; // icon for user
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
@@ -26,32 +27,33 @@ const {
 } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
-    // Generate a stat card for users – adjust as needed
+const t = useTranslations();
+    
     const cardStats = [
         {
-            count: amount.users.replace(`%number`, kpis[0]?.length),
+            count: t('pages.stats.amount.users').replace(`%number`, kpis[0]?.length),
             icon: <FaUser color={colors.primary.regular} size={25} />,
-            title: usersStat,
+            title: t('pages.stats.users'),
         },
         {
-            count: amount.classes.replace(`%number`, kpis[1]?.data?.length),
+            count: t('pages.stats.amount.classes').replace(`%number`, kpis[1]?.data?.length),
             icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-            title: classes,
+            title: t('pages.stats.classes'),
         },
         {
-            count: amount.students.replace(`%number`, kpis[2]?.data?.length),
+            count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length),
             icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-            title: studentsStat,
+            title: t('pages.stats.students'),
         },
         {
-            count: amount.teachers.replace(`%number`, kpis[3]?.data?.length ?? 0),
+            count: t('pages.stats.amount.teachers').replace(`%number`, kpis[3]?.data?.length ?? 0),
             icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-            title: teachersStat,
+            title: t('pages.stats.teachers'),
         },
         {
-            count: amount.schools.replace(`%number`, kpis[4]?.data?.length),
+            count: t('pages.stats.amount.schools').replace(`%number`, kpis[4]?.data?.length),
             icon: <LuSchool color={colors.primary.regular} size={25} />,
-            title: schoolsStat,
+            title: t('pages.stats.schools'),
         },
 
     ];
@@ -62,12 +64,12 @@ export default function Dashboard({ kpis, role, token }) {
     const schools = kpis[4]?.data?.map((school) => ({
         name: school.attributes.name,
         id: school.id,
-    }))
-        ;
+    }));
+    const { USER_COLUMNS } = useTableColumns();
     return (
         <DashboardLayout
-            title={dashboard.initial.title}
-            currentPage={menu.users}
+            title={t('pages.dashboard.initial.title')}
+            currentPage={t('components.menu.users')}
             role={role}
             token={token}
         >
@@ -82,7 +84,7 @@ export default function Dashboard({ kpis, role, token }) {
                     fontWeight={'700'}
                     pt={10}
                 >
-                    {usersDataset.title}
+                    {t('components.dataset.users.title')}
                 </Text>
 
                 <Stack bgColor={colors.white} w={'100%'}>
@@ -133,7 +135,7 @@ export const getServerSideProps = async ({ req, res }) => {
         user_token: token,
     });
     const role = response.role;
-   
+
 
     const kpis = await Promise.all([
         serverFetch({

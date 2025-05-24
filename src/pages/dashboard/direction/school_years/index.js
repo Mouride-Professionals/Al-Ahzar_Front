@@ -2,11 +2,12 @@ import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { SchoolYearDataSet } from '@components/common/reports/school_year_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
-import { SCHOOL_YEAR_COLUMNS } from '@utils/mappers/kpi';
+import { colors, routes } from '@theme';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapSchoolYearsDataTable } from '@utils/mappers/school_year';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
@@ -15,44 +16,30 @@ import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 import Loading from '../../loading';
 
-const {
-  pages: {
-    dashboard,
-    stats: {
-      classes,
-      students: studentsStat,
-      teachers: teachersStat,
-      schools: schoolsStat,
-      amount,
-    },
-  },
-  components: {
-    menu,
-    dataset: { schools: schoolsDataset },
-  },
-} = messages;
-
 export default function Dashboard({ kpis, role, token }) {
+  const t = useTranslations();
+  const { SCHOOL_YEAR_COLUMNS } = useTableColumns();
+
   const cardStats = [
     {
-      count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
+      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.data?.length ?? 0),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-      title: classes,
+      title: t('pages.stats.classes'),
     },
     {
-      count: amount.students.replace(`%number`, kpis[1]?.data?.length),
+      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.data?.length ?? 0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-      title: studentsStat,
+      title: t('pages.stats.students'),
     },
     {
-      count: amount.teachers.replace(`%number`, kpis[2]?.data?.length ?? 0),
+      count: t('pages.stats.amount.teachers').replace('%number', kpis[2]?.data?.length ?? 0),
       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-      title: teachersStat,
+      title: t('pages.stats.teachers'),
     },
     {
-      count: amount.schools.replace(`%number`, kpis[3]?.data?.length),
+      count: t('pages.stats.amount.schools').replace('%number', kpis[3]?.data?.length ?? 0),
       icon: <LuSchool color={colors.primary.regular} size={25} />,
-      title: schoolsStat,
+      title: t('pages.stats.schools'),
     },
   ];
 
@@ -61,8 +48,8 @@ export default function Dashboard({ kpis, role, token }) {
   return (
     <Suspense fallback={<Loading />}>
       <DashboardLayout
-        title={dashboard.initial.title}
-        currentPage={menu.classes}
+        title={t('pages.dashboard.initial.title')}
+        currentPage={t('components.menu.school_years')}
         role={role}
         token={token}
       >
@@ -77,7 +64,7 @@ export default function Dashboard({ kpis, role, token }) {
             fontWeight={'700'}
             pt={10}
           >
-            {schoolsDataset.title}
+            {t('components.dataset.schoolYears.title')}
           </Text>
 
           <Stack bgColor={colors.white} w={'100%'}>

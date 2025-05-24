@@ -2,11 +2,12 @@ import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { TeacherDataSet } from '@components/common/reports/teacher_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
-import { TEACHERS_COLUMNS } from '@utils/mappers/kpi';
+import { colors, routes } from '@theme';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapTeachersDataTable } from '@utils/mappers/teacher';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { FaSuitcase } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
@@ -15,87 +16,71 @@ import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 import Loading from '../../loading';
 
-const {
-  pages: {
-    dashboard,
-    stats: {
-      classes,
-      students: studentsStat,
-      teachers: teachersStat,
-      schools: schoolsStat,
-      amount,
-    },
-  },
-  components: {
-    menu,
-    dataset: { teachers: teachersDataset },
-  },
-} = messages;
-
 export default function Dashboard({ kpis, role, token }) {
   const [loading, setLoading] = useState(true);
+  const t = useTranslations();
 
+  // Get columns from the hook
+  const { TEACHERS_COLUMNS } = useTableColumns();
+
+  // Internationalized statistics cards
   const cardStats = [
     {
-      count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
+      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.data?.length ?? 0),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-      title: classes,
+      title: t('pages.stats.classes'),
     },
     {
-      count: amount.students.replace(`%number`, kpis[1]?.data?.length),
+      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.data?.length ?? 0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-      title: studentsStat,
+      title: t('pages.stats.students'),
     },
     {
-      count: amount.teachers.replace(`%number`, kpis[2]?.data?.length ?? 0),
+      count: t('pages.stats.amount.teachers').replace('%number', kpis[2]?.data?.length ?? 0),
       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-      title: teachersStat,
+      title: t('pages.stats.teachers'),
     },
     {
-      count: amount.schools.replace(`%number`, kpis[3]?.data?.length),
+      count: t('pages.stats.amount.schools').replace('%number', kpis[3]?.data?.length ?? 0),
       icon: <LuSchool color={colors.primary.regular} size={25} />,
-      title: schoolsStat,
+      title: t('pages.stats.schools'),
     },
   ];
 
   const teachers = mapTeachersDataTable({ teachers: kpis[2] });
-
-  // take all schools with only their name, id, and type for 
   const schools = kpis[3]?.data?.map((school) => ({
     name: school.attributes.name,
     id: school.id,
-  }))
-    // .filter((school) => school.name !== 'المدرسة الأهلية') // filter out the school with name 'المدرسة الأهلية'
-    ;
+  }));
+
   useEffect(() => {
     setLoading(false);
   }, []);
-  //return   <Loading /> if not mounted yet
+
   if (loading) {
     return <Loading />;
   }
 
   return (
     <DashboardLayout
-      title={dashboard.initial.title}
-      currentPage={menu.classes}
+      title={t('pages.dashboard.initial.title')}
+      currentPage={t('components.menu.classes')}
       role={role}
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
-        <HStack w={'100%'}>
+        <HStack w="100%">
           <Statistics cardStats={cardStats} />
         </HStack>
         <Text
           color={colors.secondary.regular}
           fontSize={20}
-          fontWeight={'700'}
+          fontWeight="700"
           pt={10}
         >
-          {teachersDataset.title}
+          {t('components.dataset.teachers.title')}
         </Text>
-
-        <Stack bgColor={colors.white} w={'100%'}>
+        <Stack bgColor={colors.white} w="100%">
           <TeacherDataSet
             {...{ role, token }}
             data={teachers}

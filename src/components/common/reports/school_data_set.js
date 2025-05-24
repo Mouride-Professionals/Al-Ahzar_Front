@@ -57,7 +57,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
     ? images.logo.src // Fallback to default logo
     : images.logo.src; // `${process.env.NEXT_PUBLIC_API_URL}${banner?.data?.attributes.url}`;
 
-  const t = useTranslations('components.constants.dataset.schools.details');
+  const t = useTranslations('components.dataset.schools');
 
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>

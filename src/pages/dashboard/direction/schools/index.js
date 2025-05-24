@@ -152,9 +152,10 @@
 import { SchoolDataSet } from "@components/common/reports/school_data_set";
 import DashboardPage from "@components/layout/dashboard/views/dashboard_page";
 import { messages, routes } from "@theme";
-import { SCHOOLS_COLUMNS } from "@utils/mappers/kpi";
+import { SCHOOLS_COLUMNS, useTableColumns } from "@utils/mappers/kpi";
 import { mapSchoolsDataTable } from "@utils/mappers/school";
 import { getToken } from "next-auth/jwt";
+import { use } from "react";
 import { FaSuitcase } from "react-icons/fa";
 import { HiAcademicCap } from "react-icons/hi";
 import { LuSchool } from "react-icons/lu";
@@ -176,7 +177,8 @@ export default function SchoolsDashboard({ kpis, role, token }) {
   ];
 
   const schools = mapSchoolsDataTable({ schools: kpis[3] });
- 
+  const { SCHOOLS_COLUMNS } = useTableColumns();
+
   return (
     <DashboardPage
       title={dashboard.initial.title}

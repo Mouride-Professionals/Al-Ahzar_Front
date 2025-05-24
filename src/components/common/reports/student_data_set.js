@@ -431,6 +431,7 @@ export const DataSet = ({
   const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
   const [students, setStudents] = useState(data ?? []);
   const [filterByOldStudents, setFilterByOldStudents] = useState(false);
+  const t = useTranslations('components.dataset.students');
 
   const router = useRouter();
   const schoolYear = Cookies.get('selectedSchoolYear');
@@ -467,7 +468,7 @@ export const DataSet = ({
 
   const getFilterLabel = useMemo(() => {
     // return filterByOldStudents ? 'Elèves inscrits' : 'Elèves non inscrits';
-    return 'Elèves non inscrits';
+    return t('filterLabel');
   }, [filterByOldStudents]);
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -496,7 +497,7 @@ export const DataSet = ({
             {/* <FormFilter onExport={() => { }} /> */}
             {role?.name != 'Caissier' && <StudentFilter
               onFilter={handleFilter}
-              label={t(getFilterLabel)}
+              label={getFilterLabel}
               bgColor={bgColor}
               color={color}
             />}

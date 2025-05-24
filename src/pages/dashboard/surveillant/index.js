@@ -2,66 +2,52 @@ import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
-import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
+import { colors, routes } from '@theme';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { HiAcademicCap } from 'react-icons/hi';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  pages: {
-    dashboard,
-    stats: {
-      classes,
-      students: studentsStat,
-      amount,
-    },
-  },
-  components: {
-    menu,
-    dataset: { students: studentsDataset, },
-  },
-} = messages;
-
-export default function Dashboard({ kpis, role, token,schoolId }) {
+export default function Dashboard({ kpis, role, token, schoolId }) {
+  const t = useTranslations();
+  const { STUDENTS_COLUMNS } = useTableColumns();
   const router = useRouter();
 
   const cardStats = [
     {
-      count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
+      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.data?.length ?? 0),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-      title: classes,
+      title: t('pages.stats.classes'),
     },
     {
-      count: amount.students.replace(`%number`, kpis[1]?.data?.length),
+      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.data?.length ?? 0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-      title: studentsStat,
+      title: t('pages.stats.students'),
     },
-
-
   ];
 
-
   const students = mapStudentsDataTableForEnrollments({ enrollments: kpis[1] });
-  // take all classrooms with only their id, cycle, level, and letter
+
   const classrooms = kpis[0]?.data?.map((classroom) => ({
     id: classroom.id,
     cycle: classroom.attributes.cycle,
     level: classroom.attributes.level,
     letter: classroom.attributes.letter,
   }));
-  // if no classrooms are found, redirect to classrooms page
+
   if (classrooms.length === 0) {
     router.push(routes.page_route.dashboard.surveillant.classes.all);
   }
+
   return (
     <DashboardLayout
-      title={dashboard.initial.title}
-      currentPage={menu.home}
+      title={t('pages.dashboard.initial.title')}
+      currentPage={t('components.menu.home')}
       role={role}
       token={token}
     >
@@ -69,22 +55,18 @@ export default function Dashboard({ kpis, role, token,schoolId }) {
         <HStack w={'100%'}>
           <Statistics cardStats={cardStats} />
         </HStack>
-
         <Text
           color={colors.secondary.regular}
           fontSize={20}
           fontWeight={'700'}
           pt={10}
         >
-          {studentsDataset.title}
+          {t('components.dataset.students.title')}
         </Text>
-
         <Stack bgColor={colors.white} w={'100%'}>
-
           <DataSet
             {...{ role, token, schoolId }}
             data={students}
-
             classrooms={classrooms}
             columns={STUDENTS_COLUMNS}
           />

@@ -19,6 +19,7 @@ import { DashboardLayout } from "@components/layout/dashboard";
 import { colors, messages, routes } from "@theme";
 import { mapPaymentType } from "@utils/tools/mappers";
 import { getToken } from "next-auth/jwt";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { FaCalendarCheck, FaCalendarPlus, FaRegCalendarAlt } from "react-icons/fa";
 import { HiAcademicCap } from "react-icons/hi";
@@ -45,25 +46,88 @@ const getMonthName = (num) => {
 };
 
 const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis, schools, activeSchoolYear }) => {
+    const t = useTranslations();
     const toast = useToast();
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState("payments"); // "payments" or "expenses"
-    const [selectedSchool, setSelectedSchool] = useState("all"); // "all" or school ID
+    const [activeTab, setActiveTab] = useState("payments");
+    const [selectedSchool, setSelectedSchool] = useState("all");
     const [paymentSummary, setPaymentSummary] = useState(initialPaymentKpis);
     const [expenseSummary, setExpenseSummary] = useState(initialExpenseKpis);
     const [chartData, setChartData] = useState([]);
     const [pieData, setPieData] = useState([]);
     const [transactions, setTransactions] = useState([]);
 
-
     // School options for dropdown
     const schoolOptions = [
-        { value: "all", label: "Toutes les écoles" },
+        { value: "all", label: t('components.dataset.finance.all_schools') },
         ...schools.map((school) => ({ value: school.id, label: school.name })),
     ];
 
-    // Fetch data from Strapi when school or tab changes
-    // const debounceFetch = debounce(fetchData, 300);
+    // Payment statistics
+    const paymentStats = [
+        {
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.yearPaymentTotal ?? 0),
+            icon: <SiCashapp color={colors.primary.regular} size={25} />,
+            title: t('components.dataset.finance.annual_payments'),
+        },
+        {
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.enrollmentPaymentTotal ?? 0),
+            icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
+            title: t('components.dataset.finance.total_enrollments'),
+        },
+        {
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.monthlyPaymentTotal ?? 0),
+            icon: <FaCalendarPlus color={colors.primary.regular} size={25} />,
+            title: t('components.dataset.finance.total_monthly'),
+        },
+        {
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.previousMonthPaymentTotal ?? 0),
+            icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
+            title: t('components.dataset.finance.previous_month'),
+        },
+        {
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.currentMonthPaymentTotal ?? 0),
+            icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
+            title: t('components.dataset.finance.current_month'),
+        },
+    ];
+
+    // Expense statistics
+    const expenseStats = [
+        {
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.yearExpenseTotal ?? 0),
+            icon: <SiCashapp color={colors.red.regular} size={25} />,
+            title: t('components.dataset.finance.annual_expenses'),
+        },
+        {
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.currentMonthExpenseTotal ?? 0),
+            icon: <FaCalendarCheck color={colors.red.regular} size={25} />,
+            title: t('components.dataset.finance.current_month'),
+        },
+        {
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.previousMonthExpenseTotal ?? 0),
+            icon: <FaRegCalendarAlt color={colors.red.regular} size={25} />,
+            title: t('components.dataset.finance.previous_month'),
+        },
+    ];
+
+    const pieColors = [colors.primary.regular, colors.primary.light, colors.secondary.regular, colors.gray.regular, colors.green.regular, colors.black, colors.red.regular];
+
+    const renderCustomizedLabel = (props) => {
+        const { cx, cy, midAngle, innerRadius, outerRadius, index } = props;
+        const RADIAN = Math.PI / 180;
+        const rAmount = outerRadius + 20;
+        const xAmount = cx + rAmount * Math.cos(-midAngle * RADIAN);
+        const yAmount = cy + rAmount * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <g>
+                <text x={xAmount} y={yAmount} fill="black" textAnchor={xAmount > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
+                    {`${pieData[index].name}: ${Number(pieData[index].value).toLocaleString()} FCFA`}
+                </text>
+            </g>
+        );
+    };
 
     useEffect(() => {
         // debounceFetch();
@@ -149,57 +213,23 @@ const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis,
         );
     }
 
-    // Payment statistics
-    const paymentStats = [
-        { count: amount.finance.replace(`%number`, paymentSummary?.yearPaymentTotal ?? 0), icon: <SiCashapp color={colors.primary.regular} size={25} />, title: "Encaissements Annuel" },
-        { count: amount.finance.replace(`%number`, paymentSummary?.enrollmentPaymentTotal ?? 0), icon: <HiAcademicCap color={colors.primary.regular} size={25} />, title: "Total Inscriptions" },
-        { count: amount.finance.replace(`%number`, paymentSummary?.monthlyPaymentTotal ?? 0), icon: <FaCalendarPlus color={colors.primary.regular} size={25} />, title: "Total Mensualités" },
-        { count: amount.finance.replace(`%number`, paymentSummary?.previousMonthPaymentTotal ?? 0), icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />, title: "Mois Précédent" },
-        { count: amount.finance.replace(`%number`, paymentSummary?.currentMonthPaymentTotal ?? 0), icon: <FaCalendarCheck color={colors.primary.regular} size={25} />, title: "Mois En Cours" },
-    ];
-
-    // Expense statistics
-    const expenseStats = [
-        { count: amount.finance.replace(`%number`, expenseSummary?.yearExpenseTotal ?? 0), icon: <SiCashapp color={colors.red.regular} size={25} />, title: "Dépenses Annuelles" },
-        { count: amount.finance.replace(`%number`, expenseSummary?.currentMonthExpenseTotal ?? 0), icon: <FaCalendarCheck color={colors.red.regular} size={25} />, title: "Mois En Cours" },
-        { count: amount.finance.replace(`%number`, expenseSummary?.previousMonthExpenseTotal ?? 0), icon: <FaRegCalendarAlt color={colors.red.regular} size={25} />, title: "Mois Précédent" },
-    ];
-
-    const pieColors = [colors.primary.regular, colors.primary.light, colors.secondary.regular, colors.gray.regular, colors.green.regular, colors.black, colors.red.regular];
-
-    const renderCustomizedLabel = (props) => {
-        const { cx, cy, midAngle, innerRadius, outerRadius, index } = props;
-        const RADIAN = Math.PI / 180;
-        const rAmount = outerRadius + 20;
-        const xAmount = cx + rAmount * Math.cos(-midAngle * RADIAN);
-        const yAmount = cy + rAmount * Math.sin(-midAngle * RADIAN);
-
-        return (
-            <g>
-                <text x={xAmount} y={yAmount} fill="black" textAnchor={xAmount > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
-                    {`${pieData[index].name}: ${Number(pieData[index].value).toLocaleString()} FCFA`}
-                </text>
-            </g>
-        );
-    };
-
     return (
         <DashboardLayout title={dashboard.finance.title} currentPage={menu.finance} role={role} token={token}>
             <Stack spacing={5}>
                 <HStack justify="flex-start" mt={5}>
                     <Box w="300px">
-                        <Select bgColor={colors.secondary.light}  value={selectedSchool} onChange={(e) => setSelectedSchool(e.target.value)}>
+                        <Select bgColor={colors.secondary.light} value={selectedSchool} onChange={(e) => setSelectedSchool(e.target.value)}>
                             {schoolOptions.map((option) => (
                                 <option key={option.value} value={option.value}>{option.label}</option>
                             ))}
-                            
+
                         </Select>
                     </Box>
                 </HStack>
                 <Tabs variant="soft-rounded" colorScheme="orange" onChange={(index) => setActiveTab(index === 0 ? "payments" : "expenses")}>
                     <TabList ml={4}>
-                        <Tab color={activeTab === "payments" ? colors.white : colors.primary.regular}>Paiements</Tab>
-                        <Tab color={activeTab === "expenses" ? colors.white : colors.primary.regular}>Dépenses</Tab>
+                        <Tab color={activeTab === "payments" ? colors.white : colors.primary.regular}>{t('components.dataset.finance.payments_tab')}</Tab>
+                        <Tab color={activeTab === "expenses" ? colors.white : colors.primary.regular}>{t('components.dataset.finance.expenses_tab')}</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -210,7 +240,7 @@ const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis,
 
                                 <HStack w="100%">
                                     <Box p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                        <Heading size="md" mb={4}>Tendance des paiements mensuels</Heading>
+                                        <Heading size="md" mb={4}>{t('components.dataset.finance.monthly_payments_trend')}</Heading>
                                         <ResponsiveContainer width="100%" height={300}>
                                             <BarChart data={chartData}>
                                                 <XAxis dataKey="month" />
@@ -223,7 +253,7 @@ const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis,
                                 </HStack>
                                 <HStack w="100%">
                                     <Box p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                        <Heading size="md" mb={4}>Répartition des Encaissements Annuels</Heading>
+                                        <Heading size="md" mb={4}>{t('components.dataset.finance.annual_payments_distribution')}</Heading>
                                         <ResponsiveContainer width="100%" height={350}>
                                             <PieChart>
                                                 <Pie dataKey="value" data={pieData} cx="50%" cy="50%" outerRadius={140} label={renderCustomizedLabel}>
@@ -243,7 +273,7 @@ const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis,
 
                                 <HStack w="100%">
                                     <Box p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                        <Heading size="md" mb={4}>Tendance des dépenses mensuelles</Heading>
+                                        <Heading size="md" mb={4}>{t('components.dataset.finance.monthly_expenses_trend')}</Heading>
                                         <ResponsiveContainer width="100%" height={300}>
                                             <BarChart data={chartData}>
                                                 <XAxis dataKey="month" />
@@ -256,7 +286,7 @@ const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis,
                                 </HStack>
                                 <HStack w="100%">
                                     <Box p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                        <Heading size="md" mb={4}>Répartition des Dépenses par Catégorie</Heading>
+                                        <Heading size="md" mb={4}>{t('components.dataset.finance.expenses_by_category')}</Heading>
                                         <ResponsiveContainer width="100%" height={350}>
                                             <PieChart>
                                                 <Pie dataKey="value" data={pieData} cx="50%" cy="50%" outerRadius={140} label={renderCustomizedLabel}>

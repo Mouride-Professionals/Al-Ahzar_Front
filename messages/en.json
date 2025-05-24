@@ -208,6 +208,7 @@
             "students": {
                 "title": "Student List",
                 "searchPlaceholder": "Search for a student",
+                "filterLabel": "Non-enrolled Students",
                 "validateMonthlyPayment": "Validate Monthly Payment",
                 "socialStatus": "Supported",
                 "bio": "BIO",
@@ -224,15 +225,46 @@
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "student": "Student",
+                    "class": "Class",
+                    "parent": "Parent",
+                    "parent_phone": "Parent Phone",
+                    "enrollment": "Enrollment",
+                    "current_month": "Current Month",
+                    "paid": "Paid",
+                    "not_paid": "Unpaid"
                 }
             },
             "schools": {
                 "title": "School List",
                 "searchPlaceholder": "Search for a school",
                 "addSchool": "Add a School",
+                "addressUnavailable": "Address Unavailable",
+                "emailUnavailable": "Email Unavailable",
+                "phoneUnavailable": "Phone Unavailable",
+                "dateUnknown": "Date Unknown",
+                "classes": "Classes",
+                "edit": "Edit",
+                "director": "Director:",
+                "belonging": "Affiliation:",
+                "note": "Note:",
+                "alAzhar": "Al Azhar",
+                "notAlAzhar": "Non Al Azhar",
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "name": "Name",
+                    "address": "Address",
+                    "phone": "Phone",
+                    "email": "Email",
+                    "type": "Type",
+                    "ief": "IEF",
+                    "director": "Director",
+                    "parent_school": "Parent School"
                 }
             },
             "schoolYears": {
@@ -253,6 +285,21 @@
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "title": "Title",
+                    "start_date": "Start Date",
+                    "end_date": "End Date",
+                    "status": "Status",
+                    "state": "State",
+                    "description": "Description",
+                    "na": "N/A",
+                    "active": "Active",
+                    "inactive": "Inactive",
+                    "current": "Current",
+                    "ended": "Ended",
+                    "upcoming": "Upcoming",
+                    "no_description": "No description"
                 }
             },
             "teachers": {
@@ -300,6 +347,17 @@
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "full_name": "Full Name",
+                    "email": "Email",
+                    "phone_number": "Phone Number",
+                    "address": "Address",
+                    "school": "School",
+                    "language": "Spoken Language",
+                    "contract_type": "Contract Type",
+                    "level": "Level",
+                    "na": "N/A"
                 }
             },
             "users": {
@@ -329,6 +387,15 @@
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "last_name": "Last Name",
+                    "first_name": "First Name",
+                    "email": "Email",
+                    "phone": "Phone",
+                    "school": "School",
+                    "role": "Role",
+                    "na": "N/A"
                 }
             },
             "payments": {
@@ -343,6 +410,14 @@
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "payment_date": "Payment Date",
+                    "amount": "Amount (FCFA)",
+                    "type": "Type",
+                    "monthly": "Monthly",
+                    "student": "Student",
+                    "other": "Other"
                 }
             },
             "expenses": {
@@ -358,7 +433,30 @@
                 "cta": {
                     "filter": "",
                     "export": ""
+                },
+                "columns": {
+                    "date": "Date",
+                    "amount": "Amount",
+                    "category": "Category",
+                    "school": "School",
+                    "school_year": "School Year",
+                    "na": "N/A"
                 }
+            },
+            "finance": {
+                "all_schools": "All Schools",
+                "annual_payments": "Annual Revenues",
+                "total_enrollments": "Total Enrollments",
+                "total_monthly": "Total Monthly Payments",
+                "previous_month": "Previous Month",
+                "current_month": "Current Month",
+                "annual_expenses": "Annual Expenses",
+                "payments_tab": "Payments",
+                "expenses_tab": "Expenses",
+                "monthly_payments_trend": "Monthly Payments Trend",
+                "annual_payments_distribution": "Annual Revenues Distribution",
+                "monthly_expenses_trend": "Monthly Expenses Trend",
+                "expenses_by_category": "Expenses Distribution by Category"
             }
         },
         "classList": {
@@ -375,57 +473,6 @@
             "cta": {
                 "filter": "",
                 "export": ""
-            }
-        },
-        "constants": {
-            "dataset": {
-                "students": {
-                    "students": "Student",
-                    "_class": "Class",
-                    "parents": "Parent",
-                    "phone": "Parent Phone",
-                    "registration": "Enrollment",
-                    "current_month": "Current Month",
-                    "paid": "Paid",
-                    "not_paid": "Unpaid"
-                },
-                "schools": {
-                    "name": "Name",
-                    "address": "Address",
-                    "email": "Email",
-                    "phone": "Phone",
-                    "type": "Type",
-                    "IEF": "IEF",
-                    "responsible": "Director",
-                    "parentSchool": "Parent School",
-                    "details": {
-                        "addressUnavailable": "Address Unavailable",
-                        "emailUnavailable": "Email Unavailable",
-                        "phoneUnavailable": "Phone Unavailable",
-                        "dateUnknown": "Date Unknown",
-                        "classes": "Classes",
-                        "edit": "Edit",
-                        "director": "Director:",
-                        "belonging": "Affiliation:",
-                        "note": "Note:",
-                        "alAzhar": "Al Azhar",
-                        "notAlAzhar": "Non Al Azhar"
-                    }
-                },
-                "users": {
-                    "complete_name": "First and Last Name",
-                    "email": "Email",
-                    "phoneNumber": "Phone",
-                    "gender": "Gender",
-                    "school": "School"
-                },
-                "teachers": {
-                    "complete_name": "First and Last Name",
-                    "email": "Email",
-                    "phoneNumber": "Phone",
-                    "gender": "Gender",
-                    "school": "School"
-                }
             }
         }
     },

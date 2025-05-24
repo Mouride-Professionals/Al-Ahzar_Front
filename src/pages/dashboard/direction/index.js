@@ -3,7 +3,7 @@ import { SchoolDataSet } from '@components/common/reports/school_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
-import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapSchoolsDataTable } from '@utils/mappers/school';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
@@ -64,6 +64,7 @@ export default function Dashboard({ kpis, role, token }) {
   ];
 
   const schools = mapSchoolsDataTable({ schools: kpis[4] });
+  const {SCHOOLS_COLUMNS} = useTableColumns();
 
   return (
     <DashboardLayout
