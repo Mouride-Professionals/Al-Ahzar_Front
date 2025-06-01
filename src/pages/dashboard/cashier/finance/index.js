@@ -18,12 +18,13 @@ import { ExpenseDataSet } from "@components/common/reports/expense_data_set";
 import { PaymentDataSet } from "@components/common/reports/payment_data_set";
 import { Statistics } from "@components/func/lists/Statistic";
 import { DashboardLayout } from "@components/layout/dashboard";
-import { colors, messages, routes } from "@theme";
+import { colors, routes } from "@theme";
 import { mapExpensesDataTable } from "@utils/mappers/expense";
-import { EXPENSES_COLUMNS, PAYMENTS_COLUMNS } from "@utils/mappers/kpi";
+import { EXPENSES_COLUMNS, PAYMENTS_COLUMNS, useTableColumns } from "@utils/mappers/kpi";
 import { mapPaymentsDataTable } from "@utils/mappers/payment";
 import { mapPaymentType } from "@utils/tools/mappers";
 import { getToken } from "next-auth/jwt";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
     FaCalendarCheck,
@@ -45,8 +46,6 @@ import {
 } from "recharts";
 import { serverFetch } from "src/lib/api";
 
-const { pages: { dashboard, stats: { classes, amount } }, components: { menu } } = messages;
-
 const getMonthName = (num) => {
     const date = new Date();
     date.setMonth(num - 1);
@@ -54,9 +53,10 @@ const getMonthName = (num) => {
 };
 
 const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, expenseKpis }) => {
+    const t = useTranslations();
     const toast = useToast();
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState("payments"); // "payments" or "expenses"
+    const [activeTab, setActiveTab] = useState("payments");
     const [paymentSummary, setPaymentSummary] = useState();
     const [expenseSummary, setExpenseSummary] = useState();
     const [chartData, setChartData] = useState([]);
@@ -66,11 +66,9 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
 
     const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
     const expenses = mapExpensesDataTable({ expenses: expenseKpis[0] });
-
-    // Initialize state with payment and expense KPIs
+    const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
     useEffect(() => {
         if (paymentKpis && expenseKpis) {
-            // Payments
             setPaymentSummary(paymentKpis[1]);
             setTransactions(payments);
 
@@ -78,13 +76,11 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
             const paymentMonthlyData = paymentKpis[1]?.monthlyBreakdown || [];
             const paymentTypeData = paymentKpis[1]?.paymentTypeBreakdown || [];
 
-            // Expenses
             setExpenseSummary(expenseKpis[1]);
             const expenseMonthlyData = expenseKpis[1]?.monthlyBreakdown || [];
             const expenseCategoryData = expenseKpis[1]?.totalByCategory || {};
 
-            // Switch data based on active tab
-            const updateChartData = (data, isExpense = false) => {
+            const updateChartData = (data) => {
                 const chart = expectedMonths.map((m) => {
                     const found = data.find((item) => item.month === m);
                     return {
@@ -131,62 +127,61 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
         );
     }
 
-    // Finance card statistics
+    // Finance card statistics (all UI text is internationalized)
     const paymentStats = [
         {
-            count: amount.finance.replace(`%number`, paymentSummary?.yearPaymentTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.yearPaymentTotal ?? 0),
             icon: <SiCashapp color={colors.primary.regular} size={25} />,
-            title: "Encaissements Annuel",
+            title: t('components.dataset.finance.annual_payments'),
         },
         {
-            count: amount.finance.replace(`%number`, paymentSummary?.enrollmentPaymentTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.enrollmentPaymentTotal ?? 0),
             icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-            title: "Total Inscriptions",
+            title: t('components.dataset.finance.total_enrollments'),
         },
         {
-            count: amount.finance.replace(`%number`, paymentSummary?.monthlyPaymentTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.monthlyPaymentTotal ?? 0),
             icon: <FaCalendarPlus color={colors.primary.regular} size={25} />,
-            title: "Total Mensualités",
+            title: t('components.dataset.finance.total_monthly'),
         },
         {
-            count: amount.finance.replace(`%number`, paymentSummary?.previousMonthPaymentTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.previousMonthPaymentTotal ?? 0),
             icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
-            title: "Mois Précédent",
+            title: t('components.dataset.finance.previous_month'),
         },
         {
-            count: amount.finance.replace(`%number`, paymentSummary?.currentMonthPaymentTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', paymentSummary?.currentMonthPaymentTotal ?? 0),
             icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
-            title: "Mois En Cours",
+            title: t('components.dataset.finance.current_month'),
         },
     ];
 
     const expenseStats = [
         {
-            count: amount.finance.replace(`%number`, expenseSummary?.yearExpenseTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.yearExpenseTotal ?? 0),
             icon: <SiCashapp color={colors.primary.regular} size={25} />,
-            title: "Dépenses Annuelles",
+            title: t('components.dataset.finance.annual_expenses'),
         },
         {
-            count: amount.finance.replace(`%number`, expenseSummary?.currentMonthExpenseTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.currentMonthExpenseTotal ?? 0),
             icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
-            title: "Mois En Cours",
+            title: t('components.dataset.finance.current_month'),
         },
         {
-            count: amount.finance.replace(`%number`, expenseSummary?.previousMonthExpenseTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.previousMonthExpenseTotal ?? 0),
             icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
-            title: "Mois Précédent",
+            title: t('components.dataset.finance.previous_month'),
         },
         {
-            count: amount.finance.replace(`%number`, expenseSummary?.salaryExpenseTotal ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.salaryExpenseTotal ?? 0),
             icon: <SiCashapp color={colors.primary.regular} size={25} />,
-            title: "Salaires",
+            title: t('components.dataset.finance.salaries'),
         },
         {
-            count: amount.finance.replace(`%number`, expenseSummary?.totalByCategory?.Maintenance ?? 0),
+            count: t('pages.stats.amount.finance').replace('%number', expenseSummary?.totalByCategory?.Maintenance ?? 0),
             icon: <SiCashapp color={colors.primary.regular} size={25} />,
-            title: "Maintenances",
+            title: t('components.dataset.finance.maintenance'),
         },
-
     ];
 
     const pieColors = [
@@ -228,31 +223,34 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
 
     return (
         <DashboardLayout
-            title={dashboard.finance.title}
-            currentPage={menu.finance}
+            title={t('pages.dashboard.finance.title')}
+            currentPage={t('components.menu.finance')}
             role={role}
             token={token}
         >
-                <Tabs mt={5}
-                    variant="soft-rounded"
-                    colorScheme={"orange"}
-                    onChange={(index) => setActiveTab(index === 0 ? "payments" : "expenses")}
-                >
-                    <TabList ml={4} >
-                        <Tab color={activeTab === "payments" ? colors.white : colors.primary.regular}>Paiements</Tab>
-                        <Tab color={activeTab === "expenses" ? colors.white : colors.primary.regular} >Dépenses</Tab>
-                    </TabList>
+            <Tabs mt={5}
+                variant="soft-rounded"
+                colorScheme={"orange"}
+                onChange={(index) => setActiveTab(index === 0 ? "payments" : "expenses")}
+            >
+                <TabList ml={4} >
+                    <Tab color={activeTab === "payments" ? colors.white : colors.primary.regular}>
+                        {t('components.dataset.finance.payments_tab')}
+                    </Tab>
+                    <Tab color={activeTab === "expenses" ? colors.white : colors.primary.regular}>
+                        {t('components.dataset.finance.expenses_tab')}
+                    </Tab>
+                </TabList>
 
-                    <TabPanels >
-                        {/* Payments Tab */}
-                        <TabPanel >
-                        <Wrap  spacing={20.01}>
-
+                <TabPanels >
+                    {/* Payments Tab */}
+                    <TabPanel >
+                        <Wrap spacing={20.01}>
                             <HStack w="100%">
                                 <Statistics cardStats={paymentStats} />
                             </HStack>
                             <Text color={colors.secondary.regular} fontSize={20} fontWeight="700">
-                                Historique des Transactions
+                                {t('components.dataset.finance.payments_history')}
                             </Text>
                             <Stack bgColor={colors.white} w="100%">
                                 <PaymentDataSet
@@ -264,7 +262,9 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
                             </Stack>
                             <HStack w="100%">
                                 <Box mb={8} p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                    <Heading size="md" mb={4}>Tendance des paiements mensuels</Heading>
+                                    <Heading size="md" mb={4}>
+                                        {t('components.dataset.finance.monthly_payments_trend')}
+                                    </Heading>
                                     <ResponsiveContainer width="100%" height={300}>
                                         <BarChart data={chartData}>
                                             <XAxis dataKey="month" />
@@ -277,7 +277,9 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
                             </HStack>
                             <HStack w="100%">
                                 <Box mb={8} p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                    <Heading size="md" mb={4}>Répartition des Encaissements Annuels</Heading>
+                                    <Heading size="md" mb={4}>
+                                        {t('components.dataset.finance.annual_payments_distribution')}
+                                    </Heading>
                                     <ResponsiveContainer width="100%" height={350}>
                                         <PieChart>
                                             <Pie
@@ -296,18 +298,17 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
                                     </ResponsiveContainer>
                                 </Box>
                             </HStack>
-
                         </Wrap>
-                        </TabPanel>
+                    </TabPanel>
 
-                        {/* Expenses Tab */}
-                        <TabPanel >
-                        <Wrap  spacing={20.01}>
+                    {/* Expenses Tab */}
+                    <TabPanel >
+                        <Wrap spacing={20.01}>
                             <HStack w="100%">
                                 <Statistics cardStats={expenseStats} />
                             </HStack>
                             <Text color={colors.secondary.regular} fontSize={20} fontWeight="700">
-                                Historique des Dépenses
+                                {t('components.dataset.finance.expenses_history')}
                             </Text>
                             <Stack bgColor={colors.white} w="100%">
                                 <ExpenseDataSet
@@ -321,8 +322,10 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
                                 />
                             </Stack>
                             <HStack w="100%">
-                                <Box  p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                    <Heading size="md" mb={4}>Tendance des dépenses mensuelles</Heading>
+                                <Box p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
+                                    <Heading size="md" mb={4}>
+                                        {t('components.dataset.finance.monthly_expenses_trend')}
+                                    </Heading>
                                     <ResponsiveContainer width="100%" height={300}>
                                         <BarChart data={chartData}>
                                             <XAxis dataKey="month" />
@@ -334,8 +337,10 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
                                 </Box>
                             </HStack>
                             <HStack w="100%">
-                                <Box p={5}  borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
-                                    <Heading size="md" mb={4}>Répartition des Dépenses par Catégorie</Heading>
+                                <Box p={5} borderWidth="1px" borderRadius="md" w="100%" bgColor="white">
+                                    <Heading size="md" mb={4}>
+                                        {t('components.dataset.finance.expenses_by_category')}
+                                    </Heading>
                                     <ResponsiveContainer width="100%" height={350}>
                                         <PieChart>
                                             <Pie
@@ -354,11 +359,10 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
                                     </ResponsiveContainer>
                                 </Box>
                             </HStack>
-                            </Wrap>
-
-                        </TabPanel>
-                    </TabPanels>
-                </Tabs>
+                        </Wrap>
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
         </DashboardLayout>
     );
 };
@@ -387,7 +391,7 @@ export const getServerSideProps = async ({ req, res }) => {
             get: {
                 me,
                 finance: { all: payments, stats: financeStats },
-                expenses: { all: expenses, stats: expenseStats }, // Add this to your routes
+                expenses: { all: expenses, stats: expenseStats },
             },
         },
     } = routes.api_route;
@@ -419,7 +423,7 @@ export const getServerSideProps = async ({ req, res }) => {
             serverFetch({
                 uri: expenseStats.replace("%activeSchoolYear", activeSchoolYear).replace("%schoolId", schoolId),
                 user_token: token,
-            }), // Adjust if you have a separate endpoint for expense list vs stats
+            }),
         ]),
     ]);
 

@@ -12,27 +12,22 @@ import {
 import { ClassCreationForm } from '@components/forms/class/create';
 import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  pages: { dashboard },
-  components: {
-    menu,
-    classList: { grade, intermediate, upperIntermediate, create },
-  },
-} = messages;
-
 export default function Classes({ classes, role, schoolId, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const t = useTranslations();
+
   return (
     <DashboardLayout
-      title={dashboard.classes.title}
-      currentPage={menu.classes}
+      title={t('pages.dashboard.classes.title')}
+      currentPage={t('components.menu.classes')}
       role={role}
       token={token}
     >
@@ -42,7 +37,7 @@ export default function Classes({ classes, role, schoolId, token }) {
           <ModalHeader bgColor={colors.secondary.light}>
             <HStack>
               <SiGoogleclassroom color={colors.secondary.regular} size={25} />
-              <Text>{create}</Text>
+              <Text>{t('components.classList.create')}</Text>
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
@@ -59,7 +54,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       </Modal>
 
       <ClassesList
-        groupName={grade}
+        groupName={t('components.classList.grade')}
         classes={classes}
         listOf={'grade'}
         role={role}
@@ -68,14 +63,14 @@ export default function Classes({ classes, role, schoolId, token }) {
       />
 
       <ClassesList
-        groupName={intermediate}
+        groupName={t('components.classList.intermediate')}
         classes={classes}
         listOf={'intermediate'}
         role={role}
       />
 
       <ClassesList
-        groupName={upperIntermediate}
+        groupName={t('components.classList.upperIntermediate')}
         classes={classes}
         listOf={'upperIntermediate'}
         role={role}
@@ -98,7 +93,7 @@ export const getServerSideProps = async ({ req, res }) => {
       },
     },
   } = routes.api_route;
-  // Fetch responsible user to get their school ID and role
+
   const userResponse = await serverFetch({
     uri: me,
     user_token: token,
@@ -106,7 +101,6 @@ export const getServerSideProps = async ({ req, res }) => {
 
   const { role, school: { id: schoolId } } = userResponse;
 
-  // Fetch only classes that belong to the active school year
   const classesResponse = await serverFetch({
     uri: classrooms.replace('%schoolId', schoolId).replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
@@ -115,7 +109,6 @@ export const getServerSideProps = async ({ req, res }) => {
   const classes = mapClassesByLevel({
     classes: classesResponse,
   });
-
 
   return {
     props: {

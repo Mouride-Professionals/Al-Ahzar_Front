@@ -1,30 +1,23 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateSchoolYearForm } from '@components/forms/school_year/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const {
-    components: {
-        cards: {
-            school_year: { creation, edit, info },
-        },
-    },
-} = messages;
-
 export default function Create({ schools, role, token }) {
     const [hasSucceeded, setHasSucceeded] = useState(false);
-
     const router = useRouter();
+    const t = useTranslations();
 
     return (
         <DashboardLayout
-            title={messages.pages.dashboard.school_years.title}
-            currentPage={messages.components.menu.school_years.create}
+            title={t('pages.dashboard.school_years.title')}
+            currentPage={t('components.menu.school_years')}
             role={role}
             token={token}
         >
@@ -48,7 +41,7 @@ export default function Create({ schools, role, token }) {
                 >
                     <BsArrowLeftShort size={40} />
                     <Text fontSize={20} fontWeight={'700'}>
-                        {hasSucceeded ? edit : creation}
+                        {hasSucceeded ? t('components.cards.school_year.edit') : t('components.cards.school_year.creation')}
                     </Text>
                 </HStack>
                 <Stack

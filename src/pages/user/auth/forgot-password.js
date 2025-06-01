@@ -75,20 +75,20 @@ export default function ForgotPasswordPage() {
         }
     };
 
-    const t =useTranslations('components.authentication.forgot_password');
+    const t =useTranslations('components');
     
     const messages = {
         components: {
             authentication: {
                 forgot_password: {
                     heading: {
-                        title: t('heading.title'),
-                        subtitle: t('heading.subtitle')
+                        title: t('authentication.forgot_password.heading.title'),
+                        subtitle: t('authentication.forgot_password.heading.subtitle')
                     },
                     specifics: {
-                        forgotten_password: t('specifics.forgotten_password'),
-                        account: t('specifics.account'),
-                        highlight: t('specifics.highlight')
+                        forgotten_password: t('authentication.forgot_password.specifics.forgotten_password'),
+                        account: t('authentication.forgot_password.specifics.account'),
+                        highlight: t('authentication.forgot_password.specifics.highlight')
                     }
                 }
             }
@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
                                 {/* Email Field */}
                                 <FormControl isInvalid={errors.email && touched.email}>
                                     <FormLabel fontWeight={'bold'}>
-                                        {forms.inputs.forgot_password.email.label || 'Email Address'}
+                                        {t('forms.inputs.forgot_password.email.label')}
                                     </FormLabel>
                                     <Input
                                         bgColor={colors.white}
@@ -130,7 +130,7 @@ export default function ForgotPasswordPage() {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         borderColor={colors.gray.regular}
-                                        placeholder={forms.inputs.forgot_password.email.placeholder || 'Enter your email'}
+                                        placeholder={t('forms.inputs.forgot_password.email.placeholder') || 'Enter your email'}
                                         type="email"
                                         value={values.email}
                                         h={50}
@@ -151,7 +151,7 @@ export default function ForgotPasswordPage() {
                                     isDisabled={isSubmitting}
                                     isLoading={isSubmitting}
                                 >
-                                    {forms.inputs.forgot_password.submit || 'Send Reset Email'}
+                                    {t('forms.inputs.forgot_password.submit')}
                                 </Button>
                                 {errors.authentication && touched.authentication && (
                                     <VStack>

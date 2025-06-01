@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { serverFetch } from 'src/lib/api';
 
 export default function EditUser({ user, token, role }) {
   const router = useRouter();
+  const t = useTranslations('components');
   const [formData, setFormData] = useState(user || {});
   const [loading, setLoading] = useState(false);
 
@@ -21,16 +23,20 @@ export default function EditUser({ user, token, role }) {
       },
     });
     setLoading(false);
-    // Redirect back to the users listing page after updating
     router.push('/dashboard/direction/users');
   };
 
   return (
-    <DashboardLayout title="Edit User" currentPage="users" role={role} token={token}>
+    <DashboardLayout
+      title={t('edit')}
+      currentPage={t('users')}
+      role={role}
+      token={token}
+    >
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Name"
+          placeholder={t('firstname.placeholder')}
           value={formData.name || ''}
           onChange={(e) =>
             setFormData((prev) => ({ ...prev, name: e.target.value }))
@@ -39,7 +45,7 @@ export default function EditUser({ user, token, role }) {
         />
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t('email.placeholder')}
           value={formData.email || ''}
           onChange={(e) =>
             setFormData((prev) => ({ ...prev, email: e.target.value }))
@@ -48,7 +54,7 @@ export default function EditUser({ user, token, role }) {
         />
         {/* Add any additional fields as needed */}
         <button type="submit" disabled={loading}>
-          {loading ? 'Updating...' : 'Update User'}
+          {loading ? t('updating') : t('update')}
         </button>
       </form>
     </DashboardLayout>
@@ -66,7 +72,7 @@ export const getServerSideProps = async ({ req, query }) => {
   }
   const { id } = query;
   const userData = await serverFetch({
-    uri: `/api/users/${id}`, // Adjust to your API route to fetch a single user
+    uri: `/api/users/${id}`,
     user_token: token,
   });
   return {

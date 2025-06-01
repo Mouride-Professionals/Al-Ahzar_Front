@@ -1,41 +1,28 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
-import { CreateUserForm } from '@components/forms/user/create'; // new form for user creation
+import { CreateUserForm } from '@components/forms/user/create';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { ROLES } from '@utils/roles';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const {
-    components: {
-        cards: {
-            user: { creation }, // for example: "Create User" label
-        },
-    },
-    pages: {
-        dashboard: {
-            users: { title: dashboardTitle },
-        },
-    },
-    components: { menu: { users: menuUsers } },
-} = messages;
-
 export default function Create({ schools, role, token, roles }) {
     const [hasSucceeded, setHasSucceeded] = useState(false);
     const router = useRouter();
+    const t = useTranslations();
 
-    // After successful creation, navigate back to the users listing page.
     if (hasSucceeded) {
         router.push(routes.page_route.dashboard.direction.users.all);
     }
 
     return (
         <DashboardLayout
-            title={dashboardTitle}
-            currentPage={menuUsers}
+            title={t('pages.dashboard.users.title')}
+            currentPage={t('components.menu.users')}
             role={role}
             token={token}
         >
@@ -59,7 +46,7 @@ export default function Create({ schools, role, token, roles }) {
                 >
                     <BsArrowLeftShort size={40} />
                     <Text fontSize={20} fontWeight={'700'}>
-                        {creation}
+                        {t('components.cards.user.creation')}
                     </Text>
                 </HStack>
                 <Stack
@@ -103,14 +90,14 @@ export const getServerSideProps = async ({ req }) => {
         user_token: token,
     });
     //Fetch all roles
-    const {roles} = await serverFetch({
+    const { roles } = await serverFetch({
         uri: `${routes.api_route.alazhar.get.roles}?fields[0]=name&fields[1]=id&fields[2]=type`,
         user_token: token,
     });
-    
+
     // Filter  the roles that are  in ROLES only
     const allowedRoles = Object.values(ROLES);
-    
+
     const filteredRoles = roles.filter(
         (role) => allowedRoles.includes(role.name) && role.name !== ROLES.DIRECTEUR_GENERAL
     );
@@ -119,7 +106,6 @@ export const getServerSideProps = async ({ req }) => {
         name: role.name,
         value: role.id,
     }));
-
 
     return {
         props: {

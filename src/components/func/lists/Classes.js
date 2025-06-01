@@ -5,6 +5,7 @@ import { colors, messages } from '@theme';
 import { ACCESS_CREATION } from '@utils/mappers/classes';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { ClassTitle } from '@utils/tools/mappers';
+import { useTranslations } from 'next-intl';
 
 const { create } = messages.components.classList;
 
@@ -17,6 +18,7 @@ export const ClassesList = ({
   role,
   action,
 }) => {
+  const t = useTranslations();
 
   return (
     <Stack w={'100%'}>
@@ -27,7 +29,7 @@ export const ClassesList = ({
           withCreation &&
           ACCESS_CREATION.includes(role.name) && (
             <Box w={'20%'}>
-              <PrimaryButton onClick={action} message={create} />
+              <PrimaryButton onClick={action} message={t('components.classList.create')} />
             </Box>
           )}
       </HStack>

@@ -2,8 +2,8 @@ import { Stack, Text } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
-import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
-import { mapStudentsDataTable, mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import {  useTableColumns } from '@utils/mappers/kpi';
+import {  mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
 import { serverFetch } from 'src/lib/api';
 
@@ -32,7 +32,7 @@ const {
 
 export default function Class({ detail, role, token }) {
   const { school, _class, students } = mapDetail(detail.data.attributes);
-
+  const { STUDENTS_COLUMNS } = useTableColumns();
   return (
     <DashboardLayout
       title={establishment.replace('%name', `${school} - ${_class}`)}

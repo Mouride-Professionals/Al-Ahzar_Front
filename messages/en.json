@@ -4,28 +4,28 @@
             "title": "{title}",
             "form": {
                 "specifics": {
-                    "forgotten_password": "Forgot your password?",
+                    "forgotten_password": "Forgot password?",
                     "highlight": "Click here"
                 }
             },
             "login": {
                 "heading": {
                     "title": "Sign In",
-                    "subtitle": "Enter your identifier and password to sign in to your account"
+                    "subtitle": "Enter your email and password to access your account"
                 },
                 "specifics": {
                     "forgotten_password": "",
-                    "account": "Don't have an account? Sign up",
-                    "highlight": "Forgot your password?"
+                    "account": "No account? Sign up now",
+                    "highlight": "Forgot password?"
                 },
                 "form": {
                     "identifier": {
-                        "label": "Email or Username",
+                        "label": "Email or username",
                         "placeholder": "Enter your email or username",
                         "success": "Success",
-                        "success_description": "Sign-in successful.",
+                        "success_description": "You’ve signed in successfully!",
                         "error": "Error",
-                        "error_description": "Sign-in failed."
+                        "error_description": "Sign-in failed. Check your credentials."
                     },
                     "password": {
                         "label": "Password",
@@ -36,70 +36,70 @@
             },
             "register": {
                 "heading": {
-                    "title": "Hello 👋",
-                    "subtitle": "Enter your details, we'll handle the rest 😊"
+                    "title": "Hello! 👋",
+                    "subtitle": "Fill in your details to get started 😊"
                 },
                 "specifics": {
-                    "forgotten_password": "Forgot your password?",
+                    "forgotten_password": "Forgot password?",
                     "account": "Already have an account? Sign in",
-                    "highlight": "Sign in"
+                    "highlight": "Sign In"
                 }
             },
             "change_password": {
                 "heading": {
                     "title": "Change Password",
-                    "subtitle": "Enter your current password and new password"
+                    "subtitle": "Enter your current and new password"
                 },
                 "specifics": {
-                    "forgotten_password": "Want to return to the homepage?",
+                    "forgotten_password": "Return to homepage?",
                     "highlight": "Cancel"
                 }
             },
             "forgot_password": {
                 "heading": {
-                    "title": "Password Reset Request",
-                    "subtitle": "Enter your email address"
+                    "title": "Reset Password",
+                    "subtitle": "Enter your email to reset your password"
                 },
                 "specifics": {
-                    "forgotten_password": "If you want to return to the sign-in page",
+                    "forgotten_password": "Return to sign-in page?",
                     "highlight": "Click here"
                 },
                 "form": {
                     "email": {
-                        "label": "Email Address",
+                        "label": "Email",
                         "placeholder": "Enter your email",
                         "success": "Success",
-                        "success_description": "Reset email sent successfully.",
+                        "success_description": "Reset link sent to your email!",
                         "error": "Error",
-                        "error_description": "Failed to send reset email."
+                        "error_description": "Couldn’t send reset link. Check your email."
                     },
-                    "submit": "Send Reset Email"
+                    "submit": "Send Reset Link"
                 }
             },
             "reset_password": {
                 "heading": {
-                    "title": "Reset Password",
+                    "title": "Create New Password",
                     "subtitle": "Enter your new password"
                 },
                 "specifics": {
-                    "forgotten_password": "If you want to cancel the reset",
+                    "forgotten_password": "Cancel password reset?",
                     "highlight": "Click here"
                 },
                 "form": {
                     "password": {
                         "label": "New Password",
-                        "placeholder": "Enter the new password",
+                        "placeholder": "Enter new password",
                         "success": "Success",
-                        "success_description": "Password reset successfully.",
+                        "success_description": "Password updated successfully!",
                         "error": "Error",
-                        "error_description": "Failed to reset password.",
-                        "error_token": "Invalid or missing reset token."
+                        "error_description": "Failed to update password.",
+                        "error_token": "Invalid reset link."
                     },
                     "confirm_password": {
                         "label": "Confirm Password",
-                        "placeholder": "Confirm the new password"
+                        "placeholder": "Re-enter new password"
                     },
-                    "submit": "Reset Password"
+                    "submit": "Update Password"
                 }
             }
         },
@@ -114,53 +114,53 @@
                 "students": "{number} students"
             },
             "student": {
-                "confirmation": "Enrollment Confirmation",
-                "registration": "Registration Form",
+                "confirmation": "Confirm Enrollment",
+                "registration": "Enrollment Form",
                 "another_student": "Enroll Another Student",
                 "info": {
-                    "success": "Enrollment Initiated",
-                    "message": "You have initiated the student's enrollment. The finance department will handle the final step of the enrollment process.",
-                    "confirmation": "You have finalized the enrollment of student {firstname} {lastname} in class {classname}. You can find the student's profile details.",
+                    "success": "Enrollment Started!",
+                    "message": "Student enrollment has begun. The finance department will finalize the process.",
+                    "confirmation": "{firstname} {lastname} is enrolled in {classname}. View their profile for details.",
                     "classList": "Class List"
                 }
             },
             "school": {
-                "creation": "Creation Form",
-                "edit": "Edit Form",
+                "creation": "Create School",
+                "edit": "Edit School",
                 "another_school": "Create Another School",
                 "info": {
-                    "success": "Creation Successful",
-                    "message": "You have created the school.\nYou can now create classes and enroll students.",
-                    "publishing": "You have created the school.\nYou can now create classes and enroll students.",
+                    "success": "School Created!",
+                    "message": "School created successfully. You can now add classes and students.",
+                    "publishing": "School created. Start adding classes and students!",
                     "classList": "Class List"
                 }
             },
             "user": {
-                "creation": "Creation Form",
-                "edit": "Edit Form",
+                "creation": "Create User",
+                "edit": "Edit User",
                 "another_user": "Create Another User",
                 "info": {
-                    "success": "Creation Successful",
-                    "message": "You have created a new user.",
-                    "publishing": "You have published user {firstname} {lastname}. You can now assign them a role."
+                    "success": "User Created!",
+                    "message": "User created successfully.",
+                    "publishing": "{firstname} {lastname} created. You can now assign a role."
                 }
             },
             "teacher": {
-                "affectation": "Teacher Assignment",
-                "recruitment": "Recruitment Form",
+                "affectation": "Assign Teacher",
+                "recruitment": "Teacher Recruitment Form",
                 "another_teacher": "Recruit Another Teacher",
                 "info": {
-                    "success": "Recruitment Successful",
-                    "message": "You have recruited a new teacher. You can now assign them to a school.",
-                    "affectation": "You have assigned teacher {firstname} {lastname} to school {name}."
+                    "success": "Teacher Recruited!",
+                    "message": "New teacher recruited. You can now assign them to a school.",
+                    "affectation": "Teacher {firstname} {lastname} assigned to {name} school."
                 }
             },
             "school_year": {
-                "creation": "Creation Form",
-                "edit": "Edit Form",
+                "creation": "Create School Year",
+                "edit": "Edit School Year",
                 "info": {
-                    "success": "Creation Successful",
-                    "message": "You have created the school year."
+                    "success": "School Year Created!",
+                    "message": "School year created successfully."
                 }
             }
         },
@@ -170,19 +170,19 @@
             "finance": "Finance",
             "students": {
                 "initial": "Students",
-                "create": "Enroll a Student"
+                "create": "Enroll Student"
             },
             "users": "Administration",
             "teachers": "Teachers",
             "schools": "Schools",
-            "school_years": "Years"
+            "school_years": "School Years"
         },
         "layout": {
             "breadcrumb": {
                 "initial": "Al Azhar",
                 "classes": "Classes",
                 "schools": "Al Azhar",
-                "defaultSchool": "General Management",
+                "defaultSchool": "General Directorate",
                 "siteName": "Al Azhar"
             },
             "header": {
@@ -194,7 +194,7 @@
                     "title": "Settings",
                     "language": "Language",
                     "languageSelector": {
-                        "label": "Select a language",
+                        "label": "Select Language",
                         "fr": "French",
                         "en": "English",
                         "ar": "Arabic"
@@ -208,20 +208,20 @@
             "students": {
                 "title": "Student List",
                 "searchPlaceholder": "Search for a student",
-                "filterLabel": "Non-enrolled Students",
-                "validateMonthlyPayment": "Validate Monthly Payment",
+                "filterLabel": "Unenrolled Students",
+                "validateMonthlyPayment": "Confirm Monthly Payment",
                 "socialStatus": "Supported",
-                "bio": "BIO",
+                "bio": "Profile",
                 "paymentStatus": "Payment Status",
-                "validateEnrollment": "Validate Enrollment",
-                "waitingForFinance": "Awaiting Finance Department",
+                "validateEnrollment": "Confirm Enrollment",
+                "waitingForFinance": "Awaiting Finance",
                 "reEnroll": "Re-enroll",
-                "enrollNewStudent": "Enroll a New Student",
+                "enrollNewStudent": "Enroll New Student",
                 "tutor": "Guardian",
                 "phone": "Phone",
                 "enrolledOn": "Enrolled on: {date}",
                 "studentsEnrolled": "Enrolled Students",
-                "studentsNotEnrolled": "Non-enrolled Students",
+                "studentsNotEnrolled": "Unenrolled Students",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -229,29 +229,29 @@
                 "columns": {
                     "student": "Student",
                     "class": "Class",
-                    "parent": "Parent",
-                    "parent_phone": "Parent Phone",
+                    "parent": "Guardian",
+                    "parent_phone": "Guardian Phone",
                     "enrollment": "Enrollment",
                     "current_month": "Current Month",
                     "paid": "Paid",
-                    "not_paid": "Unpaid"
+                    "not_paid": "Not Paid"
                 }
             },
             "schools": {
                 "title": "School List",
                 "searchPlaceholder": "Search for a school",
-                "addSchool": "Add a School",
-                "addressUnavailable": "Address Unavailable",
-                "emailUnavailable": "Email Unavailable",
-                "phoneUnavailable": "Phone Unavailable",
-                "dateUnknown": "Date Unknown",
+                "addSchool": "Add School",
+                "addressUnavailable": "Address unavailable",
+                "emailUnavailable": "Email unavailable",
+                "phoneUnavailable": "Phone unavailable",
+                "dateUnknown": "Date unknown",
                 "classes": "Classes",
                 "edit": "Edit",
                 "director": "Director:",
                 "belonging": "Affiliation:",
                 "note": "Note:",
                 "alAzhar": "Al Azhar",
-                "notAlAzhar": "Non Al Azhar",
+                "notAlAzhar": "Non-Al Azhar",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -270,7 +270,7 @@
             "schoolYears": {
                 "title": "School Year List",
                 "searchPlaceholder": "Search for a school year",
-                "addSchoolYear": "Add a School Year",
+                "addSchoolYear": "Add School Year",
                 "status": "Status",
                 "active": "Active",
                 "inactive": "Inactive",
@@ -279,7 +279,7 @@
                 "ended": "Ended",
                 "upcoming": "Upcoming",
                 "closeYear": "Close Year",
-                "setAsCurrent": "Set as Current Year",
+                "setAsCurrent": "Set as Current",
                 "yearEnded": "This school year has ended",
                 "edit": "Edit",
                 "cta": {
@@ -287,7 +287,7 @@
                     "export": ""
                 },
                 "columns": {
-                    "title": "Title",
+                    "title": "Year",
                     "start_date": "Start Date",
                     "end_date": "End Date",
                     "status": "Status",
@@ -307,13 +307,13 @@
                 "searchPlaceholder": "Search for a teacher",
                 "edit": "Edit",
                 "assign": "Assign",
-                "assignToSchool": "Assign {firstname} {lastname} to a new school",
+                "assignToSchool": "Assign {firstname} {lastname} to a school",
                 "currentSchool": "Current School",
                 "notAssigned": "Not Assigned",
-                "selectSchool": "Select a School",
+                "selectSchool": "Select School",
                 "cancel": "Cancel",
                 "confirm": "Confirm",
-                "recruitTeacher": "Recruit a Teacher",
+                "recruitTeacher": "Recruit Teacher",
                 "gender": "Gender",
                 "joinedOn": "Joined On",
                 "contactDetails": "Contact Details",
@@ -321,8 +321,8 @@
                 "phone": "Phone",
                 "address": "Address",
                 "personalDetails": "Personal Details",
-                "birthDate": "Date of Birth",
-                "birthPlace": "Place of Birth",
+                "birthDate": "Birth Date",
+                "birthPlace": "Birth Place",
                 "maritalStatus": "Marital Status",
                 "language": "Language",
                 "subjects": "Subjects",
@@ -354,7 +354,7 @@
                     "phone_number": "Phone Number",
                     "address": "Address",
                     "school": "School",
-                    "language": "Spoken Language",
+                    "language": "Language",
                     "contract_type": "Contract Type",
                     "level": "Level",
                     "na": "N/A"
@@ -363,11 +363,11 @@
             "users": {
                 "title": "User List",
                 "searchPlaceholder": "Search for a user",
-                "createUser": "Create a User",
+                "createUser": "Create User",
                 "edit": "Edit",
-                "assignSchool": "Assign to a School",
+                "assignSchool": "Assign to School",
                 "school": "School",
-                "notAssigned": "Not Yet Assigned",
+                "notAssigned": "Not Assigned",
                 "accountDetails": "Account Details",
                 "username": "Username",
                 "status": "Status",
@@ -381,7 +381,7 @@
                 "assignToSchool": "Assign {name} {lastname} to a school",
                 "currentAssociation": "Current Association",
                 "none": "None",
-                "selectSchool": "Select a School",
+                "selectSchool": "Select School",
                 "cancel": "Cancel",
                 "confirm": "Confirm",
                 "cta": {
@@ -423,13 +423,14 @@
             "expenses": {
                 "title": "Expense List",
                 "searchPlaceholder": "Search for an expense",
-                "addExpense": "Add an Expense",
+                "addExpense": "Add Expense",
                 "date": "Date",
                 "amount": "Amount",
                 "category": "Category",
                 "school": "School",
                 "schoolYear": "School Year",
                 "na": "N/A",
+                "create": "Create Expense",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -445,31 +446,855 @@
             },
             "finance": {
                 "all_schools": "All Schools",
-                "annual_payments": "Annual Revenues",
+                "annual_payments": "Annual Revenue",
                 "total_enrollments": "Total Enrollments",
                 "total_monthly": "Total Monthly Payments",
                 "previous_month": "Previous Month",
                 "current_month": "Current Month",
                 "annual_expenses": "Annual Expenses",
+                "salaries": "Salaries",
+                "maintenance": "Maintenance",
                 "payments_tab": "Payments",
                 "expenses_tab": "Expenses",
                 "monthly_payments_trend": "Monthly Payments Trend",
-                "annual_payments_distribution": "Annual Revenues Distribution",
+                "annual_payments_distribution": "Annual Revenue Distribution",
                 "monthly_expenses_trend": "Monthly Expenses Trend",
-                "expenses_by_category": "Expenses Distribution by Category"
+                "expenses_by_category": "Expenses by Category",
+                "expenses_history": "Expenses History",
+                "payments_history": "Payments History"
+            }
+        },
+        "forms": {
+            "inputs": {
+                "login": {
+                    "identifier": {
+                        "label": "Email or username",
+                        "placeholder": "Enter your email or username"
+                    },
+                    "password": {
+                        "label": "Password",
+                        "placeholder": "Enter your password"
+                    },
+                    "submit": "Sign In",
+                    "specifics": {
+                        "forgotten_password": "Forgot password?",
+                        "account": "No account? Sign up now",
+                        "highlight": "Sign Up"
+                    }
+                },
+                "change_password": {
+                    "current_password": {
+                        "label": "Current Password",
+                        "placeholder": "Enter your current password"
+                    },
+                    "new_password": {
+                        "label": "New Password",
+                        "placeholder": "Enter your new password"
+                    },
+                    "confirm_password": {
+                        "label": "Confirm Password",
+                        "placeholder": "Re-enter your new password"
+                    },
+                    "submit": "Update Password",
+                    "specifics": {
+                        "current_password": "Current Password",
+                        "new_password": "New Password",
+                        "confirm_password": "Confirm Password",
+                        "highlight": "Update Password"
+                    },
+                    "toast": {
+                        "successTitle": "Success",
+                        "success": "Password changed successfully",
+                        "errorTitle": "Error",
+                        "failed": "Failed to change password",
+                        "failedUpdate": "Failed to update user",
+                        "notAuthenticated": "Not authenticated"
+                    }
+                },
+                "forgot_password": {
+                    "email": {
+                        "label": "Email",
+                        "placeholder": "Enter your email"
+                    },
+                    "submit": "Send Reset Link"
+                },
+                "reset_password": {
+                    "password": {
+                        "label": "New Password",
+                        "placeholder": "Enter new password"
+                    },
+                    "confirm_password": {
+                        "label": "Confirm Password",
+                        "placeholder": "Re-enter new password"
+                    },
+                    "submit": "Update Password"
+                },
+                "student": {
+                    "registration": {
+                        "lastname": {
+                            "placeholder": "Enter last name",
+                            "label": "Last Name"
+                        },
+                        "firstname": {
+                            "placeholder": "Enter first name",
+                            "label": "First Name"
+                        },
+                        "sex": {
+                            "placeholder": "Select gender",
+                            "label": "Gender"
+                        },
+                        "socialCategory": {
+                            "placeholder": "Select social category",
+                            "label": "Social Category"
+                        },
+                        "date": {
+                            "placeholder": "Day",
+                            "label": "Day"
+                        },
+                        "month": {
+                            "placeholder": "Month",
+                            "label": "Month"
+                        },
+                        "year": {
+                            "placeholder": "Year",
+                            "label": "Year"
+                        },
+                        "birthplace": {
+                            "placeholder": "Enter birthplace",
+                            "label": "Birthplace"
+                        },
+                        "parent_lastname": {
+                            "placeholder": "Enter guardian’s last name",
+                            "label": "Guardian’s Last Name"
+                        },
+                        "parent_firstname": {
+                            "placeholder": "Enter guardian’s first name",
+                            "label": "Guardian’s First Name"
+                        },
+                        "parent_phone": {
+                            "placeholder": "Enter guardian’s phone",
+                            "label": "Guardian’s Phone"
+                        },
+                        "level": {
+                            "placeholder": "Select level",
+                            "label": "Level"
+                        },
+                        "classroom": {
+                            "placeholder": "Select class",
+                            "label": "Class"
+                        },
+                        "class_letter": {
+                            "placeholder": "Enter class letter",
+                            "label": "Class Letter"
+                        }
+                    },
+                    "confirm": {
+                        "studentType": {
+                            "placeholder": "Select student type",
+                            "label": "Student Type",
+                            "options": [
+                                {
+                                    "name": "Hafiz",
+                                    "value": "Hafiz"
+                                },
+                                {
+                                    "name": "Previous Repeater",
+                                    "value": "Ancien Redoublant"
+                                },
+                                {
+                                    "name": "Previous Passer",
+                                    "value": "Ancien Passant"
+                                },
+                                {
+                                    "name": "New",
+                                    "value": "Nouveau"
+                                }
+                            ]
+                        },
+                        "socialCategory": {
+                            "placeholder": "Select social category",
+                            "label": "Social Category",
+                            "options": [
+                                {
+                                    "name": "No Support",
+                                    "value": "Non"
+                                },
+                                {
+                                    "name": "Enrollment Fee Reduction",
+                                    "value": "Réduction inscription"
+                                },
+                                {
+                                    "name": "Monthly Fee Reduction",
+                                    "value": "Réduction mensualité"
+                                },
+                                {
+                                    "name": "Full Fee Exemption",
+                                    "value": "Tout tarifs offerts"
+                                }
+                            ]
+                        },
+                        "comment": {
+                            "placeholder": "Enter a comment",
+                            "label": "Comment"
+                        },
+                        "amount": {
+                            "placeholder": "Enter total amount",
+                            "label": "Total Amount"
+                        },
+                        "monthOf": {
+                            "placeholder": "Select payment month",
+                            "label": "Payment Month"
+                        },
+                        "paymentDetail": {
+                            "monthlyFee": {
+                                "placeholder": "Enter monthly fees",
+                                "label": "Monthly Fees"
+                            },
+                            "enrollmentFee": {
+                                "placeholder": "Enter enrollment fees",
+                                "label": "Enrollment Fees"
+                            },
+                            "blouseFee": {
+                                "placeholder": "Enter blouse fees",
+                                "label": "Blouse Fees"
+                            },
+                            "examFee": {
+                                "placeholder": "Enter exam fees",
+                                "label": "Exam Fees"
+                            },
+                            "parentContributionFee": {
+                                "placeholder": "Enter parent contribution fees",
+                                "label": "Parent Contribution Fees"
+                            }
+                        }
+                    },
+                    "enrollment": {
+                        "classroom": {
+                            "placeholder": "Select class",
+                            "label": "Class"
+                        },
+                        "socialCategory": {
+                            "placeholder": "Select social category",
+                            "label": "Social Category"
+                        },
+                        "enrollmentType": {
+                            "placeholder": "Select enrollment type",
+                            "label": "Enrollment Type"
+                        }
+                    },
+                    "payment": {
+                        "amount": {
+                            "placeholder": "Enter required amount",
+                            "label": "Required Amount"
+                        },
+                        "monthOf": {
+                            "placeholder": "Select payment month",
+                            "label": "Payment Month"
+                        }
+                    }
+                },
+                "class": {
+                    "creation": {
+                        "grade": {
+                            "placeholder": "Select cycle",
+                            "label": "Cycle"
+                        },
+                        "level": {
+                            "placeholder": "Select level",
+                            "label": "Level"
+                        },
+                        "letter": {
+                            "placeholder": "Enter letter",
+                            "label": "Letter"
+                        }
+                    },
+                    "cancel": "Cancel",
+                    "create": "Create Class"
+                },
+                "school": {
+                    "creation": {
+                        "name": {
+                            "placeholder": "Enter school name",
+                            "label": "School Name"
+                        },
+                        "address": {
+                            "placeholder": "Enter address",
+                            "label": "Address"
+                        },
+                        "city": {
+                            "placeholder": "Enter city or village",
+                            "label": "City/Village"
+                        },
+                        "email": {
+                            "placeholder": "Enter email",
+                            "label": "Email"
+                        },
+                        "postBox": {
+                            "placeholder": "Enter postbox",
+                            "label": "Postbox"
+                        },
+                        "phone": {
+                            "placeholder": "Enter phone",
+                            "label": "Phone"
+                        },
+                        "banner": {
+                            "placeholder": "Select school logo",
+                            "label": "School Logo"
+                        },
+                        "type": {
+                            "placeholder": "Select type",
+                            "label": "Type"
+                        },
+                        "parentSchool": {
+                            "placeholder": "Select parent school",
+                            "label": "Parent School"
+                        },
+                        "IEF": {
+                            "placeholder": "Enter IEF",
+                            "label": "IEF"
+                        },
+                        "responsibleName": {
+                            "placeholder": "Enter director’s name",
+                            "label": "Director’s Name"
+                        },
+                        "region": {
+                            "placeholder": "Enter region",
+                            "label": "Region"
+                        },
+                        "department": {
+                            "placeholder": "Enter department",
+                            "label": "Department"
+                        },
+                        "commune": {
+                            "placeholder": "Enter commune",
+                            "label": "Commune"
+                        },
+                        "note": {
+                            "placeholder": "Enter additional notes",
+                            "label": "Additional Notes"
+                        },
+                        "isAlAzharLand": {
+                            "placeholder": "Is the land owned by Al Azhar?",
+                            "label": "Al Azhar Land?",
+                            "options": [
+                                {
+                                    "name": "Yes",
+                                    "value": true
+                                },
+                                {
+                                    "name": "No",
+                                    "value": false
+                                }
+                            ]
+                        },
+                        "phoneFix": {
+                            "placeholder": "Enter landline phone",
+                            "label": "Landline Phone"
+                        },
+                        "IA": {
+                            "placeholder": "Enter IA",
+                            "label": "IA"
+                        },
+                        "creationDate": {
+                            "placeholder": "Enter creation date",
+                            "label": "Creation Date"
+                        }
+                    }
+                },
+                "user": {
+                    "creation": {
+                        "username": {
+                            "placeholder": "Enter username",
+                            "label": "Username"
+                        },
+                        "firstname": {
+                            "placeholder": "Enter first name",
+                            "label": "First Name"
+                        },
+                        "lastname": {
+                            "placeholder": "Enter last name",
+                            "label": "Last Name"
+                        },
+                        "email": {
+                            "placeholder": "Enter email",
+                            "label": "Email"
+                        },
+                        "password": {
+                            "placeholder": "Enter password",
+                            "label": "Password"
+                        },
+                        "confirmPassword": {
+                            "placeholder": "Re-enter password",
+                            "label": "Confirm Password"
+                        },
+                        "role": {
+                            "placeholder": "Select role",
+                            "label": "Role"
+                        },
+                        "school": {
+                            "placeholder": "Select school",
+                            "label": "School"
+                        }
+                    }
+                },
+                "teacher": {
+                    "recruitment": {
+                        "lastname": {
+                            "placeholder": "Enter last name",
+                            "label": "Last Name"
+                        },
+                        "firstname": {
+                            "placeholder": "Enter first name",
+                            "label": "First Name"
+                        },
+                        "gender": {
+                            "placeholder": "Select gender",
+                            "label": "Gender"
+                        },
+                        "phoneNumber": {
+                            "placeholder": "Enter phone number",
+                            "label": "Phone Number"
+                        },
+                        "email": {
+                            "placeholder": "Enter email",
+                            "label": "Email"
+                        },
+                        "school": {
+                            "placeholder": "Select school",
+                            "label": "School"
+                        },
+                        "birthDate": {
+                            "placeholder": "Enter birth date",
+                            "label": "Birth Date"
+                        },
+                        "birthPlace": {
+                            "placeholder": "Enter birthplace",
+                            "label": "Birthplace"
+                        },
+                        "address": {
+                            "placeholder": "Enter address",
+                            "label": "Address"
+                        },
+                        "maritalStatus": {
+                            "placeholder": "Select marital status",
+                            "label": "Marital Status"
+                        },
+                        "academicDegree": {
+                            "placeholder": "Select academic degree",
+                            "label": "Academic Degree"
+                        },
+                        "professionalDegrees": {
+                            "placeholder": "Select professional degrees",
+                            "label": "Professional Degrees",
+                            "options": [
+                                {
+                                    "value": "bts",
+                                    "label": "BTS (Higher Technical Certificate)"
+                                },
+                                {
+                                    "value": "dut",
+                                    "label": "DUT (University Technology Diploma)"
+                                },
+                                {
+                                    "value": "licence_pro",
+                                    "label": "Professional Bachelor’s"
+                                },
+                                {
+                                    "value": "cap",
+                                    "label": "CAP (Certificate of Professional Competence)"
+                                },
+                                {
+                                    "value": "bt",
+                                    "label": "BT (Technical Certificate)"
+                                },
+                                {
+                                    "value": "master_pro",
+                                    "label": "Professional Master’s"
+                                },
+                                {
+                                    "value": "ccna",
+                                    "label": "Cisco Certification (CCNA)"
+                                },
+                                {
+                                    "value": "mcse",
+                                    "label": "Microsoft Certified Solutions Expert (MCSE)"
+                                }
+                            ]
+                        },
+                        "disciplines": {
+                            "placeholder": "Select disciplines",
+                            "label": "Disciplines",
+                            "options": [
+                                {
+                                    "value": "etudes_islamiques",
+                                    "label": "Islamic Studies (Tafsir, Hadith, Fiqh, Aqida)"
+                                },
+                                {
+                                    "value": "memorisation_coran",
+                                    "label": "Quran Memorization and Interpretation"
+                                },
+                                {
+                                    "value": "langue_arabe",
+                                    "label": "Arabic Language and Literature"
+                                },
+                                {
+                                    "value": "histoire_islam",
+                                    "label": "Islamic History"
+                                },
+                                {
+                                    "value": "spiritualite_soufisme",
+                                    "label": "Spirituality and Sufism"
+                                },
+                                {
+                                    "value": "francais",
+                                    "label": "French"
+                                },
+                                {
+                                    "value": "mathematiques",
+                                    "label": "Mathematics"
+                                },
+                                {
+                                    "value": "sciences_naturelles",
+                                    "label": "Natural Sciences"
+                                },
+                                {
+                                    "value": "geographie",
+                                    "label": "Geography"
+                                },
+                                {
+                                    "value": "histoire",
+                                    "label": "History"
+                                },
+                                {
+                                    "value": "anglais",
+                                    "label": "English"
+                                },
+                                {
+                                    "value": "informatique",
+                                    "label": "Computer Science"
+                                },
+                                {
+                                    "value": "education_civique",
+                                    "label": "Civic Education"
+                                },
+                                {
+                                    "value": "formation_professionnelle",
+                                    "label": "Vocational Training"
+                                }
+                            ]
+                        },
+                        "language": {
+                            "placeholder": "Select language",
+                            "label": "Language"
+                        },
+                        "subjects": {
+                            "placeholder": "Select subjects",
+                            "label": "Subjects",
+                            "options": [
+                                {
+                                    "value": "etudes_islamiques",
+                                    "label": "Islamic Studies (Tafsir, Hadith, Fiqh, Aqida)"
+                                },
+                                {
+                                    "value": "memorisation_coran",
+                                    "label": "Quran Memorization and Interpretation"
+                                },
+                                {
+                                    "value": "langue_arabe",
+                                    "label": "Arabic Language and Literature"
+                                },
+                                {
+                                    "value": "histoire_islam",
+                                    "label": "Islamic History"
+                                },
+                                {
+                                    "value": "spiritualite_soufisme",
+                                    "label": "Spirituality and Sufism"
+                                },
+                                {
+                                    "value": "francais",
+                                    "label": "French"
+                                },
+                                {
+                                    "value": "mathematiques",
+                                    "label": "Mathematics"
+                                },
+                                {
+                                    "value": "sciences_naturelles",
+                                    "label": "Natural Sciences"
+                                },
+                                {
+                                    "value": "geographie",
+                                    "label": "Geography"
+                                },
+                                {
+                                    "value": "histoire",
+                                    "label": "History"
+                                },
+                                {
+                                    "value": "anglais",
+                                    "label": "English"
+                                },
+                                {
+                                    "value": "informatique",
+                                    "label": "Computer Science"
+                                },
+                                {
+                                    "value": "education_civique",
+                                    "label": "Civic Education"
+                                },
+                                {
+                                    "value": "formation_professionnelle",
+                                    "label": "Vocational Training"
+                                }
+                            ]
+                        },
+                        "contractType": {
+                            "placeholder": "Select contract type",
+                            "label": "Contract Type"
+                        },
+                        "level": {
+                            "placeholder": "Select level",
+                            "label": "Level"
+                        },
+                        "salary": {
+                            "placeholder": "Enter salary",
+                            "label": "Salary"
+                        },
+                        "contributions": {
+                            "placeholder": "Enter contributions",
+                            "label": "Contributions"
+                        },
+                        "registrationNumber": {
+                            "placeholder": "Enter registration number",
+                            "label": "Registration Number"
+                        },
+                        "generation": {
+                            "placeholder": "Enter generation",
+                            "label": "Generation"
+                        },
+                        "salaryPerHour": {
+                            "placeholder": "Enter hourly salary",
+                            "label": "Hourly Salary"
+                        },
+                        "hoursNumber": {
+                            "placeholder": "Enter number of hours",
+                            "label": "Number of Hours"
+                        },
+                        "additionalResponsibilities": {
+                            "placeholder": "Enter additional responsibilities",
+                            "label": "Additional Responsibilities"
+                        },
+                        "countryFrom": {
+                            "placeholder": "Enter country of origin",
+                            "label": "Country of Origin"
+                        },
+                        "arrivalDate": {
+                            "placeholder": "Enter arrival date",
+                            "label": "Arrival Date"
+                        },
+                        "previousInstitutes": {
+                            "placeholder": "Enter previous institutes",
+                            "label": "Previous Institutes"
+                        }
+                    }
+                },
+                "schoolYear": {
+                    "creation": {
+                        "name": {
+                            "placeholder": "Enter school year name",
+                            "label": "School Year Name"
+                        },
+                        "startDate": {
+                            "placeholder": "Enter start date",
+                            "label": "Start Date"
+                        },
+                        "endDate": {
+                            "placeholder": "Enter end date",
+                            "label": "End Date"
+                        },
+                        "description": {
+                            "placeholder": "Enter description",
+                            "label": "Description"
+                        }
+                    }
+                },
+                "expense": {
+                    "creation": {
+                        "expenseDate": {
+                            "placeholder": "Enter expense date",
+                            "label": "Expense Date"
+                        },
+                        "amount": {
+                            "placeholder": "Enter amount",
+                            "label": "Amount"
+                        },
+                        "category": {
+                            "placeholder": "Select category",
+                            "label": "Category"
+                        },
+                        "description": {
+                            "placeholder": "Enter description",
+                            "label": "Description"
+                        }
+                    }
+                }
+            },
+            "messages": {
+                "login": {
+                    "errors": {
+                        "not_authorized": "Email or password is incorrect",
+                        "problem": "An error occurred during login"
+                    }
+                },
+                "registration": {
+                    "info": {
+                        "birthPlaceMessage": "Date and Place of Birth",
+                        "classInfoMessage": "Class Information",
+                        "personalInfoMessage": "Personal Information",
+                        "tutorInfoMessage": "Guardian Information"
+                    },
+                    "errors": {
+                        "already_exists": "This student is already enrolled",
+                        "problem": "An error occurred during enrollment"
+                    }
+                },
+                "enrollment": {
+                    "info": {
+                        "personalInfoMessage": "Personal Information",
+                        "classInfoMessage": "Class Information",
+                        "generalInfoMessage": "General Information"
+                    },
+                    "errors": {
+                        "already_exists": "This student is already enrolled",
+                        "problem": "An error occurred during enrollment"
+                    }
+                },
+                "payment": {
+                    "errors": {
+                        "already_exists": "This payment has already been recorded",
+                        "problem": "An error occurred while processing the payment"
+                    }
+                },
+                "school": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "General Information",
+                            "addressInfoMessage": "Address Information",
+                            "contactInfoMessage": "Contact Information",
+                            "additionalInfoMessage": "Additional Information"
+                        },
+                        "errors": {
+                            "already_exists": "This school is already registered",
+                            "problem": "An error occurred while creating the school"
+                        }
+                    }
+                },
+                "teacher": {
+                    "recruitment": {
+                        "info": {
+                            "personalInfoMessage": "Personal Information",
+                            "contactInfoMessage": "Contact Information",
+                            "contractInfoMessage": "Contract Details",
+                            "additionalInfoMessage": "Additional Information"
+                        },
+                        "errors": {
+                            "already_exists": "This teacher is already registered",
+                            "problem": "An error occurred during teacher recruitment"
+                        }
+                    }
+                },
+                "user": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "General Information",
+                            "addressInfoMessage": "Address Information",
+                            "contactInfoMessage": "Contact Information",
+                            "additionalInfoMessage": "Additional Information"
+                        },
+                        "errors": {
+                            "already_exists": "This user is already registered",
+                            "problem": "An error occurred while creating the user"
+                        }
+                    }
+                },
+                "schoolYear": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "General Information"
+                        },
+                        "errors": {
+                            "already_exists": "This school year is already registered",
+                            "problem": "An error occurred while creating the school year"
+                        }
+                    }
+                },
+                "expense": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "General Information"
+                        },
+                        "errors": {
+                            "already_exists": "This expense is already recorded",
+                            "problem": "An error occurred while creating the expense"
+                        }
+                    }
+                }
+            },
+            "actions": {
+                "login": {
+                    "submit": "Sign In",
+                    "register": "Create Account",
+                    "forgotPassword": "Forgot Password?",
+                    "resetPassword": "Reset Password"
+                },
+                "class": {
+                    "cancel": "Cancel",
+                    "create": "Create Class",
+                    "edit": "Edit Class"
+                },
+                "school": {
+                    "cancel": "Cancel",
+                    "create": "Create School",
+                    "edit": "Edit School"
+                },
+                "user": {
+                    "cancel": "Cancel",
+                    "create": "Create User",
+                    "edit": "Edit User"
+                },
+                "teacher": {
+                    "cancel": "Cancel",
+                    "create": "Recruit Teacher",
+                    "edit": "Edit Teacher"
+                },
+                "student": {
+                    "cancel": "Cancel",
+                    "create": "Enroll Student",
+                    "enroll": "Enroll"
+                },
+                "schoolYear": {
+                    "cancel": "Cancel",
+                    "create": "Create School Year",
+                    "edit": "Edit School Year"
+                },
+                "expense": {
+                    "cancel": "Cancel",
+                    "create": "Create Expense"
+                }
             }
         },
         "classList": {
             "grade": "Primary Classes",
             "intermediate": "Lower Secondary Classes",
             "upperIntermediate": "Upper Secondary Classes",
-            "create": "Create a Class",
-            "noClasses": "No classes.\nPlease create a class to start."
+            "create": "Create Class",
+            "noClasses": "No classes available.\nStart by creating a new class."
         },
         "schoolList": {
             "title": "School List",
-            "createSchool": "Create a School",
-            "viewDetails": "School Profile",
+            "createSchool": "Create School",
+            "viewDetails": "School Details",
             "cta": {
                 "filter": "",
                 "export": ""
@@ -479,10 +1304,10 @@
     "pages": {
         "dashboard": {
             "initial": {
-                "title": "Al-Azhar Dashboard"
+                "title": "Al Azhar Dashboard"
             },
             "classes": {
-                "title": "Al-Azhar Classes"
+                "title": "Classes"
             },
             "students": {
                 "title": "Students"
@@ -505,15 +1330,15 @@
         },
         "class": {
             "heading": "Primary Classes",
-            "create": "Create a Class",
+            "create": "Create Class",
             "establishment": "School %name"
         },
         "stats": {
-            "classes": "Total Number of Classes",
-            "students": "Total Number of Students",
-            "teachers": "Total Number of Teachers",
-            "schools": "Total Number of Schools",
-            "users": "Total Number of Users",
+            "classes": "Total Classes",
+            "students": "Total Students",
+            "teachers": "Total Teachers",
+            "schools": "Total Schools",
+            "users": "Total Users",
             "amount": {
                 "users": "%number users",
                 "classes": "%number classes",

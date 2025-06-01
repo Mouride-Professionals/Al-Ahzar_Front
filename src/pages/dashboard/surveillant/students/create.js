@@ -2,31 +2,24 @@ import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { RegistrationCard } from '@components/common/cards';
 import { CreateStudentForm } from '@components/forms/student/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  components: {
-    cards: {
-      student: { confirmation, registration, another_student, info },
-    },
-  },
-} = messages;
-
-export default function Create({ classes, role, token ,schoolYear}) {
+export default function Create({ classes, role, token, schoolYear }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
-
   const router = useRouter();
+  const t = useTranslations();
 
   return (
     <DashboardLayout
-      title={messages.pages.dashboard.students.title}
-      currentPage={messages.components.menu.students.create}
+      title={t('pages.dashboard.students.title')}
+      currentPage={t('components.menu.students.create')}
       role={role}
       token={token}
     >
@@ -50,7 +43,9 @@ export default function Create({ classes, role, token ,schoolYear}) {
         >
           <BsArrowLeftShort size={40} />
           <Text fontSize={20} fontWeight={'700'}>
-            {hasSucceeded ? confirmation : registration}
+            {hasSucceeded
+              ? t('components.cards.student.confirmation')
+              : t('components.cards.student.registration')}
           </Text>
         </HStack>
         <Stack
@@ -64,11 +59,11 @@ export default function Create({ classes, role, token ,schoolYear}) {
           {hasSucceeded ? (
             <RegistrationCard
               cta={{
-                message: another_student,
+                message: t('components.cards.student.another_student'),
                 quickAction: () => setHasSucceeded(false),
               }}
-              title={info.success}
-              message={info.message}
+              title={t('components.cards.student.info.success')}
+              message={t('components.cards.student.info.message')}
             />
           ) : (
             <CreateStudentForm
@@ -76,7 +71,7 @@ export default function Create({ classes, role, token ,schoolYear}) {
                 classes,
                 setHasSucceeded,
                 token,
-                schoolYear
+                schoolYear,
               }}
             />
           )}
@@ -92,13 +87,15 @@ export const getServerSideProps = async ({ req, res }) => {
   const token = session?.accessToken;
   const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
 
-  const { role ,school } = await serverFetch({
+  const { role, school } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
 
   const classes = await serverFetch({
-    uri: routes.api_route.alazhar.get.classes.all.replace('%schoolId', school?.id).replace('%activeSchoolYear', activeSchoolYear),
+    uri: routes.api_route.alazhar.get.classes.all
+      .replace('%schoolId', school?.id)
+      .replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
 

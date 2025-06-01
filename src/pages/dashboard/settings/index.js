@@ -3,20 +3,24 @@ import {
   AuthenticationLayout,
   AuthenticationLayoutForm,
 } from '@components/layout/authentication';
-import { messages, routes } from '@theme';
+import { routes } from '@theme';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 
 export default function SettingsPage() {
   const router = useRouter();
   const { forcePasswordChange } = router.query;
+  const t = useTranslations('components.authentication.change_password');
 
   return (
-    <AuthenticationLayout title={'Change Password'}>
+    <AuthenticationLayout title={t('heading.title')}>
       <AuthenticationLayoutForm
         redirection_route={routes.page_route.dashboard.initial}
-        title={messages.components.authentication.change_password.heading.title}
-        subtitle={messages.components.authentication.change_password.heading.subtitle}
-        specifics={!forcePasswordChange ? messages.components.authentication.change_password.specifics : {}}
+        title={t('heading.title')}
+        subtitle={t('heading.subtitle')}
+        specifics={!forcePasswordChange ? {
+
+        } : {}}
       >
         <ChangePasswordForm />
       </AuthenticationLayoutForm>

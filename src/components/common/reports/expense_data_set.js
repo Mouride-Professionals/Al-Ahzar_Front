@@ -21,7 +21,7 @@ import { BoxZone } from "../cards/boxZone";
 
 // ExpenseExpandedComponent: Expanded row component for expense details
 const ExpenseExpandedComponent = ({ data, token }) => {
-  const t = useTranslations('components.expenseDataSet');
+  const t = useTranslations('components.dataset.expenses');
   // Destructure fields from the expense record
   const { id, expenseDate, amount, category, school, schoolYear } = data;
   const formattedDate = new Date(expenseDate);
@@ -62,7 +62,7 @@ const ExpenseExpandedComponent = ({ data, token }) => {
 
 // ExpenseDataSet component for listing expense transactions
 export const ExpenseDataSet = ({ role, data, columns, token, schoolId, schoolYearId, setHasSucceeded }) => {
-  const t = useTranslations('components.expenseDataSet');
+  const t = useTranslations('components.dataset.expenses');
   const [filterText, setFilterText] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);

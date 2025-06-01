@@ -14,6 +14,7 @@ import { AuthenticationLayout, AuthenticationLayoutForm } from '@components/layo
 import { usePasswordType } from '@hooks';
 import { colors, forms, messages, routes } from '@theme';
 import { Formik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { VscEye } from 'react-icons/vsc';
@@ -26,7 +27,16 @@ export default function ResetPasswordPage() {
     const searchParams = useSearchParams();
     const resetToken = searchParams.get('code'); // Get the reset token from the URL query params
     const { passwordType, passwordTypeToggler } = usePasswordType(); // Hook for toggling password visibility
-
+const t = useTranslations('components');
+    const {
+        inputs: {
+            reset_password: {
+                password: { label: passwordLabel, placeholder: passwordPlaceholder },
+                confirm_password: { label: confirmPasswordLabel, placeholder: confirmPasswordPlaceholder },
+                submit: submitButtonLabel,
+            },
+        },
+    } = forms;
     // Validation schema using Yup
     const validationSchema = Yup.object({
         password: Yup.string()
@@ -94,9 +104,9 @@ export default function ResetPasswordPage() {
         <AuthenticationLayout title={'Reset Password'}>
             <AuthenticationLayoutForm
                 redirection_route={routes.page_route.auth.initial}
-                title={messages.components.authentication.reset_password.heading.title}
-                subtitle={messages.components.authentication.reset_password.heading.subtitle}
-                specifics={messages.components.authentication.reset_password.specifics}
+                title={t('authentication.reset_password.heading.title')}
+                subtitle={t('authentication.reset_password.heading.subtitle')}
+                specifics={t('authentication.reset_password.specifics')}
             >
                 <Box pt={10} w={'100%'} maxW={'400px'} mx={'auto'}>
                     <Formik
@@ -117,7 +127,7 @@ export default function ResetPasswordPage() {
                                 {/* New Password Field */}
                                 <FormControl isInvalid={errors.password && touched.password}>
                                     <FormLabel fontWeight={'bold'}>
-                                        {forms.inputs.reset_password.password.label || 'New Password'}
+                                        {t(passwordLabel) }
                                     </FormLabel>
                                     <Box pos={'relative'}>
                                         <Input
@@ -127,7 +137,7 @@ export default function ResetPasswordPage() {
                                             onBlur={handleBlur}
                                             borderColor={colors.gray.regular}
                                             placeholder={
-                                                forms.inputs.reset_password.password.placeholder ||
+                                                t('forms.inputs.reset_password.password.placeholder') ||
                                                 'Enter new password'
                                             }
                                             type={passwordType}
@@ -153,7 +163,7 @@ export default function ResetPasswordPage() {
                                 {/* Confirm Password Field */}
                                 <FormControl isInvalid={errors.confirmPassword && touched.confirmPassword}>
                                     <FormLabel fontWeight={'bold'}>
-                                        {forms.inputs.reset_password.confirm_password.label || 'Confirm Password'}
+                                        {t('forms.inputs.reset_password.confirm_password.label') || 'Confirm Password'}
                                     </FormLabel>
                                     <Box pos={'relative'}>
                                         <Input
@@ -163,7 +173,7 @@ export default function ResetPasswordPage() {
                                             onBlur={handleBlur}
                                             borderColor={colors.gray.regular}
                                             placeholder={
-                                                forms.inputs.reset_password.confirm_password.placeholder ||
+                                                t('forms.inputs.reset_password.confirm_password.placeholder') ||
                                                 'Confirm new password'
                                             }
                                             type={passwordType}
@@ -196,7 +206,7 @@ export default function ResetPasswordPage() {
                                     isDisabled={isSubmitting}
                                     isLoading={isSubmitting}
                                 >
-                                    {forms.inputs.reset_password.submit || 'Reset Password'}
+                                    {t('forms.inputs.reset_password.submit') || 'Reset Password'}
                                 </Button>
                                 {errors.authentication && touched.authentication && (
                                     <VStack>

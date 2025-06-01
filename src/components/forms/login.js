@@ -16,21 +16,23 @@ import { colors, forms } from '@theme';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Fragment } from 'react';
 import { VscEye } from 'react-icons/vsc';
-import useCustomRedirect from 'src/lib/auth/redirect';
 
 export const LoginForm = () => {
   const { passwordType, passwordTypeToggler } = usePasswordType();
   const { status } = useSession();
   const router = useRouter();
+  const t = useTranslations('components');
+  const {
+    inputs: {
+      login: { identifier, password, submit },
+    },
 
-  // Use custom redirect for authenticated users
-  // useCustomRedirect();
 
-
-
+  } = forms;
   return (
     <Box pt={3} w={'100%'}>
       <Formik
@@ -41,13 +43,12 @@ export const LoginForm = () => {
             data: values,
             setSubmitting,
             setFieldError,
-            redirectOnSuccess: '/dashboard', // Updated to dashboard
-          })
-            .then((result) => {
-              if (result.success) {
-                router.push(result.callbackUrl);
-              }
-            });
+            redirectOnSuccess: '/dashboard',
+          }).then((result) => {
+            if (result.success) {
+              router.push(result.callbackUrl);
+            }
+          });
         }}
       >
         {({
@@ -62,7 +63,7 @@ export const LoginForm = () => {
           <Fragment>
             <FormControl isInvalid={errors.identifier}>
               <FormLabel fontWeight={'bold'}>
-                {forms.inputs.login.identifier.label}
+                {t(identifier.label)}
               </FormLabel>
               <Input
                 bgColor={colors.white}
@@ -70,7 +71,7 @@ export const LoginForm = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 borderColor={colors.gray.regular}
-                placeholder={forms.inputs.login.identifier.placeholder}
+                placeholder={(identifier.placeholder)}
                 type={'text'}
                 value={values.identifier}
                 h={50}
@@ -83,7 +84,7 @@ export const LoginForm = () => {
 
             <FormControl isInvalid={errors.password} py={5}>
               <FormLabel fontWeight={'bold'}>
-                {forms.inputs.login.password.label}
+                {t(password.label)}
               </FormLabel>
               <Box pos={'relative'}>
                 <Input
@@ -92,7 +93,7 @@ export const LoginForm = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   borderColor={colors.gray.regular}
-                  placeholder={forms.inputs.login.password.placeholder}
+                  placeholder={(password.placeholder)}
                   type={passwordType}
                   value={values.password}
                   h={50}
@@ -124,14 +125,14 @@ export const LoginForm = () => {
                 type={'submit'}
                 isDisabled={isSubmitting}
               >
-                {forms.inputs.login.submit}
+                {t(submit)}
               </Button>
               {errors.authentication && touched.authentication && (
                 <VStack>
                   <ErrorMessage
                     style={{ color: colors.error }}
                     render={(authentication) => (
-                      <Text color={colors.error}>{authentication}</Text>
+                      <Text color={colors.error}>{t(authentication)}</Text>
                     )}
                     name={'authentication'}
                   />

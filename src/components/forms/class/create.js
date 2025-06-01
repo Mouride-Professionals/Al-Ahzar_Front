@@ -7,8 +7,10 @@ import { classCreationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
 import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
 
 export const ClassCreationForm = ({ school, token, action }) => {
+  const t = useTranslations('components');
   const {
     inputs: {
       class: {
@@ -17,8 +19,8 @@ export const ClassCreationForm = ({ school, token, action }) => {
     },
   } = forms;
 
-  const schoolYear =  Cookies.get('selectedSchoolYear');
-  
+  const schoolYear = Cookies.get('selectedSchoolYear');
+
   return (
     <Formik
       validationSchema={classCreationSchema}
@@ -43,7 +45,6 @@ export const ClassCreationForm = ({ school, token, action }) => {
         handleBlur,
         handleSubmit,
         isSubmitting,
-        /* and other goodies */
       }) => (
         <Stack px={10} py={10}>
           <Stack>
@@ -51,6 +52,8 @@ export const ClassCreationForm = ({ school, token, action }) => {
               <WrapItem w={'100%'}>
                 <FormInput
                   {...grade}
+                  label={t(grade.label)}
+                  placeholder={t(grade.placeholder)}
                   value={values.grade}
                   {...{
                     errors,
@@ -65,6 +68,8 @@ export const ClassCreationForm = ({ school, token, action }) => {
               <WrapItem w={'100%'}>
                 <FormInput
                   {...level}
+                  label={t(level.label)}
+                  placeholder={t(level.placeholder)}
                   value={values.level}
                   {...{
                     errors,
@@ -79,6 +84,8 @@ export const ClassCreationForm = ({ school, token, action }) => {
               <WrapItem w={'100%'}>
                 <FormInput
                   {...letter}
+                  label={t(letter.label)}
+                  placeholder={t(letter.placeholder)}
                   {...{
                     errors,
                     handleChange,
@@ -96,7 +103,7 @@ export const ClassCreationForm = ({ school, token, action }) => {
               style={{ color: colors.error }}
               render={(schoolCreation) => (
                 <Text color={colors.error}>
-                  {schoolCreation.schoolCreation}
+                  {t('schoolCreationError', { error: schoolCreation.schoolCreation })}
                 </Text>
               )}
             />
@@ -104,12 +111,12 @@ export const ClassCreationForm = ({ school, token, action }) => {
 
           <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
             <Box w={'20%'} mr={5}>
-              <SecondaryButton h={50} message={'Annuler'} onClick={action} />
+              <SecondaryButton h={50} message={t('forms.actions.class.cancel')} onClick={action} />
             </Box>
             <Box w={'40%'}>
               <FormSubmit
                 uid={'registration'}
-                submit_message={'Créer la classe'}
+                submit_message={t('forms.actions.class.create')}
                 {...{
                   touched,
                   errors,

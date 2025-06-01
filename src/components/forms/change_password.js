@@ -17,6 +17,7 @@ import { colors, forms } from '@theme';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { VscEye } from 'react-icons/vsc';
@@ -26,22 +27,20 @@ export const ChangePasswordForm = () => {
     const { passwordType, passwordTypeToggler } = usePasswordType();
     const { data: session } = useSession();
     const router = useRouter();
-    // get forcePasswordChange from query params
     const { forcePasswordChange } = router.query;
-    const toast = useToast(
-        {
-            position: 'top',
-            duration: 5000,
-            isClosable: true,
-            variant: 'solid'
-        }
-    );
+    const toast = useToast({
+        position: 'top',
+        duration: 5000,
+        isClosable: true,
+        variant: 'solid'
+    });
+    const t = useTranslations('components.forms.inputs.change_password');
 
     const handleChangePassword = async (values, { setSubmitting, setFieldError }) => {
         if (!session?.user?.accessToken) {
             toast({
-                title: 'Error',
-                description: 'Not authenticated',
+                title: t('toast.errorTitle'),
+                description: t('toast.notAuthenticated'),
                 status: 'error',
             });
             setSubmitting(false);
@@ -64,9 +63,9 @@ export const ChangePasswordForm = () => {
 
             if (response.error) {
                 const errorText = response.text();
-                throw new Error(errorText || 'Failed to change password');
+                throw new Error(errorText || t('toast.failed'));
             } else {
-                //update user forcePasswordChange to false
+                // update user forcePasswordChange to false
                 const user = session.user;
                 const userResponse = await updateUser({
                     user: user.id,
@@ -77,24 +76,24 @@ export const ChangePasswordForm = () => {
                 });
                 if (userResponse.error) {
                     const errorText = userResponse.text();
-                    throw new Error(errorText || 'Failed to update user');
+                    throw new Error(errorText || t('toast.failedUpdate'));
                 }
             }
 
             toast({
-                title: 'Success',
-                description: 'Password changed successfully',
+                title: t('toast.successTitle'),
+                description: t('toast.success'),
                 status: 'success',
             });
             signOut();
 
         } catch (error) {
             toast({
-                title: 'Error',
-                description: error.message || 'Failed to change password',
+                title: t('toast.errorTitle'),
+                description: error.message || t('toast.failed'),
                 status: 'error',
             });
-            setFieldError('authentication', error.message || 'Failed to change password');
+            setFieldError('authentication', error.message || t('toast.failed'));
         } finally {
             setSubmitting(false);
         }
@@ -117,12 +116,10 @@ export const ChangePasswordForm = () => {
                     isSubmitting,
                 }) => (
                     <Fragment>
-
                         {/* Current Password */}
-
                         <FormControl isInvalid={errors.currentPassword && touched.currentPassword} pb={5}>
                             <FormLabel fontWeight={'bold'}>
-                                {forms.inputs.change_password.current_password.label}
+                                {t('current_password.label')}
                             </FormLabel>
                             <Box pos={'relative'}>
                                 <Input
@@ -131,12 +128,13 @@ export const ChangePasswordForm = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     borderColor={colors.gray.regular}
-                                    placeholder={forms.inputs.change_password.current_password.placeholder}
+                                    placeholder={(forms.inputs.change_password.current_password.placeholder)}
                                     type={passwordType}
                                     value={values.currentPassword}
                                     h={50}
                                     w={'100%'}
-                                /><Box
+                                />
+                                <Box
                                     onClick={passwordTypeToggler}
                                     _hover={{ cursor: 'pointer' }}
                                     pos={'absolute'}
@@ -154,7 +152,7 @@ export const ChangePasswordForm = () => {
                         {/* New Password */}
                         <FormControl isInvalid={errors.newPassword && touched.newPassword} pb={5}>
                             <FormLabel fontWeight={'bold'}>
-                                {forms.inputs.change_password.new_password.label}
+                                {t('new_password.label')}
                             </FormLabel>
                             <Box pos={'relative'}>
                                 <Input
@@ -187,7 +185,7 @@ export const ChangePasswordForm = () => {
                         {/* Confirm Password */}
                         <FormControl isInvalid={errors.confirmPassword && touched.confirmPassword} pb={5}>
                             <FormLabel fontWeight={'bold'}>
-                                {forms.inputs.change_password.confirm_password.label}
+                                {t('confirm_password.label')}
                             </FormLabel>
                             <Box pos={'relative'}>
                                 <Input
@@ -229,7 +227,7 @@ export const ChangePasswordForm = () => {
                                 type={'submit'}
                                 isDisabled={isSubmitting}
                             >
-                                {forms.inputs.change_password.submit}
+                                {t('submit')}
                             </Button>
                             {errors.authentication && touched.authentication && (
                                 <VStack>

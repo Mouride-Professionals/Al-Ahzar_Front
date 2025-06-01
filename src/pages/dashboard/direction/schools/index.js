@@ -155,7 +155,6 @@ import { messages, routes } from "@theme";
 import { SCHOOLS_COLUMNS, useTableColumns } from "@utils/mappers/kpi";
 import { mapSchoolsDataTable } from "@utils/mappers/school";
 import { getToken } from "next-auth/jwt";
-import { use } from "react";
 import { FaSuitcase } from "react-icons/fa";
 import { HiAcademicCap } from "react-icons/hi";
 import { LuSchool } from "react-icons/lu";

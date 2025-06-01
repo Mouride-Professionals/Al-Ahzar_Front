@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { CreateExpenseForm } from "@components/forms/expense/create";
 import { colors } from "@theme";
+import { useTranslations } from "next-intl";
 import { SiGoogleclassroom } from "react-icons/si";
 
 export const ExpenseCreationModal = ({ isOpen, onClose, token, schoolId,schoolYearId,setHasSucceeded }) => {
+    const t = useTranslations();
     return (
         <Modal size={"3xl"} onClose={onClose} isOpen={isOpen} isCentered>
             <ModalOverlay />
@@ -20,7 +22,7 @@ export const ExpenseCreationModal = ({ isOpen, onClose, token, schoolId,schoolYe
                 <ModalHeader bgColor={colors.secondary.light}>
                     <HStack>
                         <SiGoogleclassroom color={colors.secondary.regular} size={25} />
-                        <Text>Créer une dépense</Text>
+                        <Text>{t('components.dataset.expenses.create')}</Text>
                     </HStack>
                 </ModalHeader>
                 <ModalCloseButton />

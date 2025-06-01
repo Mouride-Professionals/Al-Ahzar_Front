@@ -1,21 +1,23 @@
 import { Box, HStack, Stack, Text, WrapItem } from "@chakra-ui/react";
 import { SecondaryButton } from "@components/common/button";
 import { FormInput, FormSubmit } from "@components/common/input/FormInput";
-import { expenseCreationFormHandler } from "@handlers"; // You'll need to create this
+import { expenseCreationFormHandler } from "@handlers";
 import { colors, forms } from "@theme";
-import { expenseSchema } from "@utils/schemas"; // You'll need to create this
+import { expenseSchema } from "@utils/schemas";
 import { mapFormInitialValues } from "@utils/tools/mappers";
 import { Formik } from "formik";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 export const CreateExpenseForm = ({
     action,
     token,
     setHasSucceeded,
-    school, // Array of school options for dropdown
-    schoolYear, // Array of school year options for dropdown
+    school,
+    schoolYear,
 }) => {
     const router = useRouter();
+    const t = useTranslations('components');
 
     const {
         inputs: {
@@ -23,14 +25,7 @@ export const CreateExpenseForm = ({
                 creation: { expenseDate, amount, category, description },
             },
         },
-        messages: {
-            expense: {
-                creation: { info: { generalInfoMessage } },
-            },
-        },
     } = forms;
-
-
 
     return (
         <Formik
@@ -64,13 +59,13 @@ export const CreateExpenseForm = ({
             }) => (
                 <Stack px={10} py={10}>
                     <Stack>
-                        <Text color={colors.secondary.regular} fontWeight="700">
-                            {generalInfoMessage}
-                        </Text>
+                        
                         <HStack align="center" justifyContent="space-between">
                             <WrapItem w={370}>
                                 <FormInput
                                     {...expenseDate}
+                                    label={t(expenseDate.label)}
+                                    placeholder={t(expenseDate.placeholder)}
                                     errors={errors}
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}
@@ -82,6 +77,8 @@ export const CreateExpenseForm = ({
                                 <FormInput
                                     {...amount}
                                     type="number"
+                                    label={t(amount.label)}
+                                    placeholder={t(amount.placeholder)}
                                     errors={errors}
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}
@@ -92,6 +89,8 @@ export const CreateExpenseForm = ({
                             <WrapItem w={370}>
                                 <FormInput
                                     {...category}
+                                    label={t(category.label)}
+                                    placeholder={t(category.placeholder)}
                                     errors={errors}
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}
@@ -100,12 +99,13 @@ export const CreateExpenseForm = ({
                                 />
                             </WrapItem>
                         </HStack>
-                       
                         <HStack align="center" justifyContent="space-between">
                             <WrapItem w="100%">
                                 <FormInput
                                     {...description}
                                     textarea
+                                    label={t(description.label)}
+                                    placeholder={t(description.placeholder)}
                                     errors={errors}
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}
@@ -118,12 +118,16 @@ export const CreateExpenseForm = ({
 
                     <HStack alignItems="flex-end" justifyContent="flex-end" pt={10}>
                         <Box mr={5}>
-                            <SecondaryButton h={50} message="Annuler" onClick={() => action(false)} />
+                            <SecondaryButton
+                                h={50}
+                                message={t('forms.actions.expense.cancel')}
+                                onClick={() => action(false)}
+                            />
                         </Box>
-                        <Box >
+                        <Box>
                             <FormSubmit
                                 uid="expenseCreation"
-                                submit_message="Créer une dépense"
+                                submit_message={t('forms.actions.expense.create')}
                                 {...{
                                     touched,
                                     errors,

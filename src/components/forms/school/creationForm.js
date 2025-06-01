@@ -11,6 +11,7 @@ import {
 import { schoolCreationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -19,10 +20,10 @@ export const CreateSchoolForm = ({
   token,
   setHasSucceeded,
   isEdit = false,
-  initialValues = null, // Initial values for editing
+  initialValues = null,
 }) => {
+  const t = useTranslations('components');
   const router = useRouter();
-
 
   const { id: schoolId = null, attributes: schoolAttributes = {} } =
     initialValues || {};
@@ -32,13 +33,11 @@ export const CreateSchoolForm = ({
   const [communes, setCommunes] = useState([]);
   const [IAs, setIAs] = useState([]);
   const [IEFs, setIEFs] = useState([]);
-  const [bannerFile, setBannerFile] = useState(null); // Store the selected file
-
+  const [bannerFile, setBannerFile] = useState(null);
 
   const [parentSchoolOptions, setParentSchoolOptions] = useState(schools.data);
   const [filteredParentSchools, setFilteredParentSchools] = useState([]);
   const [selectedType, setSelectedType] = useState(schoolData?.type || '');
-
 
   // Handle region and department changes
   const handleRegionChange = (selectedRegion) => {
@@ -54,14 +53,11 @@ export const CreateSchoolForm = ({
     setCommunes(communeOptions);
   };
 
-  //handle IA change
   const handleIAChange = (selectedIA) => {
     const IEFOptions = mapIEFByIA({ IA: selectedIA });
     setIEFs(IEFOptions);
-  }
+  };
 
-
-  // Update filtered options based on selected type
   useEffect(() => {
     if (selectedType === 'Annexe') {
       setFilteredParentSchools(
@@ -168,14 +164,17 @@ export const CreateSchoolForm = ({
         isSubmitting,
       }) => (
         <Stack px={10} py={10}>
+          {/* General Info */}
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {generalInfoMessage}
+              {t('forms.messages.school.creation.info.generalInfoMessage')}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
                   {...name}
+                  label={t(name.label)}
+                  placeholder={t(name.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -183,11 +182,11 @@ export const CreateSchoolForm = ({
                   value={values.name}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
-                  // label={'Date de création'}
                   {...creationDate}
+                  label={t(creationDate.label)}
+                  placeholder={t(creationDate.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -195,10 +194,11 @@ export const CreateSchoolForm = ({
                   value={values.creationDate}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
                   {...responsibleName}
+                  label={t(responsibleName.label)}
+                  placeholder={t(responsibleName.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -207,22 +207,12 @@ export const CreateSchoolForm = ({
                 />
               </WrapItem>
             </HStack>
-
             <HStack align={'center'} justifyContent={'space-between'}>
-              {/* <WrapItem w={370}>
-                <FormInput
-                  {...banner}
-                  type="file"
-                  accept="image/*"
-                  errors={errors}
-                  handleChange={(e) => setBannerFile(e.target.files[0])} // Store file in state
-                  handleBlur={handleBlur}
-                  touched={touched}
-                />
-              </WrapItem> */}
               <WrapItem w={'50%'}>
                 <FormInput
                   {...type}
+                  label={t(type.label)}
+                  placeholder={t(type.placeholder)}
                   errors={errors}
                   handleChange={(e) => {
                     setSelectedType(e.target.value);
@@ -233,12 +223,13 @@ export const CreateSchoolForm = ({
                   value={values.type}
                 />
               </WrapItem>
-
               <WrapItem w={'50%'}>
                 <FormInput
                   select
                   options={filteredParentSchools}
                   {...parentSchool}
+                  label={t(parentSchool.label)}
+                  placeholder={t(parentSchool.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -249,15 +240,17 @@ export const CreateSchoolForm = ({
               </WrapItem>
             </HStack>
           </Stack>
-          {/* address info */}
+          {/* Address Info */}
           <Stack pt={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {addressInfoMessage}
+              {t('forms.messages.school.creation.info.addressInfoMessage')} 
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
                   {...region}
+                  label={t(region.label)}
+                  placeholder={t(region.placeholder)}
                   errors={errors}
                   handleChange={(e) => {
                     handleRegionChange(e.target.value);
@@ -268,12 +261,13 @@ export const CreateSchoolForm = ({
                   value={values.region}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
                   select
                   options={departments}
                   {...department}
+                  label={t(department.label)}
+                  placeholder={t(department.placeholder)}
                   errors={errors}
                   handleChange={(e) => {
                     handleDepartmentChange(e.target.value);
@@ -290,6 +284,8 @@ export const CreateSchoolForm = ({
                   select
                   options={communes}
                   {...commune}
+                  label={t(commune.label)}
+                  placeholder={t(commune.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -301,6 +297,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={370}>
                 <FormInput
                   {...city}
+                  label={t(city.label)}
+                  placeholder={t(city.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -313,6 +311,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={370}>
                 <FormInput
                   {...address}
+                  label={t(address.label)}
+                  placeholder={t(address.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -323,6 +323,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={370}>
                 <FormInput
                   {...IA}
+                  label={t(IA.label)}
+                  placeholder={t(IA.placeholder)}
                   errors={errors}
                   handleChange={
                     (e) => {
@@ -340,6 +342,8 @@ export const CreateSchoolForm = ({
                   select
                   options={IEFs}
                   {...IEF}
+                  label={t(IEF.label)}
+                  placeholder={t(IEF.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -350,16 +354,17 @@ export const CreateSchoolForm = ({
               </WrapItem>
             </HStack>
           </Stack>
-
-          {/* contact info */}
+          {/* Contact Info */}
           <Stack pt={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {contactInfoMessage}
+              {t('forms.messages.school.creation.info.contactInfoMessage')}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
                   {...phoneFix}
+                  label={t(phoneFix.label)}
+                  placeholder={t(phoneFix.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -370,6 +375,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={370}>
                 <FormInput
                   {...phone}
+                  label={t(phone.label)}
+                  placeholder={t(phone.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -380,6 +387,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={370}>
                 <FormInput
                   {...email}
+                  label={t(email.label)}
+                  placeholder={t(email.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -390,6 +399,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={370}>
                 <FormInput
                   {...postBox}
+                  label={t(postBox.label)}
+                  placeholder={t(postBox.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -399,15 +410,17 @@ export const CreateSchoolForm = ({
               </WrapItem>
             </HStack>
           </Stack>
-          {/* additional info */}
+          {/* Additional Info */}
           <Stack pt={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {additionalInfoMessage}
+              {t('forms.messages.school.creation.info.additionalInfoMessage')}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
                   {...isAlAzharLand}
+                  label={t(isAlAzharLand.label)}
+                  placeholder={t(isAlAzharLand.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -418,6 +431,8 @@ export const CreateSchoolForm = ({
               <WrapItem w={'100%'}>
                 <FormInput
                   {...note}
+                  label={t(note.label)}
+                  placeholder={t(note.placeholder)}
                   textarea
                   errors={errors}
                   handleChange={handleChange}
@@ -428,19 +443,19 @@ export const CreateSchoolForm = ({
               </WrapItem>
             </HStack>
           </Stack>
-
+          {/* Actions */}
           <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
             <Box w={'15%'} mr={5}>
               <SecondaryButton
                 h={50}
-                message={'Annuler'}
+                message={t('forms.actions.school.cancel')}
                 onClick={() => router.back()}
               />
             </Box>
             <Box w={'20%'}>
               <FormSubmit
                 uid={'schoolCreation'}
-                submit_message={'Créer une école'}
+                submit_message={t('forms.actions.school.create')}
                 {...{
                   touched,
                   errors,

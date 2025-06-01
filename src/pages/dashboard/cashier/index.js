@@ -1,53 +1,37 @@
-import { Box, HStack, Stack, Text, Wrap } from '@chakra-ui/react';
+import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, images, messages, routes } from '@theme';
-import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
+import { colors, routes } from '@theme';
+import { STUDENTS_COLUMNS, useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { HiAcademicCap } from 'react-icons/hi';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  pages: {
-    dashboard,
-    stats: {
-      classes,
-      students: studentsStat,
-      teachers,
-      schools: schoolsStat,
-      amount,
-    },
-  },
-  components: {
-    menu,
-    dataset: { students: studentsDataset, schools: schoolsDataset },
-  },
-} = messages;
-
 export default function Dashboard({ kpis, role, token, schoolId }) {
   const router = useRouter();
+  const t = useTranslations();
 
   const cardStats = [
     {
-      count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
+      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.data?.length ?? 0),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-      title: classes,
+      title: t('pages.stats.classes'),
     },
     {
-      count: amount.students.replace(`%number`, kpis[1]?.data?.length),
+      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.data?.length ?? 0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-      title: studentsStat,
+      title: t('pages.stats.students'),
     },
-
-
+    // Add more stats as needed, using t('pages.stats.teachers') etc.
   ];
 
-
+const {  STUDENTS_COLUMNS } = useTableColumns();
   const students = mapStudentsDataTableForEnrollments({ enrollments: kpis[1] });
   const classrooms = kpis[0]?.data?.map((classroom) => ({
     id: classroom.id,
@@ -57,42 +41,15 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
   }));
   return (
     <DashboardLayout
-      title={dashboard.initial.title}
-      currentPage={menu.home}
+      title={t('pages.dashboard.initial.title')}
+      currentPage={t('components.menu.home')}
       role={role}
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
-        {/* <Box
-          position="relative"
-          w="100%"
-          p={6}
-          borderRadius="md"
-          bg={
-            // ? `url(${process.env.NEXT_PUBLIC_API_URL}${currentSchool.attributes.banner.data.attributes.url})`
-            // : 
-            // "gray.100"
-            images.logo.src
-          }
-          bgSize="cover"
-          bgPosition="center"
-          _before={{
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            bg: "rgba(255, 255, 255, 0.5)", // Semi-transparent overlay for readability
-            borderRadius: "md",
-          }}
-        > */}
-          <HStack w={'100%'}>
-
-            <Statistics cardStats={cardStats} />
-          </HStack>
-        {/* </Box> */}
-       
+        <HStack w={'100%'}>
+          <Statistics cardStats={cardStats} />
+        </HStack>
 
         <Text
           color={colors.secondary.regular}
@@ -100,11 +57,10 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
           fontWeight={'700'}
           pt={10}
         >
-          {studentsDataset.title}
+          {t('components.dataset.students.title')}
         </Text>
 
         <Stack bgColor={colors.white} w={'100%'}>
-
           <DataSet
             {...{ role, token, schoolId }}
             data={students}

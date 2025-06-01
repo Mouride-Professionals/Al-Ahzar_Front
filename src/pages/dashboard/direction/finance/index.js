@@ -214,7 +214,7 @@ const FinanceDashboard = ({ role, token, initialPaymentKpis, initialExpenseKpis,
     }
 
     return (
-        <DashboardLayout title={dashboard.finance.title} currentPage={menu.finance} role={role} token={token}>
+        <DashboardLayout title={t('pages.dashboard.finance.title')} currentPage={t('components.menu.finance')} role={role} token={token}>
             <Stack spacing={5}>
                 <HStack justify="flex-start" mt={5}>
                     <Box w="300px">

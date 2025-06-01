@@ -1,29 +1,23 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateSchoolForm } from '@components/forms/school/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  components: {
-    cards: {
-      school: { edit, another_school },
-    },
-  },
-} = messages;
-
 export default function Edit({ schoolData, schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
   const router = useRouter();
+  const t = useTranslations();
 
   return (
     <DashboardLayout
-      title={messages.pages.dashboard.schools.title}
-      currentPage={messages.components.menu.schools.edit}
+      title={t('pages.dashboard.schools.title')}
+      currentPage={t('components.menu.schools')}
       role={role}
       token={token}
     >
@@ -47,7 +41,7 @@ export default function Edit({ schoolData, schools, role, token }) {
         >
           <BsArrowLeftShort size={40} />
           <Text fontSize={20} fontWeight={'700'}>
-            {edit}
+            {t('components.cards.school.edit')}
           </Text>
         </HStack>
         <Stack

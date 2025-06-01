@@ -1,9 +1,10 @@
-import { HStack, Stack, VStack } from '@chakra-ui/react';
+import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { SchoolCreationCard } from '@components/common/cards';
 import { CreateSchoolForm } from '@components/forms/school/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
@@ -19,13 +20,13 @@ const {
 
 export default function Create({ schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
-
   const router = useRouter();
+  const t = useTranslations();
 
   return (
     <DashboardLayout
-      title={messages.pages.dashboard.schools.title}
-      currentPage={messages.components.menu.schools.create}
+      title={t('pages.dashboard.schools.title')}
+      currentPage={t('components.menu.schools')}
       role={role}
       token={token}
     >
@@ -48,9 +49,9 @@ export default function Create({ schools, role, token }) {
           w={'100%'}
         >
           <BsArrowLeftShort size={40} />
-          {/* <Text fontSize={20} fontWeight={'700'}>
-            {hasSucceeded ? publishing : creation}
-          </Text> */}
+          <Text fontSize={20} fontWeight={'700'}>
+            { t('components.cards.school.creation') }
+          </Text>
         </HStack>
         <Stack
           bgColor={colors.white}
@@ -64,12 +65,12 @@ export default function Create({ schools, role, token }) {
           {hasSucceeded ? (
             <SchoolCreationCard
               cta={{
-                message: another_school,
+                message: t('components.cards.school.creation'),
                 // link: routes.page_route.dashboard.direction.schools.create,
                 quickAction: () => setHasSucceeded(false),
               }}
-              title={info.success}
-              message={info.message}
+              title={t('components.cards.school.info.success')}
+              message={t('components.cards.school.info.message')}
             />
             // router.push(routes.page_route.dashboard.direction.initial)
           ) : (

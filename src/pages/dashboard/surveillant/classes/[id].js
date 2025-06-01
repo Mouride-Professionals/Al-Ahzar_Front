@@ -1,10 +1,11 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
-import { STUDENTS_COLUMNS } from '@utils/mappers/kpi';
+import { colors, routes } from '@theme';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { serverFetch } from 'src/lib/api';
 
 const mapDetail = (payload) => ({
@@ -18,41 +19,30 @@ const mapDetail = (payload) => ({
   }),
 });
 
-const {
-  pages: {
-    class: { establishment },
-  },
-  components: {
-    menu,
-    dataset: {
-      students: { title },
-    },
-  },
-} = messages;
-
 export default function Class({ detail, role, token }) {
+  const t = useTranslations();
   const { school, _class, students } = mapDetail(detail.data.attributes);
-
-  return (
-    <DashboardLayout
-      title={establishment.replace('%name', `${school} - ${_class}`)}
-      currentPage={menu.classes}
-      role={role}
-      token={token}
-    >
-      <Text
-        color={colors.secondary.regular}
-        fontSize={20}
-        fontWeight={'700'}
-        py={5}
+  const { STUDENTS_COLUMNS } = useTableColumns();
+    return(
+      <DashboardLayout
+        title={t('pages.class.establishment').replace('%name', `${school} - ${_class}`)}
+        currentPage={t('components.menu.classes')}
+        role={role}
+        token={token}
       >
-        {title}
-      </Text>
-      <Stack bgColor={colors.white} w={'100%'}>
-        <DataSet role={role} data={students} columns={STUDENTS_COLUMNS} />
-      </Stack>
-    </DashboardLayout>
-  );
+        <Text
+          color={colors.secondary.regular}
+          fontSize={20}
+          fontWeight={'700'}
+          py={5}
+        >
+          {t('components.dataset.students.title')}
+        </Text>
+        <Stack bgColor={colors.white} w={'100%'}>
+          <DataSet role={role} data={students} columns={STUDENTS_COLUMNS} />
+        </Stack>
+      </DashboardLayout>
+    );
 }
 
 export const getServerSideProps = async ({ query, req }) => {

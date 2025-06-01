@@ -1,5 +1,3 @@
-const { use } = require("react");
-
 module.exports = {
   name: 'Pages Messages',
   themePagesMessages: {

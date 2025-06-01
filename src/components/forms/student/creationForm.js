@@ -7,10 +7,12 @@ import { mapClassesAndLetters, mapToOptions } from '@utils/mappers/student';
 import { studentRegistrationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear }) => {
   const router = useRouter();
+  const t = useTranslations('components');
   const cycles_options = mapToOptions({
     data: mapClassesAndLetters({ classes }).cycles,
   });
@@ -20,7 +22,6 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
   const sections_options = mapToOptions({
     data: mapClassesAndLetters({ classes }).sections,
   });
-
 
   const {
     inputs: {
@@ -79,17 +80,18 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
         handleBlur,
         handleSubmit,
         isSubmitting,
-        /* and other goodies */
       }) => (
         <Stack px={10} py={10}>
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {personalInfoMessage}
+              {t(personalInfoMessage)}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'} gap={8}>
               <WrapItem w={370}>
                 <FormInput
                   {...firstname}
+                  label={t(firstname.label)}
+                  placeholder={t(firstname.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -97,10 +99,11 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   value={values.firstname}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
                   {...lastname}
+                  label={t(lastname.label)}
+                  placeholder={t(lastname.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -108,10 +111,11 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   value={values.lastname}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
                   {...sex}
+                  label={t(sex.label)}
+                  placeholder={t(sex.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -122,6 +126,8 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
               <WrapItem w={370}>
                 <FormInput
                   {...socialCategory}
+                  label={t(socialCategory.label)}
+                  placeholder={t(socialCategory.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -134,12 +140,14 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
 
           <Stack pt={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {birthPlaceMessage}
+              {t(birthPlaceMessage)}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={230}>
                 <FormInput
                   {...date}
+                  label={t(date.label)}
+                  placeholder={t(date.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -147,10 +155,11 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   value={values.date}
                 />
               </WrapItem>
-
               <WrapItem w={230}>
                 <FormInput
                   {...month}
+                  label={t(month.label)}
+                  placeholder={t(month.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -158,10 +167,11 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   value={values.month}
                 />
               </WrapItem>
-
               <WrapItem w={230}>
                 <FormInput
                   {...year}
+                  label={t(year.label)}
+                  placeholder={t(year.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -169,10 +179,11 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   value={values.year}
                 />
               </WrapItem>
-
               <WrapItem w={370}>
                 <FormInput
                   {...birthplace}
+                  label={t(birthplace.label)}
+                  placeholder={t(birthplace.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -185,13 +196,14 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
 
           <Stack py={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {tutorInfoMessage}
+              {t(tutorInfoMessage)}
             </Text>
-
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
                   {...parent_firstname}
+                  label={t(parent_firstname.label)}
+                  placeholder={t(parent_firstname.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -202,6 +214,8 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
               <WrapItem w={370}>
                 <FormInput
                   {...parent_lastname}
+                  label={t(parent_lastname.label)}
+                  placeholder={t(parent_lastname.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -209,11 +223,11 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   value={values.parent_lastname}
                 />
               </WrapItem>
-
-
               <WrapItem w={370}>
                 <FormInput
                   {...parent_phone}
+                  label={t(parent_phone.label)}
+                  placeholder={t(parent_phone.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -226,15 +240,16 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
 
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {classInfoMessage}
+              {t(classInfoMessage)}
             </Text>
-
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
                 <FormInput
                   select
                   options={cycles_options}
                   {...level}
+                  label={t(level.label)}
+                  placeholder={t(level.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -247,6 +262,8 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   select
                   options={classes_options}
                   {...classroom}
+                  label={t(classroom.label)}
+                  placeholder={t(classroom.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -259,6 +276,8 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
                   select
                   options={sections_options}
                   {...class_letter}
+                  label={t(class_letter.label)}
+                  placeholder={t(class_letter.placeholder)}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -273,14 +292,14 @@ export const CreateStudentForm = ({ classes, setHasSucceeded, token, schoolYear 
             <Box w={'15%'} mr={5}>
               <SecondaryButton
                 h={50}
-                message={'Annuler'}
+                message={t('forms.actions.student.cancel')}
                 onClick={() => router.back()}
               />
             </Box>
             <Box w={'20%'}>
               <FormSubmit
                 uid={'registration'}
-                submit_message={"Valider l'inscription"}
+                submit_message={t('forms.actions.student.create')}
                 {...{
                   touched,
                   errors,

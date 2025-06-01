@@ -1,29 +1,23 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateSchoolYearForm } from '@components/forms/school_year/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const {
-    components: {
-        cards: {
-            school_year: { edit },
-        },
-    },
-} = messages;
-
 export default function EditSchoolYear({ schoolYearData, role, token }) {
     const [hasSucceeded, setHasSucceeded] = useState(false);
     const router = useRouter();
+    const t = useTranslations();
 
     return (
         <DashboardLayout
-            title={messages.pages.dashboard.school_years.title}
-            currentPage={messages.components.menu.school_years}
+            title={t('pages.dashboard.school_years.title')}
+            currentPage={t('components.menu.school_years')}
             role={role}
             token={token}
         >
@@ -47,7 +41,7 @@ export default function EditSchoolYear({ schoolYearData, role, token }) {
                 >
                     <BsArrowLeftShort size={40} />
                     <Text fontSize={20} fontWeight={'700'}>
-                        {edit}
+                        {t('components.cards.school_year.edit')}
                     </Text>
                 </HStack>
                 <Stack
@@ -81,25 +75,23 @@ export const getServerSideProps = async ({ req, query }) => {
     const session = await getToken({ req, secret });
     const token = session?.accessToken;
 
-    const { id } = query; // Get the school year ID from the URL
+    const { id } = query;
 
     const { role = null } = await serverFetch({
         uri: routes.api_route.alazhar.get.me,
         user_token: token,
     });
 
-    // Fetch the school year data for the given ID
     const schoolYearData = await serverFetch({
         uri: `${routes.api_route.alazhar.get.school_years.detail.replace('%id', id)}`,
         user_token: token,
     });
 
-    
     return {
         props: {
             role,
             token,
-            schoolYearData: schoolYearData?.data || null, // Pre-fill the form
+            schoolYearData: schoolYearData?.data || null,
         },
     };
 };

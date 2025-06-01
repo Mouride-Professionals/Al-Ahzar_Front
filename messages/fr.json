@@ -10,22 +10,22 @@
             },
             "login": {
                 "heading": {
-                    "title": "Connectez-vous",
-                    "subtitle": "Entrez votre identifiant et votre mot de passe pour vous connecter à votre compte"
+                    "title": "Connexion",
+                    "subtitle": "Entrez votre email et mot de passe pour accéder à votre compte"
                 },
                 "specifics": {
                     "forgotten_password": "",
-                    "account": "Vous n'avez pas de compte ? Inscrivez-vous",
+                    "account": "Pas de compte ? Inscrivez-vous maintenant",
                     "highlight": "Mot de passe oublié ?"
                 },
                 "form": {
                     "identifier": {
-                        "label": "Email ou Nom d'utilisateur",
-                        "placeholder": "Entrez votre email ou nom d'utilisateur",
+                        "label": "Email ou nom d’utilisateur",
+                        "placeholder": "Entrez votre email ou nom d’utilisateur",
                         "success": "Succès",
-                        "success_description": "Connexion réussie.",
+                        "success_description": "Connexion réussie !",
                         "error": "Erreur",
-                        "error_description": "Échec de la connexion."
+                        "error_description": "Échec de la connexion. Vérifiez vos identifiants."
                     },
                     "password": {
                         "label": "Mot de passe",
@@ -36,8 +36,8 @@
             },
             "register": {
                 "heading": {
-                    "title": "Salut 👋",
-                    "subtitle": "Entrez vos informations, nous nous occupons du reste 😊"
+                    "title": "Bonjour ! 👋",
+                    "subtitle": "Remplissez vos informations pour commencer 😊"
                 },
                 "specifics": {
                     "forgotten_password": "Mot de passe oublié ?",
@@ -47,42 +47,42 @@
             },
             "change_password": {
                 "heading": {
-                    "title": "Changement de mot de passe",
-                    "subtitle": "Entrez votre mot de passe actuel et le nouveau mot de passe"
+                    "title": "Changer le mot de passe",
+                    "subtitle": "Entrez votre mot de passe actuel et le nouveau"
                 },
                 "specifics": {
-                    "forgotten_password": "Vous voulez revenir à la page d'accueil",
+                    "forgotten_password": "Retourner à la page d’accueil ?",
                     "highlight": "Annuler"
                 }
             },
             "forgot_password": {
                 "heading": {
-                    "title": "Demande de réinitialisation du mot de passe",
-                    "subtitle": "Entrez votre adresse email"
+                    "title": "Réinitialiser le mot de passe",
+                    "subtitle": "Entrez votre email pour réinitialiser votre mot de passe"
                 },
                 "specifics": {
-                    "forgotten_password": "Si vous voulez revenir à la page de connexion",
+                    "forgotten_password": "Retourner à la page de connexion ?",
                     "highlight": "Cliquez ici"
                 },
                 "form": {
                     "email": {
-                        "label": "Adresse email",
+                        "label": "Email",
                         "placeholder": "Entrez votre email",
                         "success": "Succès",
-                        "success_description": "Email de réinitialisation envoyé avec succès.",
+                        "success_description": "Lien de réinitialisation envoyé à votre email !",
                         "error": "Erreur",
-                        "error_description": "Échec de l’envoi de l’email."
+                        "error_description": "Impossible d’envoyer le lien. Vérifiez votre email."
                     },
-                    "submit": "Envoyer l’email de réinitialisation"
+                    "submit": "Envoyer le lien de réinitialisation"
                 }
             },
             "reset_password": {
                 "heading": {
-                    "title": "Réinitialisation du mot de passe",
+                    "title": "Créer un nouveau mot de passe",
                     "subtitle": "Entrez votre nouveau mot de passe"
                 },
                 "specifics": {
-                    "forgotten_password": "Si vous voulez annuler la réinitialisation",
+                    "forgotten_password": "Annuler la réinitialisation ?",
                     "highlight": "Cliquez ici"
                 },
                 "form": {
@@ -90,21 +90,21 @@
                         "label": "Nouveau mot de passe",
                         "placeholder": "Entrez le nouveau mot de passe",
                         "success": "Succès",
-                        "success_description": "Mot de passe réinitialisé avec succès.",
+                        "success_description": "Mot de passe mis à jour avec succès !",
                         "error": "Erreur",
-                        "error_description": "Échec de la réinitialisation du mot de passe.",
-                        "error_token": "Jeton de réinitialisation invalide ou manquant."
+                        "error_description": "Échec de la mise à jour du mot de passe.",
+                        "error_token": "Lien de réinitialisation invalide."
                     },
                     "confirm_password": {
                         "label": "Confirmer le mot de passe",
-                        "placeholder": "Confirmez le nouveau mot de passe"
+                        "placeholder": "Répétez le nouveau mot de passe"
                     },
-                    "submit": "Réinitialiser le mot de passe"
+                    "submit": "Mettre à jour le mot de passe"
                 }
             }
         },
         "formInput": {
-            "submit": "Soumettre",
+            "submit": "Envoyer",
             "search": "Rechercher",
             "export": "Exporter la liste",
             "filter": "Filtrer"
@@ -114,75 +114,75 @@
                 "students": "{number} élèves"
             },
             "student": {
-                "confirmation": "Confirmation d'inscription",
-                "registration": "Formulaire d'inscription",
+                "confirmation": "Confirmer l’inscription",
+                "registration": "Formulaire d’inscription",
                 "another_student": "Inscrire un autre élève",
                 "info": {
-                    "success": "Inscription initiée",
-                    "message": "Vous avez initié l'inscription de l'élève. Le service financier se chargera de la dernière étape du processus d'inscription.",
-                    "confirmation": "Vous avez clôturé l'inscription de l'élève {firstname} {lastname} en classe de {classname}. Vous pouvez trouver la fiche de l'élève sur son profil.",
+                    "success": "Inscription démarrée !",
+                    "message": "L’inscription de l’élève a commencé. Prochaines étapes avec le service financier.",
+                    "confirmation": "{firstname} {lastname} est inscrit dans la classe {classname}. Consultez son profil pour plus de détails.",
                     "classList": "Liste des classes"
                 }
             },
             "school": {
-                "creation": "Formulaire de création",
-                "edit": "Formulaire de modification",
-                "another_school": "Créer un autre établissement",
+                "creation": "Créer une école",
+                "edit": "Modifier l’école",
+                "another_school": "Créer une autre école",
                 "info": {
-                    "success": "Création réussie",
-                    "message": "Vous avez créé l'établissement.\nVous pouvez maintenant créer des classes et inscrire des élèves.",
-                    "publishing": "Vous avez créé l'établissement.\nVous pouvez maintenant créer des classes et inscrire des élèves.",
+                    "success": "École créée !",
+                    "message": "École créée avec succès. Vous pouvez maintenant ajouter des classes et des élèves.",
+                    "publishing": "École créée. Commencez à ajouter des classes et des élèves !",
                     "classList": "Liste des classes"
                 }
             },
             "user": {
-                "creation": "Formulaire de création",
-                "edit": "Formulaire de modification",
+                "creation": "Créer un utilisateur",
+                "edit": "Modifier l’utilisateur",
                 "another_user": "Créer un autre utilisateur",
                 "info": {
-                    "success": "Création réussie",
-                    "message": "Vous avez créé un nouvel utilisateur.",
-                    "publishing": "Vous avez publié l'utilisateur {firstname} {lastname}. Vous pouvez maintenant lui affecter un rôle."
+                    "success": "Utilisateur créé !",
+                    "message": "Utilisateur créé avec succès.",
+                    "publishing": "{firstname} {lastname} créé. Vous pouvez maintenant lui attribuer un rôle."
                 }
             },
             "teacher": {
-                "affectation": "Affectation d'enseignant",
-                "recruitment": "Formulaire de recrutement",
+                "affectation": "Affecter un enseignant",
+                "recruitment": "Formulaire de recrutement d’enseignant",
                 "another_teacher": "Recruter un autre enseignant",
                 "info": {
-                    "success": "Inscription réussie",
-                    "message": "Vous avez recruté un nouveau enseignant. Vous pouvez maintenant lui affecter dans une école.",
-                    "affectation": "Vous avez affecté l'enseignant {firstname} {lastname} dans l'école {name}."
+                    "success": "Enseignant recruté !",
+                    "message": "Nouvel enseignant recruté. Vous pouvez maintenant l’affecter à une école.",
+                    "affectation": "L’enseignant {firstname} {lastname} a été affecté à l’école {name}."
                 }
             },
             "school_year": {
-                "creation": "Formulaire de création",
-                "edit": "Formulaire de modification",
+                "creation": "Créer une année scolaire",
+                "edit": "Modifier l’année scolaire",
                 "info": {
-                    "success": "Création réussie",
-                    "message": "Vous avez créé l'année scolaire."
+                    "success": "Année scolaire créée !",
+                    "message": "Année scolaire créée avec succès."
                 }
             }
         },
         "menu": {
             "home": "Accueil",
             "classes": "Classes",
-            "finance": "Finance",
+            "finance": "Finances",
             "students": {
                 "initial": "Élèves",
                 "create": "Inscrire un élève"
             },
             "users": "Administration",
             "teachers": "Enseignants",
-            "schools": "Établissements",
-            "school_years": "Années"
+            "schools": "Écoles",
+            "school_years": "Années scolaires"
         },
         "layout": {
             "breadcrumb": {
                 "initial": "Al Azhar",
                 "classes": "Classes",
                 "schools": "Al Azhar",
-                "defaultSchool": "Direction Générale",
+                "defaultSchool": "Direction générale",
                 "siteName": "Al Azhar"
             },
             "header": {
@@ -194,13 +194,13 @@
                     "title": "Paramètres",
                     "language": "Langue",
                     "languageSelector": {
-                        "label": "Sélectionnez une langue",
+                        "label": "Choisir la langue",
                         "fr": "Français",
-                        "en": "English",
-                        "ar": "العربية"
+                        "en": "Anglais",
+                        "ar": "Arabe"
                     },
                     "darkMode": "Mode sombre",
-                    "logout": "Déconnexion"
+                    "logout": "Se déconnecter"
                 }
             }
         },
@@ -209,13 +209,13 @@
                 "title": "Liste des élèves",
                 "searchPlaceholder": "Rechercher un élève",
                 "filterLabel": "Élèves non inscrits",
-                "validateMonthlyPayment": "Valider une mensualité",
-                "socialStatus": "Prise en charge",
-                "bio": "BIO",
-                "paymentStatus": "État des paiements",
-                "validateEnrollment": "Valider l'inscription",
+                "validateMonthlyPayment": "Confirmer le paiement mensuel",
+                "socialStatus": "Soutenu",
+                "bio": "Profil",
+                "paymentStatus": "Statut de paiement",
+                "validateEnrollment": "Confirmer l’inscription",
                 "waitingForFinance": "En attente du service financier",
-                "reEnroll": "Re-inscrire",
+                "reEnroll": "Réinscrire",
                 "enrollNewStudent": "Inscrire un nouvel élève",
                 "tutor": "Tuteur",
                 "phone": "Téléphone",
@@ -229,12 +229,12 @@
                 "columns": {
                     "student": "Élève",
                     "class": "Classe",
-                    "parent": "Parent",
-                    "parent_phone": "Tél parent",
+                    "parent": "Tuteur",
+                    "parent_phone": "Téléphone du tuteur",
                     "enrollment": "Inscription",
-                    "current_month": "Mois en cours",
+                    "current_month": "Mois actuel",
                     "paid": "Payé",
-                    "not_paid": "Impayé"
+                    "not_paid": "Non payé"
                 }
             },
             "schools": {
@@ -248,7 +248,7 @@
                 "classes": "Classes",
                 "edit": "Modifier",
                 "director": "Directeur :",
-                "belonging": "Appartenance :",
+                "belonging": "Affiliation :",
                 "note": "Note :",
                 "alAzhar": "Al Azhar",
                 "notAlAzhar": "Non Al Azhar",
@@ -264,7 +264,7 @@
                     "type": "Type",
                     "ief": "IEF",
                     "director": "Directeur",
-                    "parent_school": "Établissement parent"
+                    "parent_school": "École mère"
                 }
             },
             "schoolYears": {
@@ -276,10 +276,10 @@
                 "inactive": "Inactif",
                 "state": "État",
                 "current": "En cours",
-                "ended": "Terminée",
+                "ended": "Terminé",
                 "upcoming": "À venir",
-                "closeYear": "Clôturer l'année",
-                "setAsCurrent": "Sélectionner comme année en cours",
+                "closeYear": "Clôturer l’année",
+                "setAsCurrent": "Définir comme année actuelle",
                 "yearEnded": "Cette année scolaire est terminée",
                 "edit": "Modifier",
                 "cta": {
@@ -287,18 +287,18 @@
                     "export": ""
                 },
                 "columns": {
-                    "title": "Titre",
+                    "title": "Année",
                     "start_date": "Date de début",
                     "end_date": "Date de fin",
                     "status": "Statut",
-                    "state": "Etat",
+                    "state": "État",
                     "description": "Description",
-                    "na": "N/A",
+                    "na": "N/D",
                     "active": "Actif",
                     "inactive": "Inactif",
                     "current": "En cours",
-                    "ended": "Clôturé",
-                    "upcoming": "A venir",
+                    "ended": "Terminé",
+                    "upcoming": "À venir",
                     "no_description": "Aucune description"
                 }
             },
@@ -307,27 +307,27 @@
                 "searchPlaceholder": "Rechercher un enseignant",
                 "edit": "Modifier",
                 "assign": "Affecter",
-                "assignToSchool": "Affecter {firstname} {lastname} à une nouvelle école",
+                "assignToSchool": "Affecter {firstname} {lastname} à une école",
                 "currentSchool": "École actuelle",
-                "notAssigned": "Non assigné",
-                "selectSchool": "Sélectionnez une école",
+                "notAssigned": "Non affecté",
+                "selectSchool": "Sélectionner une école",
                 "cancel": "Annuler",
                 "confirm": "Confirmer",
                 "recruitTeacher": "Recruter un enseignant",
                 "gender": "Genre",
-                "joinedOn": "Date d'arrivée",
-                "contactDetails": "Détails du contact",
+                "joinedOn": "Date d’arrivée",
+                "contactDetails": "Coordonnées",
                 "email": "Email",
                 "phone": "Téléphone",
                 "address": "Adresse",
-                "personalDetails": "Détails personnels",
+                "personalDetails": "Informations personnelles",
                 "birthDate": "Date de naissance",
                 "birthPlace": "Lieu de naissance",
-                "maritalStatus": "État civil",
+                "maritalStatus": "Situation matrimoniale",
                 "language": "Langue",
                 "subjects": "Matières",
-                "professionalDetails": "Détails professionnels",
-                "institution": "Établissement",
+                "professionalDetails": "Informations professionnelles",
+                "institution": "Institution",
                 "disciplines": "Disciplines",
                 "academicDegree": "Diplôme académique",
                 "professionalDegrees": "Diplômes professionnels",
@@ -335,15 +335,15 @@
                 "level": "Niveau",
                 "workDetails": "Détails du travail",
                 "salary": "Salaire",
-                "salaryPerHour": "Salaire par heure",
+                "salaryPerHour": "Salaire horaire",
                 "hoursPerWeek": "Heures par semaine",
                 "additionalResponsibilities": "Responsabilités supplémentaires",
                 "additionalInformation": "Informations supplémentaires",
-                "registrationNumber": "Numéro d'enregistrement",
+                "registrationNumber": "Numéro d’enregistrement",
                 "generation": "Génération",
-                "countryOfOrigin": "Pays d'origine",
-                "arrivalDate": "Date d'arrivée",
-                "previousInstitutes": "Instituts précédents",
+                "countryOfOrigin": "Pays d’origine",
+                "arrivalDate": "Date d’arrivée",
+                "previousInstitutes": "Institutions précédentes",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -353,11 +353,11 @@
                     "email": "Email",
                     "phone_number": "Numéro de téléphone",
                     "address": "Adresse",
-                    "school": "Établissement",
-                    "language": "Langue parlée",
+                    "school": "École",
+                    "language": "Langue",
                     "contract_type": "Type de contrat",
                     "level": "Niveau",
-                    "na": "N/A"
+                    "na": "N/D"
                 }
             },
             "users": {
@@ -365,23 +365,23 @@
                 "searchPlaceholder": "Rechercher un utilisateur",
                 "createUser": "Créer un utilisateur",
                 "edit": "Modifier",
-                "assignSchool": "Assigner à une école",
-                "school": "Établissement",
-                "notAssigned": "Pas encore assigné",
+                "assignSchool": "Affecter à une école",
+                "school": "École",
+                "notAssigned": "Non affecté",
                 "accountDetails": "Détails du compte",
-                "username": "Nom d'utilisateur",
+                "username": "Nom d’utilisateur",
                 "status": "Statut",
                 "active": "Actif",
                 "inactive": "Inactif",
                 "role": "Rôle",
-                "na": "N/A",
+                "na": "N/D",
                 "confirmed": "Confirmé",
                 "notConfirmed": "Non confirmé",
                 "blocked": "Bloqué",
-                "assignToSchool": "Assigner {name} {lastname} à une école",
+                "assignToSchool": "Affecter {name} {lastname} à une école",
                 "currentAssociation": "Association actuelle",
-                "none": "Aucun",
-                "selectSchool": "Sélectionnez une école",
+                "none": "Aucune",
+                "selectSchool": "Sélectionner une école",
                 "cancel": "Annuler",
                 "confirm": "Confirmer",
                 "cta": {
@@ -393,9 +393,9 @@
                     "first_name": "Prénom",
                     "email": "Email",
                     "phone": "Téléphone",
-                    "school": "Etablissement",
+                    "school": "École",
                     "role": "Rôle",
-                    "na": "N/A"
+                    "na": "N/D"
                 }
             },
             "payments": {
@@ -415,7 +415,7 @@
                     "payment_date": "Date de paiement",
                     "amount": "Montant (FCFA)",
                     "type": "Type",
-                    "monthly": "Mensualité",
+                    "monthly": "Mensuel",
                     "student": "Élève",
                     "other": "Autre"
                 }
@@ -428,8 +428,9 @@
                 "amount": "Montant",
                 "category": "Catégorie",
                 "school": "École",
-                "schoolYear": "Année Scolaire",
-                "na": "N/A",
+                "schoolYear": "Année scolaire",
+                "na": "N/D",
+                "create": "Créer une dépense",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -439,38 +440,861 @@
                     "amount": "Montant",
                     "category": "Catégorie",
                     "school": "École",
-                    "school_year": "Année Scolaire",
-                    "na": "N/A"
+                    "school_year": "Année scolaire",
+                    "na": "N/D"
                 }
             },
             "finance": {
                 "all_schools": "Toutes les écoles",
-                "annual_payments": "Encaissements Annuels",
-                "total_enrollments": "Total Inscriptions",
-                "total_monthly": "Total Mensualités",
-                "previous_month": "Mois Précédent",
-                "current_month": "Mois En Cours",
-                "annual_expenses": "Dépenses Annuelles",
+                "annual_payments": "Revenus annuels",
+                "total_enrollments": "Total des inscriptions",
+                "total_monthly": "Total des paiements mensuels",
+                "previous_month": "Mois précédent",
+                "current_month": "Mois actuel",
+                "annual_expenses": "Dépenses annuelles",
+                "salaries": "Salaires",
+                "maintenance": "Entretien",
                 "payments_tab": "Paiements",
                 "expenses_tab": "Dépenses",
                 "monthly_payments_trend": "Tendance des paiements mensuels",
-                "annual_payments_distribution": "Répartition des Encaissements Annuels",
+                "annual_payments_distribution": "Distribution des revenus annuels",
                 "monthly_expenses_trend": "Tendance des dépenses mensuelles",
-                "expenses_by_category": "Répartition des Dépenses par Catégorie"
+                "expenses_by_category": "Dépenses par catégorie",
+                "expenses_history": "Historique des dépenses",
+                "payments_history": "Historique des paiements"
             }
         },
-       
+        "forms": {
+            "inputs": {
+                "login": {
+                    "identifier": {
+                        "label": "Email ou nom d’utilisateur",
+                        "placeholder": "Entrez votre email ou nom d’utilisateur"
+                    },
+                    "password": {
+                        "label": "Mot de passe",
+                        "placeholder": "Entrez votre mot de passe"
+                    },
+                    "submit": "Se connecter",
+                    "specifics": {
+                        "forgotten_password": "Mot de passe oublié ?",
+                        "account": "Pas de compte ? Inscrivez-vous maintenant",
+                        "highlight": "S’inscrire"
+                    }
+                },
+                "change_password": {
+                    "current_password": {
+                        "label": "Mot de passe actuel",
+                        "placeholder": "Entrez votre mot de passe actuel"
+                    },
+                    "new_password": {
+                        "label": "Nouveau mot de passe",
+                        "placeholder": "Entrez votre nouveau mot de passe"
+                    },
+                    "confirm_password": {
+                        "label": "Confirmer le mot de passe",
+                        "placeholder": "Répétez votre nouveau mot de passe"
+                    },
+                    "submit": "Mettre à jour le mot de passe",
+                    "specifics": {
+                        "current_password": "Mot de passe actuel",
+                        "new_password": "Nouveau mot de passe",
+                        "confirm_password": "Confirmer le mot de passe",
+                        "highlight": "Mettre à jour le mot de passe"
+                    },
+                    "toast": {
+                        "successTitle": "Succès",
+                        "success": "Mot de passe changé avec succès",
+                        "errorTitle": "Erreur",
+                        "failed": "Échec du changement de mot de passe",
+                        "failedUpdate": "Échec de la mise à jour de l'utilisateur",
+                        "notAuthenticated": "Non authentifié"
+                    }
+                },
+                "forgot_password": {
+                    "email": {
+                        "label": "Email",
+                        "placeholder": "Entrez votre email"
+                    },
+                    "submit": "Envoyer le lien de réinitialisation"
+                },
+                "reset_password": {
+                    "password": {
+                        "label": "Nouveau mot de passe",
+                        "placeholder": "Entrez le nouveau mot de passe"
+                    },
+                    "confirm_password": {
+                        "label": "Confirmer le mot de passe",
+                        "placeholder": "Répétez le nouveau mot de passe"
+                    },
+                    "submit": "Mettre à jour le mot de passe"
+                },
+                "student": {
+                    "registration": {
+                        "lastname": {
+                            "placeholder": "Entrez le nom",
+                            "label": "Nom"
+                        },
+                        "firstname": {
+                            "placeholder": "Entrez le prénom",
+                            "label": "Prénom"
+                        },
+                        "sex": {
+                            "placeholder": "Sélectionnez le genre",
+                            "label": "Genre"
+                        },
+                        "socialCategory": {
+                            "placeholder": "Sélectionnez la catégorie sociale",
+                            "label": "Catégorie sociale"
+                        },
+                        "date": {
+                            "placeholder": "Jour",
+                            "label": "Jour"
+                        },
+                        "month": {
+                            "placeholder": "Mois",
+                            "label": "Mois"
+                        },
+                        "year": {
+                            "placeholder": "Année",
+                            "label": "Année"
+                        },
+                        "birthplace": {
+                            "placeholder": "Entrez le lieu de naissance",
+                            "label": "Lieu de naissance"
+                        },
+                        "parent_lastname": {
+                            "placeholder": "Entrez le nom du tuteur",
+                            "label": "Nom du tuteur"
+                        },
+                        "parent_firstname": {
+                            "placeholder": "Entrez le prénom du tuteur",
+                            "label": "Prénom du tuteur"
+                        },
+                        "parent_phone": {
+                            "placeholder": "Entrez le téléphone du tuteur",
+                            "label": "Téléphone du tuteur"
+                        },
+                        "level": {
+                            "placeholder": "Sélectionnez le niveau",
+                            "label": "Niveau"
+                        },
+                        "classroom": {
+                            "placeholder": "Sélectionnez la classe",
+                            "label": "Classe"
+                        },
+                        "class_letter": {
+                            "placeholder": "Entrez la lettre",
+                            "label": "Lettre"
+                        }
+                    },
+                    "confirm": {
+                        "studentType": {
+                            "placeholder": "Sélectionnez le type d’élève",
+                            "label": "Type d’élève",
+                            "options": [
+                                {
+                                    "name": "Hafiz",
+                                    "value": "Hafiz"
+                                },
+                                {
+                                    "name": "Ancien redoublant",
+                                    "value": "Ancien Redoublant"
+                                },
+                                {
+                                    "name": "Ancien passant",
+                                    "value": "Ancien Passant"
+                                },
+                                {
+                                    "name": "Nouveau",
+                                    "value": "Nouveau"
+                                }
+                            ]
+                        },
+                        "socialCategory": {
+                            "placeholder": "Sélectionnez la catégorie sociale",
+                            "label": "Catégorie sociale",
+                            "options": [
+                                {
+                                    "name": "Sans soutien",
+                                    "value": "Non"
+                                },
+                                {
+                                    "name": "Réduction des frais d’inscription",
+                                    "value": "Réduction inscription"
+                                },
+                                {
+                                    "name": "Réduction des frais mensuels",
+                                    "value": "Réduction mensualité"
+                                },
+                                {
+                                    "name": "Exonération totale des frais",
+                                    "value": "Tout tarifs offerts"
+                                }
+                            ]
+                        },
+                        "comment": {
+                            "placeholder": "Entrez un commentaire",
+                            "label": "Commentaire"
+                        },
+                        "amount": {
+                            "placeholder": "Entrez le montant total",
+                            "label": "Montant total"
+                        },
+                        "monthOf": {
+                            "placeholder": "Sélectionnez le mois de paiement",
+                            "label": "Mois de paiement"
+                        },
+                        "paymentDetail": {
+                            "monthlyFee": {
+                                "placeholder": "Entrez les frais mensuels",
+                                "label": "Frais mensuels"
+                            },
+                            "enrollmentFee": {
+                                "placeholder": "Entrez les frais d’inscription",
+                                "label": "Frais d’inscription"
+                            },
+                            "blouseFee": {
+                                "placeholder": "Entrez les frais de blouse",
+                                "label": "Frais de blouse"
+                            },
+                            "examFee": {
+                                "placeholder": "Entrez les frais d’examen",
+                                "label": "Frais d’examen"
+                            },
+                            "parentContributionFee": {
+                                "placeholder": "Entrez les frais de contribution des parents",
+                                "label": "Frais de contribution des parents"
+                            }
+                        }
+                    },
+                    "enrollment": {
+                        "classroom": {
+                            "placeholder": "Sélectionnez la classe",
+                            "label": "Classe"
+                        },
+                        "socialCategory": {
+                            "placeholder": "Sélectionnez la catégorie sociale",
+                            "label": "Catégorie sociale"
+                        },
+                        "enrollmentType": {
+                            "placeholder": "Sélectionnez le type d’inscription",
+                            "label": "Type d’inscription"
+                        }
+                    },
+                    "payment": {
+                        "amount": {
+                            "placeholder": "Entrez le montant requis",
+                            "label": "Montant requis"
+                        },
+                        "monthOf": {
+                            "placeholder": "Sélectionnez le mois de paiement",
+                            "label": "Mois de paiement"
+                        }
+                    }
+                },
+                "class": {
+                    "creation": {
+                        "grade": {
+                            "placeholder": "Sélectionnez le cycle",
+                            "label": "Cycle"
+                        },
+                        "level": {
+                            "placeholder": "Sélectionnez le niveau",
+                            "label": "Niveau"
+                        },
+                        "letter": {
+                            "placeholder": "Entrez la lettre",
+                            "label": "Lettre"
+                        }
+                    },
+                    "cancel": "Annuler",
+                    "create": "Créer une classe"
+                },
+                "school": {
+                    "creation": {
+                        "name": {
+                            "placeholder": "Entrez le nom de l’école",
+                            "label": "Nom de l’école"
+                        },
+                        "address": {
+                            "placeholder": "Entrez l’adresse",
+                            "label": "Adresse"
+                        },
+                        "city": {
+                            "placeholder": "Entrez la ville ou le village",
+                            "label": "Ville/Village"
+                        },
+                        "email": {
+                            "placeholder": "Entrez l’email",
+                            "label": "Email"
+                        },
+                        "postBox": {
+                            "placeholder": "Entrez la boîte postale",
+                            "label": "Boîte postale"
+                        },
+                        "phone": {
+                            "placeholder": "Entrez le téléphone",
+                            "label": "Téléphone"
+                        },
+                        "banner": {
+                            "placeholder": "Sélectionnez le logo de l’école",
+                            "label": "Logo de l’école"
+                        },
+                        "type": {
+                            "placeholder": "Sélectionnez le type",
+                            "label": "Type"
+                        },
+                        "parentSchool": {
+                            "placeholder": "Sélectionnez l’école mère",
+                            "label": "École mère"
+                        },
+                        "IEF": {
+                            "placeholder": "Entrez l’IEF",
+                            "label": "IEF"
+                        },
+                        "responsibleName": {
+                            "placeholder": "Entrez le nom du directeur",
+                            "label": "Nom du directeur"
+                        },
+                        "region": {
+                            "placeholder": "Entrez la région",
+                            "label": "Région"
+                        },
+                        "department": {
+                            "placeholder": "Entrez le département",
+                            "label": "Département"
+                        },
+                        "commune": {
+                            "placeholder": "Entrez la commune",
+                            "label": "Commune"
+                        },
+                        "note": {
+                            "placeholder": "Entrez des notes supplémentaires",
+                            "label": "Notes supplémentaires"
+                        },
+                        "isAlAzharLand": {
+                            "placeholder": "Le terrain appartient-il à Al Azhar ?",
+                            "label": "Terrain Al Azhar ?",
+                            "options": [
+                                {
+                                    "name": "Oui",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Non",
+                                    "value": false
+                                }
+                            ]
+                        },
+                        "phoneFix": {
+                            "placeholder": "Entrez le téléphone fixe",
+                            "label": "Téléphone fixe"
+                        },
+                        "IA": {
+                            "placeholder": "Entrez l’IA",
+                            "label": "IA"
+                        },
+                        "creationDate": {
+                            "placeholder": "Entrez la date de création",
+                            "label": "Date de création"
+                        }
+                    }
+                },
+                "user": {
+                    "creation": {
+                        "username": {
+                            "placeholder": "Entrez le nom d’utilisateur",
+                            "label": "Nom d’utilisateur"
+                        },
+                        "firstname": {
+                            "placeholder": "Entrez le prénom",
+                            "label": "Prénom"
+                        },
+                        "lastname": {
+                            "placeholder": "Entrez le nom",
+                            "label": "Nom"
+                        },
+                        "email": {
+                            "placeholder": "Entrez l’email",
+                            "label": "Email"
+                        },
+                        "password": {
+                            "placeholder": "Entrez le mot de passe",
+                            "label": "Mot de passe"
+                        },
+                        "confirmPassword": {
+                            "placeholder": "Répétez le mot de passe",
+                            "label": "Confirmer le mot de passe"
+                        },
+                        "role": {
+                            "placeholder": "Sélectionnez le rôle",
+                            "label": "Rôle"
+                        },
+                        "school": {
+                            "placeholder": "Sélectionnez l’école",
+                            "label": "École"
+                        }
+                    }
+                },
+                "teacher": {
+                    "recruitment": {
+                        "lastname": {
+                            "placeholder": "Entrez le nom",
+                            "label": "Nom"
+                        },
+                        "firstname": {
+                            "placeholder": "Entrez le prénom",
+                            "label": "Prénom"
+                        },
+                        "gender": {
+                            "placeholder": "Sélectionnez le genre",
+                            "label": "Genre"
+                        },
+                        "phoneNumber": {
+                            "placeholder": "Entrez le numéro de téléphone",
+                            "label": "Numéro de téléphone"
+                        },
+                        "email": {
+                            "placeholder": "Entrez l’email",
+                            "label": "Email"
+                        },
+                        "school": {
+                            "placeholder": "Sélectionnez l’école",
+                            "label": "École"
+                        },
+                        "birthDate": {
+                            "placeholder": "Entrez la date de naissance",
+                            "label": "Date de naissance"
+                        },
+                        "birthPlace": {
+                            "placeholder": "Entrez le lieu de naissance",
+                            "label": "Lieu de naissance"
+                        },
+                        "address": {
+                            "placeholder": "Entrez l’adresse",
+                            "label": "Adresse"
+                        },
+                        "maritalStatus": {
+                            "placeholder": "Sélectionnez la situation matrimoniale",
+                            "label": "Situation matrimoniale"
+                        },
+                        "academicDegree": {
+                            "placeholder": "Sélectionnez le diplôme académique",
+                            "label": "Diplôme académique"
+                        },
+                        "professionalDegrees": {
+                            "placeholder": "Sélectionnez les diplômes professionnels",
+                            "label": "Diplômes professionnels",
+                            "options": [
+                                {
+                                    "value": "bts",
+                                    "label": "BTS (Brevet de Technicien Supérieur)"
+                                },
+                                {
+                                    "value": "dut",
+                                    "label": "DUT (Diplôme Universitaire de Technologie)"
+                                },
+                                {
+                                    "value": "licence_pro",
+                                    "label": "Licence professionnelle"
+                                },
+                                {
+                                    "value": "cap",
+                                    "label": "CAP (Certificat d’Aptitude Professionnelle)"
+                                },
+                                {
+                                    "value": "bt",
+                                    "label": "BT (Brevet de Technicien)"
+                                },
+                                {
+                                    "value": "master_pro",
+                                    "label": "Master professionnel"
+                                },
+                                {
+                                    "value": "ccna",
+                                    "label": "Certification Cisco (CCNA)"
+                                },
+                                {
+                                    "value": "mcse",
+                                    "label": "Expert certifié Microsoft Solutions (MCSE)"
+                                }
+                            ]
+                        },
+                        "disciplines": {
+                            "placeholder": "Sélectionnez les disciplines",
+                            "label": "Disciplines",
+                            "options": [
+                                {
+                                    "value": "etudes_islamiques",
+                                    "label": "Études islamiques (Tafsir, Hadith, Fiqh, Aqida)"
+                                },
+                                {
+                                    "value": "memorisation_coran",
+                                    "label": "Mémorisation et interprétation du Coran"
+                                },
+                                {
+                                    "value": "langue_arabe",
+                                    "label": "Langue et littérature arabe"
+                                },
+                                {
+                                    "value": "histoire_islam",
+                                    "label": "Histoire de l’Islam"
+                                },
+                                {
+                                    "value": "spiritualite_soufisme",
+                                    "label": "Spiritualité et soufisme"
+                                },
+                                {
+                                    "value": "francais",
+                                    "label": "Français"
+                                },
+                                {
+                                    "value": "mathematiques",
+                                    "label": "Mathématiques"
+                                },
+                                {
+                                    "value": "sciences_naturelles",
+                                    "label": "Sciences naturelles"
+                                },
+                                {
+                                    "value": "geographie",
+                                    "label": "Géographie"
+                                },
+                                {
+                                    "value": "histoire",
+                                    "label": "Histoire"
+                                },
+                                {
+                                    "value": "anglais",
+                                    "label": "Anglais"
+                                },
+                                {
+                                    "value": "informatique",
+                                    "label": "Informatique"
+                                },
+                                {
+                                    "value": "education_civique",
+                                    "label": "Éducation civique"
+                                },
+                                {
+                                    "value": "formation_professionnelle",
+                                    "label": "Formation professionnelle"
+                                }
+                            ]
+                        },
+                        "language": {
+                            "placeholder": "Sélectionnez la langue",
+                            "label": "Langue"
+                        },
+                        "subjects": {
+                            "placeholder": "Sélectionnez les matières",
+                            "label": "Matières",
+                            "options": [
+                                {
+                                    "value": "etudes_islamiques",
+                                    "label": "Études islamiques (Tafsir, Hadith, Fiqh, Aqida)"
+                                },
+                                {
+                                    "value": "memorisation_coran",
+                                    "label": "Mémorisation et interprétation du Coran"
+                                },
+                                {
+                                    "value": "langue_arabe",
+                                    "label": "Langue et littérature arabe"
+                                },
+                                {
+                                    "value": "histoire_islam",
+                                    "label": "Histoire de l’Islam"
+                                },
+                                {
+                                    "value": "spiritualite_soufisme",
+                                    "label": "Spiritualité et soufisme"
+                                },
+                                {
+                                    "value": "francais",
+                                    "label": "Français"
+                                },
+                                {
+                                    "value": "mathematiques",
+                                    "label": "Mathématiques"
+                                },
+                                {
+                                    "value": "sciences_naturelles",
+                                    "label": "Sciences naturelles"
+                                },
+                                {
+                                    "value": "geographie",
+                                    "label": "Géographie"
+                                },
+                                {
+                                    "value": "histoire",
+                                    "label": "Histoire"
+                                },
+                                {
+                                    "value": "anglais",
+                                    "label": "Anglais"
+                                },
+                                {
+                                    "value": "informatique",
+                                    "label": "Informatique"
+                                },
+                                {
+                                    "value": "education_civique",
+                                    "label": "Éducation civique"
+                                },
+                                {
+                                    "value": "formation_professionnelle",
+                                    "label": "Formation professionnelle"
+                                }
+                            ]
+                        },
+                        "contractType": {
+                            "placeholder": "Sélectionnez le type de contrat",
+                            "label": "Type de contrat"
+                        },
+                        "level": {
+                            "placeholder": "Sélectionnez le niveau",
+                            "label": "Niveau"
+                        },
+                        "salary": {
+                            "placeholder": "Entrez le salaire",
+                            "label": "Salaire"
+                        },
+                        "contributions": {
+                            "placeholder": "Entrez les contributions",
+                            "label": "Contributions"
+                        },
+                        "registrationNumber": {
+                            "placeholder": "Entrez le numéro d’enregistrement",
+                            "label": "Numéro d’enregistrement"
+                        },
+                        "generation": {
+                            "placeholder": "Entrez la génération",
+                            "label": "Génération"
+                        },
+                        "salaryPerHour": {
+                            "placeholder": "Entrez le salaire horaire",
+                            "label": "Salaire horaire"
+                        },
+                        "hoursNumber": {
+                            "placeholder": "Entrez le nombre d’heures",
+                            "label": "Nombre d’heures"
+                        },
+                        "additionalResponsibilities": {
+                            "placeholder": "Entrez les responsabilités supplémentaires",
+                            "label": "Responsabilités supplémentaires"
+                        },
+                        "countryFrom": {
+                            "placeholder": "Entrez le pays d’origine",
+                            "label": "Pays d’origine"
+                        },
+                        "arrivalDate": {
+                            "placeholder": "Entrez la date d’arrivée",
+                            "label": "Date d’arrivée"
+                        },
+                        "previousInstitutes": {
+                            "placeholder": "Entrez les institutions précédentes",
+                            "label": "Institutions précédentes"
+                        }
+                    }
+                },
+                "schoolYear": {
+                    "creation": {
+                        "name": {
+                            "placeholder": "Entrez le nom de l’année scolaire",
+                            "label": "Nom de l’année scolaire"
+                        },
+                        "startDate": {
+                            "placeholder": "Entrez la date de début",
+                            "label": "Date de début"
+                        },
+                        "endDate": {
+                            "placeholder": "Entrez la date de fin",
+                            "label": "Date de fin"
+                        },
+                        "description": {
+                            "placeholder": "Entrez la description",
+                            "label": "Description"
+                        }
+                    }
+                },
+                "expense": {
+                    "creation": {
+                        "expenseDate": {
+                            "placeholder": "Entrez la date de la dépense",
+                            "label": "Date de la dépense"
+                        },
+                        "amount": {
+                            "placeholder": "Entrez le montant",
+                            "label": "Montant"
+                        },
+                        "category": {
+                            "placeholder": "Sélectionnez la catégorie",
+                            "label": "Catégorie"
+                        },
+                        "description": {
+                            "placeholder": "Entrez la description",
+                            "label": "Description"
+                        }
+                    }
+                }
+            },
+            "messages": {
+                "login": {
+                    "errors": {
+                        "not_authorized": "Email ou mot de passe incorrect",
+                        "problem": "Une erreur s’est produite lors de la connexion"
+                    }
+                },
+                "registration": {
+                    "info": {
+                        "birthPlaceMessage": "Date et lieu de naissance",
+                        "classInfoMessage": "Informations sur la classe",
+                        "personalInfoMessage": "Informations personnelles",
+                        "tutorInfoMessage": "Informations du tuteur"
+                    },
+                    "errors": {
+                        "already_exists": "Cet élève est déjà inscrit",
+                        "problem": "Une erreur s’est produite lors de l’inscription"
+                    }
+                },
+                "enrollment": {
+                    "info": {
+                        "personalInfoMessage": "Informations personnelles",
+                        "classInfoMessage": "Informations sur la classe",
+                        "generalInfoMessage": "Informations générales"
+                    },
+                    "errors": {
+                        "already_exists": "Cet élève est déjà inscrit",
+                        "problem": "Une erreur s’est produite lors de l’inscription"
+                    }
+                },
+                "payment": {
+                    "errors": {
+                        "already_exists": "Ce paiement a déjà été enregistré",
+                        "problem": "Une erreur s’est produite lors du traitement du paiement"
+                    }
+                },
+                "school": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "Informations générales",
+                            "addressInfoMessage": "Informations sur l’adresse",
+                            "contactInfoMessage": "Coordonnées",
+                            "additionalInfoMessage": "Informations supplémentaires"
+                        },
+                        "errors": {
+                            "already_exists": "Cette école est déjà enregistrée",
+                            "problem": "Une erreur s’est produite lors de la création de l’école"
+                        }
+                    }
+                },
+                "teacher": {
+                    "recruitment": {
+                        "info": {
+                            "personalInfoMessage": "Informations personnelles",
+                            "contactInfoMessage": "Coordonnées",
+                            "contractInfoMessage": "Détails du contrat",
+                            "additionalInfoMessage": "Informations supplémentaires"
+                        },
+                        "errors": {
+                            "already_exists": "Cet enseignant est déjà enregistré",
+                            "problem": "Une erreur s’est produite lors du recrutement de l’enseignant"
+                        }
+                    }
+                },
+                "user": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "Informations générales",
+                            "addressInfoMessage": "Informations sur l’adresse",
+                            "contactInfoMessage": "Coordonnées",
+                            "additionalInfoMessage": "Informations supplémentaires"
+                        },
+                        "errors": {
+                            "already_exists": "Cet utilisateur est déjà enregistré",
+                            "problem": "Une erreur s’est produite lors de la création de l’utilisateur"
+                        }
+                    }
+                },
+                "schoolYear": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "Informations générales"
+                        },
+                        "errors": {
+                            "already_exists": "Cette année scolaire est déjà enregistrée",
+                            "problem": "Une erreur s’est produite lors de la création de l’année scolaire"
+                        }
+                    }
+                },
+                "expense": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "Informations générales"
+                        },
+                        "errors": {
+                            "already_exists": "Cette dépense est déjà enregistrée",
+                            "problem": "Une erreur s’est produite lors de la création de la dépense"
+                        }
+                    }
+                }
+            },
+            "actions": {
+                "login": {
+                    "submit": "Se connecter",
+                    "register": "Créer un compte",
+                    "forgotPassword": "Mot de passe oublié ?",
+                    "resetPassword": "Réinitialiser le mot de passe"
+                },
+                "class": {
+                    "cancel": "Annuler",
+                    "create": "Créer une classe",
+                    "edit": "Modifier la classe"
+                },
+                "school": {
+                    "cancel": "Annuler",
+                    "create": "Créer une école",
+                    "edit": "Modifier l’école"
+                },
+                "user": {
+                    "cancel": "Annuler",
+                    "create": "Créer un utilisateur",
+                    "edit": "Modifier l’utilisateur"
+                },
+                "teacher": {
+                    "cancel": "Annuler",
+                    "create": "Recruter un enseignant",
+                    "edit": "Modifier l’enseignant"
+                },
+                "student": {
+                    "cancel": "Annuler",
+                    "create": "Inscrire un élève",
+                    "enroll": "Inscription"
+                },
+                "schoolYear": {
+                    "cancel": "Annuler",
+                    "create": "Créer une année scolaire",
+                    "edit": "Modifier l’année scolaire"
+                },
+                "expense": {
+                    "cancel": "Annuler",
+                    "create": "Créer une dépense"
+                }
+            }
+        },
         "classList": {
-            "grade": "Classes de primaires",
-            "intermediate": "Classes de secondaires 1er cycle",
-            "upperIntermediate": "Classes de secondaires 2ème cycle",
+            "grade": "Classes primaires",
+            "intermediate": "Classes secondaires inférieures",
+            "upperIntermediate": "Classes secondaires supérieures",
             "create": "Créer une classe",
-            "noClasses": "Aucune classe.\nVeuillez créer une classe pour commencer."
+            "noClasses": "Aucune classe disponible.\nCommencez par créer une nouvelle classe."
         },
         "schoolList": {
             "title": "Liste des écoles",
             "createSchool": "Créer une école",
-            "viewDetails": "Fiche de l'école",
+            "viewDetails": "Détails de l’école",
             "cta": {
                 "filter": "",
                 "export": ""
@@ -480,13 +1304,13 @@
     "pages": {
         "dashboard": {
             "initial": {
-                "title": "Tableau de bord Al-Azhar"
+                "title": "Tableau de bord Al Azhar"
             },
             "classes": {
-                "title": "Classes Al-Azhar"
+                "title": "Classes"
             },
             "students": {
-                "title": "Elèves"
+                "title": "Élèves"
             },
             "teachers": {
                 "title": "Enseignants"
@@ -495,26 +1319,26 @@
                 "title": "Utilisateurs"
             },
             "schools": {
-                "title": "Établissements"
+                "title": "Écoles"
             },
             "school_years": {
                 "title": "Années scolaires"
             },
             "finance": {
-                "title": "Finance"
+                "title": "Finances"
             }
         },
         "class": {
-            "heading": "Classes de primares",
+            "heading": "Classes primaires",
             "create": "Créer une classe",
-            "establishment": "Etablissement %name"
+            "establishment": "École %name"
         },
         "stats": {
-            "classes": "Nombre total de classe",
-            "students": "Nombre total d'élèves",
-            "teachers": "Nombre total d'enseignants",
-            "schools": "Nombre total d'écoles",
-            "users": "Nombre total d'utilisateurs",
+            "classes": "Total des classes",
+            "students": "Total des élèves",
+            "teachers": "Total des enseignants",
+            "schools": "Total des écoles",
+            "users": "Total des utilisateurs",
             "amount": {
                 "users": "%number utilisateurs",
                 "classes": "%number classes",
