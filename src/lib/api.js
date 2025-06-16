@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crée une instance Axios avec la configuration de base
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_STRAPI_BASE_URL || 'https://al-ahzar-backend.onrender.com/api', //'http://109.123.246.253:1338/api', // URL de base pour les appels API
+  baseURL: process.env.NEXT_PUBLIC_STRAPI_BASE_URL || 'https://al-ahzar-backend-xeuc.onrender.com/api', //'http://109.123.246.253:1338/api', // URL de base pour les appels API
   timeout: 10000, // Temps limite pour une requête
   headers: {
     'Content-Type': 'application/json',
