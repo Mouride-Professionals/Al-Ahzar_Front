@@ -33,13 +33,16 @@ export const SchoolYearSelector = ({ token }) => {
                 user_token: token,
             })
 
-            if (!response || response.data.length === 0) {
+            if (!response || !response.data) {
                 setCurrentSchoolYear(null);
                 setSchoolYear(null); // Update the school year in the context
                 Cookies.remove('selectedSchoolYear'); // Remove the selected school year from cookies
 
                 console.error('No school years found');
                 return;
+            }
+            if (response.data.length === 0) {
+                router.push('/dashboard/direction/school_years/create');
             }
 
             setSchoolYears(response.data);
