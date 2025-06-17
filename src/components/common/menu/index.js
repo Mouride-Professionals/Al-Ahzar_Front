@@ -32,12 +32,12 @@ export const MenuPill = ({ active, icon, message, link, isDisabled }) => {
       bgColor={theming.bgColor}
       borderRadius={25}
       py={3}
-      px={5}
+      px={3}
       minW={95}
     >
       {icon}
       <Box pl={1}>
-        <Text color={theming.textColor} fontSize={14}>
+        <Text color={theming.textColor} fontSize={14} noOfLines={1}>
           {message}
         </Text>
       </Box>

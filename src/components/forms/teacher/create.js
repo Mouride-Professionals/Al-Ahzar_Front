@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
@@ -7,6 +6,7 @@ import { colors, forms } from '@theme';
 import { teacherRecruitmentSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
 import { Formik } from 'formik';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Select from 'react-select';
@@ -95,15 +95,15 @@ export const CreateTeacherForm = ({
 
   // Map options with translated labels
   const translatedProfessionalDegreesOptions = professionalDegrees.options.map((opt, index) => ({
-    label: t(`inputs.teacher.recruitment.professionalDegrees.options[${ index }].label`),
+    label: t(opt.label),
     value: opt.value,
   }));
   const translatedDisciplinesOptions = disciplines.options.map((opt, index) => ({
-    label: t(`inputs.teacher.recruitment.disciplines.options[${ index }].label`),
+    label: t(opt.label),
     value: opt.value,
   }));
   const translatedSubjectsOptions = subjects.options.map((opt, index) => ({
-    label: t(`inputs.teacher.recruitment.subjects.options[${ index }].label`),
+    label: t(opt.label),
     value: opt.value,
   }));
 
@@ -119,7 +119,7 @@ export const CreateTeacherForm = ({
       backgroundColor: colors.white,
       height: 50,
       width: '100%',
-      boxShadow: state.isFocused ? `0 0 0 1px ${ colors.secondary.regular } ` : 'none',
+      boxShadow: state.isFocused ? `0 0 0 1px ${colors.secondary.regular} ` : 'none',
       '&:hover': {
         borderColor: colors.gray.dark,
       },
@@ -157,20 +157,20 @@ export const CreateTeacherForm = ({
       onSubmit={(values, { setSubmitting, setFieldError }) => {
         isEdit
           ? teacherUpdateFormHandler({
-              teacher: id,
-              data: values,
-              setSubmitting,
-              setFieldError,
-              token,
-              hasSucceeded: setHasSucceeded,
-            })
+            teacher: id,
+            data: values,
+            setSubmitting,
+            setFieldError,
+            token,
+            hasSucceeded: setHasSucceeded,
+          })
           : teacherRecruitmentFormHandler({
-              token,
-              data: values,
-              setSubmitting,
-              setFieldError,
-              hasSucceeded: setHasSucceeded,
-            });
+            token,
+            data: values,
+            setSubmitting,
+            setFieldError,
+            hasSucceeded: setHasSucceeded,
+          });
       }}
     >
       {({
@@ -234,8 +234,8 @@ export const CreateTeacherForm = ({
                   {...maritalStatus}
                   label={t(maritalStatus.label)}
                   placeholder={t(maritalStatus.placeholder)}
-                  options={maritalStatus.options.map((opt, index) => ({
-                    name: t(`inputs.teacher.recruitment.maritalStatus.options[${ index }].name`),
+                  options={maritalStatus.options.map((opt) => ({
+                    name: t(opt.name),
                     value: opt.value,
                   }))}
                   errors={errors}
@@ -252,10 +252,10 @@ export const CreateTeacherForm = ({
                   {...language}
                   label={t(language.label)}
                   placeholder={t(language.placeholder)}
-                  options={language.options.map((opt, index) => ({
-                    name: t(`inputs.teacher.recruitment.language.options[${ index }].name`),
-                    value: opt.value,
-                  }))}
+                  // options={language.options.map((opt) => ({
+                  //   name: op
+                  //   value: opt.value,
+                  // }))}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -333,8 +333,8 @@ export const CreateTeacherForm = ({
                   {...academicDegree}
                   label={t(academicDegree.label)}
                   placeholder={t(academicDegree.placeholder)}
-                  options={academicDegree.options.map((opt, index) => ({
-                    name: t(`inputs.teacher.recruitment.academicDegree.options[${ index }].name`),
+                  options={academicDegree.options.map((opt) => ({
+                    name: opt.name,
                     value: opt.value,
                   }))}
                   errors={errors}
@@ -363,14 +363,14 @@ export const CreateTeacherForm = ({
                     onBlur={handleBlur}
                     value={values.professionalDegrees
                       ?.map((degree) =>
-                          translatedProfessionalDegreesOptions.find((option) => option.value === degree)
-                        )
+                        translatedProfessionalDegreesOptions.find((option) => option.value === degree)
+                      )
                       ?.filter(Boolean) || []}
                     placeholder={t(professionalDegrees.placeholder)}
                     styles={customStyles}
                   />
                   {errors[professionalDegrees.uid] && touched[professionalDegrees.uid] && (
-                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${ errors[professionalDegrees.uid] } `) || errors[professionalDegrees.uid]}</FormErrorMessage>
+                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[professionalDegrees.uid]} `) || errors[professionalDegrees.uid]}</FormErrorMessage>
                   )}
                 </FormControl>
               </WrapItem>
@@ -421,7 +421,7 @@ export const CreateTeacherForm = ({
                     styles={customStyles}
                   />
                   {errors[disciplines.uid] && touched[disciplines.uid] && (
-                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${ errors[disciplines.uid] } `) || errors[disciplines.uid]}</FormErrorMessage>
+                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[disciplines.uid]} `) || errors[disciplines.uid]}</FormErrorMessage>
                   )}
                 </FormControl>
               </WrapItem>
@@ -432,8 +432,8 @@ export const CreateTeacherForm = ({
                   {...level}
                   label={t(level.label)}
                   placeholder={t(level.placeholder)}
-                  options={level.options.map((opt, index) => ({
-                    name: t(`inputs.teacher.recruitment.level.options[${ index }].name`),
+                  options={level.options.map((opt) => ({
+                    name: t(opt.name),
                     value: opt.value,
                   }))}
                   errors={errors}
@@ -467,7 +467,7 @@ export const CreateTeacherForm = ({
                     styles={customStyles}
                   />
                   {errors[subjects.uid] && touched[subjects.uid] && (
-                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${ errors[subjects.uid] } `) || errors[subjects.uid]}</FormErrorMessage>
+                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[subjects.uid]} `) || errors[subjects.uid]}</FormErrorMessage>
                   )}
                 </FormControl>
               </WrapItem>
@@ -485,7 +485,10 @@ export const CreateTeacherForm = ({
                   {...contractType}
                   label={t(contractType.label)}
                   placeholder={t(contractType.placeholder)}
-                  options={contractTypeOptions}
+                  options={contractType.options.map((opt) => ({
+                    name: t(opt.name),
+                    value: opt.value,
+                  }))}
                   errors={errors}
                   handleChange={(e) => {
                     setSelectedContractType(e.target.value);
@@ -629,14 +632,14 @@ export const CreateTeacherForm = ({
             <Box w={'15%'} mr={5}>
               <SecondaryButton
                 h={50}
-                message={t('buttons.cancel')}
+                message={t('forms.actions.teacher.cancel')}
                 onClick={() => router.back()}
               />
             </Box>
             <Box w={'20%'}>
               <FormSubmit
                 uid={'recruitment'}
-                submit_message={t('buttons.submit')}
+                submit_message={t('forms.actions.teacher.create')}
                 {...{ touched, errors, handleSubmit, isSubmitting }}
               />
             </Box>

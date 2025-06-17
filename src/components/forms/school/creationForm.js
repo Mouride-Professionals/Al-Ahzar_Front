@@ -243,7 +243,7 @@ export const CreateSchoolForm = ({
           {/* Address Info */}
           <Stack pt={10}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
-              {t('forms.messages.school.creation.info.addressInfoMessage')} 
+              {t('forms.messages.school.creation.info.addressInfoMessage')}
             </Text>
             <HStack align={'center'} justifyContent={'space-between'}>
               <WrapItem w={370}>
@@ -421,6 +421,11 @@ export const CreateSchoolForm = ({
                   {...isAlAzharLand}
                   label={t(isAlAzharLand.label)}
                   placeholder={t(isAlAzharLand.placeholder)}
+                  options={isAlAzharLand.options.map((option) => ({
+                    value: option.value,
+                    name: t(option.name),
+                  }))}
+
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}

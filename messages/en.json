@@ -776,16 +776,10 @@
                         "isAlAzharLand": {
                             "placeholder": "Is the land owned by Al Azhar?",
                             "label": "Al Azhar Land?",
-                            "options": [
-                                {
-                                    "name": "Yes",
-                                    "value": true
-                                },
-                                {
-                                    "name": "No",
-                                    "value": false
-                                }
-                            ]
+                            "options": {
+                                "yes": "Yes",
+                                "no": "No"
+                            }
                         },
                         "phoneFix": {
                             "placeholder": "Enter landline phone",
@@ -877,7 +871,25 @@
                         },
                         "maritalStatus": {
                             "placeholder": "Select marital status",
-                            "label": "Marital Status"
+                            "label": "Marital Status",
+                            "options": [
+                                {
+                                    "value": "Célibataire",
+                                    "label": "Single"
+                                },
+                                {
+                                    "value": "Marié(e)",
+                                    "label": "Married"
+                                },
+                                {
+                                    "value": "Divorçé(e)",
+                                    "label": "Divorced"
+                                },
+                                {
+                                    "value": "Veuf(ve)",
+                                    "label": "Widowed"
+                                }
+                            ]
                         },
                         "academicDegree": {
                             "placeholder": "Select academic degree",
@@ -1051,11 +1063,43 @@
                         },
                         "contractType": {
                             "placeholder": "Select contract type",
-                            "label": "Contract Type"
+                            "label": "Contract Type",
+                            "options": [
+                                {
+                                    "value": "Disponible",
+                                    "label": "Available"
+                                },
+                                {
+                                    "value": "Temps Partiel",
+                                    "label": "Part Time"
+                                },
+                                {
+                                    "value": "Etranger",
+                                    "label": "Foreigner"
+                                },
+                                {
+                                    "value": "Employé Etat",
+                                    "label": "State Employee"
+                                }
+                            ]
                         },
                         "level": {
                             "placeholder": "Select level",
-                            "label": "Level"
+                            "label": "Level",
+                            "options": [
+                                {
+                                    "value": "Primaire",
+                                    "label": "Primary"
+                                },
+                                {
+                                    "value": "Moyen",
+                                    "label": "Middle"
+                                },
+                                {
+                                    "value": "Secondaire",
+                                    "label": "High School"
+                                }
+                            ]
                         },
                         "salary": {
                             "placeholder": "Enter salary",

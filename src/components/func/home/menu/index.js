@@ -13,11 +13,9 @@ export const MainMenus = ({ role }) => {
       justifyContent={'flex-start'}
       w={'90%'}
     >
-      <HStack justifyContent={'flex-start'} w={'80%'}>
         {DashboardMainMenu({ activeLink, role }).map(
           (menu, i) => menu && <MenuPill {...menu} key={`main-menu-${i}`} />
         )}
-      </HStack>
     </HStack>
   );
 };

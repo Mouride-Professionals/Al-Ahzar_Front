@@ -774,16 +774,10 @@
                         "isAlAzharLand": {
                             "placeholder": "هل الأرض تابعة للأزهر؟",
                             "label": "هل الأرض تابعة للأزهر؟",
-                            "options": [
-                                {
-                                    "name": "نعم",
-                                    "value": true
-                                },
-                                {
-                                    "name": "لا",
-                                    "value": false
-                                }
-                            ]
+                            "options": {
+                                "yes": "نعم",
+                                "no": "لا"
+                            }
                         },
                         "phoneFix": {
                             "placeholder": "أدخل الهاتف الثابت",
@@ -875,7 +869,25 @@
                         },
                         "maritalStatus": {
                             "placeholder": "اختر الحالة الاجتماعية",
-                            "label": "الحالة الاجتماعية"
+                            "label": "الحالة الاجتماعية",
+                            "options": [
+                                {
+                                    "value": "Célibataire",
+                                    "label": "أعزب"
+                                },
+                                {
+                                    "value": "Marié(e)",
+                                    "label": " متزوج"
+                                },
+                                {
+                                    "value": "Divorçé(e)",
+                                    "label": " مطلق"
+                                },
+                                {
+                                    "value": "Veuf(ve)",
+                                    "label": " أرمل"
+                                }
+                            ]
                         },
                         "academicDegree": {
                             "placeholder": "اختر الدرجة الأكاديمية",
@@ -1049,11 +1061,43 @@
                         },
                         "contractType": {
                             "placeholder": "اختر نوع العقد",
-                            "label": "نوع العقد"
+                            "label": "نوع العقد",
+                            "options": [
+                                {
+                                    "name": "مستمر",
+                                    "value": "Disponible"
+                                },
+                                {
+                                    "name": "جزئي",
+                                    "value": "Temps Partiel"
+                                },
+                                {
+                                    "name": "أجنبي",
+                                    "value": "Etranger"
+                                },
+                                {
+                                    "name": "موظف دولة",
+                                    "value": "Employé Etat"
+                                }
+                            ]
                         },
                         "level": {
                             "placeholder": "اختر المستوى",
-                            "label": "المستوى"
+                            "label": "المستوى",
+                            "options": [
+                                {
+                                    "value": "Primaire",
+                                    "label": "ابتدائي"
+                                },
+                                {
+                                    "value": "Moyen",
+                                    "label": "إعدادي"
+                                },
+                                {
+                                    "value": "Secondaire",
+                                    "label": "ثانوي"
+                                }
+                            ]
                         },
                         "salary": {
                             "placeholder": "أدخل الراتب",
@@ -1297,54 +1341,54 @@
                 "filter": "",
                 "export": ""
             }
-        }},
-        "pages": {
-            "dashboard": {
-                "initial": {
-                    "title": "لوحة تحكم الأزهر"
-                },
-                "classes": {
-                    "title": "الفصول"
-                },
-                "students": {
-                    "title": "الطلاب"
-                },
-                "teachers": {
-                    "title": "المعلمون"
-                },
-                "users": {
-                    "title": "المستخدمون"
-                },
-                "schools": {
-                    "title": "المدارس"
-                },
-                "school_years": {
-                    "title": "السنوات الدراسية"
-                },
-                "finance": {
-                    "title": "المالية"
-                }
+        }
+    },
+    "pages": {
+        "dashboard": {
+            "initial": {
+                "title": "لوحة تحكم الأزهر"
             },
-            "class": {
-                "heading": "الفصول الابتدائية",
-                "create": "إنشاء فصل",
-                "establishment": "مدرسة %name"
+            "classes": {
+                "title": "الفصول"
             },
-            "stats": {
-                "classes": "إجمالي الفصول",
-                "students": "إجمالي الطلاب",
-                "teachers": "إجمالي المعلمين",
-                "schools": "إجمالي المدارس",
-                "users": "إجمالي المستخدمين",
-                "amount": {
-                    "users": "%number مستخدمين",
-                    "classes": "%number فصول",
-                    "students": "%number طلاب",
-                    "teachers": "%number معلمين",
-                    "schools": "%number مدارس",
-                    "finance": "%number FCFA"
-                }
+            "students": {
+                "title": "الطلاب"
+            },
+            "teachers": {
+                "title": "المعلمون"
+            },
+            "users": {
+                "title": "المستخدمون"
+            },
+            "schools": {
+                "title": "المدارس"
+            },
+            "school_years": {
+                "title": "السنوات الدراسية"
+            },
+            "finance": {
+                "title": "المالية"
             }
-        
-    
-    }}
+        },
+        "class": {
+            "heading": "الفصول الابتدائية",
+            "create": "إنشاء فصل",
+            "establishment": "مدرسة %name"
+        },
+        "stats": {
+            "classes": "إجمالي الفصول",
+            "students": "إجمالي الطلاب",
+            "teachers": "إجمالي المعلمين",
+            "schools": "إجمالي المدارس",
+            "users": "إجمالي المستخدمين",
+            "amount": {
+                "users": "%number مستخدمين",
+                "classes": "%number فصول",
+                "students": "%number طلاب",
+                "teachers": "%number معلمين",
+                "schools": "%number مدارس",
+                "finance": "%number FCFA"
+            }
+        }
+    }
+}

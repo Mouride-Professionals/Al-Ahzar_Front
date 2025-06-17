@@ -776,16 +776,10 @@
                         "isAlAzharLand": {
                             "placeholder": "Le terrain appartient-il à Al Azhar ?",
                             "label": "Terrain Al Azhar ?",
-                            "options": [
-                                {
-                                    "name": "Oui",
-                                    "value": true
-                                },
-                                {
-                                    "name": "Non",
-                                    "value": false
-                                }
-                            ]
+                            "options": {
+                                "yes": "Oui",
+                                "no": "Non"
+                            }
                         },
                         "phoneFix": {
                             "placeholder": "Entrez le téléphone fixe",
@@ -877,7 +871,25 @@
                         },
                         "maritalStatus": {
                             "placeholder": "Sélectionnez la situation matrimoniale",
-                            "label": "Situation matrimoniale"
+                            "label": "Situation matrimoniale",
+                            "options": [
+                                {
+                                    "value": "Célibataire",
+                                    "label": "Célibataire"
+                                },
+                                {
+                                    "value": "Marié(e)",
+                                    "label": "Marié(e)"
+                                },
+                                {
+                                    "value": "Divorçé(e)",
+                                    "label": "Divorçé(e)"
+                                },
+                                {
+                                    "value": "Veuf(ve)",
+                                    "label": "Veuf(ve)"
+                                }
+                            ]
                         },
                         "academicDegree": {
                             "placeholder": "Sélectionnez le diplôme académique",
@@ -1051,11 +1063,43 @@
                         },
                         "contractType": {
                             "placeholder": "Sélectionnez le type de contrat",
-                            "label": "Type de contrat"
+                            "label": "Type de contrat",
+                            "options": [
+                                {
+                                    "value": "Disponible",
+                                    "label": "Disponible"
+                                },
+                                {
+                                    "value": "Temps Partiel",
+                                    "label": "Temps Partiel"
+                                },
+                                {
+                                    "value": "Etranger",
+                                    "label": "Etranger"
+                                },
+                                {
+                                    "value": "Employé Etat",
+                                    "label": "Employé Etat"
+                                }
+                            ]
                         },
                         "level": {
                             "placeholder": "Sélectionnez le niveau",
-                            "label": "Niveau"
+                            "label": "Niveau",
+                            "options": [
+                                {
+                                    "value": "Primaire",
+                                    "label": "Primaire"
+                                },
+                                {
+                                    "value": "Moyen",
+                                    "label": "Moyen"
+                                },
+                                {
+                                    "value": "Secondaire",
+                                    "label": "Secondaire"
+                                }
+                            ]
                         },
                         "salary": {
                             "placeholder": "Entrez le salaire",
