@@ -1,8 +1,15 @@
 import {
   Box,
   Container,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
   Heading,
   HStack,
+  IconButton,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -12,18 +19,20 @@ import {
   Stack,
   Text,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react';
 import { MenuBreadcrumb } from '@components/common/menu';
 import { SchoolYearSelector } from '@components/common/school_year_selector';
 import { MainMenus } from '@components/func/home/menu';
+import LanguageSwitcher from '@components/language_switcher';
 import { colors, images, routes } from '@theme';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BiPlusCircle } from 'react-icons/bi';
 import { BsBell, BsHeart } from 'react-icons/bs';
-import { useTranslations } from 'next-intl';
-import LanguageSwitcher from '@components/LanguageSwitcher';
+import { FiMenu } from 'react-icons/fi'; // Use FiMenu for hamburger
 
 export const DesktopDashboardLayoutView = ({
   title,
@@ -147,3 +156,146 @@ export const DesktopDashboardLayoutView = ({
     </Stack>
   );
 };
+
+
+export const MobileDashboardLayoutView = ({
+  title,
+  banner = '',
+  children,
+  currentPage,
+  role,
+  token,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: session } = useSession();
+  const router = useRouter();
+  const t = useTranslations('components.layout.header.settings');
+
+  const logo = {
+    src: images.logo.src,
+    alt: 'Logo image',
+  };
+
+  return (
+    <VStack bgColor={colors.gray.highlight} minH="100vh" w="100%" spacing={0}>
+      {/* Header */}
+      <HStack
+        bgColor={colors.white}
+        w="100%"
+        py={2}
+        px={4}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <HStack spacing={2}>
+          <IconButton
+            aria-label="Toggle menu"
+            icon={<FiMenu size={18} />}
+            onClick={onOpen}
+            size="sm"
+            variant="ghost"
+          />
+          <Box h={40} w={50} pos="relative">
+            <Image
+              src={logo.src}
+              alt={logo.alt}
+              fill
+              style={{ objectFit: 'contain' }}
+              sizes="50px"
+              loading="lazy"
+            />
+          </Box>
+        </HStack>
+        <HStack spacing={2}>
+          <SchoolYearSelector token={token} />
+          <LanguageSwitcher onSwitch={onClose} />
+        </HStack>
+      </HStack>
+      <HStack bgColor={colors.white}
+        w="100%"
+        pb={2}
+        justifyContent="space-between"
+        alignItems="center">
+        <MainMenus role={role} />
+      </HStack>
+
+
+
+      {/* Drawer for Menu */}
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+            <HStack>
+              <Box h={40} w={50} pos="relative">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                  sizes="50px"
+                />
+              </Box>
+              <Text fontSize="md" fontWeight="bold">
+                {session?.user?.firstName} {session?.user?.lastName}
+              </Text>
+            </HStack>
+          </DrawerHeader>
+          <DrawerBody>
+            <VStack align="start" spacing={4}>
+              {/* <MainMenus role={role} /> */}
+              <Box
+                _hover={{ cursor: 'pointer', color: colors.primary.regular }}
+                onClick={() => {
+                  router.push(routes.page_route.dashboard.settings);
+                  onClose();
+                }}
+                py={2}
+              >
+                {t('title')}
+              </Box>
+              <Box
+                _hover={{ cursor: 'pointer', color: colors.primary.regular }}
+                onClick={() => {
+                  signOut();
+                  onClose();
+                }}
+                py={2}
+              >
+                {t('logout')}
+              </Box>
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Main Content */}
+      <VStack py={6} w="100%" flex={1}>
+        <Container maxW="container.sm">
+          <MenuBreadcrumb currentPage={currentPage} />
+          <Heading mt={3} size="md">
+            {title}
+          </Heading>
+          {children}
+        </Container>
+      </VStack>
+
+      {/* Footer */}
+      <HStack bgColor={colors.secondary.regular} py={4} w="100%">
+        <Container maxW="container.sm">
+          <HStack justifyContent="center">
+            <Text color={colors.white} fontSize="sm">
+              Made with
+            </Text>
+            <BsHeart color={colors.white} size={14} />
+            <Text color={colors.white} fontSize="sm">
+              for Al Azhar
+            </Text>
+          </HStack>
+        </Container>
+      </HStack>
+    </VStack>
+  );
+};
+

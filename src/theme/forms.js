@@ -582,7 +582,14 @@ module.exports = {
             label: 'forms.inputs.teacher.recruitment.academicDegree.label',
             uid: 'academicDegree',
             select: true,
-            options: mapOptions(teacherRecruitmentSchema.fields.academicDegree._whitelist),
+            options: [
+              // "Baccalauréat", "Licence", "Master", "Doctorat"
+              { value: 'Baccalauréat', label: 'forms.inputs.teacher.recruitment.academicDegree.options.0.label' },
+              { value: 'Licence', label: 'forms.inputs.teacher.recruitment.academicDegree.options.1.label' },
+              { value: 'Master', label: 'forms.inputs.teacher.recruitment.academicDegree.options.2.label' },
+              { value: 'Doctorat', label: 'forms.inputs.teacher.recruitment.academicDegree.options.3.label' },
+              { value: 'Autre', label: 'forms.inputs.teacher.recruitment.academicDegree.options.4.label' }
+            ]
           },
           professionalDegrees: {
             placeholder: 'forms.inputs.teacher.recruitment.professionalDegrees.placeholder',
@@ -660,10 +667,10 @@ module.exports = {
             uid: 'contractType',
             select: true,
             options: [
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.0.name', value: 'Disponible' },
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.1.name', value: 'Temps Partiel' },
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.2.name', value: 'Etranger' },
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.3.name', value: 'Employé Etat' },
+              { value: 'Disponible', name: 'forms.inputs.teacher.recruitment.contractType.options.0.label' },
+              { value: 'Temps Partiel', name: 'forms.inputs.teacher.recruitment.contractType.options.1.label' },
+              { value: 'Etranger', name: 'forms.inputs.teacher.recruitment.contractType.options.2.label' },
+              { value: 'Employé Etat', name: 'forms.inputs.teacher.recruitment.contractType.options.3.label' },
             ],
           },
           level: {

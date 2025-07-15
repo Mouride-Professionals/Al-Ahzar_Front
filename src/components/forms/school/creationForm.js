@@ -1,4 +1,4 @@
-import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
+import { Box, HStack, Stack, Text, WrapItem, useBreakpointValue } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import { schoolCreationFormHandler, schoolUpdateFormHandler } from '@handlers';
@@ -127,6 +127,9 @@ export const CreateSchoolForm = ({
     },
   } = forms;
 
+  // Responsive direction for HStack/Stack
+  const rowOrCol = useBreakpointValue({ base: 'column', md: 'row' });
+
   return (
     <Formik
       validationSchema={schoolCreationSchema}
@@ -163,14 +166,14 @@ export const CreateSchoolForm = ({
         handleSubmit,
         isSubmitting,
       }) => (
-        <Stack px={10} py={10}>
+        <Stack px={{ base: 2, md: 10 }} py={{ base: 2, md: 10 }} spacing={{ base: 6, md: 10 }}>
           {/* General Info */}
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t('forms.messages.school.creation.info.generalInfoMessage')}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...name}
                   label={t(name.label)}
@@ -182,7 +185,7 @@ export const CreateSchoolForm = ({
                   value={values.name}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...creationDate}
                   label={t(creationDate.label)}
@@ -194,7 +197,7 @@ export const CreateSchoolForm = ({
                   value={values.creationDate}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...responsibleName}
                   label={t(responsibleName.label)}
@@ -206,9 +209,9 @@ export const CreateSchoolForm = ({
                   value={values.responsibleName}
                 />
               </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={'50%'}>
+            </Stack>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...type}
                   label={t(type.label)}
@@ -223,7 +226,7 @@ export const CreateSchoolForm = ({
                   value={values.type}
                 />
               </WrapItem>
-              <WrapItem w={'50%'}>
+              <WrapItem w="100%">
                 <FormInput
                   select
                   options={filteredParentSchools}
@@ -238,15 +241,15 @@ export const CreateSchoolForm = ({
                   value={values.parentSchool}
                 />
               </WrapItem>
-            </HStack>
+            </Stack>
           </Stack>
           {/* Address Info */}
-          <Stack pt={10}>
+          <Stack pt={6}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t('forms.messages.school.creation.info.addressInfoMessage')}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...region}
                   label={t(region.label)}
@@ -261,7 +264,7 @@ export const CreateSchoolForm = ({
                   value={values.region}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   select
                   options={departments}
@@ -279,7 +282,7 @@ export const CreateSchoolForm = ({
                   value={values.department}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   select
                   options={communes}
@@ -294,7 +297,7 @@ export const CreateSchoolForm = ({
                   value={values.commune}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...city}
                   label={t(city.label)}
@@ -306,9 +309,9 @@ export const CreateSchoolForm = ({
                   value={values.city}
                 />
               </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={370}>
+            </Stack>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...address}
                   label={t(address.label)}
@@ -320,7 +323,7 @@ export const CreateSchoolForm = ({
                   value={values.address}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...IA}
                   label={t(IA.label)}
@@ -337,7 +340,7 @@ export const CreateSchoolForm = ({
                   value={values.IA}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   select
                   options={IEFs}
@@ -352,15 +355,15 @@ export const CreateSchoolForm = ({
                   value={values.IEF}
                 />
               </WrapItem>
-            </HStack>
+            </Stack>
           </Stack>
           {/* Contact Info */}
-          <Stack pt={10}>
+          <Stack pt={6}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t('forms.messages.school.creation.info.contactInfoMessage')}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...phoneFix}
                   label={t(phoneFix.label)}
@@ -372,7 +375,7 @@ export const CreateSchoolForm = ({
                   value={values.phoneFix}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...phone}
                   label={t(phone.label)}
@@ -384,7 +387,7 @@ export const CreateSchoolForm = ({
                   value={values.phone}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...email}
                   label={t(email.label)}
@@ -396,7 +399,7 @@ export const CreateSchoolForm = ({
                   value={values.email}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...postBox}
                   label={t(postBox.label)}
@@ -408,15 +411,15 @@ export const CreateSchoolForm = ({
                   value={values.postBox}
                 />
               </WrapItem>
-            </HStack>
+            </Stack>
           </Stack>
           {/* Additional Info */}
-          <Stack pt={10}>
+          <Stack pt={6}>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t('forms.messages.school.creation.info.additionalInfoMessage')}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...isAlAzharLand}
                   label={t(isAlAzharLand.label)}
@@ -425,7 +428,6 @@ export const CreateSchoolForm = ({
                     value: option.value,
                     name: t(option.name),
                   }))}
-
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -433,7 +435,7 @@ export const CreateSchoolForm = ({
                   value={values.isAlAzharLand}
                 />
               </WrapItem>
-              <WrapItem w={'100%'}>
+              <WrapItem w="100%">
                 <FormInput
                   {...note}
                   label={t(note.label)}
@@ -446,18 +448,19 @@ export const CreateSchoolForm = ({
                   value={values.note}
                 />
               </WrapItem>
-            </HStack>
+            </Stack>
           </Stack>
           {/* Actions */}
-          <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
-            <Box w={'15%'} mr={5}>
+          <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10} spacing={4} flexDirection={{ base: 'column', md: 'row' }}>
+            <Box w={{ base: '100%', md: '15%' }} mr={{ md: 5 }}>
               <SecondaryButton
                 h={50}
                 message={t('forms.actions.school.cancel')}
                 onClick={() => router.back()}
+                w="100%"
               />
             </Box>
-            <Box w={'20%'}>
+            <Box w={{ base: '100%', md: '20%' }}>
               <FormSubmit
                 uid={'schoolCreation'}
                 submit_message={t('forms.actions.school.create')}
@@ -467,6 +470,7 @@ export const CreateSchoolForm = ({
                   handleSubmit,
                   isSubmitting,
                 }}
+                w="100%"
               />
             </Box>
           </HStack>

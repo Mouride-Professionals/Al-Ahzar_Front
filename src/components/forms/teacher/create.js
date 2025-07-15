@@ -1,4 +1,4 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
+import { Box, FormControl, FormErrorMessage, FormLabel, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import { teacherRecruitmentFormHandler, teacherUpdateFormHandler } from '@handlers';
@@ -28,18 +28,6 @@ export const CreateTeacherForm = ({
     value: school.id,
   }));
   const [selectedContractType, setSelectedContractType] = useState(teacherData?.contractType || '');
-
-  const contractTypeOptions = [
-    { name: t('inputs.teacher.recruitment.contractType.options[0].name'), value: 'Disponible' },
-    { name: t('inputs.teacher.recruitment.contractType.options[1].name'), value: 'Temps Partiel' },
-    { name: t('inputs.teacher.recruitment.contractType.options[2].name'), value: 'Etranger' },
-    { name: t('inputs.teacher.recruitment.contractType.options[3].name'), value: 'Employé Etat' },
-  ];
-
-  const isPermanent = selectedContractType === contractTypeOptions[0].value;
-  const isTemporary = selectedContractType === contractTypeOptions[1].value;
-  const isForeign = selectedContractType === contractTypeOptions[2].value;
-  const isStateEmployee = selectedContractType === contractTypeOptions[3].value;
 
   const initialValues = mapFormInitialValues(teacherRecruitmentSchema._nodes, teacherData);
   if (isEdit) {
@@ -94,18 +82,29 @@ export const CreateTeacherForm = ({
   } = forms;
 
   // Map options with translated labels
-  const translatedProfessionalDegreesOptions = professionalDegrees.options.map((opt, index) => ({
+  const translatedProfessionalDegreesOptions = professionalDegrees.options.map((opt) => ({
     label: t(opt.label),
     value: opt.value,
   }));
-  const translatedDisciplinesOptions = disciplines.options.map((opt, index) => ({
+  const translatedDisciplinesOptions = disciplines.options.map((opt) => ({
     label: t(opt.label),
     value: opt.value,
   }));
-  const translatedSubjectsOptions = subjects.options.map((opt, index) => ({
+  const translatedSubjectsOptions = subjects.options.map((opt) => ({
     label: t(opt.label),
     value: opt.value,
   }));
+
+  // Responsive contract type logic
+  const contractTypeOptions = contractType.options.map((opt) => ({
+    name: t(opt.name),
+    value: opt.value,
+  }));
+
+  const isPermanent = selectedContractType === contractTypeOptions[0].value;
+  const isTemporary = selectedContractType === contractTypeOptions[1].value;
+  const isForeign = selectedContractType === contractTypeOptions[2].value;
+  const isStateEmployee = selectedContractType === contractTypeOptions[3].value;
 
   const customStyles = {
     container: (base) => ({
@@ -182,14 +181,14 @@ export const CreateTeacherForm = ({
         handleSubmit,
         isSubmitting,
       }) => (
-        <Stack px={10} py={10} dir={direction}>
+        <Stack px={{ base: 2, md: 10 }} py={{ base: 2, md: 10 }} spacing={{ base: 6, md: 10 }} dir={direction}>
           {/* Personal Information Section */}
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t(personalInfoMessage)}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...firstname}
                   label={t(firstname.label)}
@@ -201,7 +200,7 @@ export const CreateTeacherForm = ({
                   value={values.firstname}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...lastname}
                   label={t(lastname.label)}
@@ -213,13 +212,13 @@ export const CreateTeacherForm = ({
                   value={values.lastname}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...gender}
                   label={t(gender.label)}
                   placeholder={t(gender.placeholder)}
-                  options={gender.options.map((opt, index) => ({
-                    name: opt.name,
+                  options={gender.options.map((opt) => ({
+                    name: t(opt.name),
                     value: opt.value,
                   }))}
                   errors={errors}
@@ -229,7 +228,7 @@ export const CreateTeacherForm = ({
                   value={values.gender}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...maritalStatus}
                   label={t(maritalStatus.label)}
@@ -245,17 +244,13 @@ export const CreateTeacherForm = ({
                   value={values.maritalStatus}
                 />
               </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={370}>
+            </Stack>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+              <WrapItem w="100%">
                 <FormInput
                   {...language}
                   label={t(language.label)}
                   placeholder={t(language.placeholder)}
-                  // options={language.options.map((opt) => ({
-                  //   name: op
-                  //   value: opt.value,
-                  // }))}
                   errors={errors}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
@@ -263,7 +258,7 @@ export const CreateTeacherForm = ({
                   value={values.language}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...birthDate}
                   label={t(birthDate.label)}
@@ -275,7 +270,7 @@ export const CreateTeacherForm = ({
                   value={values.birthDate}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...birthPlace}
                   label={t(birthPlace.label)}
@@ -287,9 +282,9 @@ export const CreateTeacherForm = ({
                   value={values.birthPlace}
                 />
               </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={370}>
+            </Stack>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+              <WrapItem w="100%">
                 <FormInput
                   {...address}
                   label={t(address.label)}
@@ -301,7 +296,7 @@ export const CreateTeacherForm = ({
                   value={values.address}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   grow={2}
                   {...email}
@@ -314,7 +309,7 @@ export const CreateTeacherForm = ({
                   value={values.email}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w="100%">
                 <FormInput
                   {...phoneNumber}
                   label={t(phoneNumber.label)}
@@ -326,15 +321,15 @@ export const CreateTeacherForm = ({
                   value={values.phoneNumber}
                 />
               </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={370}>
+            </Stack>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+              <WrapItem w="100%">
                 <FormInput
                   {...academicDegree}
                   label={t(academicDegree.label)}
                   placeholder={t(academicDegree.placeholder)}
                   options={academicDegree.options.map((opt) => ({
-                    name: opt.name,
+                    name: t(opt.label),
                     value: opt.value,
                   }))}
                   errors={errors}
@@ -344,7 +339,7 @@ export const CreateTeacherForm = ({
                   value={values.academicDegree}
                 />
               </WrapItem>
-              <WrapItem w={'100%'}>
+              <WrapItem w="100%">
                 <FormControl py={2} isInvalid={errors[professionalDegrees.uid] && touched[professionalDegrees.uid]}>
                   <FormLabel fontWeight={'bold'}>{t(professionalDegrees.label)}</FormLabel>
                   <Select
@@ -370,11 +365,11 @@ export const CreateTeacherForm = ({
                     styles={customStyles}
                   />
                   {errors[professionalDegrees.uid] && touched[professionalDegrees.uid] && (
-                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[professionalDegrees.uid]} `) || errors[professionalDegrees.uid]}</FormErrorMessage>
+                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[professionalDegrees.uid]}`) || errors[professionalDegrees.uid]}</FormErrorMessage>
                   )}
                 </FormControl>
               </WrapItem>
-            </HStack>
+            </Stack>
           </Stack>
 
           {/* Contact Information Section */}
@@ -382,8 +377,8 @@ export const CreateTeacherForm = ({
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t(contactInfoMessage)}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   select={true}
                   options={schoolOptions}
@@ -397,7 +392,7 @@ export const CreateTeacherForm = ({
                   value={values.school}
                 />
               </WrapItem>
-              <WrapItem w={'100%'}>
+              <WrapItem w="100%">
                 <FormControl py={2} isInvalid={errors[disciplines.uid] && touched[disciplines.uid]}>
                   <FormLabel fontWeight={'bold'}>{t(disciplines.label)}</FormLabel>
                   <Select
@@ -421,13 +416,13 @@ export const CreateTeacherForm = ({
                     styles={customStyles}
                   />
                   {errors[disciplines.uid] && touched[disciplines.uid] && (
-                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[disciplines.uid]} `) || errors[disciplines.uid]}</FormErrorMessage>
+                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[disciplines.uid]}`) || errors[disciplines.uid]}</FormErrorMessage>
                   )}
                 </FormControl>
               </WrapItem>
-            </HStack>
-            <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-              <WrapItem w={370}>
+            </Stack>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+              <WrapItem w="100%">
                 <FormInput
                   {...level}
                   label={t(level.label)}
@@ -443,7 +438,7 @@ export const CreateTeacherForm = ({
                   value={values.level}
                 />
               </WrapItem>
-              <WrapItem w={'100%'}>
+              <WrapItem w="100%">
                 <FormControl py={2} isInvalid={errors[subjects.uid] && touched[subjects.uid]}>
                   <FormLabel fontWeight={'bold'}>{t(subjects.label)}</FormLabel>
                   <Select
@@ -467,11 +462,11 @@ export const CreateTeacherForm = ({
                     styles={customStyles}
                   />
                   {errors[subjects.uid] && touched[subjects.uid] && (
-                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[subjects.uid]} `) || errors[subjects.uid]}</FormErrorMessage>
+                    <FormErrorMessage>{t(`messages.teacher.recruitment.errors.${errors[subjects.uid]}`) || errors[subjects.uid]}</FormErrorMessage>
                   )}
                 </FormControl>
               </WrapItem>
-            </HStack>
+            </Stack>
           </Stack>
 
           {/* Contract Information Section */}
@@ -479,16 +474,13 @@ export const CreateTeacherForm = ({
             <Text color={colors.secondary.regular} fontWeight={'700'}>
               {t(contractInfoMessage)}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={'100%'}>
+            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+              <WrapItem w="100%">
                 <FormInput
                   {...contractType}
                   label={t(contractType.label)}
                   placeholder={t(contractType.placeholder)}
-                  options={contractType.options.map((opt) => ({
-                    name: t(opt.name),
-                    value: opt.value,
-                  }))}
+                  options={contractTypeOptions}
                   errors={errors}
                   handleChange={(e) => {
                     setSelectedContractType(e.target.value);
@@ -500,7 +492,7 @@ export const CreateTeacherForm = ({
                 />
               </WrapItem>
               {isPermanent && (
-                <WrapItem w={370}>
+                <WrapItem w="100%">
                   <FormInput
                     defaultValue={0}
                     {...salary}
@@ -515,37 +507,37 @@ export const CreateTeacherForm = ({
                 </WrapItem>
               )}
               {isStateEmployee && (
-                <WrapItem w={370}>
-                  <FormInput
-                    {...registrationNumber}
-                    label={t(registrationNumber.label)}
-                    placeholder={t(registrationNumber.placeholder)}
-                    errors={errors}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    touched={touched}
-                    value={values.registrationNumber}
-                  />
-                </WrapItem>
+                <>
+                  <WrapItem w="100%">
+                    <FormInput
+                      {...registrationNumber}
+                      label={t(registrationNumber.label)}
+                      placeholder={t(registrationNumber.placeholder)}
+                      errors={errors}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      touched={touched}
+                      value={values.registrationNumber}
+                    />
+                  </WrapItem>
+                  <WrapItem w="100%">
+                    <FormInput
+                      {...generation}
+                      label={t(generation.label)}
+                      placeholder={t(generation.placeholder)}
+                      errors={errors}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      touched={touched}
+                      value={values.generation}
+                    />
+                  </WrapItem>
+                </>
               )}
-              {isStateEmployee && (
-                <WrapItem w={370}>
-                  <FormInput
-                    {...generation}
-                    label={t(generation.label)}
-                    placeholder={t(generation.placeholder)}
-                    errors={errors}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    touched={touched}
-                    value={values.generation}
-                  />
-                </WrapItem>
-              )}
-            </HStack>
+            </Stack>
             {isTemporary && (
-              <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-                <WrapItem w={370}>
+              <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+                <WrapItem w="100%">
                   <FormInput
                     defaultValue={0}
                     {...hoursNumber}
@@ -558,7 +550,7 @@ export const CreateTeacherForm = ({
                     value={values.hoursNumber}
                   />
                 </WrapItem>
-                <WrapItem w={370}>
+                <WrapItem w="100%">
                   <FormInput
                     defaultValue={0}
                     {...salaryPerHour}
@@ -571,7 +563,7 @@ export const CreateTeacherForm = ({
                     value={values.salaryPerHour}
                   />
                 </WrapItem>
-                <WrapItem w={'100%'}>
+                <WrapItem w="100%">
                   <FormInput
                     {...additionalResponsibilities}
                     label={t(additionalResponsibilities.label)}
@@ -583,11 +575,11 @@ export const CreateTeacherForm = ({
                     value={values.additionalResponsibilities}
                   />
                 </WrapItem>
-              </HStack>
+              </Stack>
             )}
             {isForeign && (
-              <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-                <WrapItem w={370}>
+              <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+                <WrapItem w="100%">
                   <FormInput
                     {...arrivalDate}
                     label={t(arrivalDate.label)}
@@ -599,7 +591,7 @@ export const CreateTeacherForm = ({
                     value={values.arrivalDate}
                   />
                 </WrapItem>
-                <WrapItem w={370}>
+                <WrapItem w="100%">
                   <FormInput
                     {...countryFrom}
                     label={t(countryFrom.label)}
@@ -611,7 +603,7 @@ export const CreateTeacherForm = ({
                     value={values.countryFrom}
                   />
                 </WrapItem>
-                <WrapItem w={'100%'}>
+                <WrapItem w="100%">
                   <FormInput
                     {...previousInstitutes}
                     label={t(previousInstitutes.label)}
@@ -623,27 +615,35 @@ export const CreateTeacherForm = ({
                     value={values.previousInstitutes}
                   />
                 </WrapItem>
-              </HStack>
+              </Stack>
             )}
           </Stack>
 
           {/* Actions */}
-          <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
-            <Box w={'15%'} mr={5}>
+          <Stack
+            alignItems={{ base: 'stretch', md: 'flex-end' }}
+            justifyContent="flex-end"
+            pt={10}
+            spacing={4}
+            direction={{ base: 'column', md: 'row' }}
+          >
+            <Box w={{ base: '100%', md: '15%' }} mr={{ md: 5 }}>
               <SecondaryButton
                 h={50}
                 message={t('forms.actions.teacher.cancel')}
                 onClick={() => router.back()}
+                w="100%"
               />
             </Box>
-            <Box w={'20%'}>
+            <Box w={{ base: '100%', md: '20%' }}>
               <FormSubmit
                 uid={'recruitment'}
                 submit_message={t('forms.actions.teacher.create')}
                 {...{ touched, errors, handleSubmit, isSubmitting }}
+                w="100%"
               />
             </Box>
-          </HStack>
+          </Stack>
         </Stack>
       )}
     </Formik>

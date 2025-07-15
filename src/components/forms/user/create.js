@@ -1,4 +1,4 @@
-import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
+import { Box, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import { userCreationFormHandler } from '@handlers';
@@ -74,14 +74,14 @@ export const CreateUserForm = ({
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <Stack px={10} py={10}>
+                <Stack px={{ base: 2, md: 10 }} py={{ base: 2, md: 10 }} spacing={{ base: 6, md: 10 }}>
                     {/* Personal Information Section */}
                     <Stack>
                         <Text color={colors.secondary.regular} fontWeight={'700'}>
                             {t(generalInfoMessage)}
                         </Text>
-                        <HStack align={'center'} justifyContent={'space-between'}>
-                            <WrapItem w={"49%"}>
+                        <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     {...firstname}
                                     label={t(firstname.label)}
@@ -93,7 +93,7 @@ export const CreateUserForm = ({
                                     value={values.firstname}
                                 />
                             </WrapItem>
-                            <WrapItem w={"49%"}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     {...lastname}
                                     label={t(lastname.label)}
@@ -105,9 +105,9 @@ export const CreateUserForm = ({
                                     value={values.lastname}
                                 />
                             </WrapItem>
-                        </HStack>
-                        <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-                            <WrapItem w={"49%"}>
+                        </Stack>
+                        <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     {...username}
                                     label={t(username.label)}
@@ -119,7 +119,7 @@ export const CreateUserForm = ({
                                     value={values.username}
                                 />
                             </WrapItem>
-                            <WrapItem w={"49%"}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     {...email}
                                     label={t(email.label)}
@@ -132,7 +132,7 @@ export const CreateUserForm = ({
                                 />
                             </WrapItem>
                             {/* If you want to show password field, uncomment below
-                            <WrapItem w={370}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     {...password}
                                     type="password"
@@ -146,10 +146,10 @@ export const CreateUserForm = ({
                                 />
                             </WrapItem>
                             */}
-                        </HStack>
+                        </Stack>
                         {/* Adding Role and School fields */}
-                        <HStack align={'center'} justifyContent={'space-between'} pt={5}>
-                            <WrapItem w={"49%"}>
+                        <Stack direction={{ base: 'column', md: 'row' }} spacing={4} pt={5}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     {...role}
                                     label={t(role.label)}
@@ -162,7 +162,7 @@ export const CreateUserForm = ({
                                     value={values.role}
                                 />
                             </WrapItem>
-                            <WrapItem w={'49%'}>
+                            <WrapItem w="100%">
                                 <FormInput
                                     select={true}
                                     options={schoolOptions}
@@ -176,19 +176,26 @@ export const CreateUserForm = ({
                                     value={values.school}
                                 />
                             </WrapItem>
-                        </HStack>
+                        </Stack>
                     </Stack>
 
                     {/* Actions */}
-                    <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
-                        <Box w={'15%'} mr={5}>
+                    <Stack
+                        alignItems={{ base: 'stretch', md: 'flex-end' }}
+                        justifyContent="flex-end"
+                        pt={10}
+                        spacing={4}
+                        direction={{ base: 'column', md: 'row' }}
+                    >
+                        <Box w={{ base: '100%', md: '15%' }} mr={{ md: 5 }}>
                             <SecondaryButton
                                 h={50}
                                 message={t('forms.actions.user.cancel')}
                                 onClick={() => router.back()}
+                                w="100%"
                             />
                         </Box>
-                        <Box w={'20%'}>
+                        <Box w={{ base: '100%', md: '20%' }}>
                             <FormSubmit
                                 uid={'userCreation'}
                                 submit_message={t('forms.actions.user.create')}
@@ -198,9 +205,10 @@ export const CreateUserForm = ({
                                     handleSubmit,
                                     isSubmitting,
                                 }}
+                                w="100%"
                             />
                         </Box>
-                    </HStack>
+                    </Stack>
                 </Stack>
             )}
         </Formik>

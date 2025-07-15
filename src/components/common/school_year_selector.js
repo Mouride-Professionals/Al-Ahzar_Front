@@ -1,18 +1,20 @@
-import { Text, VStack } from '@chakra-ui/react';
+// src/components/common/school_year_selector/index.js
+'use client';
+
+import { Select, Text, VStack } from '@chakra-ui/react';
 import { colors, routes } from '@theme';
 import { useSchoolYear } from '@utils/context/school_year_context';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Select from 'react-select';
 import { serverFetch } from 'src/lib/api';
+import { signOut } from 'next-auth/react';
 
 export const SchoolYearSelector = ({ token }) => {
     const router = useRouter();
     const { schoolYear, setSchoolYear } = useSchoolYear();
     const [triggerRedirect, setTriggerRedirect] = useState(false);
-
     const [schoolYears, setSchoolYears] = useState([]);
     const [currentSchoolYear, setCurrentSchoolYear] = useState(Cookies.get('selectedSchoolYear') || null);
     const [loading, setLoading] = useState(false);
@@ -24,20 +26,21 @@ export const SchoolYearSelector = ({ token }) => {
             },
         },
     } = routes.api_route;
-    // Fetch school years and current school year
+    const t = useTranslations('components.layout.header');
+
+    // Fetch school years
     const fetchSchoolYears = async () => {
         setLoading(true);
         try {
             const response = await serverFetch({
                 uri: allSchoolYears,
                 user_token: token,
-            })
+            });
 
             if (!response || !response.data) {
                 setCurrentSchoolYear(null);
-                setSchoolYear(null); // Update the school year in the context
-                Cookies.remove('selectedSchoolYear'); // Remove the selected school year from cookies
-
+                setSchoolYear(null);
+                Cookies.remove('selectedSchoolYear');
                 console.error('No school years found');
                 return;
             }
@@ -46,11 +49,11 @@ export const SchoolYearSelector = ({ token }) => {
             }
 
             setSchoolYears(response.data);
-            const current = schoolYears?.find((year) => year.attributes?.isCurrent);
+            const current = response.data.find((year) => year.attributes?.isCurrent);
             if (current) {
                 setCurrentSchoolYear(current.id);
-                setSchoolYear(current.id); // Update the school year in the context
-                Cookies.set('selectedSchoolYear', current?.id); // Save the selected school year to cookies
+                setSchoolYear(current.id);
+                Cookies.set('selectedSchoolYear', current.id);
             }
         } catch (error) {
             console.error('Error fetching school years:', error);
@@ -58,9 +61,9 @@ export const SchoolYearSelector = ({ token }) => {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         const savedSchoolYear = Cookies.get('selectedSchoolYear');
-
         if (savedSchoolYear) {
             setCurrentSchoolYear(savedSchoolYear);
             setSchoolYear(savedSchoolYear);
@@ -69,6 +72,8 @@ export const SchoolYearSelector = ({ token }) => {
             fetchSchoolYears();
         }
     }, [token]);
+
+    // Fetch user role and redirect
     const fetchUserRole = async () => {
         try {
             const response = await serverFetch({
@@ -89,7 +94,6 @@ export const SchoolYearSelector = ({ token }) => {
                     cashier: { initial: cashier },
                 },
             } = routes.page_route;
-
 
             let redirectPath = '/user/auth';
             switch (role.name) {
@@ -116,84 +120,54 @@ export const SchoolYearSelector = ({ token }) => {
             signOut({ redirect: false });
             router.push('/user/auth');
         }
-    }
+    };
+
     useEffect(() => {
         if (!triggerRedirect) return;
-
         if (!token) {
             signOut({ redirect: false });
             router.push('/user/auth');
             return;
         }
-
-
-
         fetchUserRole();
         setTriggerRedirect(false);
     }, [triggerRedirect, router, token]);
 
     const handleSchoolYearChange = (selectedYear) => {
-        setSchoolYear(selectedYear);// Update the school year in the context
+        setSchoolYear(selectedYear);
         setCurrentSchoolYear(selectedYear);
-        Cookies.set('selectedSchoolYear', selectedYear); // Save the selected school year to cookies
+        Cookies.set('selectedSchoolYear', selectedYear);
         setTriggerRedirect(true);
-
     };
 
-    const t = useTranslations('components.layout.header');
-
     return (
-        <VStack w={'40%'} spacing={1} align="left">
-            <Text fontWeight="hairline">{t('schoolYearSelector.label')}</Text>
+        <VStack w={{ base: '120px', sm: '120px' }} spacing={1} align="left">
+            {/* <Text fontWeight="hairline" fontSize={{ base: 'xs', sm: 'sm' }}>
+                {t('schoolYearSelector.label')}
+            </Text> */}
             <Select
-                options={schoolYears.map((year) => ({
-                    value: year.id,
-                    label: `${year.attributes.name}`,
-                }))}
-                value={schoolYears
-                    .filter((year) => year.id == currentSchoolYear)
-                    .map((year) => ({
-                        value: year.id,
-
-                        label: `${year.attributes.name}`,
-                    }))}
-                onChange={(e) => handleSchoolYearChange(e.value)}
-                // isDisabled={loading}
-                isLoading={loading}
-                bgColor="white"
-                classNamePrefix="react-select"
-                styles={{
-                    container: (base) => ({
-                        ...base,
-                        width: '100%',
-                    }),
-                    control: (base, state) => ({
-                        ...base,
-                        backgroundColor: colors.white,
-                        borderColor: state.isFocused ? colors.secondary.regular : colors.secondary.regular,
-                        boxShadow: state.isFocused ? `0 0 0 1px ${colors.secondary.regular}` : 'none',
-                        minHeight: '40px',
-                    }),
-                    valueContainer: (base) => ({
-                        ...base,
-                        padding: '0 12px',
-                    }),
-                    placeholder: (base) => ({
-                        ...base,
-                        color: colors.gray.dark,
-                    }),
-                    input: (base) => ({
-                        ...base,
-                        fontSize: '14px',
-                    }),
-                    menu: (base) => ({
-                        ...base,
-                        zIndex: 5,
-                    }),
-                }}
-            />
-
+                value={currentSchoolYear || ''}
+                onChange={(e) => handleSchoolYearChange(e.target.value)}
+                isDisabled={loading}
+                bg="white"
+                borderColor={colors.secondary.regular}
+                size={{ base: 'sm', sm: 'md' }}
+                fontSize={{ base: '12px', sm: '14px' }}
+                placeholder={t('schoolYearSelector.label')}
+                _placeholder={{ color: colors.gray.dark }}
+            >
+                {loading ? (
+                    <option value="" disabled>
+                        {t('schoolYearSelector.label')}
+                    </option>
+                ) : (
+                    schoolYears.map((year) => (
+                        <option key={year.id} value={year.id}>
+                            {year.attributes.name}
+                        </option>
+                    ))
+                )}
+            </Select>
         </VStack>
     );
 };
-

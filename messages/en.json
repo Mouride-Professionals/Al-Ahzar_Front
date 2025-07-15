@@ -175,7 +175,7 @@
             "users": "Administration",
             "teachers": "Teachers",
             "schools": "Schools",
-            "school_years": "School Years"
+            "school_years": "School_Years"
         },
         "layout": {
             "breadcrumb": {

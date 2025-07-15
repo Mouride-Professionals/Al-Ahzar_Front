@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getSession } from 'next-auth/react';
 
 // Crée une instance Axios avec la configuration de base
 const api = axios.create({
@@ -11,23 +12,23 @@ const api = axios.create({
 
 // Middleware pour inclure le token d'authentification dans chaque requête
 // Add interceptor to inject token dynamically
-// api.interceptors.request.use(
-//     async (config) => {
-//         try {
-//             const session = await getSession(); // Retrieve the session
-//             if (session?.user?.accessToken) {
-//                 config.headers.Authorization = `Bearer ${session.user.accessToken}`;
-//             }
-//         } catch (error) {
-//             console.error('Failed to retrieve session for token:', error);
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         console.error('Request configuration error:', error);
-//         return Promise.reject(error);
-//     }
-// );
+api.interceptors.request.use(
+  async (config) => {
+    try {
+      const session = await getSession(); // Retrieve the session
+      if (session?.user?.accessToken) {
+        config.headers.Authorization = `Bearer ${session.user.accessToken}`;
+      }
+    } catch (error) {
+      console.error('Failed to retrieve session for token:', error);
+    }
+    return config;
+  },
+  (error) => {
+    console.error('Request configuration error:', error);
+    return Promise.reject(error);
+  }
+);
 
 
 // api.interceptors.request.use(async (config) => {

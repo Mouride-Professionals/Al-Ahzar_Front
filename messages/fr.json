@@ -175,7 +175,7 @@
             "users": "Administration",
             "teachers": "Enseignants",
             "schools": "Écoles",
-            "school_years": "Années scolaires"
+            "school_years": "Années_scolaires"
         },
         "layout": {
             "breadcrumb": {
@@ -893,7 +893,29 @@
                         },
                         "academicDegree": {
                             "placeholder": "Sélectionnez le diplôme académique",
-                            "label": "Diplôme académique"
+                            "label": "Diplôme académique",
+                            "options": [
+                                {
+                                    "value": "baccalaureat",
+                                    "label": "Baccalauréat"
+                                },
+                                {
+                                    "value": "licence",
+                                    "label": "Licence"
+                                },
+                                {
+                                    "value": "master",
+                                    "label": "Master"
+                                },
+                                {
+                                    "value": "doctorat",
+                                    "label": "Doctorat"
+                                },
+                                {
+                                    "value": "autre",
+                                    "label": "Autre"
+                                }
+                            ]
                         },
                         "professionalDegrees": {
                             "placeholder": "Sélectionnez les diplômes professionnels",
@@ -1366,7 +1388,7 @@
                 "title": "Écoles"
             },
             "school_years": {
-                "title": "Années scolaires"
+                "title": "Annéesscolaires"
             },
             "finance": {
                 "title": "Finances"
