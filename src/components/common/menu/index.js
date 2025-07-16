@@ -24,7 +24,6 @@ export const MenuPill = forwardRef(({ active, icon, message, link, isDisabled },
     <Link href={isDisabled ? '#' : link} passHref>
       <HStack
         ref={ref}
-        as="a"
         justifyContent="center"
         alignItems="center"
         bgColor={theming.bgColor}
