@@ -41,6 +41,7 @@ import { PiUserDuotone, PiUsersDuotone } from 'react-icons/pi';
 import { SlClose } from 'react-icons/sl';
 import { serverFetch } from 'src/lib/api';
 import { BoxZone } from '../cards/boxZone';
+import { hasPermission } from '@utils/roles';
 
 const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const t = useTranslations('components.dataset.students');
@@ -501,11 +502,11 @@ export const DataSet = ({
               bgColor={bgColor}
               color={color}
             />}
-            <FormExport onExport={() => downloadCSV(filtered)} />
+            <FormExport onExport={() =>filtered.length > 0 && downloadCSV(filtered)} />
           </HStack>
         </HStack>
 
-        {role?.name != 'Caissier' && (
+        {hasPermission(role.name, 'create_student')  && (
           <HStack>
             <Button
               onClick={() =>

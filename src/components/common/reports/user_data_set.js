@@ -28,8 +28,10 @@ import DataTable from 'react-data-table-component';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
+import is from 'sharp/lib/is';
+import { hasPermission, ROLES } from '@utils/roles';
 
-const ExpandedComponent = ({ data, schools, token }) => {
+const ExpandedComponent = ({ data, schools, token, role }) => {
   const t = useTranslations('components.dataset.users');
   const router = useRouter();
   const toast = useToast({ position: 'top-right', duration: 3000, isClosable: true });
@@ -155,13 +157,14 @@ const ExpandedComponent = ({ data, schools, token }) => {
 
             {/* Action Buttons */}
             <HStack justifyContent={'flex-end'} mt={6}>
-              <Button
+
+             {hasPermission(role.name, 'manageUsers') && data.role?.name !== role.name && ( <Button
                 onClick={null}
                 colorScheme="orange"
                 variant="outline"
               >
                 {t('edit')}
-              </Button>
+              </Button>)}
               {school && (
                 <Button onClick={school && openDialog} colorScheme="orange" variant="outline">
                   {t('assignSchool')}
@@ -271,7 +274,7 @@ export const UserDataSet = ({ role, data = [], schools, columns, selectedIndex =
       expandableRows
       expandableRowExpanded={(row) => row.id === expandedRow?.id}
       onRowClicked={handleRowExpandToggle}
-      expandableRowsComponent={(data) => ExpandedComponent({ ...data, schools, token })}
+      expandableRowsComponent={(data) => ExpandedComponent({ ...data, schools, token, role })}
       pagination
     />
   );

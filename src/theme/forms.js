@@ -660,10 +660,10 @@ module.exports = {
             uid: 'contractType',
             select: true,
             options: [
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.0.name', value: 'Disponible' },
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.1.name', value: 'Temps Partiel' },
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.2.name', value: 'Etranger' },
-              { name: 'forms.inputs.teacher.recruitment.contractType.options.3.name', value: 'Employé Etat' },
+              { label: 'forms.inputs.teacher.recruitment.contractType.options.0.label', value: 'Disponible' },
+              { label: 'forms.inputs.teacher.recruitment.contractType.options.1.label', value: 'Temps Partiel' },
+              { label: 'forms.inputs.teacher.recruitment.contractType.options.2.label', value: 'Etranger' },
+              { label: 'forms.inputs.teacher.recruitment.contractType.options.3.label', value: 'Employé Etat' },
             ],
           },
           level: {
