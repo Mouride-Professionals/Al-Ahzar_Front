@@ -3,13 +3,14 @@ export function formatMoney(amount, options = {}) {
 }
 
 export function formatPhoneNumber(phone) {
+  
   switch (phone?.length) {
     case 9:
       return phone.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
     case 6:
       return phone.replace(/(\d{3})(\d{3})/, '$1 $2');
     default:
-      return 'N/A';
+      return phone || 'N/A';
   }
 }
 

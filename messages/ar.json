@@ -1064,19 +1064,19 @@
                             "label": "نوع العقد",
                             "options": [
                                 {
-                                    "name": "مستمر",
+                                    "label": "مستمر",
                                     "value": "Disponible"
                                 },
                                 {
-                                    "name": "جزئي",
+                                    "label": "جزئي",
                                     "value": "Temps Partiel"
                                 },
                                 {
-                                    "name": "أجنبي",
+                                    "label": "أجنبي",
                                     "value": "Etranger"
                                 },
                                 {
-                                    "name": "موظف دولة",
+                                    "label": "موظف دولة",
                                     "value": "Employé Etat"
                                 }
                             ]

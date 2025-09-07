@@ -47,7 +47,7 @@ export default function Dashboard({ kpis, role, token }) {
       title: t('pages.stats.classes'),
     },
     {
-      count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length),
+      count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length??0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: t('pages.stats.students'),
     },

@@ -30,10 +30,10 @@ export const CreateTeacherForm = ({
   const [selectedContractType, setSelectedContractType] = useState(teacherData?.contractType || '');
 
   const contractTypeOptions = [
-    { name: t('inputs.teacher.recruitment.contractType.options[0].name'), value: 'Disponible' },
-    { name: t('inputs.teacher.recruitment.contractType.options[1].name'), value: 'Temps Partiel' },
-    { name: t('inputs.teacher.recruitment.contractType.options[2].name'), value: 'Etranger' },
-    { name: t('inputs.teacher.recruitment.contractType.options[3].name'), value: 'Employé Etat' },
+    { label: t('inputs.teacher.recruitment.contractType.options[0].label'), value: 'Disponible' },
+    { label: t('inputs.teacher.recruitment.contractType.options[1].label'), value: 'Temps Partiel' },
+    { label: t('inputs.teacher.recruitment.contractType.options[2].label'), value: 'Etranger' },
+    { label: t('inputs.teacher.recruitment.contractType.options[3].label'), value: 'Employé Etat' },
   ];
 
   const isPermanent = selectedContractType === contractTypeOptions[0].value;
@@ -486,7 +486,7 @@ export const CreateTeacherForm = ({
                   label={t(contractType.label)}
                   placeholder={t(contractType.placeholder)}
                   options={contractType.options.map((opt) => ({
-                    name: t(opt.name),
+                    name: t(opt.label),
                     value: opt.value,
                   }))}
                   errors={errors}

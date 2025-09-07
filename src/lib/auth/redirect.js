@@ -20,8 +20,9 @@ export default function useCustomRedirect() {
     });
 
     useEffect(() => {
+        
         if (status === 'loading') return;
-
+        
         const token = session?.user?.accessToken;
 
         if (!token) {
@@ -39,7 +40,7 @@ export default function useCustomRedirect() {
                 if (!userResponse) {
                     throw new Error('Aucune réponse utilisateur trouvée.');
                 }
-
+                
                 Cookies.set('schoolName', userResponse?.school?.name || '');
                 setRole(userResponse.role);
                 // setForcePasswordChange(userResponse.forcePasswordChange);
