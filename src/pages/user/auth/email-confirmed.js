@@ -1,6 +1,7 @@
 'use client';
 
-import { Box, Button, Spinner, Text, VStack, useToast } from '@chakra-ui/react';
+import { Button, Spinner, Text, VStack, useToast } from '@chakra-ui/react';
+import AuthenticationLayout from '@components/layout/authentication';
 import { colors, routes } from '@theme';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -78,15 +79,7 @@ export default function ConfirmEmail() {
     }, [confirmation, router, toast, t]);
 
     return (
-        <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            minHeight="100vh"
-            bg="gray.50"
-            p={{ base: 4, md: 8 }}
-            aria-live="polite"
-        >
+        <AuthenticationLayout>
             <VStack
                 spacing={{ base: 4, md: 6 }}
                 bg="white"
@@ -163,6 +156,6 @@ export default function ConfirmEmail() {
                     </VStack>
                 )}
             </VStack>
-        </Box>
+        </AuthenticationLayout>
     );
 }
