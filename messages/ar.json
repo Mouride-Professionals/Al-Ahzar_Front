@@ -210,7 +210,7 @@
                 "searchPlaceholder": "ابحث عن طالب",
                 "filterLabel": "الطلاب غير المسجلين",
                 "validateMonthlyPayment": "تأكيد الدفع الشهري",
-                "socialStatus": "مدعوم",
+                "socialStatus": "الحالة الاجتماعية",
                 "bio": "السيرة الذاتية",
                 "paymentStatus": "حالة الدفع",
                 "validateEnrollment": "تأكيد التسجيل",
@@ -1199,6 +1199,22 @@
                     "errors": {
                         "already_exists": "هذا الطالب مسجل بالفعل",
                         "problem": "حدث خطأ أثناء التسجيل"
+                    }
+                },
+                "confirmation": {
+                    "info": {
+                        "studentInfoMessage": "معلومات الطالب",
+                        "paymentDetailsMessage": "معلومات الدفع"
+                    },
+                    "labels": {
+                        "name": "اسم",
+                        "type": "نوع",
+                        "class": "فصل",
+                        "cancel": "الغاء",
+                        "validatePayment": "تاكيد الدفع"
+                    },
+                    "errors": {
+                        "problem": "حدث خطأ أثناء التاكيد"
                     }
                 },
                 "enrollment": {

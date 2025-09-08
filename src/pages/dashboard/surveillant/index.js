@@ -44,6 +44,7 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
     router.push(routes.page_route.dashboard.surveillant.classes.all);
   }
 
+
   return (
     <DashboardLayout
       title={t('pages.dashboard.initial.title')}
@@ -52,9 +53,7 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
       token={token}
     >
       <Wrap mt={10} spacing={20.01}>
-        <HStack w={'100%'}>
           <Statistics cardStats={cardStats} />
-        </HStack>
         <Text
           color={colors.secondary.regular}
           fontSize={20}

@@ -210,7 +210,7 @@
                 "searchPlaceholder": "Search for a student",
                 "filterLabel": "Unenrolled Students",
                 "validateMonthlyPayment": "Confirm Monthly Payment",
-                "socialStatus": "Supported",
+                "socialStatus": "Social Status",
                 "bio": "Profile",
                 "paymentStatus": "Payment Status",
                 "validateEnrollment": "Confirm Enrollment",
@@ -1201,6 +1201,22 @@
                     "errors": {
                         "already_exists": "This student is already enrolled",
                         "problem": "An error occurred during enrollment"
+                    }
+                },
+                "confirmation": {
+                    "info": {
+                        "studentInfoMessage": "Student Information",
+                        "paymentDetailsMessage": "Payment Details"
+                    },
+                    "labels": {
+                        "name": "Name",
+                        "type": "Type",
+                        "class": "Class",
+                        "cancel": "Cancel",
+                        "validatePayment": "Validate Payment"
+                    },
+                    "errors": {
+                        "problem": "An error occurred while confirming the enrollment"
                     }
                 },
                 "enrollment": {

@@ -210,7 +210,7 @@
                 "searchPlaceholder": "Rechercher un élève",
                 "filterLabel": "Élèves non inscrits",
                 "validateMonthlyPayment": "Confirmer le paiement mensuel",
-                "socialStatus": "Soutenu",
+                "socialStatus": "Statut social",
                 "bio": "Profil",
                 "paymentStatus": "Statut de paiement",
                 "validateEnrollment": "Confirmer l’inscription",
@@ -1223,6 +1223,22 @@
                     "errors": {
                         "already_exists": "Cet élève est déjà inscrit",
                         "problem": "Une erreur s’est produite lors de l’inscription"
+                    }
+                },
+                "confirmation": {
+                    "info": {
+                        "studentInfoMessage": "Information",
+                        "paymentDetailsMessage": "Informations sur le paiement"
+                    },
+                    "labels": {
+                        "name": "Nom",
+                        "type": "Type",
+                        "class": "Classe",
+                        "cancel": "Annuler",
+                        "validatePayment": "Valider le paiement"
+                    },
+                    "errors": {
+                        "problem": "Une erreur s’est produite lors de la confirmation"
                     }
                 },
                 "enrollment": {

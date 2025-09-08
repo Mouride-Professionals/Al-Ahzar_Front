@@ -828,6 +828,22 @@ module.exports = {
           problem: 'forms.messages.enrollment.errors.problem',
         },
       },
+      confirmation: {
+        info: {
+          studentInfoMessage: 'forms.messages.confirmation.info.studentInfoMessage',
+          paymentDetailsMessage: 'forms.messages.confirmation.info.paymentDetailsMessage',
+        },
+        labels: {
+          name: 'forms.messages.confirmation.labels.name',
+          type: 'forms.messages.confirmation.labels.type',
+          class: 'forms.messages.confirmation.labels.class',
+          cancel: 'forms.messages.confirmation.labels.cancel',
+          validatePayment: 'forms.messages.confirmation.labels.validatePayment',
+        },
+        errors: {
+          problem: 'forms.messages.confirmation.errors.problem',
+        },
+      },
       payment: {
         errors: {
           already_exists: 'forms.messages.payment.errors.already_exists',

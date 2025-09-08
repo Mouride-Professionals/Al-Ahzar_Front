@@ -64,7 +64,7 @@ export const DataTableLayout = ({
           </Box>
           <HStack pl={{ base: 0, md: 4 }}>
             {extraSubHeaderComponents}
-            <FormFilter onExport={() => {}} />
+            {/* <FormFilter onExport={() => {}} /> */}
             <FormExport onExport={() => downloadCSV(filtered)} />
           </HStack>
         </HStack>
