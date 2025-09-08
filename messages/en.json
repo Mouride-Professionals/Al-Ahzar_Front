@@ -101,6 +101,28 @@
                     },
                     "submit": "Update Password"
                 }
+            },
+            "email_confirmation": {
+                "heading": {
+                    "title": "Email Confirmation",
+                    "subtitle": "Verifying your email address"
+                },
+                "specifics": {
+                    "forgotten_password": "Want to go back to login?",
+                    "highlight": "Click here"
+                },
+                "form": {
+                    "verification": {
+                        "verifying": "Verification in progress...",
+                        "success": "Success",
+                        "success_description": "Email verified successfully! Redirecting...",
+                        "error": "Error",
+                        "error_description": "Email verification failed.",
+                        "error_token": "Invalid or expired confirmation link.",
+                        "error_no_token": "No confirmation token provided. Please try again."
+                    },
+                    "submit": "Go to Login"
+                }
             }
         },
         "formInput": {
@@ -219,7 +241,7 @@
                 "enrollNewStudent": "Enroll New Student",
                 "tutor": "Guardian",
                 "phone": "Phone",
-                "enrolledOn": "Enrolled on: {date}",
+                "enrolledOn": "Enrolled on",
                 "studentsEnrolled": "Enrolled Students",
                 "studentsNotEnrolled": "Unenrolled Students",
                 "cta": {

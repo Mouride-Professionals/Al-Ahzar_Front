@@ -1,4 +1,4 @@
-import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
+import { Box, HStack, Stack, Text, Wrap, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import { confirmEnrollmentFormHandler } from '@handlers';
@@ -91,35 +91,49 @@ export const StudentConfirmationForm = ({
         handleSubmit,
         isSubmitting,
       }) => (
-        <Stack px={10} py={10}>
-          <Stack>
-            <Text color={colors.secondary.regular} fontWeight={'700'}>
+        <Stack px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
+          <Stack spacing={{ base: 4, md: 6 }}>
+            <Text 
+              color={colors.secondary.regular} 
+              fontWeight={'700'}
+              fontSize={{ base: 'md', md: 'lg' }}
+            >
               {t(studentInfoMessage)}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
-                <Text fontSize="md">
+            <Wrap 
+              spacing={{ base: 4, md: 6 }}
+              justify={{ base: 'center', md: 'flex-start' }}
+            >
+              <WrapItem w={{ base: '100%', md: '45%', lg: '30%' }}>
+                <Text fontSize={{ base: 'sm', md: 'md' }} w="100%">
                   <strong>{t(nameLabel)}:</strong> {firstname} {lastname}
                 </Text>
               </WrapItem>
-              <WrapItem w={370}>
-                <Text fontSize="md">
+              <WrapItem w={{ base: '100%', md: '45%', lg: '30%' }}>
+                <Text fontSize={{ base: 'sm', md: 'md' }} w="100%">
                   <strong>{t(typeLabel)}:</strong> {type}
                 </Text>
               </WrapItem>
-              <WrapItem w={370}>
-                <Text fontSize="md">
+              <WrapItem w={{ base: '100%', md: '45%', lg: '30%' }}>
+                <Text fontSize={{ base: 'sm', md: 'md' }} w="100%">
                   <strong>{t(classLabel)}:</strong> {level} {letter}
                 </Text>
               </WrapItem>
-            </HStack>
+            </Wrap>
           </Stack>
-          <Stack mt={5}>
-            <Text color={colors.secondary.regular} fontWeight={'700'}>
+          <Stack mt={{ base: 6, md: 8 }} spacing={{ base: 4, md: 6 }}>
+            <Text 
+              color={colors.secondary.regular} 
+              fontWeight={'700'}
+              fontSize={{ base: 'md', md: 'lg' }}
+            >
               {t(paymentDetailsMessage)}
             </Text>
-            <HStack align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            <Wrap 
+              spacing={{ base: 4, md: 6 }}
+              justify={{ base: 'center', md: 'flex-start' }}
+            >
+              <WrapItem w={{ base: '100%', md: '48%', lg: '30%' }}>
                 <FormInput
                   {...amount}
                   label={t(amount.label)}
@@ -131,7 +145,7 @@ export const StudentConfirmationForm = ({
                   value={values.amount}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w={{ base: '100%', md: '48%', lg: '30%' }}>
                 <FormInput
                   {...enrollmentFee}
                   label={t(enrollmentFee.label)}
@@ -143,7 +157,7 @@ export const StudentConfirmationForm = ({
                   value={values.enrollmentFee}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w={{ base: '100%', md: '48%', lg: '30%' }}>
                 <FormInput
                   {...monthOf}
                   label={t(monthOf.label)}
@@ -155,9 +169,13 @@ export const StudentConfirmationForm = ({
                   value={values.monthOf}
                 />
               </WrapItem>
-            </HStack>
-            <HStack mt={5} align={'center'} justifyContent={'space-between'}>
-              <WrapItem w={370}>
+            </Wrap>
+            
+            <Wrap 
+              spacing={{ base: 4, md: 6 }}
+              justify={{ base: 'center', md: 'flex-start' }}
+            >
+              <WrapItem w={{ base: '100%', md: '48%', lg: '22%' }}>
                 <FormInput
                   {...monthlyFee}
                   label={t(monthlyFee.label)}
@@ -169,7 +187,7 @@ export const StudentConfirmationForm = ({
                   value={values.monthlyFee}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w={{ base: '100%', md: '48%', lg: '22%' }}>
                 <FormInput
                   {...examFee}
                   label={t(examFee.label)}
@@ -181,7 +199,7 @@ export const StudentConfirmationForm = ({
                   value={values.examFee}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w={{ base: '100%', md: '48%', lg: '22%' }}>
                 <FormInput
                   {...blouseFee}
                   label={t(blouseFee.label)}
@@ -193,7 +211,7 @@ export const StudentConfirmationForm = ({
                   value={values.blouseFee}
                 />
               </WrapItem>
-              <WrapItem w={370}>
+              <WrapItem w={{ base: '100%', md: '48%', lg: '22%' }}>
                 <FormInput
                   {...parentContributionFee}
                   label={t(parentContributionFee.label)}
@@ -205,17 +223,23 @@ export const StudentConfirmationForm = ({
                   value={values.parentContributionFee}
                 />
               </WrapItem>
-            </HStack>
+            </Wrap>
           </Stack>
-          <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10}>
-            <Box w={'15%'} mr={5}>
+          <HStack 
+            alignItems={'flex-start'} 
+            justifyContent={{ base: 'center', md: 'flex-end' }} 
+            pt={{ base: 8, md: 10 }}
+            spacing={{ base: 4, md: 5 }}
+            flexDirection={{ base: 'column', sm: 'row' }}
+          >
+            <Box w={{ base: '100%', sm: '40%', md: '15%' }}>
               <SecondaryButton
-                h={50}
+                h={{ base: 45, md: 50 }}
                 message={t(cancelLabel)}
                 onClick={() => router.back()}
               />
             </Box>
-            <Box w={'20%'}>
+            <Box w={{ base: '100%', sm: '60%', md: '20%' }}>
               <FormSubmit
                 uid={'registration'}
                 touched={touched}

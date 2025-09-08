@@ -101,6 +101,28 @@
                     },
                     "submit": "تحديث كلمة المرور"
                 }
+            },
+            "email_confirmation": {
+                "heading": {
+                    "title": "تأكيد البريد الإلكتروني",
+                    "subtitle": "جاري التحقق من بريدك الإلكتروني"
+                },
+                "specifics": {
+                    "forgotten_password": "هل تريد العودة لتسجيل الدخول؟",
+                    "highlight": "اضغط هنا"
+                },
+                "form": {
+                    "verification": {
+                        "verifying": "التحقق جاري...",
+                        "success": "تم بنجاح",
+                        "success_description": "تم التحقق من البريد الإلكتروني بنجاح! جاري التوجيه...",
+                        "error": "خطأ",
+                        "error_description": "فشل التحقق من البريد الإلكتروني.",
+                        "error_token": "رابط التأكيد غير صالح أو منتهي الصلاحية.",
+                        "error_no_token": "لم يتم توفير رمز التأكيد. يرجى المحاولة مرة أخرى."
+                    },
+                    "submit": "الذهاب لتسجيل الدخول"
+                }
             }
         },
         "formInput": {
@@ -219,7 +241,7 @@
                 "enrollNewStudent": "تسجيل طالب جديد",
                 "tutor": "ولي الأمر",
                 "phone": "رقم الهاتف",
-                "enrolledOn": "مسجل في: {date}",
+                "enrolledOn": "مسجل في",
                 "studentsEnrolled": "الطلاب المسجلون",
                 "studentsNotEnrolled": "الطلاب غير المسجلين",
                 "cta": {

@@ -10,7 +10,9 @@ import {
   Stack,
   Text,
   useToast,
-  VStack
+  VStack,
+  Wrap,
+  WrapItem
 } from '@chakra-ui/react';
 import { StudentFilter } from '@components/common/input/FormInput';
 import MonthlyPaymentModal from '@components/forms/student/monthlyPaymentForm';
@@ -178,56 +180,93 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   });
 
   return (
-    <ScaleFade px={5} initialScale={0.9} in={true}>
+    <ScaleFade px={{ base: 3, md: 5 }} initialScale={0.9} in={true}>
       <BoxZone>
         <Card variant={'filled'} w={'100%'}>
-          <CardBody>
-            <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5}>
+          <CardBody p={{ base: 4, md: 6 }}>
+            <Grid
+              templateColumns={{
+                base: 'repeat(1, 1fr)',
+                md: 'repeat(2, 1fr)',
+                lg: 'repeat(3, 1fr)'
+              }}
+              gap={{ base: 4, md: 5 }}
+            >
               {/* Student Information */}
-              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={'gray.200'}>
-                <HStack spacing={5}>
-                  <VStack justifyContent={'center'} w={50} h={50} borderRadius={100} borderColor={'orange.500'} borderWidth={1}>
-                    <PiUserDuotone color={'orange.500'} size={25} />
+              <GridItem
+                pr={{ base: 0, lg: 2 }}
+                borderRight={{ base: 'none', lg: '1px solid' }}
+                borderRightColor={{ base: 'transparent', lg: 'gray.200' }}
+                borderBottom={{ base: '1px solid', lg: 'none' }}
+                borderBottomColor={{ base: 'gray.200', lg: 'transparent' }}
+                pb={{ base: 4, lg: 0 }}
+              >
+                <HStack spacing={{ base: 2, md: 3 }} flexDirection={{ base: 'column', sm: 'row' }}>
+                  <VStack
+                    justifyContent={'center'}
+                    w={{ base: 35, md: 35 }}
+                    h={{ base: 35, md: 35 }}
+                    borderRadius={100}
+                    borderColor={'orange.500'}
+                    borderWidth={1}
+                    flexShrink={0}
+                  >
+                    <PiUserDuotone color={'orange.500'} size={18} />
                   </VStack>
-                  <Stack>
-                    <Text fontWeight={'bold'} fontSize={'lg'}>
+                  <Stack spacing={0.5} textAlign={{ base: 'center', sm: 'left' }}>
+                    <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>
                       {firstname} {lastname}
                     </Text>
-                    <Text color={'gray.600'} fontSize={'sm'}>
+                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
                       {level}
                     </Text>
-                    <Text color={'gray.600'} fontSize={'sm'}>
+                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
                       {t('enrolledOn')}: {enrollment_date}
                     </Text>
                   </Stack>
                 </HStack>
 
-                <Stack spacing={4} mt={4}>
-                  <Stack>
-                    <Text fontWeight={'bold'}>{t('socialStatus')}</Text>
-                    <Text>{socialStatus || '...'}</Text>
+                <Stack spacing={{ base: 2, md: 3 }} mt={{ base: 2, md: 3 }}>
+                  <Stack spacing={0.5}>
+                    <Text fontWeight={'bold'} fontSize={{ base: 'xs', md: 'sm' }}>{t('socialStatus')}</Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>{socialStatus || '...'}</Text>
                   </Stack>
-                  <Stack>
-                    <Text fontWeight={'bold'}>{t('bio')}</Text>
-                    <Text>{registrationComment || '...'}</Text>
+                  <Stack spacing={0.5}>
+                    <Text fontWeight={'bold'} fontSize={{ base: 'xs', md: 'sm' }}>{t('bio')}</Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>{registrationComment || '...'}</Text>
                   </Stack>
                 </Stack>
               </GridItem>
 
               {/* Parent Information */}
-              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={'gray.200'}>
-                <HStack spacing={5}>
-                  <VStack justifyContent={'center'} w={50} h={50} borderRadius={100} borderColor={'orange.500'} borderWidth={1}>
-                    <PiUsersDuotone color={'orange.500'} size={25} />
+              <GridItem
+                pr={{ base: 0, lg: 2 }}
+                borderRight={{ base: 'none', lg: '1px solid' }}
+                borderRightColor={{ base: 'transparent', lg: 'gray.200' }}
+                borderBottom={{ base: '1px solid', md: 'none' }}
+                borderBottomColor={{ base: 'gray.200', md: 'transparent' }}
+                pb={{ base: 4, md: 0 }}
+              >
+                <HStack spacing={{ base: 2, md: 3 }} flexDirection={{ base: 'column', sm: 'row' }}>
+                  <VStack
+                    justifyContent={'center'}
+                    w={{ base: 35, md: 35 }}
+                    h={{ base: 35, md: 35 }}
+                    borderRadius={100}
+                    borderColor={'orange.500'}
+                    borderWidth={1}
+                    flexShrink={0}
+                  >
+                    <PiUsersDuotone color={'orange.500'} size={18} />
                   </VStack>
-                  <Stack>
-                    <Text fontWeight={'bold'} fontSize={'lg'}>
+                  <Stack spacing={0.5} textAlign={{ base: 'center', sm: 'left' }}>
+                    <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>
                       {parent_firstname} {parent_lastname}
                     </Text>
-                    <Text color={'gray.600'} fontSize={'sm'}>
+                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
                       {t('tutor')}
                     </Text>
-                    <Text color={'gray.600'} fontSize={'sm'}>
+                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
                       {t('phone')}: {parent_phone}
                     </Text>
                   </Stack>
@@ -236,8 +275,8 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 
               {/* Payment Status */}
               <GridItem>
-                <Stack spacing={4}>
-                  <Text fontWeight={'bold'}>{t('paymentStatus')}</Text>
+                <Stack spacing={{ base: 3, md: 4 }}>
+                  <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>{t('paymentStatus')}</Text>
 
                   {payment_history.length === 0 && (
                     <Stack spacing={3}>
@@ -248,11 +287,13 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                           }
                           colorScheme={'green'}
                           variant={'outline'}
+                          size={{ base: 'sm', md: 'md' }}
+                          w={{ base: '100%', sm: 'auto' }}
                         >
                           {t('validateEnrollment')}
                         </Button>
                       ) : (
-                        <Text>{t('waitingForFinance')}</Text>
+                        <Text fontSize={{ base: 'sm', md: 'md' }}>{t('waitingForFinance')}</Text>
                       )}
                     </Stack>
                   )}
@@ -270,22 +311,25 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                             justifyContent={'space-between'}
                             bg={colors.white}
                             borderRadius={8}
-                            py={2}
-                            px={3}
+                            py={{ base: 1.5, md: 2 }}
+                            px={{ base: 2, md: 3 }}
                             border="1px solid"
                             borderColor="gray.200"
                             key={`payment-${createdAt}`}
+                            flexDirection={{ base: 'column', sm: 'row' }}
+                            align={{ base: 'flex-start', sm: 'center' }}
+                            spacing={{ base: 1, sm: 0 }}
                           >
-                            <VStack align="flex-start" spacing={0}>
-                              <Text fontSize="sm" fontWeight="medium">
+                            <VStack align={{ base: 'center', sm: 'flex-start' }} spacing={0} w={{ base: '100%', sm: 'auto' }}>
+                              <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="medium">
                                 {dateFormatter(paymentDate)}
                               </Text>
                               <Text fontSize="xs" color="gray.600">
                                 {mapPaymentType[paymentType]}
                               </Text>
                             </VStack>
-                            <HStack>
-                              <Text fontSize="sm" fontWeight="semibold">{amount} FCFA</Text>
+                            <HStack justify={{ base: 'center', sm: 'flex-end' }} w={{ base: '100%', sm: 'auto' }}>
+                              <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="semibold">{amount} FCFA</Text>
                               {isPaid ? (
                                 <BsCheck2Circle color={'green.500'} size={16} />
                               ) : (
@@ -307,23 +351,35 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
             </Grid>
 
             {/* Action Buttons */}
-            <HStack justifyContent={'flex-end'} mt={6}>
+            <Wrap justify={{ base: 'center', md: 'flex-end' }} mt={{ base: 4, md: 6 }} spacing={{ base: 2, md: 3 }}>
               {payment_history.length > 0 && ACCESS_STUDENT_VALIDATION.includes(role.type) && (
-                <Button
-                  onClick={openPaymentModal}
-                  colorScheme="orange"
-                  variant="outline"
-                >
-                  {t('validateMonthlyPayment')}
-                </Button>
+                <WrapItem w={{ base: '100%', sm: 'auto' }}>
+                  <Button
+                    onClick={openPaymentModal}
+                    colorScheme="orange"
+                    variant="outline"
+                    size={{ base: 'sm', md: 'md' }}
+                    w={{ base: '100%', sm: 'auto' }}
+                  >
+                    {t('validateMonthlyPayment')}
+                  </Button>
+                </WrapItem>
               )}
 
               {ACCESS_ROUTES.isSurveillant(role.name) && schoolYear != activeSchoolYear && (
-                <Button onClick={openDialog} colorScheme="orange" variant="outline">
-                  {t('reEnroll')}
-                </Button>
+                <WrapItem w={{ base: '100%', sm: 'auto' }}>
+                  <Button
+                    onClick={openDialog}
+                    colorScheme="orange"
+                    variant="outline"
+                    size={{ base: 'sm', md: 'md' }}
+                    w={{ base: '100%', sm: 'auto' }}
+                  >
+                    {t('reEnroll')}
+                  </Button>
+                </WrapItem>
               )}
-            </HStack>
+            </Wrap>
 
             {/* Modals */}
             <ReEnrollmentModal

@@ -66,6 +66,7 @@ const FinanceDashboard = ({ role, token, schoolId, schoolYearId, paymentKpis, ex
 
     const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
     const expenses = mapExpensesDataTable({ expenses: expenseKpis[0] });
+    
     const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
     useEffect(() => {
         if (paymentKpis && expenseKpis) {
@@ -426,6 +427,8 @@ export const getServerSideProps = async ({ req, res }) => {
             }),
         ]),
     ]);
+    console.log('paymentKpis, expenseKpis', paymentKpis, expenseKpis);
+    
 
     return {
         props: {

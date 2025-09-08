@@ -47,7 +47,7 @@ export default function Dashboard({ kpis, role, token }) {
       title: t('pages.stats.classes'),
     },
     {
-      count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length),
+      count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length ?? 0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: t('pages.stats.students'),
     },
@@ -64,7 +64,7 @@ export default function Dashboard({ kpis, role, token }) {
   ];
 
   const schools = mapSchoolsDataTable({ schools: kpis[4] });
-  const {SCHOOLS_COLUMNS} = useTableColumns();
+  const { SCHOOLS_COLUMNS } = useTableColumns();
 
   return (
     <DashboardLayout

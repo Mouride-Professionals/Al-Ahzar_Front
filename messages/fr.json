@@ -101,6 +101,28 @@
                     },
                     "submit": "Mettre à jour le mot de passe"
                 }
+            },
+            "email_confirmation": {
+                "heading": {
+                    "title": "Confirmation d'email",
+                    "subtitle": "Vérification de votre adresse email"
+                },
+                "specifics": {
+                    "forgotten_password": "Revenir à la connexion ?",
+                    "highlight": "Cliquez ici"
+                },
+                "form": {
+                    "verification": {
+                        "verifying": "Vérification en cours...",
+                        "success": "Succès",
+                        "success_description": "Email vérifié avec succès ! Redirection...",
+                        "error": "Erreur",
+                        "error_description": "Échec de la vérification de l'email.",
+                        "error_token": "Lien de confirmation invalide ou expiré.",
+                        "error_no_token": "Aucun jeton de confirmation fourni. Veuillez réessayer."
+                    },
+                    "submit": "Aller à la connexion"
+                }
             }
         },
         "formInput": {
@@ -219,7 +241,7 @@
                 "enrollNewStudent": "Inscrire un nouvel élève",
                 "tutor": "Tuteur",
                 "phone": "Téléphone",
-                "enrolledOn": "Inscrit le : {date}",
+                "enrolledOn": "Inscrit le",
                 "studentsEnrolled": "Élèves inscrits",
                 "studentsNotEnrolled": "Élèves non inscrits",
                 "cta": {
