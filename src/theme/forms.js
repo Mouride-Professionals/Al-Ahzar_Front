@@ -582,7 +582,14 @@ module.exports = {
             label: 'forms.inputs.teacher.recruitment.academicDegree.label',
             uid: 'academicDegree',
             select: true,
-            options: mapOptions(teacherRecruitmentSchema.fields.academicDegree._whitelist),
+            options: [
+              // "Baccalauréat", "Licence", "Master", "Doctorat"
+              { value: 'Baccalauréat', label: 'forms.inputs.teacher.recruitment.academicDegree.options.0.label' },
+              { value: 'Licence', label: 'forms.inputs.teacher.recruitment.academicDegree.options.1.label' },
+              { value: 'Master', label: 'forms.inputs.teacher.recruitment.academicDegree.options.2.label' },
+              { value: 'Doctorat', label: 'forms.inputs.teacher.recruitment.academicDegree.options.3.label' },
+              { value: 'Autre', label: 'forms.inputs.teacher.recruitment.academicDegree.options.4.label' }
+            ]
           },
           professionalDegrees: {
             placeholder: 'forms.inputs.teacher.recruitment.professionalDegrees.placeholder',
@@ -660,10 +667,10 @@ module.exports = {
             uid: 'contractType',
             select: true,
             options: [
-              { label: 'forms.inputs.teacher.recruitment.contractType.options.0.label', value: 'Disponible' },
-              { label: 'forms.inputs.teacher.recruitment.contractType.options.1.label', value: 'Temps Partiel' },
-              { label: 'forms.inputs.teacher.recruitment.contractType.options.2.label', value: 'Etranger' },
-              { label: 'forms.inputs.teacher.recruitment.contractType.options.3.label', value: 'Employé Etat' },
+              { value: 'Disponible', name: 'forms.inputs.teacher.recruitment.contractType.options.0.label' },
+              { value: 'Temps Partiel', name: 'forms.inputs.teacher.recruitment.contractType.options.1.label' },
+              { value: 'Etranger', name: 'forms.inputs.teacher.recruitment.contractType.options.2.label' },
+              { value: 'Employé Etat', name: 'forms.inputs.teacher.recruitment.contractType.options.3.label' },
             ],
           },
           level: {
@@ -819,6 +826,22 @@ module.exports = {
         errors: {
           already_exists: 'forms.messages.enrollment.errors.already_exists',
           problem: 'forms.messages.enrollment.errors.problem',
+        },
+      },
+      confirmation: {
+        info: {
+          studentInfoMessage: 'forms.messages.confirmation.info.studentInfoMessage',
+          paymentDetailsMessage: 'forms.messages.confirmation.info.paymentDetailsMessage',
+        },
+        labels: {
+          name: 'forms.messages.confirmation.labels.name',
+          type: 'forms.messages.confirmation.labels.type',
+          class: 'forms.messages.confirmation.labels.class',
+          cancel: 'forms.messages.confirmation.labels.cancel',
+          validatePayment: 'forms.messages.confirmation.labels.validatePayment',
+        },
+        errors: {
+          problem: 'forms.messages.confirmation.errors.problem',
         },
       },
       payment: {

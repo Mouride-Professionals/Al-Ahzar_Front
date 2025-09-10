@@ -39,7 +39,7 @@ export const themeRoutes = {
           initial: '/dashboard/surveillant/students',
           create: '/dashboard/surveillant/students/create',
           resubscribe: '/dashboard/surveillant/students/{student}/resubscribe',
-
+          bulkImport: '/dashboard/surveillant/students/bulk-import',
         },
       },
       direction: {
@@ -140,9 +140,15 @@ export const themeRoutes = {
           stats: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
           statsWithoutSchoolId: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
         },
-        
+
         me: '/users/me?populate=*',
         roles: '/users-permissions/roles',
+        bulkImport: {
+          template: '/students/bulk/template',
+          validate: '/students/bulk/validate',
+          import: '/students/bulk/import',
+          stats: '/students/bulk/stats'
+        },
       },
       update: {
         student: '/students/%id',
@@ -150,6 +156,7 @@ export const themeRoutes = {
         teacher: '/teachers/%id',
         school_year: '/school-years/%id',
         user: '/users/%id',
+
 
       },
     },

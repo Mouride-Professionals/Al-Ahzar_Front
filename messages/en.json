@@ -101,6 +101,28 @@
                     },
                     "submit": "Update Password"
                 }
+            },
+            "email_confirmation": {
+                "heading": {
+                    "title": "Email Confirmation",
+                    "subtitle": "Verifying your email address"
+                },
+                "specifics": {
+                    "forgotten_password": "Want to go back to login?",
+                    "highlight": "Click here"
+                },
+                "form": {
+                    "verification": {
+                        "verifying": "Verification in progress...",
+                        "success": "Success",
+                        "success_description": "Email verified successfully! Redirecting...",
+                        "error": "Error",
+                        "error_description": "Email verification failed.",
+                        "error_token": "Invalid or expired confirmation link.",
+                        "error_no_token": "No confirmation token provided. Please try again."
+                    },
+                    "submit": "Go to Login"
+                }
             }
         },
         "formInput": {
@@ -175,7 +197,7 @@
             "users": "Administration",
             "teachers": "Teachers",
             "schools": "Schools",
-            "school_years": "School Years"
+            "school_years": "School_Years"
         },
         "layout": {
             "breadcrumb": {
@@ -210,7 +232,7 @@
                 "searchPlaceholder": "Search for a student",
                 "filterLabel": "Unenrolled Students",
                 "validateMonthlyPayment": "Confirm Monthly Payment",
-                "socialStatus": "Supported",
+                "socialStatus": "Social Status",
                 "bio": "Profile",
                 "paymentStatus": "Payment Status",
                 "validateEnrollment": "Confirm Enrollment",
@@ -219,7 +241,7 @@
                 "enrollNewStudent": "Enroll New Student",
                 "tutor": "Guardian",
                 "phone": "Phone",
-                "enrolledOn": "Enrolled on: {date}",
+                "enrolledOn": "Enrolled on",
                 "studentsEnrolled": "Enrolled Students",
                 "studentsNotEnrolled": "Unenrolled Students",
                 "cta": {
@@ -1203,6 +1225,22 @@
                         "problem": "An error occurred during enrollment"
                     }
                 },
+                "confirmation": {
+                    "info": {
+                        "studentInfoMessage": "Student Information",
+                        "paymentDetailsMessage": "Payment Details"
+                    },
+                    "labels": {
+                        "name": "Name",
+                        "type": "Type",
+                        "class": "Class",
+                        "cancel": "Cancel",
+                        "validatePayment": "Validate Payment"
+                    },
+                    "errors": {
+                        "problem": "An error occurred while confirming the enrollment"
+                    }
+                },
                 "enrollment": {
                     "info": {
                         "personalInfoMessage": "Personal Information",
@@ -1390,6 +1428,73 @@
                 "teachers": "%number teachers",
                 "schools": "%number schools",
                 "finance": "%number FCFA"
+            }
+        }
+    },
+    "bulkImport": {
+        "title": "Bulk Student Import",
+        "subtitle": "Import multiple students at once using our guided wizard",
+        "breadcrumb": {
+            "dashboard": "Dashboard",
+            "students": "Students",
+            "bulkImport": "Bulk Import"
+        },
+        "progress": {
+            "label": "Step",
+            "of": "of"
+        },
+        "steps": {
+            "download": {
+                "title": "Download Template",
+                "description": "Download our pre-formatted Excel template",
+                "card": {
+                    "title": "Download Excel Template",
+                    "description": "Start by downloading our pre-formatted Excel template with examples",
+                    "downloadButton": "Download Template",
+                    "stats": {
+                        "format": "Excel Format",
+                        "sample": "With Examples"
+                    }
+                },
+                "requirements": {
+                    "title": "Required Information"
+                },
+                "tips": {
+                    "title": "Important Tips"
+                },
+                "notice": {
+                    "title": "Important!",
+                    "description": "Make sure to download and use the provided template to avoid import errors."
+                },
+                "nextButton": "Continue to Import",
+                "notifications": {
+                    "downloadSuccess": {
+                        "title": "Download Successful",
+                        "description": "Excel template downloaded successfully"
+                    }
+                }
+            },
+            "upload": {
+                "title": "Upload File",
+                "description": "Import your completed file"
+            },
+            "validate": {
+                "title": "Validate Data",
+                "description": "Check your data compliance"
+            },
+            "import": {
+                "title": "Import",
+                "description": "Start importing students"
+            },
+            "results": {
+                "title": "Results",
+                "description": "Review import results"
+            }
+        },
+        "notifications": {
+            "importComplete": {
+                "title": "Import Complete",
+                "description": "{count} students imported successfully"
             }
         }
     }

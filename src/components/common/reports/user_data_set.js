@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardBody,
@@ -16,15 +15,14 @@ import {
   Stack,
   Text,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
-import { FormExport, FormFilter, FormSearch } from '@components/common/input/FormInput';
-import { downloadCSV } from '@utils/csv';
+import { DataTableLayout } from '@components/layout/data_table';
+import { colors } from '@theme';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
@@ -44,8 +42,8 @@ const ExpandedComponent = ({ data, schools, token, role }) => {
   const handleAssign = async () => {
     if (!selectedSchool) {
       toast({
-        title: 'No school selected',
-        description: 'Please select a school to assign the user.',
+        title: t('noSchoolSelected'),
+        description: t('pleaseSelectSchool'),
         status: 'warning',
       });
       return;
@@ -62,31 +60,30 @@ const ExpandedComponent = ({ data, schools, token, role }) => {
       });
       if (response.ok) {
         toast({
-          title: 'Assignment Successful',
-          description: `User has been successfully assigned to ${schools.find((school) => school.id === parseInt(selectedSchool))?.name
-            }.`,
+          title: t('assignmentSuccess'),
+          description: t('assignmentSuccessDesc', {
+            school: schools.find((school) => school.id === parseInt(selectedSchool))?.name || '',
+          }),
           status: 'success',
         });
         router.refresh();
       } else {
         toast({
-          title: 'Assignment Failed',
-          description: 'Failed to assign the user. Please try again.',
+          title: t('assignmentFailed'),
+          description: t('assignmentFailedDesc'),
           status: 'error',
         });
       }
     } catch (error) {
-      console.error('Error assigning user:', error);
       toast({
-        title: 'Error Occurred',
-        description: 'An error occurred while assigning the user.',
+        title: t('errorOccurred'),
+        description: t('errorOccurredDesc'),
         status: 'error',
       });
     }
     closeDialog();
   };
 
-  // Destructure fields from the user data.
   const {
     username,
     firstname,
@@ -95,10 +92,9 @@ const ExpandedComponent = ({ data, schools, token, role }) => {
     confirmed,
     blocked,
     school,
+    role,
   } = data;
 
-
-  // Create school options (if the user can be assigned to one of the available schools).
   const schoolOptions = schools.map((school) => ({
     value: school.id,
     label: school.name,
@@ -150,7 +146,7 @@ const ExpandedComponent = ({ data, schools, token, role }) => {
                   <Text fontWeight={'bold'}>{t('accountDetails')}</Text>
                   <Text>{t('username')}: {username}</Text>
                   <Text>{t('status')}: {confirmed ? t('active') : t('inactive')}</Text>
-                  <Text>{t('role')}: {data.role?.name || t('na')}</Text>
+                  <Text>{t('role')}: {role?.name || t('na')}</Text>
                 </Stack>
               </GridItem>
             </Grid>
@@ -164,9 +160,10 @@ const ExpandedComponent = ({ data, schools, token, role }) => {
                 variant="outline"
               >
                 {t('edit')}
-              </Button>)}
-              {school && (
-                <Button onClick={school && openDialog} colorScheme="orange" variant="outline">
+              </Button>
+              )}
+              {!school && (
+                <Button onClick={openDialog} colorScheme="orange" variant="outline">
                   {t('assignSchool')}
                 </Button>
               )}
@@ -222,60 +219,42 @@ export const UserDataSet = ({ role, data = [], schools, columns, selectedIndex =
     [data, filterText, selectedIndex]
   );
   const router = useRouter();
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <HStack
-        alignItems={'center'}
-        justifyContent={'space-between'}
-        my={3}
-        w={'100%'}
-        borderRadius={10}
-      >
-        <HStack>
-          <Box w={'60%'}>
-            <FormSearch
-              placeholder={t('searchPlaceholder')}
-              keyUp={(e) => setFilterText(e.target.value)}
-            />
-          </Box>
-          <HStack pl={4}>
-            <FormFilter onExport={() => { }} />
-            <FormExport onExport={() => downloadCSV(filtered)} />
-          </HStack>
-        </HStack>
-        {role?.name != '' && (
-          <Button
-            onClick={() => router.push('/dashboard/direction/users/create')}
-            colorScheme={'orange'}
-            bgColor={'orange.500'}
-            px={10}
-          >
-            {t('createUser')}
-          </Button>
-        )}
-      </HStack>
+
+  const filterFunction = ({ data, needle }) =>
+    data.filter(
+      (item) =>
+        item.username && item.username.toLowerCase().includes(needle.toLowerCase())
     );
-  }, [filterText, selectedIndex, filtered, role]);
-  const handleRowExpandToggle = (row) => {
-    setExpandedRow((prev) => (prev?.id === row.id ? null : row));
-  };
+
+  const actionButton = role?.name && (
+    <Button
+      onClick={() => router.push('/dashboard/direction/users/create')}
+      colorScheme={'orange'}
+      bgColor={colors.primary.regular}
+     
+    >
+      {t('createUser')}
+    </Button>
+  );
 
   return (
-    <DataTable
-      style={{ width: '100%', backgroundColor: 'white', borderRadius: 10 }}
+    <DataTableLayout
       columns={columns}
       data={filtered}
-      defaultCanSort
-      initialState={{ sortBy: [{ id: 'createdAt', desc: true }] }}
-      subHeader
-      expandOnRowClicked
-      expandableRowsHideExpander
-      subHeaderComponent={subHeaderComponentMemo}
-      expandableRows
-      expandableRowExpanded={(row) => row.id === expandedRow?.id}
-      onRowClicked={handleRowExpandToggle}
-      expandableRowsComponent={(data) => ExpandedComponent({ ...data, schools, token, role })}
-      pagination
+      role={role}
+      token={token}
+      translationNamespace="components.dataset.users"
+      actionButton={actionButton}
+      expandedComponent={(data) =>
+        ExpandedComponent({ ...data, schools, token })
+      }
+      filterFunction={filterFunction}
+      defaultSortFieldId="username"
+      selectedIndex={selectedIndex}
+      paginationProps={{
+        rowsPerPage: 10,
+        rowsPerPageOptions: [5, 10, 20],
+      }}
     />
   );
 };

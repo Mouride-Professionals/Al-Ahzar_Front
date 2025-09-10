@@ -11,7 +11,7 @@ import {
 export default function Loading() {
   return (
     <Box w="100vw" minH="100vh" bg="gray.100" p={8} position="relative">
-      <VStack spacing={8} align="start" w="100%">
+      <VStack spacing={8} align="start" w="100%" py={3} px={20}>
         {/* Simulated Stats Cards */}
         <HStack spacing={8} w="100%">
           <Skeleton height="100px" width="200px" borderRadius="md" />

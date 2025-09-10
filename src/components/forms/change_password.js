@@ -61,7 +61,7 @@ export const ChangePasswordForm = () => {
                 user_token: session.user.accessToken,
             });
 
-            if (response.error) {
+            if (response.error ) {
                 const errorText = response.text();
                 throw new Error(errorText || t('toast.failed'));
             } else {

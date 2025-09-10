@@ -1,14 +1,17 @@
-import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
+import { Button, HStack, Stack, Text, VStack, Wrap } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import { hasPermission } from '@utils/roles';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { FaFileImport } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
@@ -40,9 +43,10 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
     letter: classroom.attributes.letter,
   }));
 
-  if (classrooms.length === 0) {
+  if (classrooms?.length === 0) {
     router.push(routes.page_route.dashboard.surveillant.classes.all);
   }
+
 
   return (
     <DashboardLayout
@@ -51,18 +55,34 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
       role={role}
       token={token}
     >
-      <Wrap mt={10} spacing={20.01}>
-        <HStack w={'100%'}>
+      <VStack spacing={6} align="stretch">
+        <Wrap mt={10} spacing={20.01}>
           <Statistics cardStats={cardStats} />
+        </Wrap>
+
+        {/* Action Buttons */}
+        <HStack justify="space-between" align="center">
+          <Text
+            color={colors.secondary.regular}
+            fontSize={20}
+            fontWeight={'700'}
+          >
+            {t('components.dataset.students.title')}
+          </Text>
+
+          {/* {hasPermission(role.name, 'bulkStudents') && ( <HStack spacing={4}>
+            <Button
+              as={Link}
+              href={routes.page_route.dashboard.surveillant.students.bulkImport}
+              leftIcon={<FaFileImport />}
+              colorScheme="orange"
+              size="sm"
+            >
+              {t('bulkImport.breadcrumb.bulkImport')}
+            </Button>
+          </HStack>)} */}
         </HStack>
-        <Text
-          color={colors.secondary.regular}
-          fontSize={20}
-          fontWeight={'700'}
-          pt={10}
-        >
-          {t('components.dataset.students.title')}
-        </Text>
+
         <Stack bgColor={colors.white} w={'100%'}>
           <DataSet
             {...{ role, token, schoolId }}
@@ -71,7 +91,7 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
             columns={STUDENTS_COLUMNS}
           />
         </Stack>
-      </Wrap>
+      </VStack>
     </DashboardLayout>
   );
 }
@@ -131,7 +151,8 @@ export const getServerSideProps = async ({ req, res }) => {
       kpis,
       role,
       token,
-      schoolId
+      schoolId,
+      messages: (await import(`../../../../messages/fr.json`)).default
     },
   };
 };

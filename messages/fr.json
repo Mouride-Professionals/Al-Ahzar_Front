@@ -101,6 +101,28 @@
                     },
                     "submit": "Mettre à jour le mot de passe"
                 }
+            },
+            "email_confirmation": {
+                "heading": {
+                    "title": "Confirmation d'email",
+                    "subtitle": "Vérification de votre adresse email"
+                },
+                "specifics": {
+                    "forgotten_password": "Revenir à la connexion ?",
+                    "highlight": "Cliquez ici"
+                },
+                "form": {
+                    "verification": {
+                        "verifying": "Vérification en cours...",
+                        "success": "Succès",
+                        "success_description": "Email vérifié avec succès ! Redirection...",
+                        "error": "Erreur",
+                        "error_description": "Échec de la vérification de l'email.",
+                        "error_token": "Lien de confirmation invalide ou expiré.",
+                        "error_no_token": "Aucun jeton de confirmation fourni. Veuillez réessayer."
+                    },
+                    "submit": "Aller à la connexion"
+                }
             }
         },
         "formInput": {
@@ -175,7 +197,7 @@
             "users": "Administration",
             "teachers": "Enseignants",
             "schools": "Écoles",
-            "school_years": "Années scolaires"
+            "school_years": "Années_scolaires"
         },
         "layout": {
             "breadcrumb": {
@@ -210,7 +232,7 @@
                 "searchPlaceholder": "Rechercher un élève",
                 "filterLabel": "Élèves non inscrits",
                 "validateMonthlyPayment": "Confirmer le paiement mensuel",
-                "socialStatus": "Soutenu",
+                "socialStatus": "Statut social",
                 "bio": "Profil",
                 "paymentStatus": "Statut de paiement",
                 "validateEnrollment": "Confirmer l’inscription",
@@ -219,7 +241,7 @@
                 "enrollNewStudent": "Inscrire un nouvel élève",
                 "tutor": "Tuteur",
                 "phone": "Téléphone",
-                "enrolledOn": "Inscrit le : {date}",
+                "enrolledOn": "Inscrit le",
                 "studentsEnrolled": "Élèves inscrits",
                 "studentsNotEnrolled": "Élèves non inscrits",
                 "cta": {
@@ -893,7 +915,29 @@
                         },
                         "academicDegree": {
                             "placeholder": "Sélectionnez le diplôme académique",
-                            "label": "Diplôme académique"
+                            "label": "Diplôme académique",
+                            "options": [
+                                {
+                                    "value": "baccalaureat",
+                                    "label": "Baccalauréat"
+                                },
+                                {
+                                    "value": "licence",
+                                    "label": "Licence"
+                                },
+                                {
+                                    "value": "master",
+                                    "label": "Master"
+                                },
+                                {
+                                    "value": "doctorat",
+                                    "label": "Doctorat"
+                                },
+                                {
+                                    "value": "autre",
+                                    "label": "Autre"
+                                }
+                            ]
                         },
                         "professionalDegrees": {
                             "placeholder": "Sélectionnez les diplômes professionnels",
@@ -1203,6 +1247,22 @@
                         "problem": "Une erreur s’est produite lors de l’inscription"
                     }
                 },
+                "confirmation": {
+                    "info": {
+                        "studentInfoMessage": "Information",
+                        "paymentDetailsMessage": "Informations sur le paiement"
+                    },
+                    "labels": {
+                        "name": "Nom",
+                        "type": "Type",
+                        "class": "Classe",
+                        "cancel": "Annuler",
+                        "validatePayment": "Valider le paiement"
+                    },
+                    "errors": {
+                        "problem": "Une erreur s’est produite lors de la confirmation"
+                    }
+                },
                 "enrollment": {
                     "info": {
                         "personalInfoMessage": "Informations personnelles",
@@ -1366,7 +1426,7 @@
                 "title": "Écoles"
             },
             "school_years": {
-                "title": "Années scolaires"
+                "title": "Annéesscolaires"
             },
             "finance": {
                 "title": "Finances"
@@ -1390,6 +1450,73 @@
                 "teachers": "%number enseignants",
                 "schools": "%number écoles",
                 "finance": "%number FCFA"
+            }
+        }
+    },
+    "bulkImport": {
+        "title": "Importation en masse d'étudiants",
+        "subtitle": "Importez plusieurs étudiants à la fois en utilisant notre assistant guidé",
+        "breadcrumb": {
+            "dashboard": "Tableau de bord",
+            "students": "Étudiants",
+            "bulkImport": "Importation en masse"
+        },
+        "progress": {
+            "label": "Étape",
+            "of": "sur"
+        },
+        "steps": {
+            "download": {
+                "title": "Télécharger le modèle",
+                "description": "Téléchargez notre modèle Excel pré-formaté",
+                "card": {
+                    "title": "Télécharger le modèle Excel",
+                    "description": "Commencez par télécharger notre modèle Excel pré-formaté avec des exemples",
+                    "downloadButton": "Télécharger le modèle",
+                    "stats": {
+                        "format": "Format Excel",
+                        "sample": "Avec exemples"
+                    }
+                },
+                "requirements": {
+                    "title": "Informations requises"
+                },
+                "tips": {
+                    "title": "Conseils importants"
+                },
+                "notice": {
+                    "title": "Important!",
+                    "description": "Assurez-vous de télécharger et d'utiliser le modèle fourni pour éviter les erreurs d'importation."
+                },
+                "nextButton": "Continuer vers l'importation",
+                "notifications": {
+                    "downloadSuccess": {
+                        "title": "Téléchargement réussi",
+                        "description": "Le modèle Excel a été téléchargé avec succès"
+                    }
+                }
+            },
+            "upload": {
+                "title": "Télécharger le fichier",
+                "description": "Importez votre fichier rempli"
+            },
+            "validate": {
+                "title": "Valider les données",
+                "description": "Vérifiez la conformité de vos données"
+            },
+            "import": {
+                "title": "Importer",
+                "description": "Lancez l'importation des étudiants"
+            },
+            "results": {
+                "title": "Résultats",
+                "description": "Consultez les résultats de l'importation"
+            }
+        },
+        "notifications": {
+            "importComplete": {
+                "title": "Importation terminée",
+                "description": "{count} étudiants importés avec succès"
             }
         }
     }

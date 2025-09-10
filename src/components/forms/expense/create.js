@@ -1,8 +1,8 @@
-import { Box, HStack, Stack, Text, WrapItem } from "@chakra-ui/react";
+import { Box, HStack, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import { SecondaryButton } from "@components/common/button";
 import { FormInput, FormSubmit } from "@components/common/input/FormInput";
 import { expenseCreationFormHandler } from "@handlers";
-import { colors, forms } from "@theme";
+import { forms } from "@theme";
 import { expenseSchema } from "@utils/schemas";
 import { mapFormInitialValues } from "@utils/tools/mappers";
 import { Formik } from "formik";
@@ -57,11 +57,11 @@ export const CreateExpenseForm = ({
                 handleSubmit,
                 isSubmitting,
             }) => (
-                <Stack px={10} py={10}>
-                    <Stack>
-                        
-                        <HStack align="center" justifyContent="space-between">
-                            <WrapItem w={370}>
+                <Stack px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
+                    <Stack spacing={{ base: 4, md: 6 }}>
+
+                        <Wrap spacing={{ base: 4, md: 5 }} justify="space-between">
+                            <WrapItem w={{ base: '100%', md: '48%', lg: '30%' }}>
                                 <FormInput
                                     {...expenseDate}
                                     label={t(expenseDate.label)}
@@ -73,7 +73,7 @@ export const CreateExpenseForm = ({
                                     value={values.expenseDate}
                                 />
                             </WrapItem>
-                            <WrapItem w={370}>
+                            <WrapItem w={{ base: '100%', md: '48%', lg: '30%' }}>
                                 <FormInput
                                     {...amount}
                                     type="number"
@@ -86,7 +86,7 @@ export const CreateExpenseForm = ({
                                     value={values.amount}
                                 />
                             </WrapItem>
-                            <WrapItem w={370}>
+                            <WrapItem w={{ base: '100%', md: '48%', lg: '30%' }}>
                                 <FormInput
                                     {...category}
                                     label={t(category.label)}
@@ -98,8 +98,9 @@ export const CreateExpenseForm = ({
                                     value={values.category}
                                 />
                             </WrapItem>
-                        </HStack>
-                        <HStack align="center" justifyContent="space-between">
+                        </Wrap>
+
+                        <Wrap spacing={{ base: 4, md: 5 }}>
                             <WrapItem w="100%">
                                 <FormInput
                                     {...description}
@@ -113,18 +114,24 @@ export const CreateExpenseForm = ({
                                     value={values.description}
                                 />
                             </WrapItem>
-                        </HStack>
+                        </Wrap>
                     </Stack>
 
-                    <HStack alignItems="flex-end" justifyContent="flex-end" pt={10}>
-                        <Box mr={5}>
+                    <HStack
+                        alignItems="flex-end"
+                        justifyContent={{ base: 'center', md: 'flex-end' }}
+                        pt={{ base: 6, md: 10 }}
+                        spacing={{ base: 4, md: 5 }}
+                        flexDirection={{ base: 'column', sm: 'row' }}
+                    >
+                        <Box w={{ base: '100%', sm: '40%', md: '15%' }}>
                             <SecondaryButton
-                                h={50}
+                                h={{ base: 45, md: 50 }}
                                 message={t('forms.actions.expense.cancel')}
                                 onClick={() => action(false)}
                             />
                         </Box>
-                        <Box>
+                        <Box w={{ base: '100%', sm: '60%', md: '20%' }}>
                             <FormSubmit
                                 uid="expenseCreation"
                                 submit_message={t('forms.actions.expense.create')}
