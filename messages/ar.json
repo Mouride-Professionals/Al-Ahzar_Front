@@ -101,6 +101,28 @@
                     },
                     "submit": "تحديث كلمة المرور"
                 }
+            },
+            "email_confirmation": {
+                "heading": {
+                    "title": "تأكيد البريد الإلكتروني",
+                    "subtitle": "جاري التحقق من بريدك الإلكتروني"
+                },
+                "specifics": {
+                    "forgotten_password": "هل تريد العودة لتسجيل الدخول؟",
+                    "highlight": "اضغط هنا"
+                },
+                "form": {
+                    "verification": {
+                        "verifying": "التحقق جاري...",
+                        "success": "تم بنجاح",
+                        "success_description": "تم التحقق من البريد الإلكتروني بنجاح! جاري التوجيه...",
+                        "error": "خطأ",
+                        "error_description": "فشل التحقق من البريد الإلكتروني.",
+                        "error_token": "رابط التأكيد غير صالح أو منتهي الصلاحية.",
+                        "error_no_token": "لم يتم توفير رمز التأكيد. يرجى المحاولة مرة أخرى."
+                    },
+                    "submit": "الذهاب لتسجيل الدخول"
+                }
             }
         },
         "formInput": {
@@ -210,7 +232,7 @@
                 "searchPlaceholder": "ابحث عن طالب",
                 "filterLabel": "الطلاب غير المسجلين",
                 "validateMonthlyPayment": "تأكيد الدفع الشهري",
-                "socialStatus": "مدعوم",
+                "socialStatus": "الحالة الاجتماعية",
                 "bio": "السيرة الذاتية",
                 "paymentStatus": "حالة الدفع",
                 "validateEnrollment": "تأكيد التسجيل",
@@ -219,7 +241,7 @@
                 "enrollNewStudent": "تسجيل طالب جديد",
                 "tutor": "ولي الأمر",
                 "phone": "رقم الهاتف",
-                "enrolledOn": "مسجل في: {date}",
+                "enrolledOn": "مسجل في",
                 "studentsEnrolled": "الطلاب المسجلون",
                 "studentsNotEnrolled": "الطلاب غير المسجلين",
                 "cta": {
@@ -1064,19 +1086,19 @@
                             "label": "نوع العقد",
                             "options": [
                                 {
-                                    "name": "مستمر",
+                                    "label": "مستمر",
                                     "value": "Disponible"
                                 },
                                 {
-                                    "name": "جزئي",
+                                    "label": "جزئي",
                                     "value": "Temps Partiel"
                                 },
                                 {
-                                    "name": "أجنبي",
+                                    "label": "أجنبي",
                                     "value": "Etranger"
                                 },
                                 {
-                                    "name": "موظف دولة",
+                                    "label": "موظف دولة",
                                     "value": "Employé Etat"
                                 }
                             ]
@@ -1199,6 +1221,22 @@
                     "errors": {
                         "already_exists": "هذا الطالب مسجل بالفعل",
                         "problem": "حدث خطأ أثناء التسجيل"
+                    }
+                },
+                "confirmation": {
+                    "info": {
+                        "studentInfoMessage": "معلومات الطالب",
+                        "paymentDetailsMessage": "معلومات الدفع"
+                    },
+                    "labels": {
+                        "name": "اسم",
+                        "type": "نوع",
+                        "class": "فصل",
+                        "cancel": "الغاء",
+                        "validatePayment": "تاكيد الدفع"
+                    },
+                    "errors": {
+                        "problem": "حدث خطأ أثناء التاكيد"
                     }
                 },
                 "enrollment": {
@@ -1388,6 +1426,73 @@
                 "teachers": "%number معلمين",
                 "schools": "%number مدارس",
                 "finance": "%number FCFA"
+            }
+        }
+    },
+    "bulkImport": {
+        "title": "استيراد الطلاب بالجملة",
+        "subtitle": "استورد عدة طلاب في المرة الواحدة باستخدام معالجنا المرشد",
+        "breadcrumb": {
+            "dashboard": "لوحة التحكم",
+            "students": "الطلاب",
+            "bulkImport": "الاستيراد بالجملة"
+        },
+        "progress": {
+            "label": "الخطوة",
+            "of": "من"
+        },
+        "steps": {
+            "download": {
+                "title": "تحميل النموذج",
+                "description": "حمل نموذج الإكسل المنسق مسبقًا",
+                "card": {
+                    "title": "تحميل نموذج الإكسل",
+                    "description": "ابدأ بتحميل نموذج الإكسل المنسق مسبقًا مع الأمثلة",
+                    "downloadButton": "تحميل النموذج",
+                    "stats": {
+                        "format": "تنسيق الإكسل",
+                        "sample": "مع أمثلة"
+                    }
+                },
+                "requirements": {
+                    "title": "المعلومات المطلوبة"
+                },
+                "tips": {
+                    "title": "نصائح مهمة"
+                },
+                "notice": {
+                    "title": "هام!",
+                    "description": "تأكد من تحميل واستخدام النموذج المرفق لتجنب أخطاء الاستيراد."
+                },
+                "nextButton": "متابعة إلى الاستيراد",
+                "notifications": {
+                    "downloadSuccess": {
+                        "title": "تم التحميل بنجاح",
+                        "description": "تم تحميل نموذج الإكسل بنجاح"
+                    }
+                }
+            },
+            "upload": {
+                "title": "رفع الملف",
+                "description": "استورد ملفك المكتمل"
+            },
+            "validate": {
+                "title": "التحقق من البيانات",
+                "description": "تحقق من صحة بياناتك"
+            },
+            "import": {
+                "title": "الاستيراد",
+                "description": "ابدأ استيراد الطلاب"
+            },
+            "results": {
+                "title": "النتائج",
+                "description": "راجع نتائج الاستيراد"
+            }
+        },
+        "notifications": {
+            "importComplete": {
+                "title": "اكتمل الاستيراد",
+                "description": "تم استيراد {count} طالب بنجاح"
             }
         }
     }

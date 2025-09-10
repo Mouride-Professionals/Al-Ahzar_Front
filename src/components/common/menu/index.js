@@ -8,42 +8,61 @@ import {
 } from '@chakra-ui/react';
 import { colors, routes } from '@theme';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { RiArrowRightSLine } from 'react-icons/ri';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { forwardRef, useState } from 'react';
+import { RiArrowRightSLine } from 'react-icons/ri';
 
-export const MenuPill = ({ active, icon, message, link, isDisabled }) => {
+export const MenuPill = forwardRef(({ active, icon, message, link, isDisabled }, ref) => {
   const theming = {
-    bgColor: active ? colors.secondary.regular : colors.secondary.light,
-    textColor: active ? colors.white : colors.secondary.regular,
+    bgColor: active ? colors.primary.regular : colors.white,
+    textColor: active ? colors.white : colors.gray.dark,
+    borderColor: active ? colors.primary.regular : colors.primary.regular,
   };
 
-  const router = useRouter();
-
   return (
-    <HStack
-      {...(!active && {
-        _hover: { cursor: isDisabled ? 'not-allowed' : 'pointer' },
-      })}
-      {...(!isDisabled && { onClick: () => router.push(link) })}
-      justifyContent={'center'}
-      alignItems={'center'}
-      bgColor={theming.bgColor}
-      borderRadius={25}
-      py={3}
-      px={3}
-      minW={95}
-    >
-      {icon}
-      <Box pl={1}>
-        <Text color={theming.textColor} fontSize={14} noOfLines={1}>
-          {message}
-        </Text>
-      </Box>
-    </HStack>
+    <Link href={isDisabled ? '#' : link} passHref>
+      <HStack
+        ref={ref}
+        justifyContent="center"
+        alignItems="center"
+        bgColor={theming.bgColor}
+        borderWidth={active ? 2 : 1}
+        borderColor={theming.borderColor}
+        borderRadius={25}
+        py={{ base: 2, sm: 3 }}
+        px={{ base: 2, sm: 3 }}
+        h={{ base: 8, sm: 10 }}
+        minW={{ base: 20, sm: 95 }}
+        w="auto"
+        opacity={isDisabled ? 0.5 : 1}
+        cursor={isDisabled ? 'not-allowed' : 'pointer'}
+        _hover={
+          !isDisabled && !active
+            ? { bgColor: colors.primary.light, color: colors.primary.regular }
+            : {}
+        }
+        transform={active ? 'scale(1.05)' : 'scale(1)'}
+        transition="transform 0.2s ease-in-out"
+        boxShadow={active ? '0 2px 4px rgba(0, 0, 0, 0.1)' : 'none'}
+      >
+        {icon}
+        <Box pl={1}>
+          <Text
+            color={theming.textColor}
+            fontSize={{ base: '12px', sm: '14px' }}
+            noOfLines={1}
+            fontWeight={active ? '600' : '400'}
+          >
+            {message}
+          </Text>
+        </Box>
+      </HStack>
+    </Link>
   );
-};
+});
+
+MenuPill.displayName = 'MenuPill';
 
 export const MenuBreadcrumb = ({ currentPage }) => {
   const t = useTranslations('components.layout.breadcrumb');
@@ -53,7 +72,7 @@ export const MenuBreadcrumb = ({ currentPage }) => {
   );
 
   return (
-    <Breadcrumb separator={<RiArrowRightSLine />}>
+    <Breadcrumb separator={<RiArrowRightSLine />} fontWeight={{ base: '500', sm: '700' }} fontSize={{ base: '14px', sm: '16px' }}>
       <BreadcrumbItem>
         <BreadcrumbLink
           href={routes.page_route.dashboard.initial}
@@ -66,7 +85,7 @@ export const MenuBreadcrumb = ({ currentPage }) => {
         <BreadcrumbLink
           href={routes.page_route.dashboard.initial}
           color={colors.primary.regular}
-          fontWeight={'700'}
+          // fontWeight={'700'}
           _hover={{ textDecoration: 'none' }}
           _focus={{ boxShadow: 'none' }}
           _active={{ boxShadow: 'none' }}
@@ -78,7 +97,7 @@ export const MenuBreadcrumb = ({ currentPage }) => {
         <BreadcrumbLink
           href={'#'}
           color={colors.primary.regular}
-          fontWeight={'700'}
+        // fontWeight={'700'}
         >
           {currentPage}
         </BreadcrumbLink>

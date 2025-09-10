@@ -56,6 +56,7 @@ export const loginFormHandler = async ({
         'authentication',
         forms.messages.login.errors.not_authorized
       );
+      
       return { error: res?.error || 'Authentication failed' };
     }
 

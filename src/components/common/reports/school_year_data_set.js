@@ -10,18 +10,12 @@ import {
     useToast,
     VStack,
 } from '@chakra-ui/react';
-import {
-    FormExport,
-    FormFilter,
-    FormSearch,
-} from '@components/common/input/FormInput';
+import { DataTableLayout } from '@components/layout/data_table';
 import { endSchoolYear, setCurrentSchoolYear } from '@services/school_year';
 import { colors, routes } from '@theme';
-import { downloadCSV } from '@utils/csv';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { BsFillCalendarDateFill } from 'react-icons/bs';
 import { RiCalendarEventFill } from 'react-icons/ri';
@@ -32,10 +26,9 @@ const ExpandedComponent = ({ data, token }) => {
     const {
         dashboard: {
             direction: {
-                school_years: { all, edit },
+                school_years: { edit },
             },
         },
-
     } = routes.page_route;
 
     const {
@@ -56,12 +49,11 @@ const ExpandedComponent = ({ data, token }) => {
         }
     );
     const router = useRouter();
-    // set School Year as current
+
     const handleSetCurrentSchoolYear = async () => {
         try {
             const response = await setCurrentSchoolYear(id, token);
             if (response) {
-
                 data.isCurrent = true;
                 toast({
                     title: 'Annee scolaire mise en cours',
@@ -70,22 +62,17 @@ const ExpandedComponent = ({ data, token }) => {
                 });
             }
             router.refresh();
-
         } catch (error) {
             console.error('Error setting current school year:', error);
         }
-        // show success message
-
     };
-    // set School Year as ended
+
     const handleEndSchoolYear = async () => {
         try {
             const response = await endSchoolYear(id, token);
-            // show success message
             if (response) {
                 data.isEnded = true;
                 data.isCurrent = false;
-
                 toast({
                     title: 'Annee scolaire clôturée',
                     description: `Annee scolaire  ${name} cloturée avec success`,
@@ -93,13 +80,10 @@ const ExpandedComponent = ({ data, token }) => {
                 });
                 router.refresh();
             }
-
         } catch (error) {
             console.error('Error ending current school year:', error);
         }
-
     };
-
 
     return (
         <ScaleFade px={5} initialScale={0.9} in={true}>
@@ -140,8 +124,6 @@ const ExpandedComponent = ({ data, token }) => {
                                         {isActive ? t('active') : t('inactive')}
                                     </Text>
                                 </HStack>
-
-
                                 <HStack>
                                     <Text fontWeight="bold">{t('state')}:</Text>
                                     <Text color={isCurrent ? 'green.500' : (isEnded ? 'red.500' : 'gray.500')}>
@@ -149,7 +131,6 @@ const ExpandedComponent = ({ data, token }) => {
                                     </Text>
                                 </HStack>
                             </VStack>
-
                             {description && (
                                 <VStack align="start" spacing={3}>
                                     <HStack>
@@ -200,85 +181,58 @@ export const SchoolYearDataSet = ({
     role,
     data = [],
     columns,
-    selectedIndex = 0,
     token,
 }) => {
     const t = useTranslations('components.dataset.schoolYears');
     const [filterText, setFilterText] = useState('');
-    const [expandedRow, setExpandedRow] = useState(null);
 
-    let filtered = [];
-    filtered.length = data.length;
-
-    filtered = useMemo(() =>
+    const filtered = useMemo(() =>
         data.filter(
             (item) =>
                 item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
-        ).sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
+        ).sort((a, b) => new Date(b.endDate) - new Date(a.endDate)),
+        [data, filterText]
     );
 
     const router = useRouter();
-    const subHeaderComponentMemo = useMemo(() => {
-        return (
-            <HStack
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                my={3}
-                w={'100%'}
-                borderRadius={10}
-            >
-                <HStack>
-                    <Box w={'60%'}>
-                        <FormSearch
-                            placeholder={t('searchPlaceholder')}
-                            keyUp={(e) => setFilterText(e.target.value)}
-                        />
-                    </Box>
-                    <HStack pl={4}>
-                        <FormFilter onExpwort={() => { }} />
-                        <FormExport onExport={() => downloadCSV(filtered)} />
-                    </HStack>
-                </HStack>
 
-                {role?.name == 'Secretaire General' && (
-                    <Button
-                        onClick={() =>
-                            router.push(routes.page_route.dashboard.direction.school_years.create)
-                        }
-                        colorScheme={'orange'}
-                        bgColor={colors.primary.regular}
-                        px={10}
-                    >
-                        {t('addSchoolYear')}
-                    </Button>
-                )}
-            </HStack>
+    const actionButton = role?.name === 'Secretaire General' && (
+        <Button
+            onClick={() =>
+                router.push(routes.page_route.dashboard.direction.school_years.create)
+            }
+            colorScheme={'orange'}
+            bgColor={colors.primary.regular}
+            px={10}
+        >
+            {t('addSchoolYear')}
+        </Button>
+    );
+
+    const filterFunction = ({ data, needle }) =>
+        data.filter(
+            (item) =>
+                item.name && item.name.toLowerCase().includes(needle.toLowerCase())
         );
-    }, [filterText, selectedIndex, t, filtered, role, router]);
 
-    const handleRowExpandToggle = (row) => {
-        setExpandedRow((prev) => (prev?.id === row.id ? null : row));
-    };
     return (
-        <DataTable
-            style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
+        <DataTableLayout
             columns={columns}
             data={filtered}
-            defaultSortFieldId="endDate"
-            defaultSortAsc={false}
-            subHeader
-            subHeaderAlign="center"
-            expandOnRowClicked
-            expandableRowsHideExpander
-            expandableRowExpanded={(row) => row.id === expandedRow?.id}
-            onRowClicked={handleRowExpandToggle}
-            highlightOnHover
-            subHeaderComponent={subHeaderComponentMemo}
-            expandableRows
-            expandableRowsComponent={(data) =>
+            role={role}
+            token={token}
+            translationNamespace="components.dataset.schoolYears"
+            actionButton={actionButton}
+            expandedComponent={(data) =>
                 ExpandedComponent({ ...data, role, token })
             }
-            pagination
+            filterFunction={filterFunction}
+            filterText={filterText}
+            setFilterText={setFilterText}
+            paginationProps={{
+                rowsPerPage: 10,
+                rowsPerPageOptions: [5, 10, 20],
+            }}
         />
     );
 };

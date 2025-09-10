@@ -31,7 +31,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       role={role}
       token={token}
     >
-      <Modal size={'2xl'} onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal size={{ base: 'full', md: '2xl' }} onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader bgColor={colors.secondary.light}>
@@ -45,9 +45,7 @@ export default function Classes({ classes, role, schoolId, token }) {
             <ClassCreationForm
               action={onClose}
               school={schoolId}
-              {...{
-                token,
-              }}
+              token={token}
             />
           </ModalBody>
         </ModalContent>
@@ -98,7 +96,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
     },
   } = routes.api_route;
 
-  const { id, role } = await serverFetch({
+  const { role } = await serverFetch({
     uri: me,
     user_token: token,
   });

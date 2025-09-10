@@ -152,7 +152,7 @@
 import { SchoolDataSet } from "@components/common/reports/school_data_set";
 import DashboardPage from "@components/layout/dashboard/views/dashboard_page";
 import { messages, routes } from "@theme";
-import { SCHOOLS_COLUMNS, useTableColumns } from "@utils/mappers/kpi";
+import { useTableColumns } from "@utils/mappers/kpi";
 import { mapSchoolsDataTable } from "@utils/mappers/school";
 import { getToken } from "next-auth/jwt";
 import { FaSuitcase } from "react-icons/fa";

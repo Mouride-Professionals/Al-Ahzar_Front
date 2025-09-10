@@ -20,8 +20,9 @@ export default function useCustomRedirect() {
     });
 
     useEffect(() => {
+        
         if (status === 'loading') return;
-
+        
         const token = session?.user?.accessToken;
 
         if (!token) {
@@ -39,16 +40,16 @@ export default function useCustomRedirect() {
                 if (!userResponse) {
                     throw new Error('Aucune réponse utilisateur trouvée.');
                 }
-
+                
                 Cookies.set('schoolName', userResponse?.school?.name || '');
                 setRole(userResponse.role);
-                // setForcePasswordChange(userResponse.forcePasswordChange);
+                setForcePasswordChange(userResponse.forcePasswordChange);
 
-                // if (userResponse.forcePasswordChange) {
+                if (userResponse.forcePasswordChange) {
                     
-                //     router.push(`${routes.page_route.dashboard.settings}?forcePasswordChange=true`);
-                //     return;
-                // }
+                    router.push(`${routes.page_route.dashboard.settings}?forcePasswordChange=true`);
+                    return;
+                }
             } catch (error) {
                 console.error('Error fetching user role:', error);
                 toast({

@@ -14,160 +14,159 @@ import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-const {
-    pages: {
-        dashboard,
-        stats: { users: usersStat,
-            classes,
-            students: studentsStat,
-            teachers: teachersStat,
-            schools: schoolsStat, amount },
-    },
-    components: { menu, dataset: { users: usersDataset } },
-} = messages;
+const { components: componentsMessages = {} } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
-const t = useTranslations();
-    
-    const cardStats = [
-        {
-            count: t('pages.stats.amount.users').replace(`%number`, kpis[0]?.length),
-            icon: <FaUser color={colors.primary.regular} size={25} />,
-            title: t('pages.stats.users'),
-        },
-        {
-            count: t('pages.stats.amount.classes').replace(`%number`, kpis[1]?.data?.length),
-            icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-            title: t('pages.stats.classes'),
-        },
-        {
-            count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length),
-            icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-            title: t('pages.stats.students'),
-        },
-        {
-            count: t('pages.stats.amount.teachers').replace(`%number`, kpis[3]?.data?.length ?? 0),
-            icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-            title: t('pages.stats.teachers'),
-        },
-        {
-            count: t('pages.stats.amount.schools').replace(`%number`, kpis[4]?.data?.length),
-            icon: <LuSchool color={colors.primary.regular} size={25} />,
-            title: t('pages.stats.schools'),
-        },
+  const t = useTranslations();
 
-    ];
+  const cardStats = [
+    {
+      count: t('pages.stats.amount.users').replace(
+        `%number`,
+        kpis[0]?.length ?? 0
+      ),
+      icon: <FaUser color={colors.primary.regular} size={25} />,
+      title: t('pages.stats.users'),
+    },
+    {
+      count: t('pages.stats.amount.classes').replace(
+        `%number`,
+        kpis[1]?.data?.length ?? 0
+      ),
+      icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
+      title: t('pages.stats.classes'),
+    },
+    {
+      count: t('pages.stats.amount.students').replace(
+        `%number`,
+        kpis[2]?.data?.length ?? 0
+      ),
+      icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
+      title: t('pages.stats.students'),
+    },
+    {
+      count: t('pages.stats.amount.teachers').replace(
+        `%number`,
+        kpis[3]?.data?.length ?? 0
+      ),
+      icon: <FaSuitcase color={colors.primary.regular} size={25} />,
+      title: t('pages.stats.teachers'),
+    },
+    {
+      count: t('pages.stats.amount.schools').replace(
+        `%number`,
+        kpis[4]?.data?.length ?? 0
+      ),
+      icon: <LuSchool color={colors.primary.regular} size={25} />,
+      title: t('pages.stats.schools'),
+    },
+  ];
 
-    // Map the fetched users data to the desired shape.
-    const users = mapUsersDataTable({ users: kpis[0] });
-    // take all schools with only their name, id, and type for 
-    const schools = kpis[4]?.data?.map((school) => ({
-        name: school.attributes.name,
-        id: school.id,
-    }));
-    const { USER_COLUMNS } = useTableColumns();
-    return (
-        <DashboardLayout
-            title={t('pages.dashboard.initial.title')}
-            currentPage={t('components.menu.users')}
-            role={role}
-            token={token}
+  // Map the fetched users data to the desired shape.
+  const users = mapUsersDataTable({ users: kpis[0] });
+  // take all schools with only their name, id, and type for
+  const schools = kpis[4]?.data?.map((school) => ({
+    name: school.attributes.name,
+    id: school.id,
+  }));
+  const { USER_COLUMNS } = useTableColumns();
+  return (
+    <DashboardLayout
+      title={t('pages.dashboard.initial.title')}
+      currentPage={t('components.menu.users')}
+      role={role}
+      token={token}
+    >
+      <Wrap mt={10} spacing={20.01}>
+        <HStack w={'100%'}>
+          <Statistics cardStats={cardStats} />
+        </HStack>
+        <Text
+          color={colors.secondary.regular}
+          fontSize={20}
+          fontWeight={'700'}
+          pt={10}
         >
-            <Wrap mt={10} spacing={20.01}>
+          {t('components.dataset.users.title')}
+        </Text>
 
-                <HStack w={'100%'}>
-                    <Statistics cardStats={cardStats} />
-                </HStack>
-                <Text
-                    color={colors.secondary.regular}
-                    fontSize={20}
-                    fontWeight={'700'}
-                    pt={10}
-                >
-                    {t('components.dataset.users.title')}
-                </Text>
-
-                <Stack bgColor={colors.white} w={'100%'}>
-                    <UserDataSet
-                        {...{ role, token }}
-                        data={users}
-                        columns={USER_COLUMNS}
-                        schools={schools}
-                    />
-                </Stack>
-            </Wrap>
-        </DashboardLayout>
-    );
+        <Stack bgColor={colors.white} w={'100%'}>
+          <UserDataSet
+            {...{ role, token }}
+            data={users}
+            columns={USER_COLUMNS}
+            schools={schools}
+          />
+        </Stack>
+      </Wrap>
+    </DashboardLayout>
+  );
 }
 
 export const getServerSideProps = async ({ req, res }) => {
-    const secret = process.env.NEXTAUTH_SECRET;
-    const session = await getToken({ req, secret });
-    const token = session?.accessToken;
-    const cookies = new Cookies(req, res);
-    const activeSchoolYear = cookies.get('selectedSchoolYear');
+  const secret = process.env.NEXTAUTH_SECRET;
+  const session = await getToken({ req, secret });
+  const token = session?.accessToken;
+  const cookies = new Cookies(req, res);
+  const activeSchoolYear = cookies.get('selectedSchoolYear');
 
-    if (!token) {
-        return {
-            redirect: {
-                destination: 'user/auth',
-                permanent: false,
-            },
-        };
-    }
-
-    // Fetch the user data from your Strapi endpoint.
-    const {
-        alazhar: {
-            get: {
-                me,
-                classes: { allWithoutSchoolId: classrooms },
-                students: { allWithoutSchoolId: allStudents },
-                teachers: { all: allTeachers },
-                schools: { all: allSchools },
-                users: { all: allUsers },
-            },
-        },
-    } = routes.api_route;
-
-    const response = await serverFetch({
-        uri: me,
-        user_token: token,
-    });
-    const role = response.role;
-
-
-    const kpis = await Promise.all([
-        serverFetch({
-            uri: `${allUsers}?populate=*&sort=createdAt:desc`,
-            user_token: token,
-        }),
-        serverFetch({
-            uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
-            user_token: token,
-        }),
-        serverFetch({
-            uri: allStudents.replace('%activeSchoolYear', activeSchoolYear),
-            user_token: token,
-        }),
-        serverFetch({
-            uri: allTeachers + '?sort=createdAt:desc&populate=school',
-            user_token: token,
-        }).catch(() => ({ data: [] })),
-        serverFetch({
-            uri: allSchools,
-            user_token: token,
-        }).catch(() => ({ data: [] })),
-    ]);
-
-
-
-
+  if (!token) {
     return {
-        props: {
-            kpis,
-            role,
-            token,
-        },
+      redirect: {
+        destination: 'user/auth',
+        permanent: false,
+      },
     };
+  }
+
+  // Fetch the user data from your Strapi endpoint.
+  const {
+    alazhar: {
+      get: {
+        me,
+        classes: { allWithoutSchoolId: classrooms },
+        students: { allWithoutSchoolId: allStudents },
+        teachers: { all: allTeachers },
+        schools: { all: allSchools },
+        users: { all: allUsers },
+      },
+    },
+  } = routes.api_route;
+
+  const response = await serverFetch({
+    uri: me,
+    user_token: token,
+  });
+  const role = response.role;
+
+  const kpis = await Promise.all([
+    serverFetch({
+      uri: `${allUsers}?populate=*&sort=createdAt:desc`,
+      user_token: token,
+    }),
+    serverFetch({
+      uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
+      user_token: token,
+    }),
+    serverFetch({
+      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear),
+      user_token: token,
+    }),
+    serverFetch({
+      uri: allTeachers + '?sort=createdAt:desc&populate=school',
+      user_token: token,
+    }).catch(() => ({ data: [] })),
+    serverFetch({
+      uri: allSchools,
+      user_token: token,
+    }).catch(() => ({ data: [] })),
+  ]);
+
+  return {
+    props: {
+      kpis,
+      role,
+      token,
+    },
+  };
 };

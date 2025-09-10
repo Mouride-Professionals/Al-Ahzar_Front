@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardBody,
@@ -18,22 +17,16 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import {
-  FormExport,
-  FormFilter,
-  FormSearch,
-} from '@components/common/input/FormInput';
 import { assignTeacher } from '@services/teacher';
 import { colors, routes } from '@theme';
-import { downloadCSV } from '@utils/csv';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import { useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
+import { DataTableLayout } from '@components/layout/data_table';
 
 const ExpandedComponent = ({ data, schools, token }) => {
   const t = useTranslations('components.dataset.teachers');
@@ -305,81 +298,32 @@ export const TeacherDataSet = ({
   token,
 }) => {
   const t = useTranslations('components.dataset.teachers');
-  const [filterText, setFilterText] = useState('');
-  const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
+  const router = useRouter();
 
-  let filtered = [];
-  filtered.length = data.length;
-
-  filtered = useMemo(() =>
-    reportingFilter({
-      data,
-      position: selectedIndex,
-      needle: filterText,
-    })
+  const actionButton = (
+    <Button
+      onClick={() =>
+        router.push(routes.page_route.dashboard.direction.teachers.create)
+      }
+      colorScheme="orange"
+      bgColor={colors.primary.regular}
+     
+    >
+      {t('recruitTeacher')}
+    </Button>
   );
 
-  const router = useRouter();
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <HStack
-        alignItems={'center'}
-        justifyContent={'space-between'}
-        my={3}
-        w={'100%'}
-        borderRadius={10}
-      >
-        <HStack>
-          <Box w={'60%'}>
-            <FormSearch
-              placeholder={t('searchPlaceholder')}
-              keyUp={(e) => setFilterText(e.target.value)}
-            />
-          </Box>
-          <HStack pl={4}>
-            <FormFilter onExport={() => { }} />
-            <FormExport onExport={() => downloadCSV(filtered)} />
-          </HStack>
-        </HStack>
-
-        {role?.name != '' && (
-          <Button
-            onClick={() =>
-              router.push(routes.page_route.dashboard.direction.teachers.create)
-            }
-            colorScheme={'orange'}
-            bgColor={colors.primary.regular}
-            px={10}
-          >
-            {t('recruitTeacher')}
-          </Button>
-        )}
-      </HStack>
-    );
-  }, [filterText, selectedIndex, t, filtered, role, router]);
-  const handleRowExpandToggle = (row) => {
-    // If the row is already expanded, collapse it. Otherwise, expand it.
-    setExpandedRow((prev) => (prev?.id === row.id ? null : row));
-  };
-
   return (
-    <DataTable
-      style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
+    <DataTableLayout
       columns={columns}
-      data={filtered}
-      defaultCanSort
-      initialState={{ sortBy: [{ id: 'createdAt', desc: true }] }}
-      subHeader
-      expandOnRowClicked
-      expandableRowsHideExpander
-      subHeaderComponent={subHeaderComponentMemo}
-      expandableRows
-      expandableRowExpanded={(row) => row.id === expandedRow?.id} // Expand only the selected row
-      onRowClicked={handleRowExpandToggle} // Handle row click to expand/collapse
-      expandableRowsComponent={
-        (data) => ExpandedComponent({ ...data, schools, token })
-      }
-      pagination
+      data={data}
+      role={role}
+      token={token}
+      translationNamespace="components.dataset.teachers"
+      actionButton={actionButton}
+      expandedComponent={(data) => ExpandedComponent({ ...data, schools, token })}
+      filterFunction={reportingFilter}
+      selectedIndex={selectedIndex}
     />
   );
 };

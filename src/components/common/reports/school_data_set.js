@@ -1,3 +1,6 @@
+// src/components/common/reports/school_data_set/index.js
+'use client';
+
 import {
   Box,
   Button,
@@ -9,22 +12,15 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import {
-  FormExport,
-  FormFilter,
-  FormSearch,
-} from '@components/common/input/FormInput';
 import { colors, images, routes } from '@theme';
-import { downloadCSV } from '@utils/csv';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
 import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
 import { BsFillCalendarDateFill } from 'react-icons/bs';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { BoxZone } from '../cards/boxZone';
+import { DataTableLayout } from '@components/layout/data_table';
 
 const ExpandedComponent = ({ data, role, user_token }) => {
   const {
@@ -54,124 +50,119 @@ const ExpandedComponent = ({ data, role, user_token }) => {
 
   const router = useRouter();
   const schoolBannerUrl = banner === null
-    ? images.logo.src // Fallback to default logo
-    : images.logo.src; // `${process.env.NEXT_PUBLIC_API_URL}${banner?.data?.attributes.url}`;
+    ? images.logo.src
+    : images.logo.src; // Replace with actual banner URL logic if available
 
   const t = useTranslations('components.dataset.schools');
 
   return (
-    <ScaleFade px={5} initialScale={0.9} in={true}>
+    <ScaleFade px={{ base: 3, md: 5 }} initialScale={0.9} in={true}>
       <BoxZone>
         <Card variant="outline" w="100%" bg="white">
           <CardBody>
-            <HStack spacing={5}>
-              {/* <Box
-                w={50}
-                h={50}
-                borderRadius="full"
-                bg="teal.100"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <RiSchoolFill color="orange" size={30} />
-              </Box> */}
-              <Box h={70.01} w={80.01} pos={'relative'}>
-                <Image src={schoolBannerUrl}
-                  alt={name}
-                  fill
-                  style={{ objectFit: "contain" }}
-                />
-              </Box>
-              <VStack align="start">
-                <Text fontWeight="bold" fontSize="lg">
-                  {name}
-                </Text>
-                <Text fontSize="sm" color="gray.500">
-                  {type} - {region}, {department}
-                </Text>
-              </VStack>
-            </HStack>
-            <SimpleGrid columns={[1, null, 2]} spacing={5} pt={5}>
-              <VStack align="start" spacing={3}>
-                <HStack>
-                  <HiOutlineLocationMarker color="blue" size={20} />
-                  <Text>{address || t('addressUnavailable')}</Text>
-                </HStack>
-                <HStack>
-                  <AiOutlineMail color="blue" size={20} />
-                  <Text>{email || t('emailUnavailable')}</Text>
-                </HStack>
-                <HStack>
-                  <AiOutlinePhone color="blue" size={20} />
-                  <Text>{phone || t('phoneUnavailable')}</Text>
-                </HStack>
-                {phoneFix && (
+            <VStack spacing={4} align="start">
+              <HStack spacing={3}>
+                <Box h={50} w={60} pos="relative">
+                  <Image
+                    src={schoolBannerUrl}
+                    alt={name}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    sizes="(max-width: 768px) 60px, 80px"
+                  />
+                </Box>
+                <VStack align="start" spacing={1}>
+                  <Text fontWeight="bold" fontSize={{ base: 'md', md: 'lg' }}>
+                    {name}
+                  </Text>
+                  <Text fontSize={{ base: 'xs', md: 'sm' }} color="gray.500">
+                    {type} - {region}, {department}
+                  </Text>
+                </VStack>
+              </HStack>
+              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+                <VStack align="start" spacing={2}>
                   <HStack>
-                    <AiOutlinePhone color="blue" size={20} />
-                    <Text>{phoneFix}</Text>
+                    <HiOutlineLocationMarker color="blue" size={16} />
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {address || t('addressUnavailable')}
+                    </Text>
                   </HStack>
-                )}
-                <HStack>
-                  <BsFillCalendarDateFill color="blue" size={20} />
-                  <Text>Créée le : {creationDate || t('dateUnknown')}</Text>
-                </HStack>
-              </VStack>
-
-              <VStack align="start" spacing={3}>
-                {IA && (
                   <HStack>
-                    <Text fontWeight="bold">IA :</Text>
-                    <Text>{IA}</Text>
+                    <AiOutlineMail color="blue" size={16} />
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {email || t('emailUnavailable')}
+                    </Text>
                   </HStack>
-                )}
-                {IEF && (
                   <HStack>
-                    <Text fontWeight="bold">IEF :</Text>
-                    <Text>{IEF}</Text>
+                    <AiOutlinePhone color="blue" size={16} />
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {phone || t('phoneUnavailable')}
+                    </Text>
                   </HStack>
-                )}
-                <HStack>
-                  <Text fontWeight="bold">{t('director')} :</Text>
-                  <Text>{responsibleName || 'Non assigné'}</Text>
-                </HStack>
-                <HStack>
-                  <Text fontWeight="bold">{t('belonging')} :</Text>
-                  <Text>{isAlAzharLand ? t('alAzhar') : t('notAlAzhar')}</Text>
-                </HStack>
-                {note && (
-                  <VStack align="start" spacing={1}>
-                    <Text fontWeight="bold">{t('note')} :</Text>
-                    <Text>{note}</Text>
-                  </VStack>
-                )}
-              </VStack>
-            </SimpleGrid>
-            <HStack justifyContent="flex-end" mt={5}>
-              {/* // go to the school s classes */}
-              <Button
-                onClick={() =>
-                  router.push(
-                    all.replace('%id', data.id)
-                  )
-                }
-                colorScheme="orange"
-                variant="outline"
-              >
-                {t('classes')}
-              </Button>
-
-
-              <Button
-                onClick={() =>
-                  router.push(edit.replace('%id', data.id))
-                }
-                colorScheme="orange"
-                variant="outline"
-              >
-                {t('edit')}
-              </Button>
-            </HStack>
+                  {phoneFix && (
+                    <HStack>
+                      <AiOutlinePhone color="blue" size={16} />
+                      <Text fontSize={{ base: 'xs', md: 'sm' }}>{phoneFix}</Text>
+                    </HStack>
+                  )}
+                  <HStack>
+                    <BsFillCalendarDateFill color="blue" size={16} />
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      Créée le : {creationDate || t('dateUnknown')}
+                    </Text>
+                  </HStack>
+                </VStack>
+                <VStack align="start" spacing={2}>
+                  {IA && (
+                    <HStack>
+                      <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>IA :</Text>
+                      <Text fontSize={{ base: 'xs', md: 'sm' }}>{IA}</Text>
+                    </HStack>
+                  )}
+                  {IEF && (
+                    <HStack>
+                      <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>IEF :</Text>
+                      <Text fontSize={{ base: 'xs', md: 'sm' }}>{IEF}</Text>
+                    </HStack>
+                  )}
+                  <HStack>
+                    <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>{t('director')} :</Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>{responsibleName || 'Non assigné'}</Text>
+                  </HStack>
+                  <HStack>
+                    <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>{t('belonging')} :</Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {isAlAzharLand ? t('alAzhar') : t('notAlAzhar')}
+                    </Text>
+                  </HStack>
+                  {note && (
+                    <VStack align="start" spacing={1}>
+                      <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>{t('note')} :</Text>
+                      <Text fontSize={{ base: 'xs', md: 'sm' }}>{note}</Text>
+                    </VStack>
+                  )}
+                </VStack>
+              </SimpleGrid>
+              <HStack justifyContent="flex-end" spacing={2}>
+                <Button
+                  onClick={() => router.push(all.replace('%id', data.id))}
+                  colorScheme="orange"
+                  variant="outline"
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  {t('classes')}
+                </Button>
+                <Button
+                  onClick={() => router.push(edit.replace('%id', data.id))}
+                  colorScheme="orange"
+                  variant="outline"
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  {t('edit')}
+                </Button>
+              </HStack>
+            </VStack>
           </CardBody>
         </Card>
       </BoxZone>
@@ -187,88 +178,41 @@ export const SchoolDataSet = ({
   token,
 }) => {
   const t = useTranslations('components.dataset.schools');
-  const [filterText, setFilterText] = useState('');
-  const [expandedRow, setExpandedRow] = useState(null); // To track the currently expanded row
+  const router = useRouter();
 
-
-  let filtered = [];
-  filtered.length = data.length;
-
-  filtered = useMemo(() =>
+  const filterFunction = ({ data, needle }) =>
     data.filter(
       (item) =>
-        item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
-    )
+        item.name && item.name.toLowerCase().includes(needle.toLowerCase())
+    );
+
+  const actionButton = role?.name === 'Secretaire General' && (
+    <Button
+      onClick={() =>
+        router.push(routes.page_route.dashboard.direction.schools.create)
+      }
+      colorScheme="orange"
+      bgColor={colors.primary.regular}
+     
+    >
+      {t('addSchool')}
+    </Button>
   );
 
-  const router = useRouter();
-  const subHeaderComponentMemo = useMemo(() => {
-    return (
-      <HStack
-        alignItems={'center'}
-        justifyContent={'space-between'}
-        my={3}
-        w={'100%'}
-        borderRadius={10}
-      >
-        <HStack>
-          <Box w={'60%'}>
-            <FormSearch
-              placeholder={t('searchPlaceholder')}
-              keyUp={(e) => setFilterText(e.target.value)}
-            />
-          </Box>
-          <HStack pl={4}>
-            <FormFilter onExpwort={() => { }} />
-            <FormExport onExport={() => downloadCSV(filtered)} />
-          </HStack>
-        </HStack>
-
-        {role?.name == 'Secretaire General' && (
-          <Button
-            onClick={() =>
-              router.push(routes.page_route.dashboard.direction.schools.create)
-            }
-            colorScheme={'orange'}
-            bgColor={colors.primary.regular}
-            px={10}
-          >
-            {t('addSchool')}
-          </Button>
-        )}
-      </HStack>
-    );
-  }, [filterText, selectedIndex, t, role, router, filtered]);
-
-
-  const handleRowExpandToggle = (row) => {
-    // If the row is already expanded, collapse it. Otherwise, expand it.
-    setExpandedRow((prev) => (prev?.id === row.id ? null : row));
-  };
   return (
-    <DataTable
-      style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
+    <DataTableLayout
       columns={columns}
-      data={filtered}
-      defaultCanSort
-      initialState={{ sortBy: [{ id: 'name', desc: true }] }}
-      subHeader
-      subHeaderAlign="center"
-      expandOnRowClicked
-      expandableRowsHideExpander
-
-      highlightOnHover
-      subHeaderComponent={subHeaderComponentMemo}
-      expandableRows
-      expandableRowExpanded={(row) => row.id === expandedRow?.id} // Expand only the selected row
-      onRowClicked={handleRowExpandToggle} // Handle row click to expand/collapse
-
-
-      expandableRowsComponent={(data) =>
+      data={data}
+      role={role}
+      token={token}
+      translationNamespace="components.dataset.schools"
+      actionButton={actionButton}
+      expandedComponent={(data) =>
         ExpandedComponent({ ...data, role, user_token: token })
       }
-
-      pagination
+      filterFunction={filterFunction}
+      defaultSortFieldId="name"
+      selectedIndex={selectedIndex}
     />
   );
 };
