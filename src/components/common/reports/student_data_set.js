@@ -42,7 +42,6 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
       cashier: {
         students: { confirm },
       },
-      surveillant: {},
     },
   } = routes.page_route;
 

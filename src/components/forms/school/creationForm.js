@@ -112,11 +112,6 @@ export const CreateSchoolForm = ({
         },
       },
     },
-    messages: {
-      school: {
-        creation: {},
-      },
-    },
   } = forms;
 
   // Responsive direction for HStack/Stack
