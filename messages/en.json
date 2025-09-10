@@ -1430,5 +1430,72 @@
                 "finance": "%number FCFA"
             }
         }
+    },
+    "bulkImport": {
+        "title": "Bulk Student Import",
+        "subtitle": "Import multiple students at once using our guided wizard",
+        "breadcrumb": {
+            "dashboard": "Dashboard",
+            "students": "Students",
+            "bulkImport": "Bulk Import"
+        },
+        "progress": {
+            "label": "Step",
+            "of": "of"
+        },
+        "steps": {
+            "download": {
+                "title": "Download Template",
+                "description": "Download our pre-formatted Excel template",
+                "card": {
+                    "title": "Download Excel Template",
+                    "description": "Start by downloading our pre-formatted Excel template with examples",
+                    "downloadButton": "Download Template",
+                    "stats": {
+                        "format": "Excel Format",
+                        "sample": "With Examples"
+                    }
+                },
+                "requirements": {
+                    "title": "Required Information"
+                },
+                "tips": {
+                    "title": "Important Tips"
+                },
+                "notice": {
+                    "title": "Important!",
+                    "description": "Make sure to download and use the provided template to avoid import errors."
+                },
+                "nextButton": "Continue to Import",
+                "notifications": {
+                    "downloadSuccess": {
+                        "title": "Download Successful",
+                        "description": "Excel template downloaded successfully"
+                    }
+                }
+            },
+            "upload": {
+                "title": "Upload File",
+                "description": "Import your completed file"
+            },
+            "validate": {
+                "title": "Validate Data",
+                "description": "Check your data compliance"
+            },
+            "import": {
+                "title": "Import",
+                "description": "Start importing students"
+            },
+            "results": {
+                "title": "Results",
+                "description": "Review import results"
+            }
+        },
+        "notifications": {
+            "importComplete": {
+                "title": "Import Complete",
+                "description": "{count} students imported successfully"
+            }
+        }
     }
 }

@@ -62,6 +62,7 @@ export const MenuPill = forwardRef(({ active, icon, message, link, isDisabled },
   );
 });
 
+MenuPill.displayName = 'MenuPill';
 
 export const MenuBreadcrumb = ({ currentPage }) => {
   const t = useTranslations('components.layout.breadcrumb');
@@ -71,7 +72,7 @@ export const MenuBreadcrumb = ({ currentPage }) => {
   );
 
   return (
-    <Breadcrumb separator={<RiArrowRightSLine />}  fontWeight={{ base: '500', sm: '700' }} fontSize={{ base: '14px', sm: '16px' }}>
+    <Breadcrumb separator={<RiArrowRightSLine />} fontWeight={{ base: '500', sm: '700' }} fontSize={{ base: '14px', sm: '16px' }}>
       <BreadcrumbItem>
         <BreadcrumbLink
           href={routes.page_route.dashboard.initial}
@@ -96,7 +97,7 @@ export const MenuBreadcrumb = ({ currentPage }) => {
         <BreadcrumbLink
           href={'#'}
           color={colors.primary.regular}
-          // fontWeight={'700'}
+        // fontWeight={'700'}
         >
           {currentPage}
         </BreadcrumbLink>
