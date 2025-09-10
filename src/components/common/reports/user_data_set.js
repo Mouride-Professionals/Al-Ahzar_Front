@@ -161,6 +161,7 @@ const ExpandedComponent = ({ data, schools, token, role }) => {
               >
                 {t('edit')}
               </Button>
+              )}
               {!school && (
                 <Button onClick={openDialog} colorScheme="orange" variant="outline">
                   {t('assignSchool')}
