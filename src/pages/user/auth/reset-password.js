@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { AuthenticationLayout, AuthenticationLayoutForm } from '@components/layout/authentication';
 import { usePasswordType } from '@hooks';
-import { colors, forms, messages, routes } from '@theme';
+import { colors, forms, routes } from '@theme';
 import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
@@ -31,9 +31,7 @@ const t = useTranslations('components');
     const {
         inputs: {
             reset_password: {
-                password: { label: passwordLabel, placeholder: passwordPlaceholder },
-                confirm_password: { label: confirmPasswordLabel, placeholder: confirmPasswordPlaceholder },
-                submit: submitButtonLabel,
+                password: { label: passwordLabel },
             },
         },
     } = forms;

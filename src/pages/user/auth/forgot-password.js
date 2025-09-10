@@ -11,7 +11,7 @@ import {
     useToast
 } from '@chakra-ui/react';
 import { AuthenticationLayout, AuthenticationLayoutForm } from '@components/layout/authentication';
-import { colors, forms, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { Formik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';

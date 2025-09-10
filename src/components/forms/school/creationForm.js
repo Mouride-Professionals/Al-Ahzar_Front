@@ -1,4 +1,4 @@
-import { Box, HStack, Stack, Text, WrapItem, useBreakpointValue } from '@chakra-ui/react';
+import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
 import { schoolCreationFormHandler, schoolUpdateFormHandler } from '@handlers';
@@ -94,7 +94,6 @@ export const CreateSchoolForm = ({
           name,
           creationDate,
           type,
-          banner,
           parentSchool,
           region,
           department,
@@ -115,20 +114,12 @@ export const CreateSchoolForm = ({
     },
     messages: {
       school: {
-        creation: {
-          info: {
-            generalInfoMessage,
-            addressInfoMessage,
-            contactInfoMessage,
-            additionalInfoMessage,
-          },
-        },
+        creation: {},
       },
     },
   } = forms;
 
   // Responsive direction for HStack/Stack
-  const rowOrCol = useBreakpointValue({ base: 'column', md: 'row' });
 
   return (
     <Formik
@@ -139,22 +130,22 @@ export const CreateSchoolForm = ({
       onSubmit={(values, { setSubmitting, setFieldError }) => {
         isEdit
           ? schoolUpdateFormHandler({
-            school: schoolId,
-            token,
-            bannerFile,
-            data: values,
-            setSubmitting,
-            setFieldError,
-            hasSucceeded: setHasSucceeded,
-          })
+              school: schoolId,
+              token,
+              bannerFile,
+              data: values,
+              setSubmitting,
+              setFieldError,
+              hasSucceeded: setHasSucceeded,
+            })
           : schoolCreationFormHandler({
-            token,
-            data: values,
-            bannerFile,
-            setSubmitting,
-            setFieldError,
-            hasSucceeded: setHasSucceeded,
-          });
+              token,
+              data: values,
+              bannerFile,
+              setSubmitting,
+              setFieldError,
+              hasSucceeded: setHasSucceeded,
+            });
       }}
     >
       {({
@@ -166,7 +157,11 @@ export const CreateSchoolForm = ({
         handleSubmit,
         isSubmitting,
       }) => (
-        <Stack px={{ base: 2, md: 10 }} py={{ base: 2, md: 10 }} spacing={{ base: 6, md: 10 }}>
+        <Stack
+          px={{ base: 2, md: 10 }}
+          py={{ base: 2, md: 10 }}
+          spacing={{ base: 6, md: 10 }}
+        >
           {/* General Info */}
           <Stack>
             <Text color={colors.secondary.regular} fontWeight={'700'}>
@@ -329,12 +324,10 @@ export const CreateSchoolForm = ({
                   label={t(IA.label)}
                   placeholder={t(IA.placeholder)}
                   errors={errors}
-                  handleChange={
-                    (e) => {
-                      handleChange(e);
-                      handleIAChange(e.target.value);
-                    }
-                  }
+                  handleChange={(e) => {
+                    handleChange(e);
+                    handleIAChange(e.target.value);
+                  }}
                   handleBlur={handleBlur}
                   touched={touched}
                   value={values.IA}
@@ -451,7 +444,13 @@ export const CreateSchoolForm = ({
             </Stack>
           </Stack>
           {/* Actions */}
-          <HStack alignItems={'flex-start'} justifyContent={'flex-end'} pt={10} spacing={4} flexDirection={{ base: 'column', md: 'row' }}>
+          <HStack
+            alignItems={'flex-start'}
+            justifyContent={'flex-end'}
+            pt={10}
+            spacing={4}
+            flexDirection={{ base: 'column', md: 'row' }}
+          >
             <Box w={{ base: '100%', md: '15%' }} mr={{ md: 5 }}>
               <SecondaryButton
                 h={50}

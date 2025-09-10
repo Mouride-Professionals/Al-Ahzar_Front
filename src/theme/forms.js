@@ -3,7 +3,6 @@ const {
   studentRegistrationSchema,
   schoolCreationSchema,
   teacherRecruitmentSchema,
-  userCreationSchema,
   expenseSchema,
   enrollmentSchema,
 } = require('@utils/schemas');

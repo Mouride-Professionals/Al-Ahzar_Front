@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardBody,
@@ -18,19 +17,12 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import {
-  FormExport,
-  FormFilter,
-  FormSearch,
-} from '@components/common/input/FormInput';
 import { assignTeacher } from '@services/teacher';
 import { colors, routes } from '@theme';
-import { downloadCSV } from '@utils/csv';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import { useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';

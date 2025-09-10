@@ -26,7 +26,7 @@ const ExpandedComponent = ({ data, token }) => {
     const {
         dashboard: {
             direction: {
-                school_years: { all, edit },
+                school_years: { edit },
             },
         },
     } = routes.page_route;
@@ -181,12 +181,10 @@ export const SchoolYearDataSet = ({
     role,
     data = [],
     columns,
-    selectedIndex = 0,
     token,
 }) => {
     const t = useTranslations('components.dataset.schoolYears');
     const [filterText, setFilterText] = useState('');
-    const [expandedRow, setExpandedRow] = useState(null);
 
     const filtered = useMemo(() =>
         data.filter(

@@ -14,12 +14,11 @@ import { useRouter } from 'next/navigation';
 import { BoxZone } from '../cards/boxZone';
 
 // PaymentExpandedComponent: Expanded row component for payment transactions details
-const PaymentExpandedComponent = ({ data, token }) => {
+const PaymentExpandedComponent = ({ data }) => {
   const t = useTranslations('components.dataset.payments');
   // Destructure fields from the payment transaction record
   // Adjust these fields to match your actual payment data structure
   const {
-    id,
     monthOf, amount, isPaid,
     firstname, lastname,
   } = data;
@@ -69,8 +68,6 @@ export const PaymentDataSet = ({
   selectedIndex = 0,
   token
 }) => {
-  const t = useTranslations('components.dataset.payments');
-  const router = useRouter();
 
   const filterFunction = ({ data, needle }) =>
     reportingFilter({

@@ -12,13 +12,13 @@ import {
   useToast,
   VStack,
   Wrap,
-  WrapItem
+  WrapItem,
 } from '@chakra-ui/react';
 import { StudentFilter } from '@components/common/input/FormInput';
 import MonthlyPaymentModal from '@components/forms/student/monthlyPaymentForm';
 import { DataTableLayout } from '@components/layout/data_table';
 import ReEnrollmentModal from '@components/modals/enrollmentModal';
-import { monthlyPaymentFormHandler, studentEnrollmentFormHandler } from '@handlers';
+import { monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
 import { ACCESS_STUDENT_VALIDATION } from '@utils/mappers/classes';
 import { reportingFilter } from '@utils/mappers/kpi';
@@ -34,7 +34,6 @@ import { PiUserDuotone, PiUsersDuotone } from 'react-icons/pi';
 import { SlClose } from 'react-icons/sl';
 import { serverFetch } from 'src/lib/api';
 import { BoxZone } from '../cards/boxZone';
-import { hasPermission } from '@utils/roles';
 
 const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const t = useTranslations('components.dataset.students');
@@ -43,19 +42,14 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
       cashier: {
         students: { confirm },
       },
-      surveillant: {
-        students: { resubscribe },
-      },
+      surveillant: {},
     },
   } = routes.page_route;
 
   const {
-    id,
     firstname,
     lastname,
     level,
-    registered_at,
-    birthplace,
     schoolYear,
     enrollment_date,
     enrollment_id,
@@ -87,54 +81,6 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const closePaymentModal = () => setPaymentModalOpen(false);
   const activeSchoolYear = Cookies.get('selectedSchoolYear');
 
-  const handleReEnrollment = async () => {
-    if (!selectedClassroom) {
-      toast({
-        title: 'Aucune classe sélectionnée',
-        description: 'Veuillez sélectionner une classe pour la réinscription.',
-        status: 'warning',
-      });
-      return;
-    }
-    try {
-      await studentEnrollmentFormHandler({
-        data: {
-          studentId: data.id,
-          classId: selectedClassroom,
-          schoolYearId: activeSchoolYear,
-        },
-        setSubmitting,
-        setFieldError,
-        hasSucceeded: setHasSucceeded,
-        token: user_token,
-      });
-      if (hasSucceeded) {
-        toast({
-          title: 'Réinscription réussie',
-          description: `L'étudiant a été réinscrit avec succès dans la classe ${classrooms.find(
-            (classroom) => classroom.id === parseInt(selectedClassroom)
-          )?.name}.`,
-          status: 'success',
-        });
-        router.refresh();
-      } else if (fieldError) {
-        toast({
-          title: 'Réinscription échouée',
-          description: fieldError,
-          status: 'error',
-        });
-      }
-    } catch (error) {
-      console.error('Error re-enrolling student:', error);
-      toast({
-        title: 'Error Occurred',
-        description: 'An error occurred while re-enrolling the student.',
-        status: 'error',
-      });
-    }
-    closeDialog();
-  };
-
   const handleMonthlyPayment = async (values, setSubmitting, setFieldError) => {
     try {
       await monthlyPaymentFormHandler({
@@ -146,7 +92,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
         setFieldError,
         hasSucceeded: setHasSucceeded,
         token: user_token,
-      })
+      });
       if (hasSucceeded) {
         toast({
           title: 'Paiement mensuel réussi',
@@ -163,7 +109,10 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
       }
     } catch (error) {
       console.error('Error creating monthly payment:', error);
-      setFieldError('payment', 'Une erreur est survenue lors de l\'enregistrement du paiement.');
+      setFieldError(
+        'payment',
+        "Une erreur est survenue lors de l'enregistrement du paiement."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -189,7 +138,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
               templateColumns={{
                 base: 'repeat(1, 1fr)',
                 md: 'repeat(2, 1fr)',
-                lg: 'repeat(3, 1fr)'
+                lg: 'repeat(3, 1fr)',
               }}
               gap={{ base: 4, md: 5 }}
             >
@@ -202,7 +151,10 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                 borderBottomColor={{ base: 'gray.200', lg: 'transparent' }}
                 pb={{ base: 4, lg: 0 }}
               >
-                <HStack spacing={{ base: 2, md: 3 }} flexDirection={{ base: 'column', sm: 'row' }}>
+                <HStack
+                  spacing={{ base: 2, md: 3 }}
+                  flexDirection={{ base: 'column', sm: 'row' }}
+                >
                   <VStack
                     justifyContent={'center'}
                     w={{ base: 35, md: 35 }}
@@ -214,14 +166,26 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                   >
                     <PiUserDuotone color={'orange.500'} size={18} />
                   </VStack>
-                  <Stack spacing={0.5} textAlign={{ base: 'center', sm: 'left' }}>
-                    <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>
+                  <Stack
+                    spacing={0.5}
+                    textAlign={{ base: 'center', sm: 'left' }}
+                  >
+                    <Text
+                      fontWeight={'bold'}
+                      fontSize={{ base: 'sm', md: 'md' }}
+                    >
                       {firstname} {lastname}
                     </Text>
-                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
+                    <Text
+                      color={'gray.600'}
+                      fontSize={{ base: 'xs', md: 'sm' }}
+                    >
                       {level}
                     </Text>
-                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
+                    <Text
+                      color={'gray.600'}
+                      fontSize={{ base: 'xs', md: 'sm' }}
+                    >
                       {t('enrolledOn')}: {enrollment_date}
                     </Text>
                   </Stack>
@@ -229,12 +193,26 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 
                 <Stack spacing={{ base: 2, md: 3 }} mt={{ base: 2, md: 3 }}>
                   <Stack spacing={0.5}>
-                    <Text fontWeight={'bold'} fontSize={{ base: 'xs', md: 'sm' }}>{t('socialStatus')}</Text>
-                    <Text fontSize={{ base: 'xs', md: 'sm' }}>{socialStatus || '...'}</Text>
+                    <Text
+                      fontWeight={'bold'}
+                      fontSize={{ base: 'xs', md: 'sm' }}
+                    >
+                      {t('socialStatus')}
+                    </Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {socialStatus || '...'}
+                    </Text>
                   </Stack>
                   <Stack spacing={0.5}>
-                    <Text fontWeight={'bold'} fontSize={{ base: 'xs', md: 'sm' }}>{t('bio')}</Text>
-                    <Text fontSize={{ base: 'xs', md: 'sm' }}>{registrationComment || '...'}</Text>
+                    <Text
+                      fontWeight={'bold'}
+                      fontSize={{ base: 'xs', md: 'sm' }}
+                    >
+                      {t('bio')}
+                    </Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {registrationComment || '...'}
+                    </Text>
                   </Stack>
                 </Stack>
               </GridItem>
@@ -248,7 +226,10 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                 borderBottomColor={{ base: 'gray.200', md: 'transparent' }}
                 pb={{ base: 4, md: 0 }}
               >
-                <HStack spacing={{ base: 2, md: 3 }} flexDirection={{ base: 'column', sm: 'row' }}>
+                <HStack
+                  spacing={{ base: 2, md: 3 }}
+                  flexDirection={{ base: 'column', sm: 'row' }}
+                >
                   <VStack
                     justifyContent={'center'}
                     w={{ base: 35, md: 35 }}
@@ -260,14 +241,26 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                   >
                     <PiUsersDuotone color={'orange.500'} size={18} />
                   </VStack>
-                  <Stack spacing={0.5} textAlign={{ base: 'center', sm: 'left' }}>
-                    <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>
+                  <Stack
+                    spacing={0.5}
+                    textAlign={{ base: 'center', sm: 'left' }}
+                  >
+                    <Text
+                      fontWeight={'bold'}
+                      fontSize={{ base: 'sm', md: 'md' }}
+                    >
                       {parent_firstname} {parent_lastname}
                     </Text>
-                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
+                    <Text
+                      color={'gray.600'}
+                      fontSize={{ base: 'xs', md: 'sm' }}
+                    >
                       {t('tutor')}
                     </Text>
-                    <Text color={'gray.600'} fontSize={{ base: 'xs', md: 'sm' }}>
+                    <Text
+                      color={'gray.600'}
+                      fontSize={{ base: 'xs', md: 'sm' }}
+                    >
                       {t('phone')}: {parent_phone}
                     </Text>
                   </Stack>
@@ -277,14 +270,18 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
               {/* Payment Status */}
               <GridItem>
                 <Stack spacing={{ base: 3, md: 4 }}>
-                  <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>{t('paymentStatus')}</Text>
+                  <Text fontWeight={'bold'} fontSize={{ base: 'sm', md: 'md' }}>
+                    {t('paymentStatus')}
+                  </Text>
 
                   {payment_history.length === 0 && (
                     <Stack spacing={3}>
                       {ACCESS_STUDENT_VALIDATION.includes(role.type) ? (
                         <Button
                           onClick={() =>
-                            router.push(confirm.replace('{student}', enrollment_id))
+                            router.push(
+                              confirm.replace('{student}', enrollment_id)
+                            )
                           }
                           colorScheme={'green'}
                           variant={'outline'}
@@ -294,7 +291,9 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                           {t('validateEnrollment')}
                         </Button>
                       ) : (
-                        <Text fontSize={{ base: 'sm', md: 'md' }}>{t('waitingForFinance')}</Text>
+                        <Text fontSize={{ base: 'sm', md: 'md' }}>
+                          {t('waitingForFinance')}
+                        </Text>
                       )}
                     </Stack>
                   )}
@@ -303,7 +302,13 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                     <SimpleGrid columns={1} spacing={2}>
                       {sortedPaymentHistory.slice(0, 3).map((item) => {
                         const {
-                          attributes: { monthOf, isPaid, createdAt, amount, paymentType },
+                          attributes: {
+                            monthOf,
+                            isPaid,
+                            createdAt,
+                            amount,
+                            paymentType,
+                          },
                         } = item;
                         const paymentDate = new Date(monthOf ?? createdAt);
 
@@ -321,16 +326,31 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                             align={{ base: 'flex-start', sm: 'center' }}
                             spacing={{ base: 1, sm: 0 }}
                           >
-                            <VStack align={{ base: 'center', sm: 'flex-start' }} spacing={0} w={{ base: '100%', sm: 'auto' }}>
-                              <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="medium">
+                            <VStack
+                              align={{ base: 'center', sm: 'flex-start' }}
+                              spacing={0}
+                              w={{ base: '100%', sm: 'auto' }}
+                            >
+                              <Text
+                                fontSize={{ base: 'xs', md: 'sm' }}
+                                fontWeight="medium"
+                              >
                                 {dateFormatter(paymentDate)}
                               </Text>
                               <Text fontSize="xs" color="gray.600">
                                 {mapPaymentType[paymentType]}
                               </Text>
                             </VStack>
-                            <HStack justify={{ base: 'center', sm: 'flex-end' }} w={{ base: '100%', sm: 'auto' }}>
-                              <Text fontSize={{ base: 'xs', md: 'sm' }} fontWeight="semibold">{amount} FCFA</Text>
+                            <HStack
+                              justify={{ base: 'center', sm: 'flex-end' }}
+                              w={{ base: '100%', sm: 'auto' }}
+                            >
+                              <Text
+                                fontSize={{ base: 'xs', md: 'sm' }}
+                                fontWeight="semibold"
+                              >
+                                {amount} FCFA
+                              </Text>
                               {isPaid ? (
                                 <BsCheck2Circle color={'green.500'} size={16} />
                               ) : (
@@ -352,34 +372,40 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
             </Grid>
 
             {/* Action Buttons */}
-            <Wrap justify={{ base: 'center', md: 'flex-end' }} mt={{ base: 4, md: 6 }} spacing={{ base: 2, md: 3 }}>
-              {payment_history.length > 0 && ACCESS_STUDENT_VALIDATION.includes(role.type) && (
-                <WrapItem w={{ base: '100%', sm: 'auto' }}>
-                  <Button
-                    onClick={openPaymentModal}
-                    colorScheme="orange"
-                    variant="outline"
-                    size={{ base: 'sm', md: 'md' }}
-                    w={{ base: '100%', sm: 'auto' }}
-                  >
-                    {t('validateMonthlyPayment')}
-                  </Button>
-                </WrapItem>
-              )}
+            <Wrap
+              justify={{ base: 'center', md: 'flex-end' }}
+              mt={{ base: 4, md: 6 }}
+              spacing={{ base: 2, md: 3 }}
+            >
+              {payment_history.length > 0 &&
+                ACCESS_STUDENT_VALIDATION.includes(role.type) && (
+                  <WrapItem w={{ base: '100%', sm: 'auto' }}>
+                    <Button
+                      onClick={openPaymentModal}
+                      colorScheme="orange"
+                      variant="outline"
+                      size={{ base: 'sm', md: 'md' }}
+                      w={{ base: '100%', sm: 'auto' }}
+                    >
+                      {t('validateMonthlyPayment')}
+                    </Button>
+                  </WrapItem>
+                )}
 
-              {ACCESS_ROUTES.isSurveillant(role.name) && schoolYear != activeSchoolYear && (
-                <WrapItem w={{ base: '100%', sm: 'auto' }}>
-                  <Button
-                    onClick={openDialog}
-                    colorScheme="orange"
-                    variant="outline"
-                    size={{ base: 'sm', md: 'md' }}
-                    w={{ base: '100%', sm: 'auto' }}
-                  >
-                    {t('reEnroll')}
-                  </Button>
-                </WrapItem>
-              )}
+              {ACCESS_ROUTES.isSurveillant(role.name) &&
+                schoolYear != activeSchoolYear && (
+                  <WrapItem w={{ base: '100%', sm: 'auto' }}>
+                    <Button
+                      onClick={openDialog}
+                      colorScheme="orange"
+                      variant="outline"
+                      size={{ base: 'sm', md: 'md' }}
+                      w={{ base: '100%', sm: 'auto' }}
+                    >
+                      {t('reEnroll')}
+                    </Button>
+                  </WrapItem>
+                )}
             </Wrap>
 
             {/* Modals */}
@@ -402,8 +428,8 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
               handleMonthlyPayment={handleMonthlyPayment}
               initialValues={{ monthOf: '', amount: '' }}
               alreadyPaidMonths={sortedPaymentHistory
-                .filter(item => item.attributes.paymentType === 'monthly')
-                .map(item => item.attributes.monthOf)}
+                .filter((item) => item.attributes.paymentType === 'monthly')
+                .map((item) => item.attributes.monthOf)}
             />
           </CardBody>
         </Card>
@@ -477,7 +503,6 @@ export const DataSet = ({
     >
       {t('enrollNewStudent')}
     </Button>
-    
   );
 
   return (

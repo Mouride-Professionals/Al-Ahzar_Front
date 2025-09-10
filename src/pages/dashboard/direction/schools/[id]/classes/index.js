@@ -96,7 +96,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
     },
   } = routes.api_route;
 
-  const { id, role } = await serverFetch({
+  const { role } = await serverFetch({
     uri: me,
     user_token: token,
   });

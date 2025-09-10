@@ -14,23 +14,7 @@ import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  pages: {
-    dashboard,
-    stats: {
-      users: usersStat,
-      classes,
-      students: studentsStat,
-      teachers,
-      schools: schoolsStat,
-      amount,
-    },
-  },
-  components: {
-    menu,
-    dataset: { schools: schoolsDataset },
-  },
-} = messages;
+const { components: componentsMessages = {} } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
   const t = useTranslations();
@@ -42,22 +26,34 @@ export default function Dashboard({ kpis, role, token }) {
       title: t('pages.stats.users'),
     },
     {
-      count: t('pages.stats.amount.classes').replace(`%number`, kpis[1]?.data?.length),
+      count: t('pages.stats.amount.classes').replace(
+        `%number`,
+        kpis[1]?.data?.length
+      ),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
       title: t('pages.stats.classes'),
     },
     {
-      count: t('pages.stats.amount.students').replace(`%number`, kpis[2]?.data?.length ?? 0),
+      count: t('pages.stats.amount.students').replace(
+        `%number`,
+        kpis[2]?.data?.length ?? 0
+      ),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: t('pages.stats.students'),
     },
     {
-      count: t('pages.stats.amount.teachers').replace(`%number`, kpis[3]?.data?.length ?? 0),
+      count: t('pages.stats.amount.teachers').replace(
+        `%number`,
+        kpis[3]?.data?.length ?? 0
+      ),
       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
       title: t('pages.stats.teachers'),
     },
     {
-      count: t('pages.stats.amount.schools').replace(`%number`, kpis[4]?.data?.length),
+      count: t('pages.stats.amount.schools').replace(
+        `%number`,
+        kpis[4]?.data?.length
+      ),
       icon: <LuSchool color={colors.primary.regular} size={25} />,
       title: t('pages.stats.schools'),
     },

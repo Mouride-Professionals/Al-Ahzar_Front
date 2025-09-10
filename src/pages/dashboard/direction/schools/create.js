@@ -10,13 +10,7 @@ import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const {
-  components: {
-    cards: {
-      school: { creation, another_school, info },
-    },
-  },
-} = messages;
+const { components: { cards: cardsMessages = {} } = {} } = messages;
 
 export default function Create({ schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
@@ -50,7 +44,7 @@ export default function Create({ schools, role, token }) {
         >
           <BsArrowLeftShort size={40} />
           <Text fontSize={20} fontWeight={'700'}>
-            { t('components.cards.school.creation') }
+            {t('components.cards.school.creation')}
           </Text>
         </HStack>
         <Stack
@@ -61,7 +55,6 @@ export default function Create({ schools, role, token }) {
           w={'100%'}
           minH={'35rem'}
         >
-
           {hasSucceeded ? (
             <SchoolCreationCard
               cta={{
@@ -72,8 +65,8 @@ export default function Create({ schools, role, token }) {
               title={t('components.cards.school.info.success')}
               message={t('components.cards.school.info.message')}
             />
-            // router.push(routes.page_route.dashboard.direction.initial)
           ) : (
+            // router.push(routes.page_route.dashboard.direction.initial)
             <CreateSchoolForm
               {...{
                 schools,

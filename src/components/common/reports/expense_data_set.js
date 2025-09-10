@@ -16,10 +16,10 @@ import { useState } from "react";
 import { BoxZone } from "../cards/boxZone";
 
 // ExpenseExpandedComponent: Expanded row component for expense details
-const ExpenseExpandedComponent = ({ data, token }) => {
+const ExpenseExpandedComponent = ({ data }) => {
   const t = useTranslations('components.dataset.expenses');
   // Destructure fields from the expense record
-  const { id, expenseDate, amount, category, school, schoolYear } = data;
+  const { expenseDate, amount, category, school, schoolYear } = data;
   const formattedDate = new Date(expenseDate);
 
   return (
