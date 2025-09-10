@@ -16,6 +16,7 @@ export const hasPermission = (role, permission) => {
         },
         [ROLES.SURVEILLANT_GENERAL]: {
             manageStudents: true,
+            bulkStudents: true,
             viewSchoolReports: true,
             viewClasses: true,
             viewHome: true,

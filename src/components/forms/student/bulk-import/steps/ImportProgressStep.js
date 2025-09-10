@@ -119,13 +119,26 @@ export default function ImportProgressStep({
             setImportProgress(100);
             setCurrentStep('Import terminé!');
 
+            const endTime = Date.now();
+            const duration = startTime ? Math.round((endTime - startTime) / 1000) : 0;
+
             const results = {
+                // Main statistics
                 total: apiData.total || totalStudents,
                 success: apiData.success || 0,
                 errors: apiData.errors || 0,
                 warnings: apiData.warnings || 0,
-                details: apiData.details || [],
-                errorDetails: apiData.errorDetails || []
+
+                // Detailed data
+                details: apiData.details || apiData.students || [], // Imported students
+                errorDetails: apiData.errorDetails || apiData.errors || [], // Error details
+
+                // Metadata
+                duration: duration,
+                timestamp: new Date().toISOString(),
+
+                // Backend response data (raw)
+                rawData: apiData
             };
 
             setImportResults(results);

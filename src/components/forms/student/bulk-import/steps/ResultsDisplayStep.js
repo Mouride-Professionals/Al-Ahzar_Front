@@ -59,28 +59,86 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
     const toast = useToast();
 
     if (!importData) {
-        return null;
+        return (
+            <Card>
+                <CardBody p={8}>
+                    <VStack spacing={4} align="center">
+                        <Icon as={FaExclamationTriangle} boxSize={16} color="orange.500" />
+                        <Heading size="lg" color="orange.600">
+                            Aucune donnée d'importation disponible
+                        </Heading>
+                        <Text color="gray.600" textAlign="center">
+                            Les résultats de l'importation ne sont pas disponibles.
+                        </Text>
+                        <Button
+                            leftIcon={<RepeatIcon />}
+                            colorScheme="blue"
+                            onClick={onStartOver}
+                        >
+                            Recommencer l'importation
+                        </Button>
+                    </VStack>
+                </CardBody>
+            </Card>
+        );
     }
 
+    // Handle different data structures from backend
     const {
-        totalProcessed,
-        successCount,
-        errorCount,
-        duration,
-        importedStudents,
-        errors
+        // New backend structure
+        total: totalProcessed = 0,
+        success: successCount = 0,
+        errors: errorCount = 0,
+        warnings: warningCount = 0,
+        details: importedStudents = [],
+        errorDetails: errors = [],
+        duration = 0,
+
+        // Legacy structure fallback
+        totalProcessed: legacyTotal,
+        successCount: legacySuccess,
+        errorCount: legacyErrors,
+        importedStudents: legacyStudents,
+        errors: legacyErrorList
     } = importData;
 
-    const successRate = totalProcessed > 0 ? Math.round((successCount / totalProcessed) * 100) : 0;
+    // Use legacy values if new structure is not available
+    const actualTotalProcessed = totalProcessed || legacyTotal || 0;
+    const actualSuccessCount = successCount || legacySuccess || 0;
+    const actualErrorCount = errorCount || legacyErrors || 0;
+    const actualImportedStudents = importedStudents?.length ? importedStudents : (legacyStudents || []);
+    const actualErrors = errors?.length ? errors : (legacyErrorList || []);
+    const actualDuration = duration || 0;
+
+    const successRate = actualTotalProcessed > 0 ? Math.round((actualSuccessCount / actualTotalProcessed) * 100) : 0;
 
     const downloadErrorReport = () => {
+        if (!actualErrors || actualErrors.length === 0) {
+            toast({
+                title: 'Aucune erreur',
+                description: 'Il n\'y a aucune erreur à télécharger',
+                status: 'info',
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
+
         // Create CSV content for error report
         const csvContent = [
-            ['Ligne', 'Erreur', 'Détails'],
-            ...errors.map(error => [error.row, error.error, error.details])
+            ['Ligne', 'Erreur', 'Détails', 'Données'],
+            ...actualErrors.map(error => [
+                error.row || error.line || 'N/A',
+                error.error || error.message || error.type || 'Erreur inconnue',
+                error.details || error.description || '',
+                error.data ? JSON.stringify(error.data) : ''
+            ])
         ];
 
-        const csvString = csvContent.map(row => row.join(',')).join('\n');
+        const csvString = csvContent.map(row =>
+            row.map(cell => `"${String(cell).replace(/"/g, '""')}"`)
+        ).map(row => row.join(',')).join('\n');
+
         const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
 
@@ -104,19 +162,34 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
     };
 
     const downloadSuccessReport = () => {
+        if (!actualImportedStudents || actualImportedStudents.length === 0) {
+            toast({
+                title: 'Aucun étudiant importé',
+                description: 'Il n\'y a aucun étudiant importé à télécharger',
+                status: 'info',
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
+
         // Create CSV content for success report
         const csvContent = [
-            ['ID Étudiant', 'Prénom', 'Nom', 'Classe', 'Numéro d\'inscription'],
-            ...importedStudents.map(student => [
-                student.id,
-                student.firstName,
-                student.lastName,
-                student.class,
-                student.enrollmentNumber
+            ['ID Étudiant', 'Prénom', 'Nom', 'Classe', 'Numéro d\'inscription', 'Statut'],
+            ...actualImportedStudents.map(student => [
+                student.id || student.studentId || '',
+                student.firstName || student.first_name || student.prenom || '',
+                student.lastName || student.last_name || student.nom || '',
+                student.class || student.className || student.classe || '',
+                student.enrollmentNumber || student.enrollment_number || student.numero_inscription || '',
+                student.status || 'Importé'
             ])
         ];
 
-        const csvString = csvContent.map(row => row.join(',')).join('\n');
+        const csvString = csvContent.map(row =>
+            row.map(cell => `"${String(cell).replace(/"/g, '""')}"`)
+        ).map(row => row.join(',')).join('\n');
+
         const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
 
@@ -140,6 +213,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
     };
 
     const formatDuration = (seconds) => {
+        if (!seconds || seconds === 0) return 'Instantané';
         if (seconds < 60) return `${seconds}s`;
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
@@ -151,33 +225,38 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
             {/* Success Header */}
             <Card
                 borderWidth={2}
-                borderColor={successCount > 0 ? "green.200" : "red.200"}
-                bg={successCount > 0 ? "green.50" : "red.50"}
+                borderColor={actualSuccessCount > 0 ? "green.200" : "red.200"}
+                bg={actualSuccessCount > 0 ? "green.50" : "red.50"}
             >
                 <CardBody p={8}>
                     <VStack spacing={4} align="center">
                         <Icon
-                            as={successCount > 0 ? FaCheckCircle : FaExclamationTriangle}
+                            as={actualSuccessCount > 0 ? FaCheckCircle : FaExclamationTriangle}
                             boxSize={16}
-                            color={successCount > 0 ? "green.500" : "red.500"}
+                            color={actualSuccessCount > 0 ? "green.500" : "red.500"}
                         />
 
                         <VStack spacing={2} textAlign="center">
-                            <Heading size="lg" color={successCount > 0 ? "green.600" : "red.600"}>
-                                {successCount > 0 ? 'Importation réussie!' : 'Importation terminée avec des erreurs'}
+                            <Heading size="lg" color={actualSuccessCount > 0 ? "green.600" : "red.600"}>
+                                {actualSuccessCount > 0 ? 'Importation réussie!' : 'Importation terminée avec des erreurs'}
                             </Heading>
                             <Text color="gray.600" fontSize="lg">
-                                {successCount > 0
-                                    ? `${successCount} étudiants ont été importés avec succès`
-                                    : `${errorCount} erreurs ont été détectées lors de l'importation`
+                                {actualSuccessCount > 0
+                                    ? `${actualSuccessCount} étudiants ont été importés avec succès`
+                                    : `${actualErrorCount} erreurs ont été détectées lors de l'importation`
                                 }
                             </Text>
+                            {warningCount > 0 && (
+                                <Text color="orange.600" fontSize="md">
+                                    {warningCount} avertissements détectés
+                                </Text>
+                            )}
                         </VStack>
 
                         <HStack spacing={8} color="gray.500">
                             <HStack>
                                 <Icon as={FaClock} />
-                                <Text fontSize="sm">Durée: {formatDuration(duration)}</Text>
+                                <Text fontSize="sm">Durée: {formatDuration(actualDuration)}</Text>
                             </HStack>
                             <HStack>
                                 <Icon as={FaUsers} />
@@ -195,7 +274,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                         <CardBody textAlign="center">
                             <Stat>
                                 <StatLabel>Total traité</StatLabel>
-                                <StatNumber color="blue.500">{totalProcessed}</StatNumber>
+                                <StatNumber color="blue.500">{actualTotalProcessed}</StatNumber>
                                 <StatHelpText>étudiants</StatHelpText>
                             </Stat>
                         </CardBody>
@@ -207,7 +286,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                         <CardBody textAlign="center">
                             <Stat>
                                 <StatLabel>Importés</StatLabel>
-                                <StatNumber color="green.500">{successCount}</StatNumber>
+                                <StatNumber color="green.500">{actualSuccessCount}</StatNumber>
                                 <StatHelpText>avec succès</StatHelpText>
                             </Stat>
                         </CardBody>
@@ -219,12 +298,26 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                         <CardBody textAlign="center">
                             <Stat>
                                 <StatLabel>Erreurs</StatLabel>
-                                <StatNumber color="red.500">{errorCount}</StatNumber>
-                                <StatHelpText>échecs</StatHelpText>
+                                <StatNumber color="red.500">{actualErrorCount}</StatNumber>
+                                <StatHelpText>détectées</StatHelpText>
                             </Stat>
                         </CardBody>
                     </Card>
                 </GridItem>
+
+                {warningCount > 0 && (
+                    <GridItem>
+                        <Card>
+                            <CardBody textAlign="center">
+                                <Stat>
+                                    <StatLabel>Avertissements</StatLabel>
+                                    <StatNumber color="orange.500">{warningCount}</StatNumber>
+                                    <StatHelpText>détectés</StatHelpText>
+                                </Stat>
+                            </CardBody>
+                        </Card>
+                    </GridItem>
+                )}
 
                 <GridItem>
                     <Card>
@@ -242,7 +335,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
             {/* Detailed Results */}
             <Accordion allowToggle>
                 {/* Successful Imports */}
-                {successCount > 0 && (
+                {actualSuccessCount > 0 && (
                     <AccordionItem>
                         <h2>
                             <AccordionButton>
@@ -250,7 +343,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                                     <HStack>
                                         <Icon as={FaCheckCircle} color="green.500" />
                                         <Text fontWeight="semibold">
-                                            Étudiants importés avec succès ({successCount})
+                                            Étudiants importés avec succès ({actualSuccessCount})
                                         </Text>
                                     </HStack>
                                 </Box>
@@ -261,7 +354,10 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                             <VStack spacing={4} align="stretch">
                                 <HStack justify="space-between">
                                     <Text fontSize="sm" color="gray.600">
-                                        Affichage des {Math.min(5, importedStudents.length)} premiers étudiants
+                                        {actualImportedStudents.length > 0
+                                            ? `Affichage des ${Math.min(5, actualImportedStudents.length)} premiers étudiants`
+                                            : 'Aucun détail d\'étudiant disponible'
+                                        }
                                     </Text>
                                     <Button
                                         size="sm"
@@ -269,45 +365,68 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                                         variant="outline"
                                         colorScheme="green"
                                         onClick={downloadSuccessReport}
+                                        isDisabled={actualImportedStudents.length === 0}
                                     >
                                         Télécharger la liste
                                     </Button>
                                 </HStack>
 
-                                <Box overflowX="auto">
-                                    <Table size="sm" variant="simple">
-                                        <Thead>
-                                            <Tr>
-                                                <Th>ID</Th>
-                                                <Th>Prénom</Th>
-                                                <Th>Nom</Th>
-                                                <Th>Classe</Th>
-                                                <Th>N° Inscription</Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {importedStudents.slice(0, showAllStudents ? undefined : 5).map((student, index) => (
-                                                <Tr key={index}>
-                                                    <Td fontFamily="mono" fontSize="xs">{student.id}</Td>
-                                                    <Td>{student.firstName}</Td>
-                                                    <Td>{student.lastName}</Td>
-                                                    <Td>
-                                                        <Badge colorScheme="blue">{student.class}</Badge>
-                                                    </Td>
-                                                    <Td fontFamily="mono" fontSize="xs">{student.enrollmentNumber}</Td>
+                                {actualImportedStudents.length > 0 ? (
+                                    <Box overflowX="auto">
+                                        <Table size="sm" variant="simple">
+                                            <Thead>
+                                                <Tr>
+                                                    <Th>ID</Th>
+                                                    <Th>Prénom</Th>
+                                                    <Th>Nom</Th>
+                                                    <Th>Classe</Th>
+                                                    <Th>N° Inscription</Th>
+                                                    <Th>Statut</Th>
                                                 </Tr>
-                                            ))}
-                                        </Tbody>
-                                    </Table>
-                                </Box>
+                                            </Thead>
+                                            <Tbody>
+                                                {actualImportedStudents.slice(0, showAllStudents ? undefined : 5).map((student, index) => (
+                                                    <Tr key={student.id || index}>
+                                                        <Td fontFamily="mono" fontSize="xs">
+                                                            {student.id || student.studentId || `N/A`}
+                                                        </Td>
+                                                        <Td>{student.firstName || student.first_name || student.prenom || 'N/A'}</Td>
+                                                        <Td>{student.lastName || student.last_name || student.nom || 'N/A'}</Td>
+                                                        <Td>
+                                                            <Badge colorScheme="blue">
+                                                                {student.class || student.className || student.classe || 'N/A'}
+                                                            </Badge>
+                                                        </Td>
+                                                        <Td fontFamily="mono" fontSize="xs">
+                                                            {student.enrollmentNumber || student.enrollment_number || student.numero_inscription || 'N/A'}
+                                                        </Td>
+                                                        <Td>
+                                                            <Badge colorScheme="green" size="sm">
+                                                                {student.status || 'Importé'}
+                                                            </Badge>
+                                                        </Td>
+                                                    </Tr>
+                                                ))}
+                                            </Tbody>
+                                        </Table>
+                                    </Box>
+                                ) : (
+                                    <Alert status="info">
+                                        <AlertIcon />
+                                        <AlertDescription>
+                                            Aucun détail d'étudiant n'est disponible pour cet import.
+                                            {actualSuccessCount > 0 && ' Les étudiants ont été importés avec succès mais sans détails.'}
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
 
-                                {importedStudents.length > 5 && !showAllStudents && (
+                                {actualImportedStudents.length > 5 && !showAllStudents && (
                                     <Button
                                         size="sm"
                                         variant="ghost"
                                         onClick={() => setShowAllStudents(true)}
                                     >
-                                        Voir tous les étudiants ({importedStudents.length})
+                                        Voir tous les étudiants ({actualImportedStudents.length})
                                     </Button>
                                 )}
                             </VStack>
@@ -316,7 +435,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                 )}
 
                 {/* Import Errors */}
-                {errorCount > 0 && (
+                {actualErrorCount > 0 && (
                     <AccordionItem>
                         <h2>
                             <AccordionButton>
@@ -324,7 +443,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                                     <HStack>
                                         <Icon as={FaExclamationTriangle} color="red.500" />
                                         <Text fontWeight="semibold">
-                                            Erreurs d'importation ({errorCount})
+                                            Erreurs d'importation ({actualErrorCount})
                                         </Text>
                                     </HStack>
                                 </Box>
@@ -335,7 +454,10 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                             <VStack spacing={4} align="stretch">
                                 <HStack justify="space-between">
                                     <Text fontSize="sm" color="gray.600">
-                                        Détails des erreurs rencontrées
+                                        {actualErrors.length > 0
+                                            ? 'Détails des erreurs rencontrées'
+                                            : 'Aucun détail d\'erreur disponible'
+                                        }
                                     </Text>
                                     <Button
                                         size="sm"
@@ -343,34 +465,54 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
                                         variant="outline"
                                         colorScheme="red"
                                         onClick={downloadErrorReport}
+                                        isDisabled={actualErrors.length === 0}
                                     >
                                         Télécharger le rapport
                                     </Button>
                                 </HStack>
 
-                                <List spacing={2}>
-                                    {errors.slice(0, showAllErrors ? undefined : 5).map((error, index) => (
-                                        <ListItem key={index} p={3} bg="red.50" borderRadius="md">
-                                            <VStack align="start" spacing={1}>
-                                                <HStack>
-                                                    <Badge colorScheme="red">Ligne {error.row}</Badge>
-                                                    <Text fontWeight="semibold" fontSize="sm">{error.error}</Text>
-                                                </HStack>
-                                                <Text fontSize="sm" color="gray.600">
-                                                    {error.details}
-                                                </Text>
-                                            </VStack>
-                                        </ListItem>
-                                    ))}
-                                </List>
+                                {actualErrors.length > 0 ? (
+                                    <List spacing={2}>
+                                        {actualErrors.slice(0, showAllErrors ? undefined : 5).map((error, index) => (
+                                            <ListItem key={index} p={3} bg="red.50" borderRadius="md">
+                                                <VStack align="start" spacing={1}>
+                                                    <HStack>
+                                                        <Badge colorScheme="red">
+                                                            Ligne {error.row || error.line || 'N/A'}
+                                                        </Badge>
+                                                        <Text fontWeight="semibold" fontSize="sm">
+                                                            {error.error || error.message || error.type || 'Erreur inconnue'}
+                                                        </Text>
+                                                    </HStack>
+                                                    <Text fontSize="sm" color="gray.600">
+                                                        {error.details || error.description || 'Aucun détail disponible'}
+                                                    </Text>
+                                                    {error.data && (
+                                                        <Text fontSize="xs" color="gray.500" fontFamily="mono">
+                                                            Données: {typeof error.data === 'string' ? error.data : JSON.stringify(error.data)}
+                                                        </Text>
+                                                    )}
+                                                </VStack>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                ) : (
+                                    <Alert status="info">
+                                        <AlertIcon />
+                                        <AlertDescription>
+                                            Aucun détail d'erreur n'est disponible.
+                                            {actualErrorCount > 0 && ' Des erreurs ont été détectées mais sans détails.'}
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
 
-                                {errors.length > 5 && !showAllErrors && (
+                                {actualErrors.length > 5 && !showAllErrors && (
                                     <Button
                                         size="sm"
                                         variant="ghost"
                                         onClick={() => setShowAllErrors(true)}
                                     >
-                                        Voir toutes les erreurs ({errors.length})
+                                        Voir toutes les erreurs ({actualErrors.length})
                                     </Button>
                                 )}
                             </VStack>
@@ -437,7 +579,7 @@ export default function ResultsDisplayStep({ importData, onStartOver }) {
             </VStack>
 
             {/* Final Status Message */}
-            {successCount > 0 && (
+            {actualSuccessCount > 0 && (
                 <Alert status="info" borderRadius="md">
                     <AlertIcon />
                     <Box>

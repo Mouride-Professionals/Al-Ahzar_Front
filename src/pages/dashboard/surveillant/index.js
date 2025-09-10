@@ -5,6 +5,7 @@ import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import { hasPermission } from '@utils/roles';
 import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
@@ -69,7 +70,7 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
             {t('components.dataset.students.title')}
           </Text>
 
-          <HStack spacing={4}>
+          {/* {hasPermission(role.name, 'bulkStudents') && ( <HStack spacing={4}>
             <Button
               as={Link}
               href={routes.page_route.dashboard.surveillant.students.bulkImport}
@@ -79,7 +80,7 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
             >
               {t('bulkImport.breadcrumb.bulkImport')}
             </Button>
-          </HStack>
+          </HStack>)} */}
         </HStack>
 
         <Stack bgColor={colors.white} w={'100%'}>
