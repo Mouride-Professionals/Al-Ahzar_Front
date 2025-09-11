@@ -7,7 +7,6 @@ import { enrollmentSchema } from "@utils/schemas"; // updated schema for enrollm
 import { mapFormInitialValues } from "@utils/tools/mappers";
 import { Formik } from "formik";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import Select from 'react-select';
 
 
@@ -21,14 +20,13 @@ export const EnrollmentForm = ({
   setSelectedClassroom,
 
 }) => {
-  const router = useRouter();
   const activeSchoolYear = Cookies.get('selectedSchoolYear');
 
 
   const {
     inputs: {
       student: {
-        enrollment: { classroom, enrollmentType, socialCategory, description },
+        enrollment: { classroom, enrollmentType, socialCategory },
       },
     },
     messages: {

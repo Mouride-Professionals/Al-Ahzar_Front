@@ -865,7 +865,11 @@
                         },
                         "gender": {
                             "placeholder": "Select gender",
-                            "label": "Gender"
+                            "label": "Gender",
+                            "options": {
+                                "male": "Male",
+                                "female": "Female"
+                            }
                         },
                         "phoneNumber": {
                             "placeholder": "Enter phone number",
@@ -915,7 +919,29 @@
                         },
                         "academicDegree": {
                             "placeholder": "Select academic degree",
-                            "label": "Academic Degree"
+                            "label": "Academic Degree",
+                            "options": [
+                                {
+                                    "value": "baccalaureat",
+                                    "label": "Baccalauréat"
+                                },
+                                {
+                                    "value": "licence",
+                                    "label": "Licence"
+                                },
+                                {
+                                    "value": "master",
+                                    "label": "Master"
+                                },
+                                {
+                                    "value": "doctorat",
+                                    "label": "Doctorat"
+                                },
+                                {
+                                    "value": "autre",
+                                    "label": "Autre"
+                                }
+                            ]
                         },
                         "professionalDegrees": {
                             "placeholder": "Select professional degrees",

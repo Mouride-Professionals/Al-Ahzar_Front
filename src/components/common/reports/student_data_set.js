@@ -24,6 +24,7 @@ import { ACCESS_STUDENT_VALIDATION } from '@utils/mappers/classes';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import { hasPermission } from '@utils/roles';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
@@ -483,7 +484,10 @@ export const DataSet = ({
       needle,
     });
 
-  const extraSubHeaderComponents = role?.name !== 'Caissier' && (
+  const extraSubHeaderComponents = hasPermission(
+    role.name,
+    'manageStudents'
+  ) && (
     <StudentFilter
       onFilter={handleFilter}
       label={getFilterLabel}
@@ -492,7 +496,7 @@ export const DataSet = ({
     />
   );
 
-  const actionButton = role?.name !== 'Caissier' && (
+  const actionButton = hasPermission(role.name, 'manageStudents') && (
     <Button
       onClick={() =>
         router.push(routes.page_route.dashboard.surveillant.students.create)

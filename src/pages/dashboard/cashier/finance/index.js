@@ -20,7 +20,7 @@ import { Statistics } from "@components/func/lists/Statistic";
 import { DashboardLayout } from "@components/layout/dashboard";
 import { colors, routes } from "@theme";
 import { mapExpensesDataTable } from "@utils/mappers/expense";
-import { EXPENSES_COLUMNS, PAYMENTS_COLUMNS, useTableColumns } from "@utils/mappers/kpi";
+import { useTableColumns } from "@utils/mappers/kpi";
 import { mapPaymentsDataTable } from "@utils/mappers/payment";
 import { mapPaymentType } from "@utils/tools/mappers";
 import { getToken } from "next-auth/jwt";

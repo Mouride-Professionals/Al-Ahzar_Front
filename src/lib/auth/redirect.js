@@ -1,99 +1,128 @@
 'use client';
 
+import { useToast } from '@chakra-ui/react';
 import { routes } from '@theme';
 import Cookies from 'js-cookie';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { serverFetch } from '../api';
-import { useToast } from '@chakra-ui/react';
 
 export default function useCustomRedirect() {
-    const router = useRouter();
-    const { data: session, status } = useSession();
-    const [role, setRole] = useState(null);
-    const [forcePasswordChange, setForcePasswordChange] = useState(false);
-    const toast = useToast({
-        position: 'top',
-        duration: 5000,
-        isClosable: true,
-    });
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [role, setRole] = useState(null);
+  const [forcePasswordChange, setForcePasswordChange] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const toast = useToast({
+    position: 'top',
+    duration: 5000,
+    isClosable: true,
+  });
 
-    useEffect(() => {
-        
-        if (status === 'loading') return;
-        
-        const token = session?.user?.accessToken;
+  // Get current path to prevent unnecessary redirects
+  const currentPath =
+    typeof window !== 'undefined' ? window.location.pathname : '';
 
-        if (!token) {
-            router.push('/user/auth');
-            return;
+  useEffect(() => {
+    if (status === 'loading') return;
+
+    const token = session?.user?.accessToken;
+
+    if (!token) {
+      // Only redirect to auth if not already there
+      if (!currentPath.startsWith('/user/auth')) {
+        router.push('/user/auth');
+      }
+      return;
+    }
+
+    const fetchUserRole = async () => {
+      try {
+        const userResponse = await serverFetch({
+          uri: routes.api_route.alazhar.get.me,
+          user_token: token,
+        });
+
+        if (!userResponse) {
+          throw new Error('Aucune réponse utilisateur trouvée.');
         }
 
-        const fetchUserRole = async () => {
-            try {
-                const userResponse = await serverFetch({
-                    uri: routes.api_route.alazhar.get.me,
-                    user_token: token,
-                });
+        Cookies.set('schoolName', userResponse?.school?.name || '');
+        setRole(userResponse.role);
+        setForcePasswordChange(userResponse.forcePasswordChange);
+        setIsInitialized(true);
 
-                if (!userResponse) {
-                    throw new Error('Aucune réponse utilisateur trouvée.');
-                }
-                
-                Cookies.set('schoolName', userResponse?.school?.name || '');
-                setRole(userResponse.role);
-                setForcePasswordChange(userResponse.forcePasswordChange);
-
-                if (userResponse.forcePasswordChange) {
-                    
-                    router.push(`${routes.page_route.dashboard.settings}?forcePasswordChange=true`);
-                    return;
-                }
-            } catch (error) {
-                console.error('Error fetching user role:', error);
-                toast({
-                    id: 'redirect-error',
-                    title: 'Erreur',
-                    description: error.message || 'Échec de la récupération du rôle utilisateur.',
-                    status: 'error',
-                });
-                signOut({ redirect: false });
-                router.push('/user/auth');
-            }
-        };
-
-        fetchUserRole();
-    }, [session, status, router, toast]);
-
-    useEffect(() => {
-        if (!role || forcePasswordChange) return;
-
-        const {
-            dashboard: {
-                direction: { initial: direction },
-                surveillant: { initial: surveillant },
-                cashier: { initial: cashier },
-            },
-        } = routes.page_route;
-
-        let redirectPath = '/user/auth';
-        switch (role.name) {
-            case 'Caissier':
-                redirectPath = cashier;
-                break;
-            case 'Secretaire General':
-            case 'Directeur General':
-            case 'Directeur etablissment': // Fixed redirect anomaly
-                redirectPath = direction;
-                break;
-            case 'Surveillant general':
-                redirectPath = surveillant;
-                break;
-            default:
-                redirectPath = '/user/auth';
+        if (userResponse.forcePasswordChange) {
+          const settingsPath = `${routes.page_route.dashboard.settings}?forcePasswordChange=true`;
+          // Only redirect if not already on settings page
+          if (!currentPath.startsWith(routes.page_route.dashboard.settings)) {
+            router.push(settingsPath);
+          }
+          return;
         }
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+        toast({
+          id: 'redirect-error',
+          title: 'Erreur',
+          description:
+            error.message || 'Échec de la récupération du rôle utilisateur.',
+          status: 'error',
+        });
+        await signOut({ redirect: false });
+        router.push('/user/auth');
+      }
+    };
 
-        router.push(redirectPath);
-    }, [role, forcePasswordChange, router]);
+    fetchUserRole();
+  }, [session, status, router, toast, currentPath]);
+
+  useEffect(() => {
+    // Only proceed if user data is initialized and no force password change
+    if (!isInitialized || !role || forcePasswordChange) return;
+
+    // Use the proper route destructuring pattern
+    const {
+      dashboard: {
+        direction: { initial: direction },
+        surveillant: { initial: surveillant },
+        cashier: { initial: cashier },
+      },
+    } = routes.page_route;
+
+    // Role-based redirect mapping
+    const roleRedirectMap = {
+      Caissier: cashier,
+      'Secretaire General': direction,
+      'Directeur General': direction,
+      'Directeur etablissment': direction,
+      'Surveillant general': surveillant,
+    };
+
+    const targetPath = roleRedirectMap[role.name];
+
+    if (!targetPath) {
+      // Invalid role, redirect to auth
+      if (!currentPath.startsWith('/user/auth')) {
+        router.push('/user/auth');
+      }
+      return;
+    }
+
+    // Only redirect if not already on the correct dashboard path
+    const isDashboardPath = currentPath.startsWith('/dashboard');
+    const isCorrectDashboard = currentPath.startsWith(targetPath);
+
+    if (!isDashboardPath || !isCorrectDashboard) {
+      router.push(targetPath);
+    }
+  }, [role, forcePasswordChange, router, currentPath, isInitialized]);
+
+  return {
+    role,
+    forcePasswordChange,
+    isInitialized,
+    currentPath,
+  };
 }

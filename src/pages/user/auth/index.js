@@ -3,7 +3,7 @@ import {
   AuthenticationLayout,
   AuthenticationLayoutForm,
 } from '@components/layout/authentication';
-import { messages, routes } from '@theme';
+import { routes } from '@theme';
 import { useTranslations } from 'next-intl';
 
 export default function Login() {

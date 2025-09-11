@@ -41,7 +41,6 @@ import {
 } from 'recharts';
 import { serverFetch } from 'src/lib/api';
 
-const { pages: pagesMessages = {} } = messages;
 
 const getMonthName = (num) => {
   const date = new Date();
@@ -266,7 +265,7 @@ const FinanceDashboard = ({
     };
 
     fetchData();
-  }, [selectedSchool, activeTab, token, activeSchoolYear]);
+  }, [selectedSchool, activeTab, token, activeSchoolYear, toast]);
 
   if (loading) {
     return (

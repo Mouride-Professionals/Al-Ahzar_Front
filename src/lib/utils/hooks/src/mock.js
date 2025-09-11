@@ -52,7 +52,7 @@ export const useMockedData = ({ sample, size }) => {
     });
 
     setMockedData(mockedData);
-  }, []);
+  }, [sample, size]);
 
   return { mockedData };
 };
