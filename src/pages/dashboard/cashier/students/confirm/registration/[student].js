@@ -24,8 +24,7 @@ export default function StudentConfirmation({ studentDetail, role, token }) {
     attributes: {
       student: {
         data: {
-          id: studentId,
-          attributes: { firstname, lastname, type },
+          attributes: { firstname, lastname },
         },
       },
       class: {

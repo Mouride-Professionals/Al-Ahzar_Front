@@ -66,9 +66,11 @@ module.exports = {
         },
         submit: 'forms.inputs.change_password.submit',
         specifics: {
-          current_password: 'forms.inputs.change_password.specifics.current_password',
+          current_password:
+            'forms.inputs.change_password.specifics.current_password',
           new_password: 'forms.inputs.change_password.specifics.new_password',
-          confirm_password: 'forms.inputs.change_password.specifics.confirm_password',
+          confirm_password:
+            'forms.inputs.change_password.specifics.confirm_password',
           highlight: 'forms.inputs.change_password.specifics.highlight',
         },
       },
@@ -102,13 +104,15 @@ module.exports = {
       student: {
         registration: {
           lastname: {
-            placeholder: 'forms.inputs.student.registration.lastname.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.lastname.placeholder',
             label: 'forms.inputs.student.registration.lastname.label',
             type: 'text',
             uid: 'lastname',
           },
           firstname: {
-            placeholder: 'forms.inputs.student.registration.firstname.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.firstname.placeholder',
             label: 'forms.inputs.student.registration.firstname.label',
             type: 'text',
             uid: 'firstname',
@@ -118,14 +122,19 @@ module.exports = {
             label: 'forms.inputs.student.registration.sex.label',
             uid: 'sex',
             select: true,
-            options: mapOptions(studentRegistrationSchema.fields.sex._whitelist),
+            options: mapOptions(
+              studentRegistrationSchema.fields.sex._whitelist
+            ),
           },
           socialCategory: {
-            placeholder: 'forms.inputs.student.registration.socialCategory.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.socialCategory.placeholder',
             label: 'forms.inputs.student.registration.socialCategory.label',
             select: true,
             uid: 'socialCategory',
-            options: mapOptions(studentRegistrationSchema.fields.socialCategory._whitelist),
+            options: mapOptions(
+              studentRegistrationSchema.fields.socialCategory._whitelist
+            ),
           },
           date: {
             placeholder: 'forms.inputs.student.registration.date.placeholder',
@@ -146,25 +155,29 @@ module.exports = {
             uid: 'year',
           },
           birthplace: {
-            placeholder: 'forms.inputs.student.registration.birthplace.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.birthplace.placeholder',
             label: 'forms.inputs.student.registration.birthplace.label',
             type: 'text',
             uid: 'birthplace',
           },
           parent_lastname: {
-            placeholder: 'forms.inputs.student.registration.parent_lastname.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.parent_lastname.placeholder',
             label: 'forms.inputs.student.registration.parent_lastname.label',
             type: 'text',
             uid: 'parent_lastname',
           },
           parent_firstname: {
-            placeholder: 'forms.inputs.student.registration.parent_firstname.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.parent_firstname.placeholder',
             label: 'forms.inputs.student.registration.parent_firstname.label',
             type: 'text',
             uid: 'parent_firstname',
           },
           parent_phone: {
-            placeholder: 'forms.inputs.student.registration.parent_phone.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.parent_phone.placeholder',
             label: 'forms.inputs.student.registration.parent_phone.label',
             type: 'text',
             uid: 'parent_phone',
@@ -176,13 +189,15 @@ module.exports = {
             uid: 'level',
           },
           classroom: {
-            placeholder: 'forms.inputs.student.registration.classroom.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.classroom.placeholder',
             label: 'forms.inputs.student.registration.classroom.label',
             type: 'text',
             uid: 'classroom',
           },
           class_letter: {
-            placeholder: 'forms.inputs.student.registration.class_letter.placeholder',
+            placeholder:
+              'forms.inputs.student.registration.class_letter.placeholder',
             label: 'forms.inputs.student.registration.class_letter.label',
             type: 'text',
             uid: 'class_letter',
@@ -195,22 +210,47 @@ module.exports = {
             select: true,
             uid: 'studentType',
             options: [
-              { name: 'forms.inputs.student.confirm.studentType.options[0].name', value: 'Hafiz' },
-              { name: 'forms.inputs.student.confirm.studentType.options[1].name', value: 'Ancien Redoublant' },
-              { name: 'forms.inputs.student.confirm.studentType.options[2].name', value: 'Ancien Passant' },
-              { name: 'forms.inputs.student.confirm.studentType.options[3].name', value: 'Nouveau' },
+              {
+                name: 'forms.inputs.student.confirm.studentType.options[0].name',
+                value: 'Hafiz',
+              },
+              {
+                name: 'forms.inputs.student.confirm.studentType.options[1].name',
+                value: 'Ancien Redoublant',
+              },
+              {
+                name: 'forms.inputs.student.confirm.studentType.options[2].name',
+                value: 'Ancien Passant',
+              },
+              {
+                name: 'forms.inputs.student.confirm.studentType.options[3].name',
+                value: 'Nouveau',
+              },
             ],
           },
           socialCategory: {
-            placeholder: 'forms.inputs.student.confirm.socialCategory.placeholder',
+            placeholder:
+              'forms.inputs.student.confirm.socialCategory.placeholder',
             label: 'forms.inputs.student.confirm.socialCategory.label',
             select: true,
             uid: 'socialCategory',
             options: [
-              { name: 'forms.inputs.student.confirm.socialCategory.options[0].name', value: 'Non' },
-              { name: 'forms.inputs.student.confirm.socialCategory.options[1].name', value: 'Réduction inscription' },
-              { name: 'forms.inputs.student.confirm.socialCategory.options[2].name', value: 'Réduction mensualité' },
-              { name: 'forms.inputs.student.confirm.socialCategory.options[3].name', value: 'Tout tarifs offerts' },
+              {
+                name: 'forms.inputs.student.confirm.socialCategory.options[0].name',
+                value: 'Non',
+              },
+              {
+                name: 'forms.inputs.student.confirm.socialCategory.options[1].name',
+                value: 'Réduction inscription',
+              },
+              {
+                name: 'forms.inputs.student.confirm.socialCategory.options[2].name',
+                value: 'Réduction mensualité',
+              },
+              {
+                name: 'forms.inputs.student.confirm.socialCategory.options[3].name',
+                value: 'Tout tarifs offerts',
+              },
             ],
           },
           comment: {
@@ -233,32 +273,41 @@ module.exports = {
           },
           paymentDetail: {
             monthlyFee: {
-              placeholder: 'forms.inputs.student.confirm.paymentDetail.monthlyFee.placeholder',
-              label: 'forms.inputs.student.confirm.paymentDetail.monthlyFee.label',
+              placeholder:
+                'forms.inputs.student.confirm.paymentDetail.monthlyFee.placeholder',
+              label:
+                'forms.inputs.student.confirm.paymentDetail.monthlyFee.label',
               type: 'number',
               uid: 'monthlyFee',
             },
             enrollmentFee: {
-              placeholder: 'forms.inputs.student.confirm.paymentDetail.enrollmentFee.placeholder',
-              label: 'forms.inputs.student.confirm.paymentDetail.enrollmentFee.label',
+              placeholder:
+                'forms.inputs.student.confirm.paymentDetail.enrollmentFee.placeholder',
+              label:
+                'forms.inputs.student.confirm.paymentDetail.enrollmentFee.label',
               type: 'number',
               uid: 'enrollmentFee',
             },
             blouseFee: {
-              placeholder: 'forms.inputs.student.confirm.paymentDetail.blouseFee.placeholder',
-              label: 'forms.inputs.student.confirm.paymentDetail.blouseFee.label',
+              placeholder:
+                'forms.inputs.student.confirm.paymentDetail.blouseFee.placeholder',
+              label:
+                'forms.inputs.student.confirm.paymentDetail.blouseFee.label',
               type: 'number',
               uid: 'blouseFee',
             },
             examFee: {
-              placeholder: 'forms.inputs.student.confirm.paymentDetail.examFee.placeholder',
+              placeholder:
+                'forms.inputs.student.confirm.paymentDetail.examFee.placeholder',
               label: 'forms.inputs.student.confirm.paymentDetail.examFee.label',
               type: 'number',
               uid: 'examFee',
             },
             parentContributionFee: {
-              placeholder: 'forms.inputs.student.confirm.paymentDetail.parentContributionFee.placeholder',
-              label: 'forms.inputs.student.confirm.paymentDetail.parentContributionFee.label',
+              placeholder:
+                'forms.inputs.student.confirm.paymentDetail.parentContributionFee.placeholder',
+              label:
+                'forms.inputs.student.confirm.paymentDetail.parentContributionFee.label',
               type: 'number',
               uid: 'parentContributionFee',
             },
@@ -266,24 +315,31 @@ module.exports = {
         },
         enrollment: {
           classroom: {
-            placeholder: 'forms.inputs.student.enrollment.classroom.placeholder',
+            placeholder:
+              'forms.inputs.student.enrollment.classroom.placeholder',
             label: 'forms.inputs.student.enrollment.classroom.label',
             uid: 'class',
             type: 'text',
           },
           socialCategory: {
-            placeholder: 'forms.inputs.student.enrollment.socialCategory.placeholder',
+            placeholder:
+              'forms.inputs.student.enrollment.socialCategory.placeholder',
             label: 'forms.inputs.student.enrollment.socialCategory.label',
             select: true,
             uid: 'socialCategory',
-            options: mapOptions(enrollmentSchema.fields.socialCategory._whitelist),
+            options: mapOptions(
+              enrollmentSchema.fields.socialCategory._whitelist
+            ),
           },
           enrollmentType: {
-            placeholder: 'forms.inputs.student.enrollment.enrollmentType.placeholder',
+            placeholder:
+              'forms.inputs.student.enrollment.enrollmentType.placeholder',
             label: 'forms.inputs.student.enrollment.enrollmentType.label',
             select: true,
             uid: 'enrollmentType',
-            options: mapOptions(enrollmentSchema.fields.enrollmentType._whitelist),
+            options: mapOptions(
+              enrollmentSchema.fields.enrollmentType._whitelist
+            ),
           },
         },
         payment: {
@@ -378,7 +434,8 @@ module.exports = {
             options: mapOptions(schoolCreationSchema.fields.type._whitelist),
           },
           parentSchool: {
-            placeholder: 'forms.inputs.school.creation.parentSchool.placeholder',
+            placeholder:
+              'forms.inputs.school.creation.parentSchool.placeholder',
             label: 'forms.inputs.school.creation.parentSchool.label',
             uid: 'parentSchool',
             type: 'text',
@@ -390,7 +447,8 @@ module.exports = {
             type: 'text',
           },
           responsibleName: {
-            placeholder: 'forms.inputs.school.creation.responsibleName.placeholder',
+            placeholder:
+              'forms.inputs.school.creation.responsibleName.placeholder',
             label: 'forms.inputs.school.creation.responsibleName.label',
             uid: 'responsibleName',
             type: 'text',
@@ -421,13 +479,20 @@ module.exports = {
             type: 'text',
           },
           isAlAzharLand: {
-            placeholder: 'forms.inputs.school.creation.isAlAzharLand.placeholder',
+            placeholder:
+              'forms.inputs.school.creation.isAlAzharLand.placeholder',
             label: 'forms.inputs.school.creation.isAlAzharLand.label',
             uid: 'isAlAzharLand',
             select: true,
             options: [
-              { name: 'forms.inputs.school.creation.isAlAzharLand.options.yes', value: true },
-              { name: 'forms.inputs.school.creation.isAlAzharLand.options.no', value: false },
+              {
+                name: 'forms.inputs.school.creation.isAlAzharLand.options.yes',
+                value: true,
+              },
+              {
+                name: 'forms.inputs.school.creation.isAlAzharLand.options.no',
+                value: false,
+              },
             ],
           },
           phoneFix: {
@@ -444,7 +509,8 @@ module.exports = {
             options: mapOptions(schoolCreationSchema.fields.IA._whitelist),
           },
           creationDate: {
-            placeholder: 'forms.inputs.school.creation.creationDate.placeholder',
+            placeholder:
+              'forms.inputs.school.creation.creationDate.placeholder',
             label: 'forms.inputs.school.creation.creationDate.label',
             uid: 'creationDate',
             type: 'date',
@@ -484,7 +550,8 @@ module.exports = {
             type: 'password',
           },
           confirmPassword: {
-            placeholder: 'forms.inputs.user.creation.confirmPassword.placeholder',
+            placeholder:
+              'forms.inputs.user.creation.confirmPassword.placeholder',
             label: 'forms.inputs.user.creation.confirmPassword.label',
             uid: 'confirmPassword',
             type: 'password',
@@ -506,13 +573,15 @@ module.exports = {
       teacher: {
         recruitment: {
           lastname: {
-            placeholder: 'forms.inputs.teacher.recruitment.lastname.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.lastname.placeholder',
             label: 'forms.inputs.teacher.recruitment.lastname.label',
             type: 'text',
             uid: 'lastname',
           },
           firstname: {
-            placeholder: 'forms.inputs.teacher.recruitment.firstname.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.firstname.placeholder',
             label: 'forms.inputs.teacher.recruitment.firstname.label',
             type: 'text',
             uid: 'firstname',
@@ -522,10 +591,20 @@ module.exports = {
             label: 'forms.inputs.teacher.recruitment.gender.label',
             uid: 'gender',
             select: true,
-            options: mapOptions(teacherRecruitmentSchema.fields.gender._whitelist),
+            options: [
+              {
+                name: 'forms.inputs.teacher.recruitment.gender.options.male',
+                value: 'Homme',
+              },
+              {
+                name: 'forms.inputs.teacher.recruitment.gender.options.female',
+                value: 'Femme',
+              },
+            ],
           },
           phoneNumber: {
-            placeholder: 'forms.inputs.teacher.recruitment.phoneNumber.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.phoneNumber.placeholder',
             label: 'forms.inputs.teacher.recruitment.phoneNumber.label',
             uid: 'phoneNumber',
             type: 'text',
@@ -544,13 +623,15 @@ module.exports = {
             type: 'text',
           },
           birthDate: {
-            placeholder: 'forms.inputs.teacher.recruitment.birthDate.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.birthDate.placeholder',
             label: 'forms.inputs.teacher.recruitment.birthDate.label',
             uid: 'birthDate',
             type: 'date',
           },
           birthPlace: {
-            placeholder: 'forms.inputs.teacher.recruitment.birthPlace.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.birthPlace.placeholder',
             label: 'forms.inputs.teacher.recruitment.birthPlace.label',
             uid: 'birthPlace',
             type: 'text',
@@ -562,114 +643,308 @@ module.exports = {
             type: 'text',
           },
           maritalStatus: {
-            placeholder: 'forms.inputs.teacher.recruitment.maritalStatus.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.maritalStatus.placeholder',
             label: 'forms.inputs.teacher.recruitment.maritalStatus.label',
             uid: 'maritalStatus',
             select: true,
             options: [
-              // 'Célibataire', 'Marié(e)', 'Divorçé(e)', 'Veuf(ve)'
-              { value: 'Célibataire', name: 'forms.inputs.teacher.recruitment.maritalStatus.options.0.label' },
-              { value: 'Marié(e)', name: 'forms.inputs.teacher.recruitment.maritalStatus.options.1.label' },
-              { value: 'Divorçé(e)', name: 'forms.inputs.teacher.recruitment.maritalStatus.options.2.label' },
-              { value: 'Veuf(ve)', name: 'forms.inputs.teacher.recruitment.maritalStatus.options.3.label' },
-
-
+              {
+                value: 'Célibataire',
+                name: 'forms.inputs.teacher.recruitment.maritalStatus.options.0.label',
+              },
+              {
+                value: 'Marié(e)',
+                name: 'forms.inputs.teacher.recruitment.maritalStatus.options.1.label',
+              },
+              {
+                value: 'Divorçé(e)',
+                name: 'forms.inputs.teacher.recruitment.maritalStatus.options.2.label',
+              },
+              {
+                value: 'Veuf(ve)',
+                name: 'forms.inputs.teacher.recruitment.maritalStatus.options.3.label',
+              },
             ],
           },
           academicDegree: {
-            placeholder: 'forms.inputs.teacher.recruitment.academicDegree.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.academicDegree.placeholder',
             label: 'forms.inputs.teacher.recruitment.academicDegree.label',
             uid: 'academicDegree',
             select: true,
             options: [
               // "Baccalauréat", "Licence", "Master", "Doctorat"
-              { value: 'Baccalauréat', label: 'forms.inputs.teacher.recruitment.academicDegree.options.0.label' },
-              { value: 'Licence', label: 'forms.inputs.teacher.recruitment.academicDegree.options.1.label' },
-              { value: 'Master', label: 'forms.inputs.teacher.recruitment.academicDegree.options.2.label' },
-              { value: 'Doctorat', label: 'forms.inputs.teacher.recruitment.academicDegree.options.3.label' },
-              { value: 'Autre', label: 'forms.inputs.teacher.recruitment.academicDegree.options.4.label' }
-            ]
+              {
+                value: 'Baccalauréat',
+                label:
+                  'forms.inputs.teacher.recruitment.academicDegree.options.0.label',
+              },
+              {
+                value: 'Licence',
+                label:
+                  'forms.inputs.teacher.recruitment.academicDegree.options.1.label',
+              },
+              {
+                value: 'Master',
+                label:
+                  'forms.inputs.teacher.recruitment.academicDegree.options.2.label',
+              },
+              {
+                value: 'Doctorat',
+                label:
+                  'forms.inputs.teacher.recruitment.academicDegree.options.3.label',
+              },
+              {
+                value: 'Autre',
+                label:
+                  'forms.inputs.teacher.recruitment.academicDegree.options.4.label',
+              },
+            ],
           },
           professionalDegrees: {
-            placeholder: 'forms.inputs.teacher.recruitment.professionalDegrees.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.professionalDegrees.placeholder',
             label: 'forms.inputs.teacher.recruitment.professionalDegrees.label',
             uid: 'professionalDegrees',
             select: true,
             isMulti: true,
             options: [
-              { value: 'bts', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.0.label' },
-              { value: 'dut', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.1.label' },
-              { value: 'licence_pro', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.2.label' },
-              { value: 'cap', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.3.label' },
-              { value: 'bt', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.4.label' },
-              { value: 'master_pro', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.5.label' },
-              { value: 'ccna', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.6.label' },
-              { value: 'mcse', label: 'forms.inputs.teacher.recruitment.professionalDegrees.options.7.label' },
+              {
+                value: 'bts',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.0.label',
+              },
+              {
+                value: 'dut',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.1.label',
+              },
+              {
+                value: 'licence_pro',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.2.label',
+              },
+              {
+                value: 'cap',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.3.label',
+              },
+              {
+                value: 'bt',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.4.label',
+              },
+              {
+                value: 'master_pro',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.5.label',
+              },
+              {
+                value: 'ccna',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.6.label',
+              },
+              {
+                value: 'mcse',
+                label:
+                  'forms.inputs.teacher.recruitment.professionalDegrees.options.7.label',
+              },
             ],
           },
           disciplines: {
-            placeholder: 'forms.inputs.teacher.recruitment.disciplines.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.disciplines.placeholder',
             label: 'forms.inputs.teacher.recruitment.disciplines.label',
             uid: 'disciplines',
             select: true,
             isMulti: true,
             options: [
-              { value: 'etudes_islamiques', label: 'forms.inputs.teacher.recruitment.disciplines.options.0.label' },
-              { value: 'memorisation_coran', label: 'forms.inputs.teacher.recruitment.disciplines.options.1.label' },
-              { value: 'langue_arabe', label: 'forms.inputs.teacher.recruitment.disciplines.options.2.label' },
-              { value: 'histoire_islam', label: 'forms.inputs.teacher.recruitment.disciplines.options.3.label' },
-              { value: 'spiritualite_soufisme', label: 'forms.inputs.teacher.recruitment.disciplines.options.4.label' },
-              { value: 'francais', label: 'forms.inputs.teacher.recruitment.disciplines.options.5.label' },
-              { value: 'mathematiques', label: 'forms.inputs.teacher.recruitment.disciplines.options.6.label' },
-              { value: 'sciences_naturelles', label: 'forms.inputs.teacher.recruitment.disciplines.options.7.label' },
-              { value: 'geographie', label: 'forms.inputs.teacher.recruitment.disciplines.options.8.label' },
-              { value: 'histoire', label: 'forms.inputs.teacher.recruitment.disciplines.options.9.label' },
-              { value: 'anglais', label: 'forms.inputs.teacher.recruitment.disciplines.options.10.label' },
-              { value: 'informatique', label: 'forms.inputs.teacher.recruitment.disciplines.options.11.label' },
-              { value: 'education_civique', label: 'forms.inputs.teacher.recruitment.disciplines.options.12.label' },
-              { value: 'formation_professionnelle', label: 'forms.inputs.teacher.recruitment.disciplines.options.13.label' },
+              {
+                value: 'etudes_islamiques',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.0.label',
+              },
+              {
+                value: 'memorisation_coran',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.1.label',
+              },
+              {
+                value: 'langue_arabe',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.2.label',
+              },
+              {
+                value: 'histoire_islam',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.3.label',
+              },
+              {
+                value: 'spiritualite_soufisme',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.4.label',
+              },
+              {
+                value: 'francais',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.5.label',
+              },
+              {
+                value: 'mathematiques',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.6.label',
+              },
+              {
+                value: 'sciences_naturelles',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.7.label',
+              },
+              {
+                value: 'geographie',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.8.label',
+              },
+              {
+                value: 'histoire',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.9.label',
+              },
+              {
+                value: 'anglais',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.10.label',
+              },
+              {
+                value: 'informatique',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.11.label',
+              },
+              {
+                value: 'education_civique',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.12.label',
+              },
+              {
+                value: 'formation_professionnelle',
+                label:
+                  'forms.inputs.teacher.recruitment.disciplines.options.13.label',
+              },
             ],
           },
           language: {
-            placeholder: 'forms.inputs.teacher.recruitment.language.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.language.placeholder',
             label: 'forms.inputs.teacher.recruitment.language.label',
             uid: 'language',
             select: true,
-            options: mapOptions(teacherRecruitmentSchema.fields.language._whitelist),
+            options: mapOptions(
+              teacherRecruitmentSchema.fields.language._whitelist
+            ),
           },
           subjects: {
-            placeholder: 'forms.inputs.teacher.recruitment.subjects.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.subjects.placeholder',
             label: 'forms.inputs.teacher.recruitment.subjects.label',
             uid: 'subjects',
             select: true,
             isMulti: true,
             options: [
-              { value: 'etudes_islamiques', label: 'forms.inputs.teacher.recruitment.subjects.options.0.label' },
-              { value: 'memorisation_coran', label: 'forms.inputs.teacher.recruitment.subjects.options.1.label' },
-              { value: 'langue_arabe', label: 'forms.inputs.teacher.recruitment.subjects.options.2.label' },
-              { value: 'histoire_islam', label: 'forms.inputs.teacher.recruitment.subjects.options.3.label' },
-              { value: 'spiritualite_soufisme', label: 'forms.inputs.teacher.recruitment.subjects.options.4.label' },
-              { value: 'francais', label: 'forms.inputs.teacher.recruitment.subjects.options.5.label' },
-              { value: 'mathematiques', label: 'forms.inputs.teacher.recruitment.subjects.options.6.label' },
-              { value: 'sciences_naturelles', label: 'forms.inputs.teacher.recruitment.subjects.options.7.label' },
-              { value: 'geographie', label: 'forms.inputs.teacher.recruitment.subjects.options.8.label' },
-              { value: 'histoire', label: 'forms.inputs.teacher.recruitment.subjects.options.9.label' },
-              { value: 'anglais', label: 'forms.inputs.teacher.recruitment.subjects.options.10.label' },
-              { value: 'informatique', label: 'forms.inputs.teacher.recruitment.subjects.options.11.label' },
-              { value: 'education_civique', label: 'forms.inputs.teacher.recruitment.subjects.options.12.label' },
-              { value: 'formation_professionnelle', label: 'forms.inputs.teacher.recruitment.subjects.options.13.label' },
+              {
+                value: 'etudes_islamiques',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.0.label',
+              },
+              {
+                value: 'memorisation_coran',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.1.label',
+              },
+              {
+                value: 'langue_arabe',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.2.label',
+              },
+              {
+                value: 'histoire_islam',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.3.label',
+              },
+              {
+                value: 'spiritualite_soufisme',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.4.label',
+              },
+              {
+                value: 'francais',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.5.label',
+              },
+              {
+                value: 'mathematiques',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.6.label',
+              },
+              {
+                value: 'sciences_naturelles',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.7.label',
+              },
+              {
+                value: 'geographie',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.8.label',
+              },
+              {
+                value: 'histoire',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.9.label',
+              },
+              {
+                value: 'anglais',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.10.label',
+              },
+              {
+                value: 'informatique',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.11.label',
+              },
+              {
+                value: 'education_civique',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.12.label',
+              },
+              {
+                value: 'formation_professionnelle',
+                label:
+                  'forms.inputs.teacher.recruitment.subjects.options.13.label',
+              },
             ],
           },
           contractType: {
-            placeholder: 'forms.inputs.teacher.recruitment.contractType.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.contractType.placeholder',
             label: 'forms.inputs.teacher.recruitment.contractType.label',
             uid: 'contractType',
             select: true,
             options: [
-              { value: 'Disponible', name: 'forms.inputs.teacher.recruitment.contractType.options.0.label' },
-              { value: 'Temps Partiel', name: 'forms.inputs.teacher.recruitment.contractType.options.1.label' },
-              { value: 'Etranger', name: 'forms.inputs.teacher.recruitment.contractType.options.2.label' },
-              { value: 'Employé Etat', name: 'forms.inputs.teacher.recruitment.contractType.options.3.label' },
+              {
+                value: 'Disponible',
+                name: 'forms.inputs.teacher.recruitment.contractType.options.0.label',
+              },
+              {
+                value: 'Temps Partiel',
+                name: 'forms.inputs.teacher.recruitment.contractType.options.1.label',
+              },
+              {
+                value: 'Etranger',
+                name: 'forms.inputs.teacher.recruitment.contractType.options.2.label',
+              },
+              {
+                value: 'Employé Etat',
+                name: 'forms.inputs.teacher.recruitment.contractType.options.3.label',
+              },
             ],
           },
           level: {
@@ -678,9 +953,18 @@ module.exports = {
             uid: 'level',
             select: true,
             options: [
-              { name: 'forms.inputs.teacher.recruitment.level.options.0.label', value: 'Primaire' },
-              { name: 'forms.inputs.teacher.recruitment.level.options.1.label', value: 'Moyen' },
-              { name: 'forms.inputs.teacher.recruitment.level.options.2.label', value: 'Secondaire' },
+              {
+                name: 'forms.inputs.teacher.recruitment.level.options.0.label',
+                value: 'Primaire',
+              },
+              {
+                name: 'forms.inputs.teacher.recruitment.level.options.1.label',
+                value: 'Moyen',
+              },
+              {
+                name: 'forms.inputs.teacher.recruitment.level.options.2.label',
+                value: 'Secondaire',
+              },
             ],
           },
           salary: {
@@ -690,49 +974,58 @@ module.exports = {
             type: 'number',
           },
           registrationNumber: {
-            placeholder: 'forms.inputs.teacher.recruitment.registrationNumber.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.registrationNumber.placeholder',
             label: 'forms.inputs.teacher.recruitment.registrationNumber.label',
             uid: 'registrationNumber',
             type: 'text',
           },
           generation: {
-            placeholder: 'forms.inputs.teacher.recruitment.generation.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.generation.placeholder',
             label: 'forms.inputs.teacher.recruitment.generation.label',
             uid: 'generation',
             type: 'text',
           },
           salaryPerHour: {
-            placeholder: 'forms.inputs.teacher.recruitment.salaryPerHour.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.salaryPerHour.placeholder',
             label: 'forms.inputs.teacher.recruitment.salaryPerHour.label',
             uid: 'salaryPerHour',
             type: 'number',
           },
           hoursNumber: {
-            placeholder: 'forms.inputs.teacher.recruitment.hoursNumber.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.hoursNumber.placeholder',
             label: 'forms.inputs.teacher.recruitment.hoursNumber.label',
             uid: 'hoursNumber',
             type: 'number',
           },
           additionalResponsibilities: {
-            placeholder: 'forms.inputs.teacher.recruitment.additionalResponsibilities.placeholder',
-            label: 'forms.inputs.teacher.recruitment.additionalResponsibilities.label',
+            placeholder:
+              'forms.inputs.teacher.recruitment.additionalResponsibilities.placeholder',
+            label:
+              'forms.inputs.teacher.recruitment.additionalResponsibilities.label',
             uid: 'additionalResponsibilities',
             type: 'text',
           },
           countryFrom: {
-            placeholder: 'forms.inputs.teacher.recruitment.countryFrom.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.countryFrom.placeholder',
             label: 'forms.inputs.teacher.recruitment.countryFrom.label',
             uid: 'countryFrom',
             type: 'text',
           },
           arrivalDate: {
-            placeholder: 'forms.inputs.teacher.recruitment.arrivalDate.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.arrivalDate.placeholder',
             label: 'forms.inputs.teacher.recruitment.arrivalDate.label',
             uid: 'arrivalDate',
             type: 'date',
           },
           previousInstitutes: {
-            placeholder: 'forms.inputs.teacher.recruitment.previousInstitutes.placeholder',
+            placeholder:
+              'forms.inputs.teacher.recruitment.previousInstitutes.placeholder',
             label: 'forms.inputs.teacher.recruitment.previousInstitutes.label',
             uid: 'previousInstitutes',
             type: 'text',
@@ -748,7 +1041,8 @@ module.exports = {
             type: 'text',
           },
           startDate: {
-            placeholder: 'forms.inputs.schoolYear.creation.startDate.placeholder',
+            placeholder:
+              'forms.inputs.schoolYear.creation.startDate.placeholder',
             label: 'forms.inputs.schoolYear.creation.startDate.label',
             uid: 'startDate',
             type: 'date',
@@ -760,7 +1054,8 @@ module.exports = {
             type: 'date',
           },
           description: {
-            placeholder: 'forms.inputs.schoolYear.creation.description.placeholder',
+            placeholder:
+              'forms.inputs.schoolYear.creation.description.placeholder',
             label: 'forms.inputs.schoolYear.creation.description.label',
             uid: 'description',
             type: 'text',
@@ -770,7 +1065,8 @@ module.exports = {
       expense: {
         creation: {
           expenseDate: {
-            placeholder: 'forms.inputs.expense.creation.expenseDate.placeholder',
+            placeholder:
+              'forms.inputs.expense.creation.expenseDate.placeholder',
             label: 'forms.inputs.expense.creation.expenseDate.label',
             uid: 'expenseDate',
             type: 'date',
@@ -789,7 +1085,8 @@ module.exports = {
             options: mapOptions(expenseSchema.fields.category._whitelist),
           },
           description: {
-            placeholder: 'forms.inputs.expense.creation.description.placeholder',
+            placeholder:
+              'forms.inputs.expense.creation.description.placeholder',
             label: 'forms.inputs.expense.creation.description.label',
             uid: 'description',
             type: 'text',
@@ -806,9 +1103,11 @@ module.exports = {
       },
       registration: {
         info: {
-          birthPlaceMessage: 'forms.messages.registration.info.birthPlaceMessage',
+          birthPlaceMessage:
+            'forms.messages.registration.info.birthPlaceMessage',
           classInfoMessage: 'forms.messages.registration.info.classInfoMessage',
-          personalInfoMessage: 'forms.messages.registration.info.personalInfoMessage',
+          personalInfoMessage:
+            'forms.messages.registration.info.personalInfoMessage',
           tutorInfoMessage: 'forms.messages.registration.info.tutorInfoMessage',
         },
         errors: {
@@ -818,9 +1117,11 @@ module.exports = {
       },
       enrollment: {
         info: {
-          personalInfoMessage: 'forms.messages.enrollment.info.personalInfoMessage',
+          personalInfoMessage:
+            'forms.messages.enrollment.info.personalInfoMessage',
           classInfoMessage: 'forms.messages.enrollment.info.classInfoMessage',
-          generalInfoMessage: 'forms.messages.enrollment.info.generalInfoMessage',
+          generalInfoMessage:
+            'forms.messages.enrollment.info.generalInfoMessage',
         },
         errors: {
           already_exists: 'forms.messages.enrollment.errors.already_exists',
@@ -829,8 +1130,10 @@ module.exports = {
       },
       confirmation: {
         info: {
-          studentInfoMessage: 'forms.messages.confirmation.info.studentInfoMessage',
-          paymentDetailsMessage: 'forms.messages.confirmation.info.paymentDetailsMessage',
+          studentInfoMessage:
+            'forms.messages.confirmation.info.studentInfoMessage',
+          paymentDetailsMessage:
+            'forms.messages.confirmation.info.paymentDetailsMessage',
         },
         labels: {
           name: 'forms.messages.confirmation.labels.name',
@@ -852,13 +1155,18 @@ module.exports = {
       school: {
         creation: {
           info: {
-            generalInfoMessage: 'forms.messages.school.creation.info.generalInfoMessage',
-            addressInfoMessage: 'forms.messages.school.creation.info.addressInfoMessage',
-            contactInfoMessage: 'forms.messages.school.creation.info.contactInfoMessage',
-            additionalInfoMessage: 'forms.messages.school.creation.info.additionalInfoMessage',
+            generalInfoMessage:
+              'forms.messages.school.creation.info.generalInfoMessage',
+            addressInfoMessage:
+              'forms.messages.school.creation.info.addressInfoMessage',
+            contactInfoMessage:
+              'forms.messages.school.creation.info.contactInfoMessage',
+            additionalInfoMessage:
+              'forms.messages.school.creation.info.additionalInfoMessage',
           },
           errors: {
-            already_exists: 'forms.messages.school.creation.errors.already_exists',
+            already_exists:
+              'forms.messages.school.creation.errors.already_exists',
             problem: 'forms.messages.school.creation.errors.problem',
           },
         },
@@ -866,13 +1174,18 @@ module.exports = {
       teacher: {
         recruitment: {
           info: {
-            personalInfoMessage: 'forms.messages.teacher.recruitment.info.personalInfoMessage',
-            contactInfoMessage: 'forms.messages.teacher.recruitment.info.contactInfoMessage',
-            contractInfoMessage: 'forms.messages.teacher.recruitment.info.contractInfoMessage',
-            additionalInfoMessage: 'forms.messages.teacher.recruitment.info.additionalInfoMessage',
+            personalInfoMessage:
+              'forms.messages.teacher.recruitment.info.personalInfoMessage',
+            contactInfoMessage:
+              'forms.messages.teacher.recruitment.info.contactInfoMessage',
+            contractInfoMessage:
+              'forms.messages.teacher.recruitment.info.contractInfoMessage',
+            additionalInfoMessage:
+              'forms.messages.teacher.recruitment.info.additionalInfoMessage',
           },
           errors: {
-            already_exists: 'forms.messages.teacher.recruitment.errors.already_exists',
+            already_exists:
+              'forms.messages.teacher.recruitment.errors.already_exists',
             problem: 'forms.messages.teacher.recruitment.errors.problem',
           },
         },
@@ -880,13 +1193,18 @@ module.exports = {
       user: {
         creation: {
           info: {
-            generalInfoMessage: 'forms.messages.user.creation.info.generalInfoMessage',
-            addressInfoMessage: 'forms.messages.user.creation.info.addressInfoMessage',
-            contactInfoMessage: 'forms.messages.user.creation.info.contactInfoMessage',
-            additionalInfoMessage: 'forms.messages.user.creation.info.additionalInfoMessage',
+            generalInfoMessage:
+              'forms.messages.user.creation.info.generalInfoMessage',
+            addressInfoMessage:
+              'forms.messages.user.creation.info.addressInfoMessage',
+            contactInfoMessage:
+              'forms.messages.user.creation.info.contactInfoMessage',
+            additionalInfoMessage:
+              'forms.messages.user.creation.info.additionalInfoMessage',
           },
           errors: {
-            already_exists: 'forms.messages.user.creation.errors.already_exists',
+            already_exists:
+              'forms.messages.user.creation.errors.already_exists',
             problem: 'forms.messages.user.creation.errors.problem',
           },
         },
@@ -894,10 +1212,12 @@ module.exports = {
       schoolYear: {
         creation: {
           info: {
-            generalInfoMessage: 'forms.messages.schoolYear.creation.info.generalInfoMessage',
+            generalInfoMessage:
+              'forms.messages.schoolYear.creation.info.generalInfoMessage',
           },
           errors: {
-            already_exists: 'forms.messages.schoolYear.creation.errors.already_exists',
+            already_exists:
+              'forms.messages.schoolYear.creation.errors.already_exists',
             problem: 'forms.messages.schoolYear.creation.errors.problem',
           },
         },
@@ -905,10 +1225,12 @@ module.exports = {
       expense: {
         creation: {
           info: {
-            generalInfoMessage: 'forms.messages.expense.creation.info.generalInfoMessage',
+            generalInfoMessage:
+              'forms.messages.expense.creation.info.generalInfoMessage',
           },
           errors: {
-            already_exists: 'forms.messages.expense.creation.errors.already_exists',
+            already_exists:
+              'forms.messages.expense.creation.errors.already_exists',
             problem: 'forms.messages.expense.creation.errors.problem',
           },
         },

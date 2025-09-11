@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-const { components: { cards: cardsMessages = {} } = {} } = messages;
 
 export default function Create({ schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);

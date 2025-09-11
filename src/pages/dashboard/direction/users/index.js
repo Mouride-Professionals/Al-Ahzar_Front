@@ -14,7 +14,6 @@ import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
-const { components: componentsMessages = {} } = messages;
 
 export default function Dashboard({ kpis, role, token }) {
   const t = useTranslations();

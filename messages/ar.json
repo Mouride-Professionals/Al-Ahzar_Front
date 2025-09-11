@@ -863,7 +863,11 @@
                         },
                         "gender": {
                             "placeholder": "اختر الجنس",
-                            "label": "الجنس"
+                            "label": "الجنس",
+                            "options": {
+                                "male": "ذكر",
+                                "female": "انثى"
+                            }
                         },
                         "phoneNumber": {
                             "placeholder": "أدخل رقم الهاتف",
@@ -913,7 +917,29 @@
                         },
                         "academicDegree": {
                             "placeholder": "اختر الدرجة الأكاديمية",
-                            "label": "الدرجة الأكاديمية"
+                            "label": "الدرجة الأكاديمية",
+                            "options": [
+                                {
+                                    "value": "Baccalauréat",
+                                    "label": "Baccalauréat"
+                                },
+                                {
+                                    "value": "Licence",
+                                    "label": "Licence"
+                                },
+                                {
+                                    "value": "Master",
+                                    "label": "Master"
+                                },
+                                {
+                                    "value": "Doctorat",
+                                    "label": "Doctorat"
+                                },
+                                {
+                                    "value": "Autre",
+                                    "label": "Autre"
+                                }
+                            ]
                         },
                         "professionalDegrees": {
                             "placeholder": "اختر الشهادات المهنية",
