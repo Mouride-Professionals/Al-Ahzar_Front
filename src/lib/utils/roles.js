@@ -43,6 +43,7 @@ export const hasPermission = (role, permission) => {
     [ROLES.SECRETAIRE_GENERAL]: {
       viewAllSchoolsFinance: true,
       createSchool: true,
+      manageSchool: true,
       switchSchools: true,
       viewHome: true,
       manageUsers: true,
@@ -52,6 +53,7 @@ export const hasPermission = (role, permission) => {
     [ROLES.DIRECTEUR_GENERAL]: {
       viewAllSchoolsFinance: true,
       createSchool: true,
+      manageSchool: true,
       switchSchools: true,
       viewHome: true,
       manageUsers: true,

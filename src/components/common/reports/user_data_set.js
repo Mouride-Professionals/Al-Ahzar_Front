@@ -63,26 +63,28 @@ const ExpandedComponent = ({ data, schools, token, role: userRole }) => {
       });
       if (response.ok) {
         toast({
-          title: t('assignmentSuccess'),
-          description: t('assignmentSuccessDesc', {
-            school:
-              schools.find((school) => school.id === parseInt(selectedSchool))
-                ?.name || '',
-          }),
+          title: 'Assignement effectué',
+          description:
+            "L'utilisateur a bien été assigné à l'ecole" +
+            {
+              school:
+                schools.find((school) => school.id === parseInt(selectedSchool))
+                  ?.name || '',
+            },
           status: 'success',
         });
         router.refresh();
       } else {
         toast({
-          title: t('assignmentFailed'),
-          description: t('assignmentFailedDesc'),
+          title: 'Assignement echoué',
+          description: "Une erreur s'est produite lors de l'assignement",
           status: 'error',
         });
       }
     } catch (error) {
       toast({
-        title: t('errorOccurred'),
-        description: t('errorOccurredDesc'),
+        title: 'Assignement echoué',
+        description: 'Une erreur s\'est produite lors de l\'assignement',
         status: 'error',
       });
     }
@@ -188,7 +190,7 @@ const ExpandedComponent = ({ data, schools, token, role: userRole }) => {
                     {t('edit')}
                   </Button>
                 )}
-              {!school && (
+              {!school&& !hasPermission(userRole.name, 'manageUsers') && (
                 <Button
                   onClick={openDialog}
                   colorScheme="orange"

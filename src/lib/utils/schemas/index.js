@@ -394,29 +394,71 @@ export const teacherRecruitmentSchema = object({
 
 export const schoolYearSchema = object({
   name: string().trim().required("Le nom de l'année scolaire est requis"),
-  startDate: date().required('La date de début est requise'),
+  startDate: date()
+    .required('La date de début est requise')
+    .test(
+      'valid-start-date',
+      'La date de début ne peut pas être antérieure à 5 ans',
+      (startDate) => {
+        if (!startDate) return false;
+        const currentYear = new Date().getFullYear();
+        const minYear = currentYear - 5;
+        const minDate = new Date(`${minYear}-01-01`);
+        return startDate >= minDate;
+      }
+    ),
   endDate: date()
     .min(
       ref('startDate'),
       'La date de fin doit être ultérieure à la date de début'
     )
-    // .max(ref('startDate'), 'La durée de l\'année scolaire ne peut pas dépasser 12 mois')
-    // .test(
-    //   'max-12-months',
-    //   'La durée de l\'année scolaire ne peut pas dépasser 12 mois',
-    //   (endDate, context) => {
-    //     if (!endDate) return false;
-    //     const startDate = context.parent.startDate;
-    //     if (!startDate) return false;
+    .test(
+      'min-duration',
+      "L'année scolaire doit durer au moins 8 mois",
+      (endDate, context) => {
+        if (!endDate) return false;
+        const startDate = context.parent.startDate;
+        if (!startDate) return false;
 
-    //     const diffInMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-    //       (endDate.getMonth() - startDate.getMonth());
+        const diffInMonths =
+          (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+          (endDate.getMonth() - startDate.getMonth());
 
-    //     return diffInMonths >= 15;
-    //   }
-    // )
+        return diffInMonths >= 8;
+      }
+    )
+    .test(
+      'max-duration',
+      "L'année scolaire ne peut pas dépasser 15 mois",
+      (endDate, context) => {
+        if (!endDate) return false;
+        const startDate = context.parent.startDate;
+        if (!startDate) return false;
+
+        const diffInMonths =
+          (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+          (endDate.getMonth() - startDate.getMonth());
+
+        return diffInMonths <= 15;
+      }
+    )
+    .test(
+      'same-year-validation',
+      'La date de fin doit être dans la même année scolaire (année suivante maximum)',
+      (endDate, context) => {
+        if (!endDate) return false;
+        const startDate = context.parent.startDate;
+        if (!startDate) return false;
+
+        const startYear = startDate.getFullYear();
+        const endYear = endDate.getFullYear();
+
+        // End date should be in the same year or the following year
+        return endYear >= startYear && endYear <= startYear + 1;
+      }
+    )
     .required('La date de fin est requise'),
-  description: string().trim().required('La description est requise'),
+  description: string().trim(),
 });
 
 export const expenseSchema = object({
