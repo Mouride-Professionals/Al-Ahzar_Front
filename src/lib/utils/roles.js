@@ -1,65 +1,100 @@
 export const ROLES = {
-    CAISSIER: 'Caissier',
-    SURVEILLANT_GENERAL: 'Surveillant general',
-    SECRETAIRE_GENERAL: 'Secretaire General',
-    DIRECTEUR_GENERAL: 'Directeur General',
-    DIRECTEUR_ETABLISSMENT: 'Directeur etablissment',
+  CAISSIER: 'Caissier',
+  SURVEILLANT_GENERAL: 'Surveillant general',
+  SECRETAIRE_GENERAL: 'Secretaire General',
+  DIRECTEUR_GENERAL: 'Directeur General',
+  DIRECTEUR_ETABLISSMENT: 'Directeur etablissment',
+
+  // Assistant roles (Adjoint) - same permissions as main roles
+  ADJOINT_CAISSIER: 'Adjoint Caissier',
+  ADJOINT_SURVEILLANT_GENERAL: 'Adjoint Surveillant General',
+  ADJOINT_SECRETAIRE_GENERAL: 'Adjoint Secretaire General',
+  ADJOINT_DIRECTEUR_GENERAL: 'Adjoint Directeur General',
+  ADJOINT_DIRECTEUR_ETABLISSMENT: 'Adjoint Directeur Etablissement',
 };
 
-
 export const hasPermission = (role, permission) => {
-    const permissions = {
-        [ROLES.CAISSIER]: {
-            viewSchoolFinance: true,
-            createExpense: true,
-            viewHome: true,
-            managePayments: true,
-        },
-        [ROLES.SURVEILLANT_GENERAL]: {
-            manageStudents: true,
-            bulkStudents: true,
-            viewSchoolReports: true,
-            viewClasses: true,
-            viewHome: true,
-        },
-        [ROLES.SECRETAIRE_GENERAL]: {
-            viewAllSchoolsFinance: true,
-            createSchool: true,
-            switchSchools: true,
-            viewHome: true,
-            manageUsers: true,
-            manageTeachers: true,
-            manageSchoolYears: true,
-        },
-        [ROLES.DIRECTEUR_GENERAL]: {
-            viewAllSchoolsFinance: true,
-            createSchool: true,
-            switchSchools: true,
-            viewHome: true,
-            manageUsers: true,
-            manageTeachers: true,
-            manageSchoolYears: true,
-            manageRoles: true, // For role management
-        },
-        [ROLES.DIRECTEUR_ETABLISSMENT]: {
-            viewSchoolFinance: true,
-            createExpense: true,
-            manageStudents: true,
-            viewSchoolReports: true,
-            viewClasses: true,
-            viewHome: true,
-        },
-    };
-    return permissions[role]?.[permission] || false;
+  // Map assistant roles to their main role permissions
+  const roleMapping = {
+    [ROLES.ADJOINT_CAISSIER]: ROLES.CAISSIER,
+    [ROLES.ADJOINT_SURVEILLANT_GENERAL]: ROLES.SURVEILLANT_GENERAL,
+    [ROLES.ADJOINT_SECRETAIRE_GENERAL]: ROLES.SECRETAIRE_GENERAL,
+    [ROLES.ADJOINT_DIRECTEUR_GENERAL]: ROLES.DIRECTEUR_GENERAL,
+    [ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT]: ROLES.DIRECTEUR_ETABLISSMENT,
+  };
+
+  // Use mapped role for assistant roles, otherwise use original role
+  const effectiveRole = roleMapping[role] || role;
+
+  const permissions = {
+    [ROLES.CAISSIER]: {
+      viewSchoolFinance: true,
+      createExpense: true,
+      viewHome: true,
+      managePayments: true,
+    },
+    [ROLES.SURVEILLANT_GENERAL]: {
+      manageStudents: true,
+      bulkStudents: true,
+      viewSchoolReports: true,
+      viewClasses: true,
+      viewHome: true,
+    },
+    [ROLES.SECRETAIRE_GENERAL]: {
+      viewAllSchoolsFinance: true,
+      createSchool: true,
+      switchSchools: true,
+      viewHome: true,
+      manageUsers: true,
+      manageTeachers: true,
+      manageSchoolYears: true,
+    },
+    [ROLES.DIRECTEUR_GENERAL]: {
+      viewAllSchoolsFinance: true,
+      createSchool: true,
+      switchSchools: true,
+      viewHome: true,
+      manageUsers: true,
+      manageTeachers: true,
+      manageSchoolYears: true,
+      manageRoles: true, // For role management
+    },
+    [ROLES.DIRECTEUR_ETABLISSMENT]: {
+      viewSchoolFinance: true,
+      createExpense: true,
+      manageStudents: true,
+      viewSchoolReports: true,
+      viewClasses: true,
+      viewHome: true,
+    },
+  };
+  return permissions[effectiveRole]?.[permission] || false;
 };
 
 // Helper to get allowed schools for a role
 export const getAllowedSchools = (role, userSchoolId, allSchools) => {
-    if ([ROLES.SECRETAIRE_GENERAL, ROLES.DIRECTEUR_GENERAL].includes(role)) {
-        return allSchools; // Access to all schools
-    }
-    if ([ROLES.CAISSIER, ROLES.SURVEILLANT_GENERAL, ROLES.DIRECTEUR_ETABLISSMENT].includes(role)) {
-        return allSchools.filter((school) => school.id === userSchoolId); // Only assigned school
-    }
-    return [];
+  // Define role groups with their permissions
+  const directionRoles = [
+    ROLES.SECRETAIRE_GENERAL,
+    ROLES.DIRECTEUR_GENERAL,
+    ROLES.ADJOINT_SECRETAIRE_GENERAL,
+    ROLES.ADJOINT_DIRECTEUR_GENERAL,
+  ];
+
+  const schoolSpecificRoles = [
+    ROLES.CAISSIER,
+    ROLES.SURVEILLANT_GENERAL,
+    ROLES.DIRECTEUR_ETABLISSMENT,
+    ROLES.ADJOINT_CAISSIER,
+    ROLES.ADJOINT_SURVEILLANT_GENERAL,
+    ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
+  ];
+
+  if (directionRoles.includes(role)) {
+    return allSchools; // Access to all schools
+  }
+  if (schoolSpecificRoles.includes(role)) {
+    return allSchools.filter((school) => school.id === userSchoolId); // Only assigned school
+  }
+  return [];
 };

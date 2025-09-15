@@ -94,10 +94,15 @@ export default function useCustomRedirect() {
     // Role-based redirect mapping
     const roleRedirectMap = {
       Caissier: cashier,
+      'Adjoint Caissier': cashier,
       'Secretaire General': direction,
+      'Adjoint Secretaire General': direction,
       'Directeur General': direction,
+      'Adjoint Directeur General': direction,
       'Directeur etablissment': direction,
+      'Adjoint Directeur Etablissement': direction,
       'Surveillant general': surveillant,
+      'Adjoint Surveillant General': surveillant,
     };
 
     const targetPath = roleRedirectMap[role.name];
