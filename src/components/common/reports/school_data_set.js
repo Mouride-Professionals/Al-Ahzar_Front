@@ -12,6 +12,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { DataTableLayout } from '@components/layout/data_table';
 import { colors, images, routes } from '@theme';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -20,13 +21,16 @@ import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
 import { BsFillCalendarDateFill } from 'react-icons/bs';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { BoxZone } from '../cards/boxZone';
-import { DataTableLayout } from '@components/layout/data_table';
+import { hasPermission } from '@utils/roles';
 
 const ExpandedComponent = ({ data, role, user_token }) => {
   const {
     dashboard: {
       direction: {
-        schools: { edit, classes: { all } },
+        schools: {
+          edit,
+          classes: { all },
+        },
       },
     },
   } = routes.page_route;
@@ -49,9 +53,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
   } = data;
 
   const router = useRouter();
-  const schoolBannerUrl = banner === null
-    ? images.logo.src
-    : images.logo.src; // Replace with actual banner URL logic if available
+  const schoolBannerUrl = banner === null ? images.logo.src : images.logo.src; // Replace with actual banner URL logic if available
 
   const t = useTranslations('components.dataset.schools');
 
@@ -103,7 +105,9 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                   {phoneFix && (
                     <HStack>
                       <AiOutlinePhone color="blue" size={16} />
-                      <Text fontSize={{ base: 'xs', md: 'sm' }}>{phoneFix}</Text>
+                      <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                        {phoneFix}
+                      </Text>
                     </HStack>
                   )}
                   <HStack>
@@ -116,29 +120,50 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 <VStack align="start" spacing={2}>
                   {IA && (
                     <HStack>
-                      <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>IA :</Text>
+                      <Text
+                        fontWeight="bold"
+                        fontSize={{ base: 'xs', md: 'sm' }}
+                      >
+                        IA :
+                      </Text>
                       <Text fontSize={{ base: 'xs', md: 'sm' }}>{IA}</Text>
                     </HStack>
                   )}
                   {IEF && (
                     <HStack>
-                      <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>IEF :</Text>
+                      <Text
+                        fontWeight="bold"
+                        fontSize={{ base: 'xs', md: 'sm' }}
+                      >
+                        IEF :
+                      </Text>
                       <Text fontSize={{ base: 'xs', md: 'sm' }}>{IEF}</Text>
                     </HStack>
                   )}
                   <HStack>
-                    <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>{t('director')} :</Text>
-                    <Text fontSize={{ base: 'xs', md: 'sm' }}>{responsibleName || 'Non assigné'}</Text>
+                    <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>
+                      {t('director')} :
+                    </Text>
+                    <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                      {responsibleName || 'Non assigné'}
+                    </Text>
                   </HStack>
                   <HStack>
-                    <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>{t('belonging')} :</Text>
+                    <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>
+                      {t('belonging')} :
+                    </Text>
                     <Text fontSize={{ base: 'xs', md: 'sm' }}>
                       {isAlAzharLand ? t('alAzhar') : t('notAlAzhar')}
                     </Text>
                   </HStack>
                   {note && (
                     <VStack align="start" spacing={1}>
-                      <Text fontWeight="bold" fontSize={{ base: 'xs', md: 'sm' }}>{t('note')} :</Text>
+                      <Text
+                        fontWeight="bold"
+                        fontSize={{ base: 'xs', md: 'sm' }}
+                      >
+                        {t('note')} :
+                      </Text>
                       <Text fontSize={{ base: 'xs', md: 'sm' }}>{note}</Text>
                     </VStack>
                   )}
@@ -186,14 +211,13 @@ export const SchoolDataSet = ({
         item.name && item.name.toLowerCase().includes(needle.toLowerCase())
     );
 
-  const actionButton = role?.name === 'Secretaire General' && (
+  const actionButton = hasPermission(role.name, 'manageSchool') && (
     <Button
       onClick={() =>
         router.push(routes.page_route.dashboard.direction.schools.create)
       }
       colorScheme="orange"
       bgColor={colors.primary.regular}
-     
     >
       {t('addSchool')}
     </Button>
