@@ -19,6 +19,7 @@ import { ExpenseDataSet } from '@components/common/reports/expense_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
+import { generateExpectedMonths, getMonthName } from '@utils/date';
 import { mapExpensesDataTable } from '@utils/mappers/expense';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapPaymentType } from '@utils/tools/mappers';
@@ -45,12 +46,6 @@ import {
 } from 'recharts';
 import { serverFetch } from 'src/lib/api';
 
-const getMonthName = (num) => {
-  const date = new Date();
-  date.setMonth(num - 1);
-  return date.toLocaleString('default', { month: 'short' });
-};
-
 const FinanceDashboard = ({
   role,
   token,
@@ -58,6 +53,7 @@ const FinanceDashboard = ({
   initialExpenseKpis,
   schools,
   activeSchoolYear,
+  schoolYearData,
 }) => {
   const t = useTranslations();
   const toast = useToast();
@@ -249,7 +245,11 @@ const FinanceDashboard = ({
         setExpenseSummary(expenseStatsData);
         setExpenseData(expenseDataResult);
 
-        const expectedMonths = [11, 12, 1, 2, 3, 4, 5, 6, 7];
+        // Generate expected months from school year dates
+        const expectedMonths = generateExpectedMonths(
+          schoolYearData?.startDate,
+          schoolYearData?.endDate
+        );
         const paymentMonthlyData = paymentStatsData?.monthlyBreakdown || [];
         const paymentTypeData = paymentStatsData?.paymentTypeBreakdown || [];
         const expenseMonthlyData = expenseStatsData?.monthlyBreakdown || [];
@@ -301,7 +301,15 @@ const FinanceDashboard = ({
     };
 
     fetchData();
-  }, [selectedSchool, activeTab, token, activeSchoolYear, toast]);
+  }, [
+    selectedSchool,
+    activeTab,
+    token,
+    activeSchoolYear,
+    toast,
+    schoolYearData?.startDate,
+    schoolYearData?.endDate,
+  ]);
 
   if (loading) {
     return (
@@ -344,14 +352,14 @@ const FinanceDashboard = ({
           <TabList ml={4}>
             <Tab
               color={
-                activeTab === 'payments' ? colors.white : colors.primary.regular
+                activeTab === 'payments' ? colors.primary.regular : colors.primary.regular
               }
             >
               {t('components.dataset.finance.payments_tab')}
             </Tab>
             <Tab
               color={
-                activeTab === 'expenses' ? colors.white : colors.primary.regular
+                activeTab === 'expenses' ? colors.primary.regular : colors.primary.regular
               }
             >
               {t('components.dataset.finance.expenses_tab')}
@@ -547,6 +555,7 @@ export const getServerSideProps = async ({ req, res }) => {
         schools: { all: schoolsRoute },
         finance: { statsWithoutSchoolId: financeStats },
         expenses: { statsWithoutSchoolId: expenseStats },
+        school_years: { detail: schoolYearRoute },
       },
     },
   } = routes.api_route;
@@ -554,8 +563,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const response = await serverFetch({ uri: me, user_token: token });
   const role = response.role;
 
-  // Fetch initial data (system-wide) and schools list
-  const [schoolsData, initialPaymentKpis, initialExpenseKpis] =
+  // Fetch initial data (system-wide), schools list, and school year data
+  const [schoolsData, initialPaymentKpis, initialExpenseKpis, schoolYearData] =
     await Promise.all([
       serverFetch({ uri: schoolsRoute, user_token: token }),
       serverFetch({
@@ -566,6 +575,10 @@ export const getServerSideProps = async ({ req, res }) => {
         uri: expenseStats.replace('%activeSchoolYear', activeSchoolYear),
         user_token: token,
       }),
+      serverFetch({
+        uri: schoolYearRoute.replace('%id', activeSchoolYear),
+        user_token: token,
+      }).catch(() => null), // Handle case where school year data might not be available
     ]);
 
   return {
@@ -579,6 +592,7 @@ export const getServerSideProps = async ({ req, res }) => {
         name: s.attributes.name,
       })),
       activeSchoolYear,
+      schoolYearData: schoolYearData?.data?.attributes || null,
     },
   };
 };
