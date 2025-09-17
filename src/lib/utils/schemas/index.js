@@ -28,6 +28,8 @@ const AllowedRoles = [
   'Adjoint Secretaire General',
   'Adjoint Directeur General',
   'Adjoint Directeur Etablissement',
+  'Secretaire Générale de Finances',
+  'Adjoint Secretaire Générale de Finances',
 ];
 const AllowedEnrollmentTypes = [
   'Ancien Redoublant',

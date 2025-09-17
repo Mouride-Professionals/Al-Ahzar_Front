@@ -178,14 +178,17 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 >
                   {t('classes')}
                 </Button>
-                <Button
-                  onClick={() => router.push(edit.replace('%id', data.id))}
-                  colorScheme="orange"
-                  variant="outline"
-                  size={{ base: 'sm', md: 'md' }}
-                >
-                  {t('edit')}
-                </Button>
+
+                {hasPermission(role.name, 'manageSchool') && (
+                  <Button
+                    onClick={() => router.push(edit.replace('%id', data.id))}
+                    colorScheme="orange"
+                    variant="outline"
+                    size={{ base: 'sm', md: 'md' }}
+                  >
+                    {t('edit')}
+                  </Button>
+                )}
               </HStack>
             </VStack>
           </CardBody>

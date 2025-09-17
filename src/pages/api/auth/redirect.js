@@ -40,6 +40,8 @@ export default async function handler(req, res) {
       break;
     case 'Secretaire General':
     case 'Adjoint Secretaire General':
+    case 'Secretaire Générale de Finances':
+    case 'Adjoint Secretaire Générale de Finances':
       redirectPath = direction;
       break;
     case 'Surveillant general':
@@ -61,4 +63,3 @@ export default async function handler(req, res) {
   // Redirect the user
   return res.redirect(307, redirectPath);
 }
-
