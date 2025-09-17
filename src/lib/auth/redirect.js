@@ -103,6 +103,8 @@ export default function useCustomRedirect() {
       'Adjoint Directeur Etablissement': direction,
       'Surveillant general': surveillant,
       'Adjoint Surveillant General': surveillant,
+      'Secretaire Générale de Finances': direction,
+      'Adjoint Secretaire Générale de Finances': direction,
     };
 
     const targetPath = roleRedirectMap[role.name];

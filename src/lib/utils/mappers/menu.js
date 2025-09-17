@@ -32,6 +32,9 @@ export const ACCESS_ROUTES = {
     classes: surveillant.classes,
     students: surveillant.students,
   }, // Same access as Directeur Etablissement
+  // SGF roles - read-only finance access via direction dashboard
+  [ROLES.SECRETAIRE_GENERALE_FINANCES]: direction,
+  [ROLES.ADJOINT_SECRETAIRE_GENERALE_FINANCES]: direction,
   isAdmin(role) {
     return (
       role === ROLES.SECRETAIRE_GENERAL ||
@@ -48,6 +51,13 @@ export const ACCESS_ROUTES = {
   },
   isCashier(role) {
     return role === ROLES.CAISSIER || role === ROLES.ADJOINT_CAISSIER;
+  },
+  // Helper to check if role is SGF (finance read-only)
+  isFinanceReadOnly(role) {
+    return (
+      role === ROLES.SECRETAIRE_GENERALE_FINANCES ||
+      role === ROLES.ADJOINT_SECRETAIRE_GENERALE_FINANCES
+    );
   },
 };
 

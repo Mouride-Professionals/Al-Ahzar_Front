@@ -11,6 +11,11 @@ export const ROLES = {
   ADJOINT_SECRETAIRE_GENERAL: 'Adjoint Secretaire General',
   ADJOINT_DIRECTEUR_GENERAL: 'Adjoint Directeur General',
   ADJOINT_DIRECTEUR_ETABLISSMENT: 'Adjoint Directeur Etablissement',
+
+  // Finance roles - read-only access to all finance across establishments
+  SECRETAIRE_GENERALE_FINANCES: 'Secretaire Générale de Finances',
+  ADJOINT_SECRETAIRE_GENERALE_FINANCES:
+    'Adjoint Secretaire Générale de Finances',
 };
 
 export const hasPermission = (role, permission) => {
@@ -21,6 +26,9 @@ export const hasPermission = (role, permission) => {
     [ROLES.ADJOINT_SECRETAIRE_GENERAL]: ROLES.SECRETAIRE_GENERAL,
     [ROLES.ADJOINT_DIRECTEUR_GENERAL]: ROLES.DIRECTEUR_GENERAL,
     [ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT]: ROLES.DIRECTEUR_ETABLISSMENT,
+    // SGF assistant role maps to main SGF role
+    [ROLES.ADJOINT_SECRETAIRE_GENERALE_FINANCES]:
+      ROLES.SECRETAIRE_GENERALE_FINANCES,
   };
 
   // Use mapped role for assistant roles, otherwise use original role
@@ -69,6 +77,21 @@ export const hasPermission = (role, permission) => {
       viewClasses: true,
       viewHome: true,
     },
+    // SGF roles - read-only finance access across all establishments
+    [ROLES.SECRETAIRE_GENERALE_FINANCES]: {
+      viewAllSchoolsFinance: true,
+      viewSchoolFinance: true,
+      switchSchools: true,
+      viewHome: true,
+      // Notable: NO create/edit permissions - read-only access
+      createExpense: false,
+      managePayments: false,
+      createSchool: false,
+      manageSchool: false,
+      manageUsers: false,
+      manageTeachers: false,
+      manageSchoolYears: false,
+    },
   };
   return permissions[effectiveRole]?.[permission] || false;
 };
@@ -83,6 +106,12 @@ export const getAllowedSchools = (role, userSchoolId, allSchools) => {
     ROLES.ADJOINT_DIRECTEUR_GENERAL,
   ];
 
+  // SGF roles have global read-only access to all schools
+  const financeGlobalRoles = [
+    ROLES.SECRETAIRE_GENERALE_FINANCES,
+    ROLES.ADJOINT_SECRETAIRE_GENERALE_FINANCES,
+  ];
+
   const schoolSpecificRoles = [
     ROLES.CAISSIER,
     ROLES.SURVEILLANT_GENERAL,
@@ -92,7 +121,7 @@ export const getAllowedSchools = (role, userSchoolId, allSchools) => {
     ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
   ];
 
-  if (directionRoles.includes(role)) {
+  if (directionRoles.includes(role) || financeGlobalRoles.includes(role)) {
     return allSchools; // Access to all schools
   }
   if (schoolSpecificRoles.includes(role)) {

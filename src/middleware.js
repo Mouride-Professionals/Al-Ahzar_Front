@@ -45,6 +45,8 @@ export async function middleware(req) {
       case 'Directeur General':
       case 'Adjoint Secretaire General':
       case 'Adjoint Directeur General':
+      case 'Secretaire Générale de Finances':
+      case 'Adjoint Secretaire Générale de Finances':
         redirectPath = direction;
         break;
       case 'Surveillant general':
@@ -70,5 +72,3 @@ export async function middleware(req) {
 
   return NextResponse.next();
 }
-
-

@@ -34,10 +34,7 @@ export const ClassesList = ({
         {Object.values(classes).length &&
           withCreation &&
           ACCESS_CREATION.includes(role.name) && (
-            <Box
-              w={{ base: '100%', md: '20%' }}
-              order={{ base: 0, md: 1 }}
-            >
+            <Box w={{ base: '100%', md: '20%' }} order={{ base: 0, md: 1 }}>
               <PrimaryButton
                 onClick={action}
                 message={t('components.classList.create')}
@@ -87,14 +84,15 @@ export const ClassesList = ({
                 {_class.sections.map((section, idx) => (
                   <ClassCard
                     goTo={
-                      ACCESS_ROUTES.isAdmin(role.name)
+                      ACCESS_ROUTES.isAdmin(role.name) ||
+                      ACCESS_ROUTES.isFinanceReadOnly(role.name)
                         ? ACCESS_ROUTES[role.name].schools.classes.detail
-                          .replace('%id', schoolId)
-                          .replace('%classId', _class.classId[idx])
+                            .replace('%id', schoolId)
+                            .replace('%classId', _class.classId[idx])
                         : ACCESS_ROUTES[role.name].classes.detail.replace(
-                          '%id',
-                          _class.classId[idx]
-                        )
+                            '%id',
+                            _class.classId[idx]
+                          )
                     }
                     {...(listOf === 'intermediate' && { theme: colors.purple })}
                     {...(listOf === 'upperIntermediate' && {
