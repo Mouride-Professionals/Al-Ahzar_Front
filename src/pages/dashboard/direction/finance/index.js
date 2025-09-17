@@ -11,12 +11,16 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useToast,
   Wrap,
 } from '@chakra-ui/react';
+import { ExpenseDataSet } from '@components/common/reports/expense_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
+import { mapExpensesDataTable } from '@utils/mappers/expense';
+import { useTableColumns } from '@utils/mappers/kpi';
 import { mapPaymentType } from '@utils/tools/mappers';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
@@ -40,7 +44,6 @@ import {
   YAxis,
 } from 'recharts';
 import { serverFetch } from 'src/lib/api';
-
 
 const getMonthName = (num) => {
   const date = new Date();
@@ -66,6 +69,10 @@ const FinanceDashboard = ({
   const [chartData, setChartData] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [expenseData, setExpenseData] = useState([]);
+  const [hasSucceeded, setHasSucceeded] = useState(false);
+
+  const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
 
   // School options for dropdown
   const schoolOptions = [
@@ -186,7 +193,10 @@ const FinanceDashboard = ({
         alazhar: {
           get: {
             finance: { statsWithoutSchoolId: paymentStatsRoute },
-            expenses: { statsWithoutSchoolId: expenseStatsRoute },
+            expenses: {
+              statsWithoutSchoolId: expenseStatsRoute,
+              all: expenseDataRoute,
+            },
           },
         },
       } = routes.api_route;
@@ -201,6 +211,14 @@ const FinanceDashboard = ({
             ? expenseStatsRoute.replace('%activeSchoolYear', activeSchoolYear)
             : `${expenseStatsRoute.replace('%activeSchoolYear', activeSchoolYear)}&filters[school][id][$eq]=${selectedSchool}`;
 
+        // Fetch expense data only when a specific school is selected
+        const expenseDataUri =
+          selectedSchool !== 'all'
+            ? expenseDataRoute
+                .replace('%activeSchoolYear', activeSchoolYear)
+                .replace('%schoolId', selectedSchool)
+            : null;
+
         const paymentStatsData = await serverFetch({
           uri: paymentStatsUri,
           user_token: token,
@@ -210,8 +228,26 @@ const FinanceDashboard = ({
           user_token: token,
         });
 
+        // Fetch expense data only for specific school
+        let expenseDataResult = [];
+        if (expenseDataUri) {
+          try {
+            const expenseDataResponse = await serverFetch({
+              uri: expenseDataUri,
+              user_token: token,
+            });
+            expenseDataResult = mapExpensesDataTable({
+              expenses: expenseDataResponse,
+            });
+          } catch (error) {
+            console.error('Error fetching expense data:', error);
+            expenseDataResult = [];
+          }
+        }
+
         setPaymentSummary(paymentStatsData);
         setExpenseSummary(expenseStatsData);
+        setExpenseData(expenseDataResult);
 
         const expectedMonths = [11, 12, 1, 2, 3, 4, 5, 6, 7];
         const paymentMonthlyData = paymentStatsData?.monthlyBreakdown || [];
@@ -391,10 +427,38 @@ const FinanceDashboard = ({
             {/* Expenses Tab */}
             <TabPanel>
               <Wrap spacing={20.01}>
+                {/* Statistics */}
                 <HStack w="100%">
                   <Statistics cardStats={expenseStats} />
                 </HStack>
 
+                {/* Expense Data Table - Only show when specific school is selected */}
+                {selectedSchool !== 'all' && expenseData.length > 0 && (
+                  <>
+                    <HStack w="100%">
+                      <Text
+                        color={colors.secondary.regular}
+                        fontSize={20}
+                        fontWeight="700"
+                      >
+                        {t('components.dataset.finance.expenses_history')}
+                      </Text>
+                    </HStack>
+                    <Stack bgColor={colors.white} w="100%">
+                      <ExpenseDataSet
+                        role={role}
+                        data={expenseData}
+                        columns={EXPENSES_COLUMNS}
+                        token={token}
+                        schoolId={selectedSchool}
+                        schoolYearId={activeSchoolYear}
+                        setHasSucceeded={setHasSucceeded}
+                      />
+                    </Stack>
+                  </>
+                )}
+
+                {/* Monthly Expenses Trend */}
                 <HStack w="100%">
                   <Box
                     p={5}
@@ -416,6 +480,8 @@ const FinanceDashboard = ({
                     </ResponsiveContainer>
                   </Box>
                 </HStack>
+
+                {/* Expenses by Category */}
                 <HStack w="100%">
                   <Box
                     p={5}
