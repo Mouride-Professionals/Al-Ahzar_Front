@@ -65,16 +65,22 @@ const FinanceDashboard = ({
   const [chartData, setChartData] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [expenseTransactions, setExpenseTransactions] = useState([]);
   const [hasSucceeded, setHasSucceeded] = useState(false);
 
-  const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
-  const expenses = mapExpensesDataTable({ expenses: expenseKpis[0] });
-
   const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
+
   useEffect(() => {
     if (paymentKpis && expenseKpis) {
       setPaymentSummary(paymentKpis[1]);
+
+      // Map payments data inside useEffect to avoid dependency issues
+      const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
       setTransactions(payments);
+
+      // Map expenses data inside useEffect to avoid dependency issues
+      const expenses = mapExpensesDataTable({ expenses: expenseKpis[0] });
+      setExpenseTransactions(expenses);
 
       // Generate expected months from school year dates
       const expectedMonths = generateExpectedMonths(
@@ -129,8 +135,6 @@ const FinanceDashboard = ({
     paymentKpis,
     expenseKpis,
     activeTab,
-    hasSucceeded,
-    payments,
     schoolYearData?.startDate,
     schoolYearData?.endDate,
   ]);
@@ -394,7 +398,7 @@ const FinanceDashboard = ({
               <Stack bgColor={colors.white} w="100%">
                 <ExpenseDataSet
                   role={role}
-                  data={expenses}
+                  data={expenseTransactions}
                   columns={EXPENSES_COLUMNS}
                   token={token}
                   schoolId={schoolId}

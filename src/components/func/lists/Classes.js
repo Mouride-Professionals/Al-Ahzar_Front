@@ -4,6 +4,7 @@ import { ClassCard } from '@components/common/cards';
 import { colors, messages } from '@theme';
 import { ACCESS_CREATION } from '@utils/mappers/classes';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
+import { hasPermission } from '@utils/roles';
 import { ClassTitle } from '@utils/tools/mappers';
 import { useTranslations } from 'next-intl';
 
@@ -33,7 +34,7 @@ export const ClassesList = ({
         {/* Button first on mobile, second on desktop */}
         {Object.values(classes).length &&
           withCreation &&
-          ACCESS_CREATION.includes(role.name) && (
+          hasPermission(role.name, 'manageClasses') && (
             <Box w={{ base: '100%', md: '20%' }} order={{ base: 0, md: 1 }}>
               <PrimaryButton
                 onClick={action}

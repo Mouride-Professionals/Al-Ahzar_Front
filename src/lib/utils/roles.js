@@ -46,6 +46,7 @@ export const hasPermission = (role, permission) => {
       bulkStudents: true,
       viewSchoolReports: true,
       viewClasses: true,
+      manageClasses: true,
       viewHome: true,
     },
     [ROLES.SECRETAIRE_GENERAL]: {
@@ -75,6 +76,7 @@ export const hasPermission = (role, permission) => {
       manageStudents: true,
       viewSchoolReports: true,
       viewClasses: true,
+      manageClasses: true,
       viewHome: true,
     },
     // SGF roles - read-only finance access across all establishments
