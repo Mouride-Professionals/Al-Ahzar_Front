@@ -20,7 +20,6 @@ import { DataTableLayout } from '@components/layout/data_table';
 import ReEnrollmentModal from '@components/modals/enrollmentModal';
 import { monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
-import { ACCESS_STUDENT_VALIDATION } from '@utils/mappers/classes';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
@@ -276,7 +275,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 
                   {payment_history.length === 0 && (
                     <Stack spacing={3}>
-                      {ACCESS_STUDENT_VALIDATION.includes(role.type) ? (
+                      {ACCESS_ROUTES.isCashier(role.name) ? (
                         <Button
                           onClick={() =>
                             router.push(
@@ -378,7 +377,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
               spacing={{ base: 2, md: 3 }}
             >
               {payment_history.length > 0 &&
-                ACCESS_STUDENT_VALIDATION.includes(role.type) && (
+                ACCESS_ROUTES.isCashier(role.name) && (
                   <WrapItem w={{ base: '100%', sm: 'auto' }}>
                     <Button
                       onClick={openPaymentModal}

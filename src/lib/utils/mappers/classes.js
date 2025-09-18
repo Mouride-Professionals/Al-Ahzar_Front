@@ -7,4 +7,4 @@ export const ACCESS_CREATION = [
   'Adjoint Directeur Etablissement',
 ];
 
-export const ACCESS_STUDENT_VALIDATION = ['caissier', 'Adjoint Caissier'];
+export const ACCESS_STUDENT_VALIDATION = ['caissier', 'adjoint_caissier'];

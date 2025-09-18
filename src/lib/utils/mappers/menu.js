@@ -61,6 +61,14 @@ export const ACCESS_ROUTES = {
   },
 };
 
+// is directeur etablissement
+export const isEstablishmentDirector = (role) => {
+  return (
+    role === ROLES.DIRECTEUR_ETABLISSMENT ||
+    role === ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT
+  );
+};
+
 export const DashboardMainMenu = ({ activeLink, role }) => {
   const roleName = role?.name;
   const routes = ACCESS_ROUTES[roleName] || {};
