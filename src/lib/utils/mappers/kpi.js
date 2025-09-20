@@ -22,7 +22,7 @@ export const useTableColumns = () => {
   const STUDENTS_COLUMNS = [
     {
       name: t('students.columns.student'),
-      selector: (row) => `${row.lastname}, ${row.firstname} `,
+      selector: (row) => ` ${row.firstname}, ${row.lastname} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -36,7 +36,7 @@ export const useTableColumns = () => {
     },
     {
       name: t('students.columns.parent'),
-      selector: (row) => `${row.parent_lastname}, ${row.parent_firstname} `,
+      selector: (row) => ` ${row.parent_firstname}, ${row.parent_lastname} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -47,6 +47,8 @@ export const useTableColumns = () => {
       desc: true,
       sortable: true,
       reorder: true,
+      //always ltr
+      style: { direction: 'ltr' },
     },
     {
       name: t('students.columns.enrollment'),
@@ -219,6 +221,7 @@ export const useTableColumns = () => {
       desc: true,
       sortable: true,
       reorder: true,
+      style: { direction: 'ltr' },
     },
     {
       name: t('schools.columns.email'),
@@ -278,6 +281,7 @@ export const useTableColumns = () => {
       desc: true,
       sortable: true,
       reorder: true,
+      style: { direction: 'ltr' },
     },
     {
       name: t('teachers.columns.address'),
@@ -344,6 +348,7 @@ export const useTableColumns = () => {
       desc: true,
       sortable: true,
       reorder: true,
+      style: { direction: 'ltr' },
     },
     {
       name: t('users.columns.school'),

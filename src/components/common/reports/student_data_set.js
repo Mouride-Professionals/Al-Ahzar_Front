@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardBody,
@@ -15,10 +16,11 @@ import {
   WrapItem,
 } from '@chakra-ui/react';
 import { StudentFilter } from '@components/common/input/FormInput';
+import AddPaymentModal from '@components/forms/student/addPaymentForm';
 import MonthlyPaymentModal from '@components/forms/student/monthlyPaymentForm';
 import { DataTableLayout } from '@components/layout/data_table';
 import ReEnrollmentModal from '@components/modals/enrollmentModal';
-import { monthlyPaymentFormHandler } from '@handlers';
+import { addPaymentFormHandler, monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
@@ -28,12 +30,15 @@ import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BsCheck2Circle } from 'react-icons/bs';
 import { PiUserDuotone, PiUsersDuotone } from 'react-icons/pi';
 import { SlClose } from 'react-icons/sl';
 import { serverFetch } from 'src/lib/api';
 import { BoxZone } from '../cards/boxZone';
+
+// simple in-memory cache to avoid refetching school year months repeatedly
+const schoolYearMonthsCache = {};
 
 const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const t = useTranslations('components.dataset.students');
@@ -69,16 +74,21 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   });
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [isAddPaymentOpen, setAddPaymentOpen] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState('');
   const [isSubmitting, setSubmitting] = useState(false);
   const [fieldError, setFieldError] = useState('');
   const [hasSucceeded, setHasSucceeded] = useState(false);
+  const [showAllPayments, setShowAllPayments] = useState(false);
 
   const openDialog = () => setDialogOpen(true);
   const closeDialog = () => setDialogOpen(false);
   const openPaymentModal = () => setPaymentModalOpen(true);
   const closePaymentModal = () => setPaymentModalOpen(false);
+  const openAddPaymentModal = () => setAddPaymentOpen(true);
+  const closeAddPaymentModal = () => setAddPaymentOpen(false);
   const activeSchoolYear = Cookies.get('selectedSchoolYear');
+  const [allowedMonths, setAllowedMonths] = useState([]);
 
   const handleMonthlyPayment = async (values, setSubmitting, setFieldError) => {
     try {
@@ -117,16 +127,120 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
     }
   };
 
+  const handleAddPayment = async (values, setSubmitting, setFieldError) => {
+    try {
+      await addPaymentFormHandler({
+        data: values,
+        setSubmitting,
+        setFieldError,
+        token: user_token,
+        hasSucceeded: setHasSucceeded,
+      });
+      if (hasSucceeded) {
+        toast({
+          title: 'Paiement ajouté',
+          description: 'Le paiement a été ajouté avec succès.',
+          status: 'success',
+        });
+        router.refresh();
+      } else if (fieldError) {
+        toast({ title: 'Erreur', description: fieldError, status: 'error' });
+      }
+    } catch (err) {
+      console.error('Error adding payment:', err);
+      setFieldError(
+        'payment',
+        "Une erreur est survenue lors de l'ajout du paiement."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const classroomOptions = classrooms.map((classroom) => ({
     value: classroom.id,
     label: `${classroom.level} ${classroom.letter}`,
   }));
 
-  const sortedPaymentHistory = payment_history.sort((a, b) => {
-    const dateA = new Date(a.attributes.monthOf);
-    const dateB = new Date(b.attributes.monthOf);
-    return dateB - dateA;
+  const sortedPaymentHistory = [...(payment_history || [])].sort((a, b) => {
+    const aDate = new Date(a.attributes.monthOf ?? a.attributes.createdAt);
+    const bDate = new Date(b.attributes.monthOf ?? b.attributes.createdAt);
+    return +bDate - +aDate;
   });
+
+  // compute already paid months for monthly payments (YYYY-MM)
+  const alreadyPaidMonthsList = sortedPaymentHistory
+    .filter((item) => item.attributes.paymentType === 'monthly')
+    .map((item) => item.attributes.monthOf?.slice(0, 7));
+
+  useEffect(() => {
+    const fetchSchoolYear = async () => {
+      if (!activeSchoolYear) return;
+      // reuse cached months if present
+      if (schoolYearMonthsCache[activeSchoolYear]) {
+        const cached = schoolYearMonthsCache[activeSchoolYear];
+        // if cached is a promise, await it; otherwise set directly
+        if (cached.then) {
+          try {
+            const months = await cached;
+            setAllowedMonths(months);
+            return;
+          } catch (err) {
+            // fall through to refetch
+          }
+        } else {
+          setAllowedMonths(cached);
+          return;
+        }
+      }
+      try {
+        // store in-flight promise to dedupe concurrent requests
+        const promise = serverFetch({
+          uri: routes.api_route.alazhar.get.school_years.detail.replace(
+            '%id',
+            activeSchoolYear
+          ),
+          user_token,
+        }).then((resp) => {
+          const sy =
+            resp?.data?.data?.attributes ||
+            resp?.data?.attributes ||
+            resp?.data;
+          const start = sy?.startDate;
+          const end = sy?.endDate;
+          if (!start || !end) return [];
+
+          const startDate = new Date(start);
+          const endDate = new Date(end);
+          const months = [];
+          const cur = new Date(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            1
+          );
+          const last = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+          while (cur <= last) {
+            const y = cur.getFullYear();
+            const m = String(cur.getMonth() + 1).padStart(2, '0');
+            months.push(`${y}-${m}`);
+            cur.setMonth(cur.getMonth() + 1);
+          }
+          // cache resolved months
+          schoolYearMonthsCache[activeSchoolYear] = months;
+          return months;
+        });
+
+        schoolYearMonthsCache[activeSchoolYear] = promise;
+        const months = await promise;
+        setAllowedMonths(months);
+      } catch (err) {
+        console.error('Failed to fetch school year for months', err);
+        setAllowedMonths([]);
+      }
+    };
+
+    fetchSchoolYear();
+  }, [activeSchoolYear, user_token]);
 
   return (
     <ScaleFade px={{ base: 3, md: 5 }} initialScale={0.9} in={true}>
@@ -260,7 +374,15 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                       color={'gray.600'}
                       fontSize={{ base: 'xs', md: 'sm' }}
                     >
-                      {t('phone')}: {parent_phone}
+                      {t('phone')}:{' '}
+                      <Text
+                        as="span"
+                        dir="ltr"
+                        display="inline-block"
+                        style={{ unicodeBidi: 'isolate-override' }}
+                      >
+                        {parent_phone}
+                      </Text>
                     </Text>
                   </Stack>
                 </HStack>
@@ -298,73 +420,191 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                   )}
 
                   {type && payment_history.length > 0 && (
-                    <SimpleGrid columns={1} spacing={2}>
-                      {sortedPaymentHistory.slice(0, 3).map((item) => {
-                        const {
-                          attributes: {
-                            monthOf,
-                            isPaid,
-                            createdAt,
-                            amount,
-                            paymentType,
-                          },
-                        } = item;
-                        const paymentDate = new Date(monthOf ?? createdAt);
+                    <>
+                      {!showAllPayments ? (
+                        <SimpleGrid columns={1} spacing={2}>
+                          {sortedPaymentHistory.slice(0, 3).map((item) => {
+                            const {
+                              attributes: {
+                                monthOf,
+                                isPaid,
+                                createdAt,
+                                amount,
+                                paymentType,
+                              },
+                            } = item;
+                            const paymentDate = new Date(monthOf ?? createdAt);
 
-                        return (
-                          <HStack
-                            justifyContent={'space-between'}
-                            bg={colors.white}
-                            borderRadius={8}
-                            py={{ base: 1.5, md: 2 }}
-                            px={{ base: 2, md: 3 }}
+                            return (
+                              <HStack
+                                justifyContent={'space-between'}
+                                bg={colors.white}
+                                borderRadius={8}
+                                py={{ base: 1.5, md: 2 }}
+                                px={{ base: 2, md: 3 }}
+                                border="1px solid"
+                                borderColor="gray.200"
+                                key={`payment-${createdAt}`}
+                                flexDirection={{ base: 'column', sm: 'row' }}
+                                align={{ base: 'flex-start', sm: 'center' }}
+                                spacing={{ base: 1, sm: 0 }}
+                              >
+                                <VStack
+                                  align={{ base: 'center', sm: 'flex-start' }}
+                                  spacing={0}
+                                  w={{ base: '100%', sm: 'auto' }}
+                                >
+                                  <Text
+                                    fontSize={{ base: 'xs', md: 'sm' }}
+                                    fontWeight="medium"
+                                  >
+                                    {dateFormatter(paymentDate)}
+                                  </Text>
+                                  <Text fontSize="xs" color="gray.600">
+                                    {mapPaymentType[paymentType]}
+                                  </Text>
+                                </VStack>
+                                <HStack
+                                  justify={{ base: 'center', sm: 'flex-end' }}
+                                  w={{ base: '100%', sm: 'auto' }}
+                                >
+                                  <Text
+                                    fontSize={{ base: 'xs', md: 'sm' }}
+                                    fontWeight="semibold"
+                                  >
+                                    {amount} FCFA
+                                  </Text>
+                                  {isPaid ? (
+                                    <BsCheck2Circle
+                                      color={'green.500'}
+                                      size={16}
+                                    />
+                                  ) : (
+                                    <SlClose color={'red.500'} size={16} />
+                                  )}
+                                </HStack>
+                              </HStack>
+                            );
+                          })}
+
+                          {payment_history.length > 3 && (
+                            <Text
+                              as="button"
+                              onClick={() => setShowAllPayments(true)}
+                              fontSize="xs"
+                              color="gray.500"
+                              textAlign="center"
+                              _hover={{ color: 'gray.700' }}
+                            >
+                              {`+${payment_history.length - 3} more payments`}
+                            </Text>
+                          )}
+                        </SimpleGrid>
+                      ) : (
+                        <>
+                          <Box
+                            mt={2}
+                            maxH="220px"
+                            overflowY="auto"
                             border="1px solid"
-                            borderColor="gray.200"
-                            key={`payment-${createdAt}`}
-                            flexDirection={{ base: 'column', sm: 'row' }}
-                            align={{ base: 'flex-start', sm: 'center' }}
-                            spacing={{ base: 1, sm: 0 }}
+                            borderColor="gray.100"
+                            borderRadius={6}
+                            p={2}
                           >
-                            <VStack
-                              align={{ base: 'center', sm: 'flex-start' }}
-                              spacing={0}
-                              w={{ base: '100%', sm: 'auto' }}
-                            >
-                              <Text
-                                fontSize={{ base: 'xs', md: 'sm' }}
-                                fontWeight="medium"
-                              >
-                                {dateFormatter(paymentDate)}
-                              </Text>
-                              <Text fontSize="xs" color="gray.600">
-                                {mapPaymentType[paymentType]}
-                              </Text>
+                            <VStack spacing={2} align="stretch">
+                              {sortedPaymentHistory.map((item) => {
+                                const {
+                                  attributes: {
+                                    monthOf,
+                                    isPaid,
+                                    createdAt,
+                                    amount,
+                                    paymentType,
+                                  },
+                                } = item;
+                                const paymentDate = new Date(
+                                  monthOf ?? createdAt
+                                );
+
+                                return (
+                                  <HStack
+                                    justifyContent={'space-between'}
+                                    bg={colors.white}
+                                    borderRadius={8}
+                                    py={{ base: 1.5, md: 2 }}
+                                    px={{ base: 2, md: 3 }}
+                                    border="1px solid"
+                                    borderColor="gray.200"
+                                    key={`payment-expanded-${createdAt}`}
+                                    flexDirection={{
+                                      base: 'column',
+                                      sm: 'row',
+                                    }}
+                                    align={{ base: 'flex-start', sm: 'center' }}
+                                    spacing={{ base: 1, sm: 0 }}
+                                  >
+                                    <VStack
+                                      align={{
+                                        base: 'center',
+                                        sm: 'flex-start',
+                                      }}
+                                      spacing={0}
+                                      w={{ base: '100%', sm: 'auto' }}
+                                    >
+                                      <Text
+                                        fontSize={{ base: 'xs', md: 'sm' }}
+                                        fontWeight="medium"
+                                      >
+                                        {dateFormatter(paymentDate)}
+                                      </Text>
+                                      <Text fontSize="xs" color="gray.600">
+                                        {mapPaymentType[paymentType]}
+                                      </Text>
+                                    </VStack>
+                                    <HStack
+                                      justify={{
+                                        base: 'center',
+                                        sm: 'flex-end',
+                                      }}
+                                      w={{ base: '100%', sm: 'auto' }}
+                                    >
+                                      <Text
+                                        fontSize={{ base: 'xs', md: 'sm' }}
+                                        fontWeight="semibold"
+                                      >
+                                        {amount} FCFA
+                                      </Text>
+                                      {isPaid ? (
+                                        <BsCheck2Circle
+                                          color={'green.500'}
+                                          size={16}
+                                        />
+                                      ) : (
+                                        <SlClose color={'red.500'} size={16} />
+                                      )}
+                                    </HStack>
+                                  </HStack>
+                                );
+                              })}
                             </VStack>
-                            <HStack
-                              justify={{ base: 'center', sm: 'flex-end' }}
-                              w={{ base: '100%', sm: 'auto' }}
-                            >
-                              <Text
-                                fontSize={{ base: 'xs', md: 'sm' }}
-                                fontWeight="semibold"
-                              >
-                                {amount} FCFA
-                              </Text>
-                              {isPaid ? (
-                                <BsCheck2Circle color={'green.500'} size={16} />
-                              ) : (
-                                <SlClose color={'red.500'} size={16} />
-                              )}
-                            </HStack>
-                          </HStack>
-                        );
-                      })}
-                      {payment_history.length > 3 && (
-                        <Text fontSize="xs" color="gray.500" textAlign="center">
-                          +{payment_history.length - 3} more payments
-                        </Text>
+                          </Box>
+
+                          <Text
+                            as="button"
+                            onClick={() => setShowAllPayments(false)}
+                            display="block"
+                            w="100%"
+                            textAlign="center"
+                            mt={2}
+                            fontSize="xs"
+                            color="gray.500"
+                            _hover={{ color: 'gray.700' }}
+                          >
+                            Show less
+                          </Text>
+                        </>
                       )}
-                    </SimpleGrid>
+                    </>
                   )}
                 </Stack>
               </GridItem>
@@ -376,7 +616,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
               mt={{ base: 4, md: 6 }}
               spacing={{ base: 2, md: 3 }}
             >
-              {payment_history.length > 0 &&
+              {/* {payment_history.length > 0 &&
                 ACCESS_ROUTES.isCashier(role.name) && (
                   <WrapItem w={{ base: '100%', sm: 'auto' }}>
                     <Button
@@ -387,6 +627,20 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                       w={{ base: '100%', sm: 'auto' }}
                     >
                       {t('validateMonthlyPayment')}
+                    </Button>
+                  </WrapItem>
+                )} */}
+              {payment_history.length > 0 &&
+                ACCESS_ROUTES.isCashier(role.name) && (
+                  <WrapItem w={{ base: '100%', sm: 'auto' }}>
+                    <Button
+                      onClick={openAddPaymentModal}
+                      colorScheme="green"
+                      variant="outline"
+                      size={{ base: 'sm', md: 'md' }}
+                      w={{ base: '100%', sm: 'auto' }}
+                    >
+                      {t('addPayment')}
                     </Button>
                   </WrapItem>
                 )}
@@ -447,6 +701,15 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
               alreadyPaidMonths={sortedPaymentHistory
                 .filter((item) => item.attributes.paymentType === 'monthly')
                 .map((item) => item.attributes.monthOf)}
+            />
+            <AddPaymentModal
+              isOpen={isAddPaymentOpen}
+              onClose={closeAddPaymentModal}
+              enrollmentId={enrollment_id}
+              token={user_token}
+              handleAddPayment={handleAddPayment}
+              alreadyPaidMonths={alreadyPaidMonthsList}
+              allowedMonths={allowedMonths}
             />
           </CardBody>
         </Card>

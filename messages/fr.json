@@ -233,6 +233,7 @@
                 "searchPlaceholder": "Rechercher un élève",
                 "filterLabel": "Élèves non inscrits",
                 "validateMonthlyPayment": "Confirmer le paiement mensuel",
+                "addPayment": "Ajouter un paiement",
                 "socialStatus": "Statut social",
                 "bio": "Profil",
                 "paymentStatus": "Statut de paiement",
@@ -506,6 +507,33 @@
             }
         },
         "forms": {
+            "student": {
+                "addPayment": {
+                    "title": "Ajouter un paiement",
+                    "typeLabel": "Type de paiement",
+                    "types": {
+                        "enrollment": "Inscription",
+                        "monthly": "Mensuel",
+                        "exam": "Examen",
+                        "blouse": "Blouse",
+                        "parentContribution": "Contribution des parents",
+                        "other": "Autre"
+                    },
+                    "monthLabel": "Mois",
+                    "amountLabel": "Montant (FCFA)",
+                    "amountPlaceholder": "Entrez le montant",
+                    "commentLabel": "Commentaire (optionnel)",
+                    "commentPlaceholder": "Ajouter un commentaire",
+                    "cancel": "Annuler",
+                    "submit": "Ajouter le paiement",
+                    "success": "Paiement ajouté avec succès",
+                    "error": "Une erreur est survenue lors de l'ajout du paiement",
+                    "monthAlreadyPaid": "Ce mois est déjà payé",
+                    "amountRequired": "Le montant est requis",
+                    "monthRequired": "Le mois est requis",
+                    "monthNotInSchoolYear": "Le mois est en dehors de l'année scolaire actuelle"
+                }
+            },
             "inputs": {
                 "login": {
                     "identifier": {

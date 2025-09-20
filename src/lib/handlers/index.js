@@ -250,6 +250,33 @@ export const monthlyPaymentFormHandler = async ({
   }
 };
 
+export const addPaymentFormHandler = async ({
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  try {
+    const payload = mapPaymentBody({ data });
+    await createPayment({ payload, token });
+    hasSucceeded(true);
+  } catch (err) {
+    console.error('Error adding payment:', err);
+    if (err?.data) {
+      const { data: errorData } = err.data;
+      if (errorData?.message?.includes('exists')) {
+        setFieldError('payment', forms.messages.payment.errors.already_exists);
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError('payment', forms.messages.payment.errors.problem);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 // handle student enrollment
 export const studentEnrollmentFormHandler = async ({
   data,

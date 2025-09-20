@@ -233,6 +233,7 @@
                 "searchPlaceholder": "Search for a student",
                 "filterLabel": "Unenrolled Students",
                 "validateMonthlyPayment": "Confirm Monthly Payment",
+                "addPayment": "Add Payment",
                 "socialStatus": "Social Status",
                 "bio": "Profile",
                 "paymentStatus": "Payment Status",
@@ -506,6 +507,33 @@
             }
         },
         "forms": {
+            "student": {
+                "addPayment": {
+                    "title": "Add Payment",
+                    "typeLabel": "Payment Type",
+                    "types": {
+                        "enrollment": "Enrollment",
+                        "monthly": "Monthly",
+                        "exam": "Exam",
+                        "blouse": "Blouse",
+                        "parentContribution": "Parent Contribution",
+                        "other": "Other"
+                    },
+                    "monthLabel": "Month",
+                    "amountLabel": "Amount (FCFA)",
+                    "amountPlaceholder": "Enter amount",
+                    "commentLabel": "Comment (optional)",
+                    "commentPlaceholder": "Add a comment",
+                    "cancel": "Cancel",
+                    "submit": "Add Payment",
+                    "success": "Payment added successfully",
+                    "error": "An error occurred while adding the payment",
+                    "monthAlreadyPaid": "This month is already paid",
+                    "amountRequired": "Amount is required",
+                    "monthRequired": "Month is required",
+                    "monthNotInSchoolYear": "Month is outside current school year"
+                }
+            },
             "inputs": {
                 "login": {
                     "identifier": {

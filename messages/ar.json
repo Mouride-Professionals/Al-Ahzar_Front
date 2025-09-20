@@ -233,6 +233,7 @@
                 "searchPlaceholder": "ابحث عن طالب",
                 "filterLabel": "الطلاب غير المسجلين",
                 "validateMonthlyPayment": "تأكيد الدفع الشهري",
+                "addPayment": "اضافة دفعة",
                 "socialStatus": "الحالة الاجتماعية",
                 "bio": "السيرة الذاتية",
                 "paymentStatus": "حالة الدفع",
@@ -506,6 +507,33 @@
             }
         },
         "forms": {
+            "student": {
+                "addPayment": {
+                    "title": "إضافة دفعة",
+                    "typeLabel": "نوع الدفع",
+                    "types": {
+                        "enrollment": "تسجيل",
+                        "monthly": "شهري",
+                        "exam": "اختبار",
+                        "blouse": "مئزر",
+                        "parentContribution": "مساهمة الوالدين",
+                        "other": "أخرى"
+                    },
+                    "monthLabel": "الشهر",
+                    "amountLabel": "المبلغ (FCFA)",
+                    "amountPlaceholder": "أدخل المبلغ",
+                    "commentLabel": "تعليق (اختياري)",
+                    "commentPlaceholder": "أضف تعليقًا",
+                    "cancel": "إلغاء",
+                    "submit": "إضافة الدفعة",
+                    "success": "تمت إضافة الدفعة بنجاح",
+                    "error": "حدث خطأ أثناء إضافة الدفعة",
+                    "monthAlreadyPaid": "تم دفع هذا الشهر بالفعل",
+                    "amountRequired": "المبلغ مطلوب",
+                    "monthRequired": "الشهر مطلوب",
+                    "monthNotInSchoolYear": "الشهر خارج السنة الدراسية الحالية"
+                }
+            },
             "inputs": {
                 "login": {
                     "identifier": {
