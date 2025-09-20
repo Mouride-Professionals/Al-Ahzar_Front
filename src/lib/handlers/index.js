@@ -1,5 +1,5 @@
 import { createExpense } from '@services/expense';
-import { persistPayment } from '@services/payment';
+import { cancelPayment, persistPayment } from '@services/payment';
 import {
   createClassroom,
   createSchool,
@@ -753,6 +753,55 @@ export const expenseCreationFormHandler = async ({
         err?.message || 'Erreur lors de la création de la dépense'
       );
     }
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+export const paymentCancellationHandler = async ({
+  paymentId,
+  cancellationReason,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  try {
+    const payload = {
+      data: {
+        status: 'cancelled',
+        cancellationReason: cancellationReason,
+        cancelledAt: new Date().toISOString(),
+      },
+    };
+console.log('paymentCancellationHandler', paymentId, payload, token);
+
+    await cancelPayment({ paymentId, payload, token });
+    hasSucceeded(true);
+  } catch (err) {
+    if (err?.data) {
+      const { data } = err?.data;
+      if (data?.message?.includes('not found')) {
+        setFieldError(
+          'cancellation',
+          forms.messages.payment.cancellation.errors.not_found
+        );
+        setSubmitting(false);
+        return;
+      }
+      if (data?.message?.includes('already cancelled')) {
+        setFieldError(
+          'cancellation',
+          forms.messages.payment.cancellation.errors.already_cancelled
+        );
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError(
+      'cancellation',
+      forms.messages.payment.cancellation.errors.problem
+    );
   } finally {
     setSubmitting(false);
   }

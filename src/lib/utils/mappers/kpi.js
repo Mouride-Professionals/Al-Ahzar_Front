@@ -3,7 +3,7 @@
 import { Badge } from '@chakra-ui/react';
 import { colors } from '@theme';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 // Filter function remains unchanged (locale-agnostic)
 export const reportingFilter = ({ data, needle }) => {
@@ -22,7 +22,7 @@ export const useTableColumns = () => {
   const STUDENTS_COLUMNS = [
     {
       name: t('students.columns.student'),
-      selector: (row) => `${ row.lastname }, ${ row.firstname } `,
+      selector: (row) => `${row.lastname}, ${row.firstname} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -36,7 +36,7 @@ export const useTableColumns = () => {
     },
     {
       name: t('students.columns.parent'),
-      selector: (row) => `${ row.parent_lastname }, ${ row.parent_firstname } `,
+      selector: (row) => `${row.parent_lastname}, ${row.parent_firstname} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -62,7 +62,9 @@ export const useTableColumns = () => {
       reorder: true,
       cell: ({ isCurrentMonthPaid }) => (
         <Badge
-          bgColor={isCurrentMonthPaid ? colors.secondary.soft : colors.red.light}
+          bgColor={
+            isCurrentMonthPaid ? colors.secondary.soft : colors.red.light
+          }
           color={
             isCurrentMonthPaid ? colors.secondary.regular : colors.red.regular
           }
@@ -71,7 +73,9 @@ export const useTableColumns = () => {
           px={3}
           borderRadius={50}
         >
-          {isCurrentMonthPaid ? t('students.columns.paid') : t('students.columns.not_paid')}
+          {isCurrentMonthPaid
+            ? t('students.columns.paid')
+            : t('students.columns.not_paid')}
         </Badge>
       ),
     },
@@ -99,7 +103,8 @@ export const useTableColumns = () => {
     },
     {
       name: t('payments.columns.type'),
-      selector: (row) => mapPaymentType[row.paymentType] || t('payments.columns.other'),
+      selector: (row) =>
+        mapPaymentType[row.paymentType] || t('payments.columns.other'),
       desc: true,
       sortable: true,
       reorder: true,
@@ -113,10 +118,44 @@ export const useTableColumns = () => {
     },
     {
       name: t('payments.columns.student'),
-      selector: (row) => `${ row.firstname } ${ row.lastname } `,
+      selector: (row) => `${row.firstname} ${row.lastname} `,
       desc: true,
       sortable: true,
       reorder: true,
+    },
+    {
+      name: t('payments.status'),
+      desc: true,
+      sortable: true,
+      reorder: true,
+      cell: (row) => (
+        <Badge
+          bgColor={
+            row.status === 'paid'
+              ? colors.secondary.soft
+              : row.status === 'cancelled'
+                ? colors.red.light
+                : colors.yellow.light
+          }
+          color={
+            row.status === 'paid'
+              ? colors.secondary.regular
+              : row.status === 'cancelled'
+                ? colors.red.regular
+                : colors.yellow.regular
+          }
+          variant={'subtle'}
+          py={1}
+          px={3}
+          borderRadius={50}
+        >
+          {row.status === 'paid'
+            ? t('payments.paid')
+            : row.status === 'cancelled'
+              ? t('payments.cancelled')
+              : t('payments.pending')}
+        </Badge>
+      ),
     },
   ];
 
@@ -134,7 +173,7 @@ export const useTableColumns = () => {
     },
     {
       name: t('expenses.columns.amount'),
-      selector: (row) => `${ row.amount } FCFA`,
+      selector: (row) => `${row.amount} FCFA`,
       sortable: true,
       id: 'amount',
     },
@@ -161,7 +200,7 @@ export const useTableColumns = () => {
   const SCHOOLS_COLUMNS = [
     {
       name: t('schools.columns.name'),
-      selector: (row) => `${ row.name } `,
+      selector: (row) => `${row.name} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -169,49 +208,49 @@ export const useTableColumns = () => {
     },
     {
       name: t('schools.columns.address'),
-      selector: (row) => `${ row.address } `,
+      selector: (row) => `${row.address} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schools.columns.phone'),
-      selector: (row) => `${ row.phone } `,
+      selector: (row) => `${row.phone} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schools.columns.email'),
-      selector: (row) => `${ row.email } `,
+      selector: (row) => `${row.email} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schools.columns.type'),
-      selector: (row) => `${ row.type } `,
+      selector: (row) => `${row.type} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schools.columns.ief'),
-      selector: (row) => `${ row.IEF } `,
+      selector: (row) => `${row.IEF} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schools.columns.director'),
-      selector: (row) => `${ row.responsibleName } `,
+      selector: (row) => `${row.responsibleName} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schools.columns.parent_school'),
-      selector: (row) => `${ row.parentSchool } `,
+      selector: (row) => `${row.parentSchool} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -221,56 +260,56 @@ export const useTableColumns = () => {
   const TEACHERS_COLUMNS = [
     {
       name: t('teachers.columns.full_name'),
-      selector: (row) => `${ row.lastname }, ${ row.firstname } `,
+      selector: (row) => `${row.lastname}, ${row.firstname} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.email'),
-      selector: (row) => `${ row.email } `,
+      selector: (row) => `${row.email} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.phone_number'),
-      selector: (row) => `${ row.phoneNumber } `,
+      selector: (row) => `${row.phoneNumber} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.address'),
-      selector: (row) => `${ row.address } `,
+      selector: (row) => `${row.address} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.school'),
-      selector: (row) => `${ row.school } `,
+      selector: (row) => `${row.school} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.language'),
-      selector: (row) => `${ row.language || t('teachers.columns.na') } `,
+      selector: (row) => `${row.language || t('teachers.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.contract_type'),
-      selector: (row) => `${ row.contractType || t('teachers.columns.na') } `,
+      selector: (row) => `${row.contractType || t('teachers.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('teachers.columns.level'),
-      selector: (row) => `${ row.level || t('teachers.columns.na') } `,
+      selector: (row) => `${row.level || t('teachers.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -280,42 +319,42 @@ export const useTableColumns = () => {
   const USER_COLUMNS = [
     {
       name: t('users.columns.last_name'),
-      selector: (row) => `${ row.lastname || t('users.columns.na') } `,
+      selector: (row) => `${row.lastname || t('users.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('users.columns.first_name'),
-      selector: (row) => `${ row.firstname || t('users.columns.na') } `,
+      selector: (row) => `${row.firstname || t('users.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('users.columns.email'),
-      selector: (row) => `${ row.email || t('users.columns.na') } `,
+      selector: (row) => `${row.email || t('users.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('users.columns.phone'),
-      selector: (row) => `${ row.phone || t('users.columns.na') } `,
+      selector: (row) => `${row.phone || t('users.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('users.columns.school'),
-      selector: (row) => `${ row.school?.name || t('users.columns.na') } `,
+      selector: (row) => `${row.school?.name || t('users.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('users.columns.role'),
-      selector: (row) => `${ row.role?.name || t('users.columns.na') } `,
+      selector: (row) => `${row.role?.name || t('users.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -325,28 +364,29 @@ export const useTableColumns = () => {
   const SCHOOL_YEAR_COLUMNS = [
     {
       name: t('schoolYears.columns.title'),
-      selector: (row) => `${ row.name || t('schoolYears.columns.na') } `,
+      selector: (row) => `${row.name || t('schoolYears.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schoolYears.columns.start_date'),
-      selector: (row) => `${ row.startDate || t('schoolYears.columns.na') } `,
+      selector: (row) => `${row.startDate || t('schoolYears.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schoolYears.columns.end_date'),
-      selector: (row) => `${ row.endDate || t('schoolYears.columns.na') } `,
+      selector: (row) => `${row.endDate || t('schoolYears.columns.na')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schoolYears.columns.status'),
-      selector: (row) => `${ row.isActive ? t('schoolYears.columns.active') : t('schoolYears.columns.inactive') } `,
+      selector: (row) =>
+        `${row.isActive ? t('schoolYears.columns.active') : t('schoolYears.columns.inactive')} `,
       desc: true,
       sortable: true,
       reorder: true,
@@ -354,14 +394,15 @@ export const useTableColumns = () => {
     {
       name: t('schoolYears.columns.state'),
       selector: (row) =>
-        `${ row.isCurrent ? t('schoolYears.columns.current') : row.isEnded ? t('schoolYears.columns.ended') : t('schoolYears.columns.upcoming') } `,
+        `${row.isCurrent ? t('schoolYears.columns.current') : row.isEnded ? t('schoolYears.columns.ended') : t('schoolYears.columns.upcoming')} `,
       desc: true,
       sortable: true,
       reorder: true,
     },
     {
       name: t('schoolYears.columns.description'),
-      selector: (row) => `${ row.description || t('schoolYears.columns.no_description') } `,
+      selector: (row) =>
+        `${row.description || t('schoolYears.columns.no_description')} `,
       desc: true,
       sortable: true,
       reorder: true,

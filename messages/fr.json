@@ -430,7 +430,11 @@
                 "status": "Statut",
                 "paid": "Payé",
                 "pending": "En attente",
+                "cancelled": "Annulé",
                 "student": "Élève",
+                "cancelPayment": "Annuler le paiement",
+                "cancelledAt": "Annulé le",
+                "cancellationReason": "Raison de l'annulation",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -486,6 +490,19 @@
                 "expenses_by_category": "Dépenses par catégorie",
                 "expenses_history": "Historique des dépenses",
                 "payments_history": "Historique des paiements"
+            }
+        },
+        "modals": {
+            "paymentCancellation": {
+                "title": "Annuler le paiement",
+                "paymentDetails": "Détails du paiement",
+                "warning": "⚠️ Cette action ne peut pas être annulée. Le paiement sera marqué comme annulé et restera dans le système pour les enregistrements historiques.",
+                "reasonLabel": "Raison de l'annulation",
+                "reasonPlaceholder": "Veuillez fournir une raison pour l'annulation de ce paiement (ex : entrée dupliquée, montant incorrect, retrait de l'élève, etc.)",
+                "reasonRequired": "La raison de l'annulation est requise",
+                "cancel": "Annuler",
+                "confirm": "Annuler le paiement",
+                "cancelling": "Annulation en cours..."
             }
         },
         "forms": {
@@ -1277,13 +1294,20 @@
                     },
                     "errors": {
                         "already_exists": "Cet élève est déjà inscrit",
-                        "problem": "Une erreur s’est produite lors de l’inscription"
+                        "problem": "Une erreur s'est produite lors de l'inscription"
                     }
                 },
                 "payment": {
                     "errors": {
                         "already_exists": "Ce paiement a déjà été enregistré",
-                        "problem": "Une erreur s’est produite lors du traitement du paiement"
+                        "problem": "Une erreur s'est produite lors du traitement du paiement"
+                    },
+                    "cancellation": {
+                        "errors": {
+                            "not_found": "Paiement non trouvé",
+                            "already_cancelled": "Ce paiement a déjà été annulé",
+                            "problem": "Une erreur s'est produite lors de l'annulation du paiement"
+                        }
                     }
                 },
                 "school": {

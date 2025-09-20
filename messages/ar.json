@@ -430,7 +430,11 @@
                 "status": "الحالة",
                 "paid": "مدفوع",
                 "pending": "قيد الانتظار",
+                "cancelled": "ملغى",
                 "student": "الطالب",
+                "cancelPayment": "إلغاء الدفعة",
+                "cancelledAt": "تاريخ الإلغاء",
+                "cancellationReason": "سبب الإلغاء",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -486,6 +490,19 @@
                 "expenses_by_category": "توزيع المصروفات حسب الفئة",
                 "expenses_history": "سجل المصروفات",
                 "payments_history": "سجل الدفعات"
+            }
+        },
+        "modals": {
+            "paymentCancellation": {
+                "title": "إلغاء الدفعة",
+                "paymentDetails": "تفاصيل الدفعة",
+                "warning": "⚠️ لا يمكن التراجع عن هذا الإجراء. ستُوضع علامة إلغاء على الدفعة وستبقى في النظام للسجلات التاريخية.",
+                "reasonLabel": "سبب الإلغاء",
+                "reasonPlaceholder": "يرجى تقديم سبب لإلغاء هذه الدفعة (مثل: إدخال مكرر، مبلغ خاطئ، انسحاب الطالب، إلخ)",
+                "reasonRequired": "سبب الإلغاء مطلوب",
+                "cancel": "إلغاء",
+                "confirm": "إلغاء الدفعة",
+                "cancelling": "جاري الإلغاء..."
             }
         },
         "forms": {
@@ -1282,6 +1299,13 @@
                     "errors": {
                         "already_exists": "تم تسجيل هذا الدفع مسبقًا",
                         "problem": "حدث خطأ أثناء معالجة الدفع"
+                    },
+                    "cancellation": {
+                        "errors": {
+                            "not_found": "الدفعة غير موجودة",
+                            "already_cancelled": "تم إلغاء هذه الدفعة بالفعل",
+                            "problem": "حدث خطأ أثناء إلغاء الدفعة"
+                        }
                     }
                 },
                 "school": {

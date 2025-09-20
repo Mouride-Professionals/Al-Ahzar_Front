@@ -105,18 +105,7 @@ export const getServerSideProps = async ({ req, params }) => {
     uri: routes.api_route.alazhar.get.students.detail.replace('%id', params.id),
     user_token: token,
   });
-  console.log('enrollment', enrollment);
-
-  console.log(
-    'role',
-    role,
-    'schoolYear',
-    schoolYear,
-    'enrollment',
-    enrollment?.data,
-    'classes',
-    classes?.data
-  );
+ 
 
   return {
     props: {

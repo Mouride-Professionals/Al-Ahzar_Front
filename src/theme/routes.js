@@ -1,7 +1,5 @@
-
 export const name = 'Theming Routes File';
 export const themeRoutes = {
-
   page_route: {
     initial: '/',
     auth: {
@@ -22,7 +20,6 @@ export const themeRoutes = {
         students: {
           initial: '/dashboard/cashier/students',
           confirm: '/dashboard/cashier/students/confirm/registration/{student}',
-
         },
         finance: {
           initial: '/dashboard/cashier/finance',
@@ -77,13 +74,11 @@ export const themeRoutes = {
           detail: '/dashboard/direction/school_years/%id',
           create: '/dashboard/direction/school_years/create',
           edit: '/dashboard/direction/school_years/%id/edit',
-
         },
         finance: {
           initial: '/dashboard/direction/finance',
           // detail: '/dashboard/cashier/classes/%id',
         },
-
       },
     },
   },
@@ -132,13 +127,17 @@ export const themeRoutes = {
         },
         finance: {
           all: '/payments?filters[enrollment][schoolYear][id][$eq]=%activeSchoolYear&filters[enrollment][class][school][id][$eq]=%schoolId&sort=createdAt:desc&populate=enrollment.student,payment_detail',
-          stats: '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
-          statsWithoutSchoolId: '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
+          stats:
+            '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
+          statsWithoutSchoolId:
+            '/payments/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
         },
         expenses: {
           all: '/expenses?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId&sort=createdAt:desc&populate=school,schoolYear',
-          stats: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
-          statsWithoutSchoolId: '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
+          stats:
+            '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[school][id][$eq]=%schoolId',
+          statsWithoutSchoolId:
+            '/expenses/stats?filters[schoolYear][id][$eq]=%activeSchoolYear',
         },
 
         me: '/users/me?populate=*',
@@ -147,7 +146,7 @@ export const themeRoutes = {
           template: '/students/bulk/template',
           validate: '/students/bulk/validate',
           import: '/students/bulk/import',
-          stats: '/students/bulk/stats'
+          stats: '/students/bulk/stats',
         },
       },
       update: {
@@ -157,8 +156,7 @@ export const themeRoutes = {
         teacher: '/teachers/%id',
         school_year: '/school-years/%id',
         user: '/users/%id',
-
-
+        payment: '/payments/%id',
       },
     },
   },
