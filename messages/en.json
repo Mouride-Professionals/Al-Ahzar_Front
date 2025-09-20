@@ -138,6 +138,7 @@
             "student": {
                 "confirmation": "Confirm Enrollment",
                 "registration": "Enrollment Form",
+                "modification": "Update Student Information",
                 "another_student": "Enroll Another Student",
                 "info": {
                     "success": "Enrollment Started!",
@@ -238,6 +239,7 @@
                 "validateEnrollment": "Confirm Enrollment",
                 "waitingForFinance": "Awaiting Finance",
                 "reEnroll": "Re-enroll",
+                "updateStudent": "Update Student",
                 "enrollNewStudent": "Enroll New Student",
                 "tutor": "Guardian",
                 "phone": "Phone",

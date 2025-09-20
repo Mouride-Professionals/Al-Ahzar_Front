@@ -136,8 +136,9 @@
                 "students": "{number} élèves"
             },
             "student": {
-                "confirmation": "Confirmer l’inscription",
-                "registration": "Formulaire d’inscription",
+                "confirmation": "Confirmer l'inscription",
+                "registration": "Formulaire d'inscription",
+                "modification": "Modifier les informations de l'étudiant",
                 "another_student": "Inscrire un autre élève",
                 "info": {
                     "success": "Inscription démarrée !",
@@ -238,6 +239,7 @@
                 "validateEnrollment": "Confirmer l’inscription",
                 "waitingForFinance": "En attente du service financier",
                 "reEnroll": "Réinscrire",
+                "updateStudent": "Modifier l'étudiant",
                 "enrollNewStudent": "Inscrire un nouvel élève",
                 "tutor": "Tuteur",
                 "phone": "Téléphone",

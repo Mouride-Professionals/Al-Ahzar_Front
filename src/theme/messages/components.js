@@ -1,4 +1,3 @@
-
 module.exports = {
   name: 'Components Messages',
   themeComponentsMessages: {
@@ -29,10 +28,11 @@ module.exports = {
       change_password: {
         heading: {
           title: 'Changement de mot de passe',
-          subtitle: 'Entrez votre mot de passe actuel et le nouveau mot de passe',
+          subtitle:
+            'Entrez votre mot de passe actuel et le nouveau mot de passe',
         },
         specifics: {
-          forgotten_password: 'Vous voulez revenir à la page d\'accueil',
+          forgotten_password: "Vous voulez revenir à la page d'accueil",
           highlight: 'Annuler',
         },
       },
@@ -81,7 +81,8 @@ module.exports = {
         another_school: 'Créer un autre établissement',
         info: {
           success: 'Création reussie',
-          message: "Vous avez créé l'établissement.\n Vous pouvez maintenant créer des classes et inscrire des élèves.",
+          message:
+            "Vous avez créé l'établissement.\n Vous pouvez maintenant créer des classes et inscrire des élèves.",
           publishing:
             " Vous avez créé l'établissement .\n Vous pouvez maintenant créer des classes et inscrire des élèves.",
           classList: 'Liste des classes',
@@ -96,7 +97,7 @@ module.exports = {
           message: 'Vous avez créé un nouvel utilisateur.',
           publishing:
             "Vous avez publié l'utilisateur %firstname %lastname. Vous pouvez maintenant lui affecter un rôle.",
-        }
+        },
       },
       teacher: {
         affectation: "Affectation d'enseignant",
@@ -115,8 +116,7 @@ module.exports = {
         edit: 'Formulaire de modification',
         info: {
           success: 'Création reussie',
-          message:
-            "Vous avez créé l'année scolaire.",
+          message: "Vous avez créé l'année scolaire.",
         },
       },
     },
@@ -127,6 +127,7 @@ module.exports = {
       students: {
         initial: 'Elèves',
         create: 'Inscrire un élève',
+        edit: "Modifier l'élève",
       },
       users: 'Administration',
       teachers: 'Enseignants',

@@ -1,25 +1,34 @@
 import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
-import { RegistrationCard } from '@components/common/cards';
 import { CreateStudentForm } from '@components/forms/student/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, routes } from '@theme';
-import Cookies from 'cookies';
+import { colors, messages, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
-import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
-export default function Create({ classes, role, token, schoolYear }) {
+const {
+  components: {
+    cards: {
+      student: { modification },
+    },
+  },
+} = messages;
+
+export default function Edit({ student, classes, role, token, schoolYear }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
+
   const router = useRouter();
-  const t = useTranslations();
+  // Redirect back to dashboard if successfully edited
+  if (hasSucceeded) {
+    router.back();
+  }
 
   return (
     <DashboardLayout
-      title={t('pages.dashboard.students.title')}
-      currentPage={t('components.menu.students.create')}
+      title={messages.pages.dashboard.students.title}
+      currentPage={messages.components.menu.students.edit}
       role={role}
       token={token}
     >
@@ -43,9 +52,7 @@ export default function Create({ classes, role, token, schoolYear }) {
         >
           <BsArrowLeftShort size={40} />
           <Text fontSize={20} fontWeight={'700'}>
-            {hasSucceeded
-              ? t('components.cards.student.confirmation')
-              : t('components.cards.student.registration')}
+            {modification}
           </Text>
         </HStack>
         <Stack
@@ -56,57 +63,68 @@ export default function Create({ classes, role, token, schoolYear }) {
           w={'100%'}
           minH={'35rem'}
         >
-          {hasSucceeded ? (
-            <RegistrationCard
-              cta={{
-                message: t('components.cards.student.another_student'),
-                quickAction: () => setHasSucceeded(false),
-              }}
-              title={t('components.cards.student.info.success')}
-              message={t('components.cards.student.info.message')}
-            />
-          ) : (
-            <CreateStudentForm
-              {...{
-                classes,
-                setHasSucceeded,
-                token,
-                schoolYear,
-              }}
-            />
-          )}
+          <CreateStudentForm
+            {...{
+              classes,
+              token,
+              setHasSucceeded,
+              schoolYear,
+              initialData: student, // Pass preloaded student data
+              isEdit: true, // Indicate edit mode
+            }}
+          />
         </Stack>
       </VStack>
     </DashboardLayout>
   );
 }
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ req, params }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
-  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
+
+  // Get current school year from cookies or default
+  const schoolYear = req.cookies.selectedSchoolYear || null;
 
   const { role, school } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
 
+  // Fetch classes data
   const classes = await serverFetch({
     uri: routes.api_route.alazhar.get.classes.all
       .replace('%schoolId', school?.id)
-      .replace('%activeSchoolYear', activeSchoolYear),
+      .replace('%activeSchoolYear', schoolYear),
     user_token: token,
   });
 
-  console.log('classes in create', classes);
+  // Fetch enrollment data by ID (which includes student data)
+  const enrollment = await serverFetch({
+    uri: routes.api_route.alazhar.get.students.detail.replace('%id', params.id),
+    user_token: token,
+  });
+  console.log('enrollment', enrollment);
+
+  console.log(
+    'role',
+    role,
+    'schoolYear',
+    schoolYear,
+    'enrollment',
+    enrollment?.data,
+    'classes',
+    classes?.data
+  );
 
   return {
     props: {
-      role,
+      role: role,
       token: token,
-      classes,
-      schoolYear: activeSchoolYear,
+      student: enrollment?.data || null, // Pass enrollment data as 'student' prop
+      classes: classes || null,
+      schoolYear,
     },
   };
 };

@@ -405,6 +405,24 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                     </Button>
                   </WrapItem>
                 )}
+
+              {ACCESS_ROUTES.isSurveillant(role.name) && (
+                <WrapItem w={{ base: '100%', sm: 'auto' }}>
+                  <Button
+                    onClick={() =>
+                      router.push(
+                        `/dashboard/surveillant/students/${enrollment_id}/edit`
+                      )
+                    }
+                    colorScheme="blue"
+                    variant="outline"
+                    size={{ base: 'sm', md: 'md' }}
+                    w={{ base: '100%', sm: 'auto' }}
+                  >
+                    {t('updateStudent')}
+                  </Button>
+                </WrapItem>
+              )}
             </Wrap>
 
             {/* Modals */}

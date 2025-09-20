@@ -7,7 +7,14 @@ import {
   updateSchool,
 } from '@services/school';
 import { createSchoolYear, updateSchoolYear } from '@services/school_year';
-import { confirmStudent, createPayment, createStudent, enrollStudent } from '@services/student';
+import {
+  confirmStudent,
+  createPayment,
+  createStudent,
+  enrollStudent,
+  updateEnrollment,
+  updateStudent,
+} from '@services/student';
 import { createTeacher, updateTeacher } from '@services/teacher';
 import { createUser, updateUser } from '@services/user';
 import { forms } from '@theme';
@@ -19,7 +26,7 @@ import {
   mapPaymentBody,
   mapStudentConfirmationBody,
   mapStudentCreationBody,
-  mapStudentEnrollmentBody
+  mapStudentEnrollmentBody,
 } from '@utils/mappers/student';
 import { mapTeacherCreationBody } from '@utils/mappers/teacher';
 import { mapUserCreationBody } from '@utils/mappers/user';
@@ -49,21 +56,17 @@ export const loginFormHandler = async ({
       redirect: false,
     });
 
-
     if (!res || res.error) {
       setSubmitting(false);
       setFieldError(
         'authentication',
         forms.messages.login.errors.not_authorized
       );
-      
+
       return { error: res?.error || 'Authentication failed' };
     }
 
-
     return { success: true, callbackUrl: redirectOnSuccess };
-
-
   } catch (error) {
     console.error('Login error:', error);
     setSubmitting(false);
@@ -72,10 +75,8 @@ export const loginFormHandler = async ({
       'An unexpected error occurred. Please try again.'
     );
     return { error: error.message };
-
   }
 };
-
 
 export const registrationFormHandler = async ({
   data,
@@ -118,7 +119,6 @@ export const registrationFormHandler = async ({
   }
 };
 
-
 export const confirmEnrollmentFormHandler = async ({
   enrollment,
   student,
@@ -129,14 +129,13 @@ export const confirmEnrollmentFormHandler = async ({
   setHasSucceeded,
 }) => {
   try {
-
     // Map the primary enrollment payment data
     const enrollmentPaymentPayload = mapPaymentBody({
       data: {
         amount: data.enrollmentFee,
         enrollmentId: enrollment,
         paymentType: 'enrollment',
-      }
+      },
     });
 
     // Create the primary enrollment payment
@@ -150,7 +149,7 @@ export const confirmEnrollmentFormHandler = async ({
       monthlyFee: 'monthly',
       blouseFee: 'blouse',
       examFee: 'exam',
-      parentContributionFee: 'parentContribution'
+      parentContributionFee: 'parentContribution',
     };
 
     // For each additional fee, create a separate payment record if a fee is provided.
@@ -163,7 +162,7 @@ export const confirmEnrollmentFormHandler = async ({
             enrollmentId: enrollment,
             paymentType: paymentType,
             monthOf: paymentType === 'monthly' ? data.monthOf : null,
-          }
+          },
         });
         await createPayment({
           payload: extraPaymentPayload,
@@ -177,10 +176,7 @@ export const confirmEnrollmentFormHandler = async ({
     if (err?.data) {
       const { data } = err?.data;
       if (data?.message?.includes('exists')) {
-        setFieldError(
-          'payment',
-          forms.messages.payment.errors.already_exists
-        );
+        setFieldError('payment', forms.messages.payment.errors.already_exists);
         setSubmitting(false);
         return;
       }
@@ -198,7 +194,6 @@ export const confirmStudentFormHandler = async ({
   token,
   setHasSucceeded,
 }) => {
-
   const payload = mapStudentConfirmationBody({ data });
 
   confirmStudent({ payload, token, student })
@@ -226,7 +221,6 @@ export const confirmStudentFormHandler = async ({
 };
 // handle monthly payment
 
-
 export const monthlyPaymentFormHandler = async ({
   data,
   setSubmitting,
@@ -235,7 +229,9 @@ export const monthlyPaymentFormHandler = async ({
   setHasSucceeded,
 }) => {
   try {
-    const payload = mapPaymentBody({ data: { ...data, paymentType: 'monthly' } });
+    const payload = mapPaymentBody({
+      data: { ...data, paymentType: 'monthly' },
+    });
 
     await createPayment({ payload, token });
     setHasSucceeded(true);
@@ -243,10 +239,7 @@ export const monthlyPaymentFormHandler = async ({
     if (err?.data) {
       const { data } = err?.data;
       if (data?.message?.includes('exists')) {
-        setFieldError(
-          'payment',
-          forms.messages.payment.errors.already_exists
-        );
+        setFieldError('payment', forms.messages.payment.errors.already_exists);
         setSubmitting(false);
         return;
       }
@@ -299,7 +292,6 @@ export const createClassroomFormHandler = async ({
   action,
 }) => {
   const { level, letter } = data;
-
 
   getSchool({
     addOns: `filters[$and][0][id][$eq]=${school}&filters[$and][1][classes][schoolYear][id][$eq]=${schoolYear}&filters[$and][1][classes][level][$eq]=${level}&filters[$and][1][classes][letter][$eq]=${letter}&populate=classes`,
@@ -356,8 +348,6 @@ export const schoolCreationFormHandler = async ({
     payload = formData;
   }
 
-
-
   createSchool({ payload, token })
     .then(() => {
       setSubmitting(false);
@@ -399,7 +389,7 @@ export const schoolUpdateFormHandler = async ({
   if (bannerFile) {
     const formData = new FormData();
     formData.append('data', JSON.stringify(payload));
-    formData.append("files.banner", bannerFile, bannerFile.name);
+    formData.append('files.banner', bannerFile, bannerFile.name);
     payload = formData;
   }
 
@@ -450,7 +440,6 @@ export const userCreationFormHandler = async ({
     // Attempt to create the user and update its role
     const user = await createUser({ payload, token });
 
-
     const role = data.role;
     await updateUser({
       user: user.user.id,
@@ -458,13 +447,12 @@ export const userCreationFormHandler = async ({
         role: role,
       },
       token,
-
-    })
+    });
 
     setSubmitting(false);
     hasSucceeded(true);
   } catch (err) {
-    console.error("Error creating user:", err);
+    console.error('Error creating user:', err);
 
     // Handle specific error cases
     if (err?.data) {
@@ -540,7 +528,6 @@ export const teacherRecruitmentFormHandler = async ({
 }) => {
   const payload = mapTeacherCreationBody({ data });
 
-
   createTeacher({ payload, token })
     .then(() => {
       hasSucceeded(true);
@@ -577,7 +564,6 @@ export const teacherUpdateFormHandler = async ({
 }) => {
   const payload = mapTeacherCreationBody({ data });
 
-
   updateTeacher({ teacher, payload, token })
     .then(() => {
       hasSucceeded(true);
@@ -604,6 +590,70 @@ export const teacherUpdateFormHandler = async ({
   setSubmitting(false);
 };
 
+export const studentUpdateFormHandler = async ({
+  student,
+  enrollment, // Add enrollment ID parameter for updating enrollment if needed
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  try {
+    const studentPayload = mapStudentCreationBody({ data });
+
+    // Update student information
+    await updateStudent({ student, payload: studentPayload, token });
+
+    // Check if enrollment-related data has changed and update if needed
+    if (enrollment) {
+      const enrollmentData = {};
+      let hasEnrollmentChanges = false;
+
+      // Check if class has changed (class_letter contains the class ID)
+      if (data.class_letter && studentPayload.data.classe) {
+        enrollmentData.class = studentPayload.data.classe;
+        hasEnrollmentChanges = true;
+      }
+
+      // Check if social status has changed
+      if (data.socialCategory && studentPayload.data.socialStatus) {
+        enrollmentData.socialStatus = studentPayload.data.socialStatus;
+        hasEnrollmentChanges = true;
+      }
+
+      // Update enrollment if there are changes
+      if (hasEnrollmentChanges) {
+        const enrollmentPayload = { data: enrollmentData };
+        await updateEnrollment({
+          enrollment,
+          payload: enrollmentPayload,
+          token,
+        });
+      }
+    }
+
+    hasSucceeded(true);
+  } catch (err) {
+    if (err?.data) {
+      const { data } = err?.data;
+      if (data?.message?.includes('exists')) {
+        setFieldError(
+          'registration',
+          forms.messages.student.registration.errors.already_exists
+        );
+        setSubmitting(false);
+        return;
+      }
+    }
+    setFieldError(
+      'registration',
+      forms.messages.student.registration.errors.problem
+    );
+  } finally {
+    setSubmitting(false);
+  }
+};
 
 export const schoolYearCreationFormHandler = async ({
   data,
@@ -684,23 +734,26 @@ export const expenseCreationFormHandler = async ({
   hasSucceeded,
 }) => {
   try {
-
     const payload = mapExpenseCreationBody({ data });
 
     await createExpense({ token, payload });
     hasSucceeded(true);
   } catch (err) {
-    console.error("Error creating expense:", err);
+    console.error('Error creating expense:', err);
     if (err?.data) {
       const { data: errorData } = err.data;
       // If errorData.message exists, use it, else fall back to a standard error message.
-      setFieldError("expense creation", errorData?.message || "Erreur lors de la création de la dépense");
+      setFieldError(
+        'expense creation',
+        errorData?.message || 'Erreur lors de la création de la dépense'
+      );
     } else {
-      setFieldError("general", err?.message || "Erreur lors de la création de la dépense");
+      setFieldError(
+        'general',
+        err?.message || 'Erreur lors de la création de la dépense'
+      );
     }
   } finally {
     setSubmitting(false);
   }
 };
-
-

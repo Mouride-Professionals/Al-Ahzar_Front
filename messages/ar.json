@@ -138,6 +138,7 @@
             "student": {
                 "confirmation": "تأكيد التسجيل",
                 "registration": "نموذج التسجيل",
+                "modification": "تحديث معلومات الطالب",
                 "another_student": "تسجيل طالب جديد",
                 "info": {
                     "success": "بدأ التسجيل!",
@@ -238,6 +239,7 @@
                 "validateEnrollment": "تأكيد التسجيل",
                 "waitingForFinance": "في انتظار القسم المالي",
                 "reEnroll": "إعادة التسجيل",
+                "updateStudent": "تحديث الطالب",
                 "enrollNewStudent": "تسجيل طالب جديد",
                 "tutor": "ولي الأمر",
                 "phone": "رقم الهاتف",

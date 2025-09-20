@@ -152,6 +152,7 @@ export const themeRoutes = {
       },
       update: {
         student: '/students/%id',
+        enrollment: '/enrollments/%id',
         school: '/schools/%id',
         teacher: '/teachers/%id',
         school_year: '/school-years/%id',
