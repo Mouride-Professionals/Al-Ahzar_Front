@@ -138,6 +138,7 @@
             "student": {
                 "confirmation": "Confirm Enrollment",
                 "registration": "Enrollment Form",
+                "modification": "Update Student Information",
                 "another_student": "Enroll Another Student",
                 "info": {
                     "success": "Enrollment Started!",
@@ -232,12 +233,14 @@
                 "searchPlaceholder": "Search for a student",
                 "filterLabel": "Unenrolled Students",
                 "validateMonthlyPayment": "Confirm Monthly Payment",
+                "addPayment": "Add Payment",
                 "socialStatus": "Social Status",
                 "bio": "Profile",
                 "paymentStatus": "Payment Status",
                 "validateEnrollment": "Confirm Enrollment",
                 "waitingForFinance": "Awaiting Finance",
                 "reEnroll": "Re-enroll",
+                "updateStudent": "Update Student",
                 "enrollNewStudent": "Enroll New Student",
                 "tutor": "Guardian",
                 "phone": "Phone",
@@ -428,7 +431,11 @@
                 "status": "Status",
                 "paid": "Paid",
                 "pending": "Pending",
+                "cancelled": "Cancelled",
                 "student": "Student",
+                "cancelPayment": "Cancel Payment",
+                "cancelledAt": "Cancelled At",
+                "cancellationReason": "Cancellation Reason",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -439,6 +446,7 @@
                     "type": "Type",
                     "monthly": "Monthly",
                     "student": "Student",
+                    "status": "Status",
                     "other": "Other"
                 }
             },
@@ -486,7 +494,47 @@
                 "payments_history": "Payments History"
             }
         },
+        "modals": {
+            "paymentCancellation": {
+                "title": "Cancel Payment",
+                "paymentDetails": "Payment Details",
+                "warning": "⚠️ This action cannot be undone. The payment will be marked as cancelled and will remain in the system for historical records.",
+                "reasonLabel": "Cancellation Reason",
+                "reasonPlaceholder": "Please provide a reason for cancelling this payment (e.g., duplicate entry, incorrect amount, student withdrawal, etc.)",
+                "reasonRequired": "Cancellation reason is required",
+                "cancel": "Cancel",
+                "confirm": "Cancel Payment",
+                "cancelling": "Cancelling..."
+            }
+        },
         "forms": {
+            "student": {
+                "addPayment": {
+                    "title": "Add Payment",
+                    "typeLabel": "Payment Type",
+                    "types": {
+                        "enrollment": "Enrollment",
+                        "monthly": "Monthly",
+                        "exam": "Exam",
+                        "blouse": "Blouse",
+                        "parentContribution": "Parent Contribution",
+                        "other": "Other"
+                    },
+                    "monthLabel": "Month",
+                    "amountLabel": "Amount (FCFA)",
+                    "amountPlaceholder": "Enter amount",
+                    "commentLabel": "Comment (optional)",
+                    "commentPlaceholder": "Add a comment",
+                    "cancel": "Cancel",
+                    "submit": "Add Payment",
+                    "success": "Payment added successfully",
+                    "error": "An error occurred while adding the payment",
+                    "monthAlreadyPaid": "This month is already paid",
+                    "amountRequired": "Amount is required",
+                    "monthRequired": "Month is required",
+                    "monthNotInSchoolYear": "Month is outside current school year"
+                }
+            },
             "inputs": {
                 "login": {
                     "identifier": {
@@ -1282,6 +1330,14 @@
                     "errors": {
                         "already_exists": "This payment has already been recorded",
                         "problem": "An error occurred while processing the payment"
+                    },
+                    "cancellation": {
+                        "errors": {
+                            "not_found": "Payment not found",
+                            "already_cancelled": "This payment has already been cancelled",
+                            "problem": "An error occurred while cancelling the payment"
+                        },
+                        "success": "Payment cancelled successfully"
                     }
                 },
                 "school": {

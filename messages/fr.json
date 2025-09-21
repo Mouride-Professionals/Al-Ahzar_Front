@@ -136,8 +136,9 @@
                 "students": "{number} élèves"
             },
             "student": {
-                "confirmation": "Confirmer l’inscription",
-                "registration": "Formulaire d’inscription",
+                "confirmation": "Confirmer l'inscription",
+                "registration": "Formulaire d'inscription",
+                "modification": "Modifier les informations de l'étudiant",
                 "another_student": "Inscrire un autre élève",
                 "info": {
                     "success": "Inscription démarrée !",
@@ -232,12 +233,14 @@
                 "searchPlaceholder": "Rechercher un élève",
                 "filterLabel": "Élèves non inscrits",
                 "validateMonthlyPayment": "Confirmer le paiement mensuel",
+                "addPayment": "Ajouter un paiement",
                 "socialStatus": "Statut social",
                 "bio": "Profil",
                 "paymentStatus": "Statut de paiement",
                 "validateEnrollment": "Confirmer l’inscription",
                 "waitingForFinance": "En attente du service financier",
                 "reEnroll": "Réinscrire",
+                "updateStudent": "Modifier l'étudiant",
                 "enrollNewStudent": "Inscrire un nouvel élève",
                 "tutor": "Tuteur",
                 "phone": "Téléphone",
@@ -428,7 +431,11 @@
                 "status": "Statut",
                 "paid": "Payé",
                 "pending": "En attente",
+                "cancelled": "Annulé",
                 "student": "Élève",
+                "cancelPayment": "Annuler le paiement",
+                "cancelledAt": "Annulé le",
+                "cancellationReason": "Raison de l'annulation",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -439,6 +446,7 @@
                     "type": "Type",
                     "monthly": "Mensuel",
                     "student": "Élève",
+                    "status": "Statut",
                     "other": "Autre"
                 }
             },
@@ -486,7 +494,47 @@
                 "payments_history": "Historique des paiements"
             }
         },
+        "modals": {
+            "paymentCancellation": {
+                "title": "Annuler le paiement",
+                "paymentDetails": "Détails du paiement",
+                "warning": "⚠️ Cette action ne peut pas être annulée. Le paiement sera marqué comme annulé et restera dans le système pour les enregistrements historiques.",
+                "reasonLabel": "Raison de l'annulation",
+                "reasonPlaceholder": "Veuillez fournir une raison pour l'annulation de ce paiement (ex : entrée dupliquée, montant incorrect, retrait de l'élève, etc.)",
+                "reasonRequired": "La raison de l'annulation est requise",
+                "cancel": "Annuler",
+                "confirm": "Annuler le paiement",
+                "cancelling": "Annulation en cours..."
+            }
+        },
         "forms": {
+            "student": {
+                "addPayment": {
+                    "title": "Ajouter un paiement",
+                    "typeLabel": "Type de paiement",
+                    "types": {
+                        "enrollment": "Inscription",
+                        "monthly": "Mensuel",
+                        "exam": "Examen",
+                        "blouse": "Blouse",
+                        "parentContribution": "Contribution des parents",
+                        "other": "Autre"
+                    },
+                    "monthLabel": "Mois",
+                    "amountLabel": "Montant (FCFA)",
+                    "amountPlaceholder": "Entrez le montant",
+                    "commentLabel": "Commentaire (optionnel)",
+                    "commentPlaceholder": "Ajouter un commentaire",
+                    "cancel": "Annuler",
+                    "submit": "Ajouter le paiement",
+                    "success": "Paiement ajouté avec succès",
+                    "error": "Une erreur est survenue lors de l'ajout du paiement",
+                    "monthAlreadyPaid": "Ce mois est déjà payé",
+                    "amountRequired": "Le montant est requis",
+                    "monthRequired": "Le mois est requis",
+                    "monthNotInSchoolYear": "Le mois est en dehors de l'année scolaire actuelle"
+                }
+            },
             "inputs": {
                 "login": {
                     "identifier": {
@@ -1275,13 +1323,20 @@
                     },
                     "errors": {
                         "already_exists": "Cet élève est déjà inscrit",
-                        "problem": "Une erreur s’est produite lors de l’inscription"
+                        "problem": "Une erreur s'est produite lors de l'inscription"
                     }
                 },
                 "payment": {
                     "errors": {
                         "already_exists": "Ce paiement a déjà été enregistré",
-                        "problem": "Une erreur s’est produite lors du traitement du paiement"
+                        "problem": "Une erreur s'est produite lors du traitement du paiement"
+                    },
+                    "cancellation": {
+                        "errors": {
+                            "not_found": "Paiement non trouvé",
+                            "already_cancelled": "Ce paiement a déjà été annulé",
+                            "problem": "Une erreur s'est produite lors de l'annulation du paiement"
+                        }
                     }
                 },
                 "school": {

@@ -18,6 +18,7 @@ import { ExpenseDataSet } from '@components/common/reports/expense_data_set';
 import { PaymentDataSet } from '@components/common/reports/payment_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
+import { PaymentCancellationModal } from '@components/modals/paymentCancellationModal';
 import { colors, routes } from '@theme';
 import { generateExpectedMonths, getMonthName } from '@utils/date';
 import { mapExpensesDataTable } from '@utils/mappers/expense';
@@ -67,6 +68,10 @@ const FinanceDashboard = ({
   const [transactions, setTransactions] = useState([]);
   const [expenseTransactions, setExpenseTransactions] = useState([]);
   const [hasSucceeded, setHasSucceeded] = useState(false);
+
+  // Payment cancellation modal state
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
 
@@ -138,6 +143,33 @@ const FinanceDashboard = ({
     schoolYearData?.startDate,
     schoolYearData?.endDate,
   ]);
+
+  // Payment cancellation handler
+  const handleCancelPayment = (payment) => {
+    console.log('handleCancelPayment in FinanceDashboard', payment);
+
+    setSelectedPayment(payment);
+    setIsCancelModalOpen(true);
+  };
+
+  const handleCancelModalClose = () => {
+    setIsCancelModalOpen(false);
+    setSelectedPayment(null);
+  };
+
+  const handleCancelSuccess = () => {
+    // Refresh the transactions data
+    const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
+    setTransactions(payments);
+    handleCancelModalClose();
+
+    toast({
+      title: t('components.forms.messages.payment.cancellation.success'),
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
   if (loading) {
     return (
@@ -323,6 +355,7 @@ const FinanceDashboard = ({
                   data={transactions}
                   columns={PAYMENTS_COLUMNS}
                   token={token}
+                  onCancelPayment={handleCancelPayment}
                 />
               </Stack>
               <HStack w="100%">
@@ -460,6 +493,18 @@ const FinanceDashboard = ({
           </TabPanel>
         </TabPanels>
       </Tabs>
+
+      {/* Payment Cancellation Modal */}
+      {selectedPayment && (
+        <PaymentCancellationModal
+          isOpen={isCancelModalOpen}
+          onClose={handleCancelModalClose}
+          paymentId={selectedPayment}
+          token={token}
+          setHasSucceeded={handleCancelSuccess}
+          // setHasSucceeded={setHasSucceeded}
+        />
+      )}
     </DashboardLayout>
   );
 };

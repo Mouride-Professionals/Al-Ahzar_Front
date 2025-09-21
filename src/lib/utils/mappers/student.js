@@ -28,8 +28,6 @@ export const mapStudentEnrollmentBody = ({ data }) => {
       schoolYear: data.schoolYearId, // Assuming you have the school year ID in the data
       socialStatus: data.socialCategory,
       enrollmentType: data.enrollmentType,
-
-
     },
   };
 };
@@ -40,8 +38,6 @@ export const mapStudentConfirmationBody = ({ data }) => {
       type: data.studentType,
       socialStatus: data.socialCategory,
       registrationComment: data.comment,
-
-
     },
   };
 };
@@ -130,19 +126,21 @@ export const mapStudentsDataTable = ({ students }) => {
   }
 };
 export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
-  if (enrollments && Array.isArray(enrollments.data) && enrollments.data.length) {
+  if (
+    enrollments &&
+    Array.isArray(enrollments.data) &&
+    enrollments.data.length
+  ) {
     const { data } = enrollments;
 
     return data.map((enrollment) => {
-
       const {
         id,
         attributes: {
           enrollmentDate,
           schoolYear: {
-            data: {
-              id: schoolYearId,
-            } },
+            data: { id: schoolYearId },
+          },
           student: {
             data: {
               id: studentId,
@@ -162,7 +160,6 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
           },
           payments,
           class: classroom,
-
         },
       } = enrollment;
 
@@ -171,11 +168,8 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
       if (classroom?.data) {
         const {
           data: {
-            attributes: {
-              level,
-              letter
-            },
-          }
+            attributes: { level, letter },
+          },
         } = classroom;
         formattedLevel = `${level} ${letter}`;
       }
@@ -202,7 +196,11 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
         socialStatus,
         registrationComment,
         registered_at: createdAt.split('T')[0].split('-').reverse().join('/'),
-        enrollment_date: enrollmentDate.split('T')[0].split('-').reverse().join('/'),
+        enrollment_date: enrollmentDate
+          .split('T')[0]
+          .split('-')
+          .reverse()
+          .join('/'),
         enrollment_id: id,
         payments,
         isCurrentMonthPaid,
@@ -214,8 +212,8 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
 
 // Helper function to find the appropriate category for the level
 const gradeLevels = ['CI', 'CP', 'CE1', 'CE2', 'CM1', 'CM2'];
-const intermediateLevels = ['a 6eme', 'a 5eme', 'a 4eme', 'a 3eme'];
-const upperIntermediateLevels = ['a 2nd', 'a 1ere', 'Terminale'];
+const intermediateLevels = ['6ème', '5ème', '4ème', '3ème'];
+const upperIntermediateLevels = ['2nde', '1ère', 'Terminale'];
 
 const getCategory = (level) => {
   if (gradeLevels.includes(level)) {
@@ -317,6 +315,41 @@ export const mapClassesAndLetters = ({ classes }) => {
     sections: sectionsMap,
     cycles: cyclesMap,
   };
+};
+
+// Enhanced function to get filtered classes based on selected cycle
+export const getClassesByCycle = ({ classes, selectedCycle }) => {
+  if (!selectedCycle) return [];
+
+  const { data } = classes;
+  const filteredClasses = data
+    .filter((item) => item.attributes.cycle === selectedCycle)
+    .map((item) => item.attributes.level);
+
+  return Array.from(new Set(filteredClasses)).sort();
+};
+
+// Enhanced function to get filtered class letters based on selected cycle and level
+export const getClassLettersByCycleAndLevel = ({
+  classes,
+  selectedCycle,
+  selectedLevel,
+}) => {
+  if (!selectedCycle || !selectedLevel) return [];
+
+  const { data } = classes;
+  const filteredLetters = data
+    .filter(
+      (item) =>
+        item.attributes.cycle === selectedCycle &&
+        item.attributes.level === selectedLevel
+    )
+    .map((item) => ({
+      name: item.attributes.letter,
+      value: item.id,
+    }));
+
+  return filteredLetters;
 };
 
 export const mapToOptions = ({ data }) => {

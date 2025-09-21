@@ -30,6 +30,9 @@ export const mapPaymentsDataTable = ({ payments }) => {
           amount,
           isPaid,
           paymentType,
+          status,
+          cancelledAt,
+          cancellationReason,
           enrollment: {
             data: {
               id: enrollmentId,
@@ -64,6 +67,9 @@ export const mapPaymentsDataTable = ({ payments }) => {
         amount,
         isPaid,
         paymentType,
+        status,
+        cancelledAt,
+        cancellationReason,
         enrollmentId,
         studentId,
         firstname,

@@ -33,6 +33,10 @@ module.exports = {
       light: 'rgba(147, 52, 74, 0.2)',
       regular: '#93344a',
     },
+    yellow: {
+      light: 'rgba(255, 193, 7, 0.2)',
+      regular: '#ffc107',
+    },
     pink: {
       hot: '#f3385e',
       soft: 'rgba(243, 56, 94, 0.2)',

@@ -17,6 +17,7 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import { DataTableLayout } from '@components/layout/data_table';
 import { assignTeacher } from '@services/teacher';
 import { colors, routes } from '@theme';
 import { reportingFilter } from '@utils/mappers/kpi';
@@ -26,24 +27,20 @@ import { useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
-import { DataTableLayout } from '@components/layout/data_table';
 
 const ExpandedComponent = ({ data, schools, token }) => {
   const t = useTranslations('components.dataset.teachers');
   const router = useRouter();
-  const toast = useToast(
-    {
-      position: 'top-right',
-      duration: 3000,
-      isClosable: true,
-    }
-  );
+  const toast = useToast({
+    position: 'top-right',
+    duration: 3000,
+    isClosable: true,
+  });
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState('');
 
   const openDialog = () => setDialogOpen(true);
   const closeDialog = () => setDialogOpen(false);
-
 
   const handleAssign = async () => {
     if (!selectedSchool) {
@@ -51,7 +48,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
         title: 'No school selected',
         description: 'Please select a school to assign the teacher.',
         status: 'warning',
-      })
+      });
       return;
     }
     try {
@@ -64,9 +61,8 @@ const ExpandedComponent = ({ data, schools, token }) => {
       if (response) {
         toast({
           title: 'Assignment Successful',
-          description: `Teacher has been successfully assigned to ${schools.find(school => school.id === parseInt(selectedSchool))?.name}.`,
+          description: `Teacher has been successfully assigned to ${schools.find((school) => school.id === parseInt(selectedSchool))?.name}.`,
           status: 'success',
-
         });
         router.refresh();
       } else {
@@ -82,7 +78,7 @@ const ExpandedComponent = ({ data, schools, token }) => {
         title: 'Error Occurred',
         description: 'An error occurred while assigning the teacher.',
         status: 'error',
-      })
+      });
     }
     closeDialog();
   };
@@ -127,7 +123,6 @@ const ExpandedComponent = ({ data, schools, token }) => {
     label: school.name,
   }));
 
-
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
       <BoxZone>
@@ -135,9 +130,21 @@ const ExpandedComponent = ({ data, schools, token }) => {
           <CardBody>
             <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5}>
               {/* General Information */}
-              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
+              <GridItem
+                pr={2}
+                borderRight={1}
+                borderRightStyle={'solid'}
+                borderRightColor={colors.gray.thin}
+              >
                 <HStack spacing={5}>
-                  <VStack justifyContent={'center'} w={50} h={50} borderRadius={100} borderColor={colors.secondary.regular} borderWidth={1}>
+                  <VStack
+                    justifyContent={'center'}
+                    w={50}
+                    h={50}
+                    borderRadius={100}
+                    borderColor={colors.secondary.regular}
+                    borderWidth={1}
+                  >
                     <PiUserDuotone color={colors.secondary.regular} size={25} />
                   </VStack>
                   <Stack>
@@ -145,11 +152,14 @@ const ExpandedComponent = ({ data, schools, token }) => {
                       {firstname} {lastname}
                     </Text>
                     {gender && (
-                      <Text color={colors.secondary.regular}>{t('gender')}: {gender}</Text>
+                      <Text color={colors.secondary.regular}>
+                        {t('gender')}: {gender}
+                      </Text>
                     )}
                     {createdAt && (
                       <Text color={colors.secondary.regular}>
-                        {t('joinedOn')}: {new Date(createdAt).toLocaleDateString()}
+                        {t('joinedOn')}:{' '}
+                        {new Date(createdAt).toLocaleDateString()}
                       </Text>
                     )}
                   </Stack>
@@ -157,12 +167,37 @@ const ExpandedComponent = ({ data, schools, token }) => {
               </GridItem>
 
               {/* Contact Information */}
-              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
+              <GridItem
+                pr={2}
+                borderRight={1}
+                borderRightStyle={'solid'}
+                borderRightColor={colors.gray.thin}
+              >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>{t('contactDetails')}</Text>
-                  {email && <Text>{t('email')}: {email}</Text>}
-                  {phoneNumber && <Text>{t('phone')}: {phoneNumber}</Text>}
-                  {address && <Text>{t('address')}: {address}</Text>}
+                  {email && (
+                    <Text>
+                      {t('email')}: {email}
+                    </Text>
+                  )}
+                  {phoneNumber && (
+                    <Text>
+                      {t('phone')}:
+                      <Text
+                        as="span"
+                        dir="ltr"
+                        display="inline-block"
+                        style={{ unicodeBidi: 'isolate-override' }}
+                      >
+                        {phoneNumber}
+                      </Text>
+                    </Text>
+                  )}
+                  {address && (
+                    <Text>
+                      {t('address')}: {address}
+                    </Text>
+                  )}
                 </Stack>
               </GridItem>
 
@@ -170,10 +205,26 @@ const ExpandedComponent = ({ data, schools, token }) => {
               <GridItem>
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>{t('personalDetails')}</Text>
-                  {birthDate && <Text>{t('birthDate')}: {birthDate}</Text>}
-                  {birthPlace && <Text>{t('birthPlace')}: {birthPlace}</Text>}
-                  {maritalStatus && <Text>{t('maritalStatus')}: {maritalStatus}</Text>}
-                  {language && <Text>{t('language')}: {language}</Text>}
+                  {birthDate && (
+                    <Text>
+                      {t('birthDate')}: {birthDate}
+                    </Text>
+                  )}
+                  {birthPlace && (
+                    <Text>
+                      {t('birthPlace')}: {birthPlace}
+                    </Text>
+                  )}
+                  {maritalStatus && (
+                    <Text>
+                      {t('maritalStatus')}: {maritalStatus}
+                    </Text>
+                  )}
+                  {language && (
+                    <Text>
+                      {t('language')}: {language}
+                    </Text>
+                  )}
                   {subjects && (
                     <Text>
                       <strong>{t('subjects')}:</strong> {subjects.join(',  ')}
@@ -186,35 +237,78 @@ const ExpandedComponent = ({ data, schools, token }) => {
             {/* Additional Details */}
             <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5} pt={5}>
               {/* Professional Information */}
-              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
+              <GridItem
+                pr={2}
+                borderRight={1}
+                borderRightStyle={'solid'}
+                borderRightColor={colors.gray.thin}
+              >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>{t('professionalDetails')}</Text>
-                  {school && <Text>{t('institution')}: {school}</Text>}
+                  {school && (
+                    <Text>
+                      {t('institution')}: {school}
+                    </Text>
+                  )}
                   {disciplines?.length > 0 && (
                     <Text>
-                      <strong>{t('disciplines')}:</strong> {disciplines.join(', ')}
+                      <strong>{t('disciplines')}:</strong>{' '}
+                      {disciplines.join(', ')}
                     </Text>
                   )}
-                  {academicDegree && <Text>{t('academicDegree')}: {academicDegree}</Text>}
+                  {academicDegree && (
+                    <Text>
+                      {t('academicDegree')}: {academicDegree}
+                    </Text>
+                  )}
                   {professionalDegrees && (
                     <Text>
-                      <strong>{t('professionalDegrees')}:</strong> {professionalDegrees.join(', ')}
+                      <strong>{t('professionalDegrees')}:</strong>{' '}
+                      {professionalDegrees.join(', ')}
                     </Text>
                   )}
-                  {contractType && <Text>{t('contractType')}: {contractType}</Text>}
-                  {level && <Text>{t('level')}: {level}</Text>}
+                  {contractType && (
+                    <Text>
+                      {t('contractType')}: {contractType}
+                    </Text>
+                  )}
+                  {level && (
+                    <Text>
+                      {t('level')}: {level}
+                    </Text>
+                  )}
                 </Stack>
               </GridItem>
 
               {/* Salary and Responsibilities */}
-              <GridItem pr={2} borderRight={1} borderRightStyle={'solid'} borderRightColor={colors.gray.thin}>
+              <GridItem
+                pr={2}
+                borderRight={1}
+                borderRightStyle={'solid'}
+                borderRightColor={colors.gray.thin}
+              >
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>{t('workDetails')}</Text>
-                  {salary && <Text>{t('salary')}: {salary}</Text>}
-                  {salaryPerHour && <Text>{t('salaryPerHour')}: {salaryPerHour}</Text>}
-                  {hoursNumber && <Text>{t('hoursPerWeek')}: {hoursNumber}</Text>}
+                  {salary && (
+                    <Text>
+                      {t('salary')}: {salary}
+                    </Text>
+                  )}
+                  {salaryPerHour && (
+                    <Text>
+                      {t('salaryPerHour')}: {salaryPerHour}
+                    </Text>
+                  )}
+                  {hoursNumber && (
+                    <Text>
+                      {t('hoursPerWeek')}: {hoursNumber}
+                    </Text>
+                  )}
                   {additionalResponsibilities && (
-                    <Text>{t('additionalResponsibilities')}: {additionalResponsibilities}</Text>
+                    <Text>
+                      {t('additionalResponsibilities')}:{' '}
+                      {additionalResponsibilities}
+                    </Text>
                   )}
                 </Stack>
               </GridItem>
@@ -224,13 +318,29 @@ const ExpandedComponent = ({ data, schools, token }) => {
                 <Stack spacing={4}>
                   <Text fontWeight={'bold'}>{t('additionalInformation')}</Text>
                   {registrationNumber && (
-                    <Text>{t('registrationNumber')}: {registrationNumber}</Text>
+                    <Text>
+                      {t('registrationNumber')}: {registrationNumber}
+                    </Text>
                   )}
-                  {generation && <Text>{t('generation')}: {generation}</Text>}
-                  {countryFrom && <Text>{t('countryOfOrigin')}: {countryFrom}</Text>}
-                  {arrivalDate && <Text>{t('arrivalDate')}: {arrivalDate}</Text>}
+                  {generation && (
+                    <Text>
+                      {t('generation')}: {generation}
+                    </Text>
+                  )}
+                  {countryFrom && (
+                    <Text>
+                      {t('countryOfOrigin')}: {countryFrom}
+                    </Text>
+                  )}
+                  {arrivalDate && (
+                    <Text>
+                      {t('arrivalDate')}: {arrivalDate}
+                    </Text>
+                  )}
                   {previousInstitutes && (
-                    <Text>{t('previousInstitutes')}: {previousInstitutes}</Text>
+                    <Text>
+                      {t('previousInstitutes')}: {previousInstitutes}
+                    </Text>
                   )}
                 </Stack>
               </GridItem>
@@ -258,16 +368,24 @@ const ExpandedComponent = ({ data, schools, token }) => {
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>
-                  {t('assignToSchool', { firstname: firstname || '', lastname: lastname || '' })}
+                  {t('assignToSchool', {
+                    firstname: firstname || '',
+                    lastname: lastname || '',
+                  })}
                 </ModalHeader>
                 <ModalBody>
                   <Text mb={4}>
-                    <strong>{t('currentSchool')}:</strong> {school || t('notAssigned')}
+                    <strong>{t('currentSchool')}:</strong>{' '}
+                    {school || t('notAssigned')}
                   </Text>
                   <Select
                     options={schoolOptions}
-                    value={schoolOptions.find((option) => option.value === selectedSchool)}
-                    onChange={(selectedOption) => setSelectedSchool(selectedOption.value)}
+                    value={schoolOptions.find(
+                      (option) => option.value === selectedSchool
+                    )}
+                    onChange={(selectedOption) =>
+                      setSelectedSchool(selectedOption.value)
+                    }
                     placeholder={t('selectSchool')}
                     isSearchable
                   />
@@ -276,7 +394,11 @@ const ExpandedComponent = ({ data, schools, token }) => {
                   <Button onClick={closeDialog} colorScheme="gray" mr={3}>
                     {t('cancel')}
                   </Button>
-                  <Button onClick={handleAssign} colorScheme="orange" isDisabled={!selectedSchool}>
+                  <Button
+                    onClick={handleAssign}
+                    colorScheme="orange"
+                    isDisabled={!selectedSchool}
+                  >
                     {t('confirm')}
                   </Button>
                 </ModalFooter>
@@ -307,7 +429,6 @@ export const TeacherDataSet = ({
       }
       colorScheme="orange"
       bgColor={colors.primary.regular}
-     
     >
       {t('recruitTeacher')}
     </Button>
@@ -321,7 +442,9 @@ export const TeacherDataSet = ({
       token={token}
       translationNamespace="components.dataset.teachers"
       actionButton={actionButton}
-      expandedComponent={(data) => ExpandedComponent({ ...data, schools, token })}
+      expandedComponent={(data) =>
+        ExpandedComponent({ ...data, schools, token })
+      }
       filterFunction={reportingFilter}
       selectedIndex={selectedIndex}
     />

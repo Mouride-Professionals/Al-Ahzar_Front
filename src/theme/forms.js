@@ -1151,6 +1151,14 @@ module.exports = {
           already_exists: 'forms.messages.payment.errors.already_exists',
           problem: 'forms.messages.payment.errors.problem',
         },
+        cancellation: {
+          errors: {
+            not_found: 'forms.messages.payment.cancellation.errors.not_found',
+            already_cancelled:
+              'forms.messages.payment.cancellation.errors.already_cancelled',
+            problem: 'forms.messages.payment.cancellation.errors.problem',
+          },
+        },
       },
       school: {
         creation: {

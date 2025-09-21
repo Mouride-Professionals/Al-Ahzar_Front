@@ -138,6 +138,7 @@
             "student": {
                 "confirmation": "تأكيد التسجيل",
                 "registration": "نموذج التسجيل",
+                "modification": "تحديث معلومات الطالب",
                 "another_student": "تسجيل طالب جديد",
                 "info": {
                     "success": "بدأ التسجيل!",
@@ -232,12 +233,14 @@
                 "searchPlaceholder": "ابحث عن طالب",
                 "filterLabel": "الطلاب غير المسجلين",
                 "validateMonthlyPayment": "تأكيد الدفع الشهري",
+                "addPayment": "اضافة دفعة",
                 "socialStatus": "الحالة الاجتماعية",
                 "bio": "السيرة الذاتية",
                 "paymentStatus": "حالة الدفع",
                 "validateEnrollment": "تأكيد التسجيل",
                 "waitingForFinance": "في انتظار القسم المالي",
                 "reEnroll": "إعادة التسجيل",
+                "updateStudent": "تحديث الطالب",
                 "enrollNewStudent": "تسجيل طالب جديد",
                 "tutor": "ولي الأمر",
                 "phone": "رقم الهاتف",
@@ -428,7 +431,11 @@
                 "status": "الحالة",
                 "paid": "مدفوع",
                 "pending": "قيد الانتظار",
+                "cancelled": "ملغى",
                 "student": "الطالب",
+                "cancelPayment": "إلغاء الدفعة",
+                "cancelledAt": "تاريخ الإلغاء",
+                "cancellationReason": "سبب الإلغاء",
                 "cta": {
                     "filter": "",
                     "export": ""
@@ -439,6 +446,7 @@
                     "type": "النوع",
                     "monthly": "شهري",
                     "student": "الطالب",
+                    "status": "الحالة",
                     "other": "أخرى"
                 }
             },
@@ -486,7 +494,47 @@
                 "payments_history": "سجل الدفعات"
             }
         },
+        "modals": {
+            "paymentCancellation": {
+                "title": "إلغاء الدفعة",
+                "paymentDetails": "تفاصيل الدفعة",
+                "warning": "⚠️ لا يمكن التراجع عن هذا الإجراء. ستُوضع علامة إلغاء على الدفعة وستبقى في النظام للسجلات التاريخية.",
+                "reasonLabel": "سبب الإلغاء",
+                "reasonPlaceholder": "يرجى تقديم سبب لإلغاء هذه الدفعة (مثل: إدخال مكرر، مبلغ خاطئ، انسحاب الطالب، إلخ)",
+                "reasonRequired": "سبب الإلغاء مطلوب",
+                "cancel": "إلغاء",
+                "confirm": "إلغاء الدفعة",
+                "cancelling": "جاري الإلغاء..."
+            }
+        },
         "forms": {
+            "student": {
+                "addPayment": {
+                    "title": "إضافة دفعة",
+                    "typeLabel": "نوع الدفع",
+                    "types": {
+                        "enrollment": "تسجيل",
+                        "monthly": "شهري",
+                        "exam": "اختبار",
+                        "blouse": "مئزر",
+                        "parentContribution": "مساهمة الوالدين",
+                        "other": "أخرى"
+                    },
+                    "monthLabel": "الشهر",
+                    "amountLabel": "المبلغ (FCFA)",
+                    "amountPlaceholder": "أدخل المبلغ",
+                    "commentLabel": "تعليق (اختياري)",
+                    "commentPlaceholder": "أضف تعليقًا",
+                    "cancel": "إلغاء",
+                    "submit": "إضافة الدفعة",
+                    "success": "تمت إضافة الدفعة بنجاح",
+                    "error": "حدث خطأ أثناء إضافة الدفعة",
+                    "monthAlreadyPaid": "تم دفع هذا الشهر بالفعل",
+                    "amountRequired": "المبلغ مطلوب",
+                    "monthRequired": "الشهر مطلوب",
+                    "monthNotInSchoolYear": "الشهر خارج السنة الدراسية الحالية"
+                }
+            },
             "inputs": {
                 "login": {
                     "identifier": {
@@ -1280,6 +1328,13 @@
                     "errors": {
                         "already_exists": "تم تسجيل هذا الدفع مسبقًا",
                         "problem": "حدث خطأ أثناء معالجة الدفع"
+                    },
+                    "cancellation": {
+                        "errors": {
+                            "not_found": "الدفعة غير موجودة",
+                            "already_cancelled": "تم إلغاء هذه الدفعة بالفعل",
+                            "problem": "حدث خطأ أثناء إلغاء الدفعة"
+                        }
                     }
                 },
                 "school": {

@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { DataTableLayout } from '@components/layout/data_table';
 import { colors, images, routes } from '@theme';
+import { hasPermission } from '@utils/roles';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -21,7 +22,6 @@ import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
 import { BsFillCalendarDateFill } from 'react-icons/bs';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { BoxZone } from '../cards/boxZone';
-import { hasPermission } from '@utils/roles';
 
 const ExpandedComponent = ({ data, role, user_token }) => {
   const {
@@ -99,14 +99,29 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                   <HStack>
                     <AiOutlinePhone color="blue" size={16} />
                     <Text fontSize={{ base: 'xs', md: 'sm' }}>
-                      {phone || t('phoneUnavailable')}
+                      {t('phone')}:
+                      <Text
+                        as="span"
+                        dir="ltr"
+                        display="inline-block"
+                        style={{ unicodeBidi: 'isolate-override' }}
+                      >
+                        {phone || t('phoneUnavailable')}
+                      </Text>
                     </Text>
                   </HStack>
                   {phoneFix && (
                     <HStack>
                       <AiOutlinePhone color="blue" size={16} />
                       <Text fontSize={{ base: 'xs', md: 'sm' }}>
-                        {phoneFix}
+                        <Text
+                          as="span"
+                          dir="ltr"
+                          display="inline-block"
+                          style={{ unicodeBidi: 'isolate-override' }}
+                        >
+                          {phoneFix}
+                        </Text>
                       </Text>
                     </HStack>
                   )}

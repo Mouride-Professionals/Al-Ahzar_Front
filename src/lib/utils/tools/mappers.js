@@ -20,17 +20,18 @@ export const ClassTitle = (name) => {
   return name;
 };
 
-
-
 export const mapFormInitialValues = (schemaNodes, initialData = {}) => {
   // Initialize default values for all schema nodes
   const initialValues = schemaNodes.reduce((obj, key) => {
-
     if (key === 'salaryPerHour' || key === 'hoursNumber' || key === 'salary') {
       obj[key] = 0;
       return obj;
     }
-    if (key === 'subjects' || key === 'professionalDegrees' || key === 'disciplines') {
+    if (
+      key === 'subjects' ||
+      key === 'professionalDegrees' ||
+      key === 'disciplines'
+    ) {
       obj[key] = [];
       return obj;
     }
@@ -45,7 +46,7 @@ export const mapFormInitialValues = (schemaNodes, initialData = {}) => {
 
   // Override default values with initialData if provided
   Object.keys(initialData).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(initialValues, key)(key)) {
+    if (Object.prototype.hasOwnProperty.call(initialValues, key)) {
       initialValues[key] = initialData[key] ?? initialValues[key];
     }
   });
@@ -62,10 +63,10 @@ export const dateFormatter = (date) => {
 };
 
 export const mapPaymentType = {
-    'monthly': 'Mensualité',
-    'enrollment': 'Inscription',
-    'blouse': 'Blouse',
-    'parentContribution': 'Contribution des parents',
-    'exam': 'Examen',
-    'other': 'Autre',
-  };
+  monthly: 'Mensualité',
+  enrollment: 'Inscription',
+  blouse: 'Blouse',
+  parentContribution: 'Contribution des parents',
+  exam: 'Examen',
+  other: 'Autre',
+};
