@@ -212,8 +212,8 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
 
 // Helper function to find the appropriate category for the level
 const gradeLevels = ['CI', 'CP', 'CE1', 'CE2', 'CM1', 'CM2'];
-const intermediateLevels = ['6ème', '5ème', '4ème', '3ème'];
-const upperIntermediateLevels = ['2nde', '1ère', 'Terminale'];
+const intermediateLevels = ['a 6eme', 'a 5eme', 'a 4eme', 'a 3eme'];
+const upperIntermediateLevels = ['a 2nd', 'a 1ere', 'Terminale'];
 
 const getCategory = (level) => {
   if (gradeLevels.includes(level)) {
