@@ -446,6 +446,7 @@
                     "type": "Type",
                     "monthly": "Monthly",
                     "student": "Student",
+                    "status": "Status",
                     "other": "Other"
                 }
             },
@@ -1335,7 +1336,8 @@
                             "not_found": "Payment not found",
                             "already_cancelled": "This payment has already been cancelled",
                             "problem": "An error occurred while cancelling the payment"
-                        }
+                        },
+                        "success": "Payment cancelled successfully"
                     }
                 },
                 "school": {

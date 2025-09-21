@@ -668,7 +668,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                         `/dashboard/surveillant/students/${enrollment_id}/edit`
                       )
                     }
-                    colorScheme="blue"
+                    colorScheme="orange"
                     variant="outline"
                     size={{ base: 'sm', md: 'md' }}
                     w={{ base: '100%', sm: 'auto' }}

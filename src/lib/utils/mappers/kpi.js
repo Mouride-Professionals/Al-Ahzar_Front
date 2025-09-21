@@ -126,7 +126,8 @@ export const useTableColumns = () => {
       reorder: true,
     },
     {
-      name: t('payments.status'),
+      name: t('payments.columns.status'),
+      selector: (row) => row.status,
       desc: true,
       sortable: true,
       reorder: true,

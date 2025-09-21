@@ -147,7 +147,7 @@ const FinanceDashboard = ({
   // Payment cancellation handler
   const handleCancelPayment = (payment) => {
     console.log('handleCancelPayment in FinanceDashboard', payment);
-    
+
     setSelectedPayment(payment);
     setIsCancelModalOpen(true);
   };
@@ -164,7 +164,7 @@ const FinanceDashboard = ({
     handleCancelModalClose();
 
     toast({
-      title: t('components.modals.payment_cancellation.success_message'),
+      title: t('components.forms.messages.payment.cancellation.success'),
       status: 'success',
       duration: 3000,
       isClosable: true,
@@ -501,7 +501,8 @@ const FinanceDashboard = ({
           onClose={handleCancelModalClose}
           paymentId={selectedPayment}
           token={token}
-          onSuccess={handleCancelSuccess}
+          setHasSucceeded={handleCancelSuccess}
+          // setHasSucceeded={setHasSucceeded}
         />
       )}
     </DashboardLayout>

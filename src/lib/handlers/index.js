@@ -801,11 +801,12 @@ export const paymentCancellationHandler = async ({
         cancelledAt: new Date().toISOString(),
       },
     };
-console.log('paymentCancellationHandler', paymentId, payload, token);
 
     await cancelPayment({ paymentId, payload, token });
     hasSucceeded(true);
   } catch (err) {
+    console.log('Error cancelling payment:', err);
+    
     if (err?.data) {
       const { data } = err?.data;
       if (data?.message?.includes('not found')) {
