@@ -85,6 +85,7 @@ export const hasPermission = (role, permission) => {
       viewSchoolFinance: true,
       switchSchools: true,
       viewHome: true,
+      viewTeachers: true,
       // Notable: NO create/edit permissions - read-only access
       createExpense: false,
       managePayments: false,

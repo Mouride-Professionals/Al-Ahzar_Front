@@ -41,6 +41,7 @@ const schoolYearMonthsCache = {};
 
 const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const t = useTranslations('components.dataset.students');
+  const tPayments = useTranslations('components.dataset.payments');
   const {
     dashboard: {
       cashier: {
@@ -431,9 +432,18 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                 createdAt,
                                 amount,
                                 paymentType,
+                                status,
+                                cancelledAt,
                               },
                             } = item;
                             const paymentDate = new Date(monthOf ?? createdAt);
+                            const cancelledAtDate = cancelledAt
+                              ? new Date(cancelledAt)
+                              : null;
+                            const cancelled =
+                              status === 'cancelled' ||
+                              (cancelledAtDate instanceof Date &&
+                                !isNaN(+cancelledAtDate));
 
                             return (
                               <HStack
@@ -467,14 +477,26 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                 <HStack
                                   justify={{ base: 'center', sm: 'flex-end' }}
                                   w={{ base: '100%', sm: 'auto' }}
+                                  spacing={2}
                                 >
                                   <Text
                                     fontSize={{ base: 'xs', md: 'sm' }}
                                     fontWeight="semibold"
+                                    textDecoration={
+                                      cancelled ? 'line-through' : 'none'
+                                    }
+                                    color={cancelled ? 'gray.400' : 'inherit'}
                                   >
                                     {amount} FCFA
                                   </Text>
-                                  {isPaid ? (
+                                  {cancelled ? (
+                                    <HStack spacing={1}>
+                                      <SlClose color={'red.500'} size={14} />
+                                      <Text fontSize="xs" color="red.500">
+                                        {tPayments('cancelled')}
+                                      </Text>
+                                    </HStack>
+                                  ) : isPaid ? (
                                     <BsCheck2Circle
                                       color={'green.500'}
                                       size={16}
@@ -520,11 +542,22 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                     createdAt,
                                     amount,
                                     paymentType,
+                                    status,
+                                    isCancelled,
                                   },
                                 } = item;
                                 const paymentDate = new Date(
                                   monthOf ?? createdAt
                                 );
+                                const cancelledAtRaw =
+                                  item.attributes.cancelledAt;
+                                const cancelledAtDate = cancelledAtRaw
+                                  ? new Date(cancelledAtRaw)
+                                  : null;
+                                const cancelled =
+                                  status === 'cancelled' ||
+                                  (cancelledAtDate instanceof Date &&
+                                    !isNaN(+cancelledAtDate));
 
                                 return (
                                   <HStack
@@ -567,14 +600,31 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                         sm: 'flex-end',
                                       }}
                                       w={{ base: '100%', sm: 'auto' }}
+                                      spacing={2}
                                     >
                                       <Text
                                         fontSize={{ base: 'xs', md: 'sm' }}
                                         fontWeight="semibold"
+                                        textDecoration={
+                                          cancelled ? 'line-through' : 'none'
+                                        }
+                                        color={
+                                          cancelled ? 'gray.400' : 'inherit'
+                                        }
                                       >
                                         {amount} FCFA
                                       </Text>
-                                      {isPaid ? (
+                                      {cancelled ? (
+                                        <HStack spacing={1}>
+                                          <SlClose
+                                            color={'red.500'}
+                                            size={14}
+                                          />
+                                          <Text fontSize="xs" color="red.500">
+                                            {tPayments('cancelled')}
+                                          </Text>
+                                        </HStack>
+                                      ) : isPaid ? (
                                         <BsCheck2Circle
                                           color={'green.500'}
                                           size={16}
