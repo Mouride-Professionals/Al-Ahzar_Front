@@ -253,13 +253,16 @@
                 },
                 "columns": {
                     "student": "الطالب",
+                    "student_identifier": "معرّف الطالب",
                     "class": "الفصل",
                     "parent": "ولي الأمر",
                     "parent_phone": "رقم هاتف ولي الأمر",
                     "enrollment": "التسجيل",
+                    "enrollment_number": "رقم الجلوس",
                     "current_month": "الشهر الحالي",
                     "paid": "مدفوع",
-                    "not_paid": "غير مدفوع"
+                    "not_paid": "غير مدفوع",
+                    "na": "N/A"
                 }
             },
             "schools": {

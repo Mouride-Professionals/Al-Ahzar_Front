@@ -20,12 +20,18 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
 
   const cardStats = [
     {
-      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.data?.length ?? 0),
+      count: t('pages.stats.amount.classes').replace(
+        '%number',
+        kpis[0]?.data?.length ?? 0
+      ),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
       title: t('pages.stats.classes'),
     },
     {
-      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.data?.length ?? 0),
+      count: t('pages.stats.amount.students').replace(
+        '%number',
+        kpis[1]?.data?.length ?? 0
+      ),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: t('pages.stats.students'),
     },
@@ -43,7 +49,6 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
   if (classrooms?.length === 0) {
     router.push(routes.page_route.dashboard.surveillant.classes.all);
   }
-
 
   return (
     <DashboardLayout
@@ -123,23 +128,25 @@ export const getServerSideProps = async ({ req, res }) => {
   });
 
   const role = response.role;
-  const schoolId = response.school?.id
+  const schoolId = response.school?.id;
   const kpis = await Promise.all([
     // serverFetch({
     //   uri:`${users}?filters[role][$eq]=${role}&filters[school_year][$eq]=${activeSchoolYear}`,
     //   user_token: token,
     // }),
     serverFetch({
-      uri: classrooms.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', schoolId),
+      uri: classrooms
+        .replace('%activeSchoolYear', activeSchoolYear)
+        .replace('%schoolId', schoolId),
       user_token: token,
     }),
 
     serverFetch({
-      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', schoolId),
+      uri: allStudents
+        .replace('%activeSchoolYear', activeSchoolYear)
+        .replace('%schoolId', schoolId),
       user_token: token,
     }),
-
-
   ]);
 
 
@@ -149,7 +156,7 @@ export const getServerSideProps = async ({ req, res }) => {
       role,
       token,
       schoolId,
-      messages: (await import(`../../../../messages/fr.json`)).default
+      messages: (await import(`../../../../messages/fr.json`)).default,
     },
   };
 };

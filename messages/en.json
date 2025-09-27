@@ -253,13 +253,16 @@
                 },
                 "columns": {
                     "student": "Student",
+                    "student_identifier": "Student ID",
                     "class": "Class",
                     "parent": "Guardian",
                     "parent_phone": "Guardian Phone",
                     "enrollment": "Enrollment",
+                    "enrollment_number": "Enrollment #",
                     "current_month": "Current Month",
                     "paid": "Paid",
-                    "not_paid": "Not Paid"
+                    "not_paid": "Not Paid",
+                    "na": "N/A"
                 }
             },
             "schools": {

@@ -28,6 +28,13 @@ export const useTableColumns = () => {
       reorder: true,
     },
     {
+      name: t('students.columns.student_identifier'),
+      selector: (row) => row.student_identifier || t('students.columns.na'),
+      desc: true,
+      sortable: true,
+      reorder: true,
+    },
+    {
       name: t('students.columns.class'),
       selector: (row) => row.level,
       desc: true,
@@ -53,6 +60,13 @@ export const useTableColumns = () => {
     {
       name: t('students.columns.enrollment'),
       selector: (row) => row.enrollment_date,
+      desc: true,
+      sortable: true,
+      reorder: true,
+    },
+    {
+      name: t('students.columns.enrollment_number'),
+      selector: (row) => row.enrollment_number || t('students.columns.na'),
       desc: true,
       sortable: true,
       reorder: true,

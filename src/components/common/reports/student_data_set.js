@@ -22,7 +22,6 @@ import { DataTableLayout } from '@components/layout/data_table';
 import ReEnrollmentModal from '@components/modals/enrollmentModal';
 import { addPaymentFormHandler, monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
-import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { hasPermission } from '@utils/roles';
@@ -63,6 +62,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
     type,
     socialStatus,
     registrationComment,
+    studentIdentifier,
     payments: { data: payment_history },
   } = data;
 
@@ -749,6 +749,7 @@ export const DataSet = ({
     const studentsList = mapStudentsDataTableForEnrollments({
       enrollments: response,
     });
+
     setStudents(studentsList);
     setFilterByOldStudents(true);
   };
@@ -757,12 +758,21 @@ export const DataSet = ({
     return t('filterLabel');
   }, [filterByOldStudents, t]);
 
-  const filterFunction = ({ data, needle }) =>
-    reportingFilter({
-      data,
-      position: selectedIndex,
-      needle,
+  // Custom filter for students dataset: search firstname, lastname and student identifier (matricule)
+  const studentFilterFunction = ({ data, needle }) => {
+    if (!needle || !data) return data;
+    const q = String(needle).toLowerCase();
+    return data.filter((item) => {
+      const first = String(item.firstname || '').toLowerCase();
+      const last = String(item.lastname || '').toLowerCase();
+      const sid = String(item.student_identifier || '').toLowerCase();
+      return (
+        (first && first.includes(q)) ||
+        (last && last.includes(q)) ||
+        (sid && sid.includes(q))
+      );
     });
+  };
 
   const extraSubHeaderComponents = hasPermission(
     role.name,
@@ -799,7 +809,7 @@ export const DataSet = ({
       expandedComponent={(data) =>
         ExpandedComponent({ ...data, classrooms, role, user_token: token })
       }
-      filterFunction={filterFunction}
+      filterFunction={studentFilterFunction}
       defaultSortFieldId="registered_at"
       extraSubHeaderComponents={extraSubHeaderComponents}
       selectedIndex={selectedIndex}
