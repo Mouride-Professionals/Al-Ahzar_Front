@@ -253,13 +253,16 @@
                 },
                 "columns": {
                     "student": "Élève",
+                    "student_identifier": "Identifiant élève",
                     "class": "Classe",
                     "parent": "Tuteur",
                     "parent_phone": "Téléphone du tuteur",
                     "enrollment": "Inscription",
+                    "enrollment_number": "N° d'inscription",
                     "current_month": "Mois actuel",
                     "paid": "Payé",
-                    "not_paid": "Non payé"
+                    "not_paid": "Non payé",
+                    "na": "N/D"
                 }
             },
             "schools": {

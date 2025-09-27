@@ -22,7 +22,6 @@ import { DataTableLayout } from '@components/layout/data_table';
 import ReEnrollmentModal from '@components/modals/enrollmentModal';
 import { addPaymentFormHandler, monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
-import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { hasPermission } from '@utils/roles';
@@ -42,6 +41,7 @@ const schoolYearMonthsCache = {};
 
 const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const t = useTranslations('components.dataset.students');
+  const tPayments = useTranslations('components.dataset.payments');
   const {
     dashboard: {
       cashier: {
@@ -63,6 +63,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
     type,
     socialStatus,
     registrationComment,
+    studentIdentifier,
     payments: { data: payment_history },
   } = data;
 
@@ -431,9 +432,18 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                 createdAt,
                                 amount,
                                 paymentType,
+                                status,
+                                cancelledAt,
                               },
                             } = item;
                             const paymentDate = new Date(monthOf ?? createdAt);
+                            const cancelledAtDate = cancelledAt
+                              ? new Date(cancelledAt)
+                              : null;
+                            const cancelled =
+                              status === 'cancelled' ||
+                              (cancelledAtDate instanceof Date &&
+                                !isNaN(+cancelledAtDate));
 
                             return (
                               <HStack
@@ -467,14 +477,26 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                 <HStack
                                   justify={{ base: 'center', sm: 'flex-end' }}
                                   w={{ base: '100%', sm: 'auto' }}
+                                  spacing={2}
                                 >
                                   <Text
                                     fontSize={{ base: 'xs', md: 'sm' }}
                                     fontWeight="semibold"
+                                    textDecoration={
+                                      cancelled ? 'line-through' : 'none'
+                                    }
+                                    color={cancelled ? 'gray.400' : 'inherit'}
                                   >
                                     {amount} FCFA
                                   </Text>
-                                  {isPaid ? (
+                                  {cancelled ? (
+                                    <HStack spacing={1}>
+                                      <SlClose color={'red.500'} size={14} />
+                                      <Text fontSize="xs" color="red.500">
+                                        {tPayments('cancelled')}
+                                      </Text>
+                                    </HStack>
+                                  ) : isPaid ? (
                                     <BsCheck2Circle
                                       color={'green.500'}
                                       size={16}
@@ -520,11 +542,22 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                     createdAt,
                                     amount,
                                     paymentType,
+                                    status,
+                                    isCancelled,
                                   },
                                 } = item;
                                 const paymentDate = new Date(
                                   monthOf ?? createdAt
                                 );
+                                const cancelledAtRaw =
+                                  item.attributes.cancelledAt;
+                                const cancelledAtDate = cancelledAtRaw
+                                  ? new Date(cancelledAtRaw)
+                                  : null;
+                                const cancelled =
+                                  status === 'cancelled' ||
+                                  (cancelledAtDate instanceof Date &&
+                                    !isNaN(+cancelledAtDate));
 
                                 return (
                                   <HStack
@@ -567,14 +600,31 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                         sm: 'flex-end',
                                       }}
                                       w={{ base: '100%', sm: 'auto' }}
+                                      spacing={2}
                                     >
                                       <Text
                                         fontSize={{ base: 'xs', md: 'sm' }}
                                         fontWeight="semibold"
+                                        textDecoration={
+                                          cancelled ? 'line-through' : 'none'
+                                        }
+                                        color={
+                                          cancelled ? 'gray.400' : 'inherit'
+                                        }
                                       >
                                         {amount} FCFA
                                       </Text>
-                                      {isPaid ? (
+                                      {cancelled ? (
+                                        <HStack spacing={1}>
+                                          <SlClose
+                                            color={'red.500'}
+                                            size={14}
+                                          />
+                                          <Text fontSize="xs" color="red.500">
+                                            {tPayments('cancelled')}
+                                          </Text>
+                                        </HStack>
+                                      ) : isPaid ? (
                                         <BsCheck2Circle
                                           color={'green.500'}
                                           size={16}
@@ -749,6 +799,7 @@ export const DataSet = ({
     const studentsList = mapStudentsDataTableForEnrollments({
       enrollments: response,
     });
+
     setStudents(studentsList);
     setFilterByOldStudents(true);
   };
@@ -757,12 +808,21 @@ export const DataSet = ({
     return t('filterLabel');
   }, [filterByOldStudents, t]);
 
-  const filterFunction = ({ data, needle }) =>
-    reportingFilter({
-      data,
-      position: selectedIndex,
-      needle,
+  // Custom filter for students dataset: search firstname, lastname and student identifier (matricule)
+  const studentFilterFunction = ({ data, needle }) => {
+    if (!needle || !data) return data;
+    const q = String(needle).toLowerCase();
+    return data.filter((item) => {
+      const first = String(item.firstname || '').toLowerCase();
+      const last = String(item.lastname || '').toLowerCase();
+      const sid = String(item.student_identifier || '').toLowerCase();
+      return (
+        (first && first.includes(q)) ||
+        (last && last.includes(q)) ||
+        (sid && sid.includes(q))
+      );
     });
+  };
 
   const extraSubHeaderComponents = hasPermission(
     role.name,
@@ -799,7 +859,7 @@ export const DataSet = ({
       expandedComponent={(data) =>
         ExpandedComponent({ ...data, classrooms, role, user_token: token })
       }
-      filterFunction={filterFunction}
+      filterFunction={studentFilterFunction}
       defaultSortFieldId="registered_at"
       extraSubHeaderComponents={extraSubHeaderComponents}
       selectedIndex={selectedIndex}

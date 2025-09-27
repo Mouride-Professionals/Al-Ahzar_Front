@@ -246,7 +246,9 @@ export const DashboardMainMenu = ({ activeLink, role }) => {
       color: colors.secondary.regular,
       message: messages.components.menu.teachers,
       link: routes.teachers?.all,
-      isVisible: hasPermission(roleName, 'manageTeachers'),
+      isVisible:
+        hasPermission(roleName, 'manageTeachers') ||
+        hasPermission(roleName, 'viewTeachers'),
     },
     // School Years
     routes.school_years && {

@@ -27,8 +27,9 @@ import { useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
+import { hasPermission } from '@utils/roles';
 
-const ExpandedComponent = ({ data, schools, token }) => {
+const ExpandedComponent = ({ data, schools, token, role }) => {
   const t = useTranslations('components.dataset.teachers');
   const router = useRouter();
   const toast = useToast({
@@ -233,7 +234,6 @@ const ExpandedComponent = ({ data, schools, token }) => {
                 </Stack>
               </GridItem>
             </Grid>
-
             {/* Additional Details */}
             <Grid templateColumns={'repeat(3, 1fr)'} columnGap={5} pt={5}>
               {/* Professional Information */}
@@ -345,24 +345,25 @@ const ExpandedComponent = ({ data, schools, token }) => {
                 </Stack>
               </GridItem>
             </Grid>
-
             {/* Modify Button */}
-            <HStack justifyContent={'flex-end'} mt={6}>
-              <Button
-                onClick={() => router.push(`${edit.replace('%id', data.id)}`)}
-                colorScheme="orange"
-                variant="outline"
-              >
-                {t('edit')}
-              </Button>
-              <Button
-                onClick={openDialog}
-                colorScheme={colors.secondary.regular}
-                variant="outline"
-              >
-                {t('assign')}
-              </Button>
-            </HStack>
+            {hasPermission(role.name, 'manageTeachers') && (
+              <HStack justifyContent={'flex-end'} mt={6}>
+                <Button
+                  onClick={() => router.push(`${edit.replace('%id', data.id)}`)}
+                  colorScheme="orange"
+                  variant="outline"
+                >
+                  {t('edit')}
+                </Button>
+                <Button
+                  onClick={openDialog}
+                  colorScheme={colors.secondary.regular}
+                  variant="outline"
+                >
+                  {t('assign')}
+                </Button>
+              </HStack>
+            )}
             {/* Modal */}
             <Modal isOpen={isDialogOpen} onClose={closeDialog} zIndex={1500}>
               <ModalOverlay />
@@ -422,7 +423,7 @@ export const TeacherDataSet = ({
   const t = useTranslations('components.dataset.teachers');
   const router = useRouter();
 
-  const actionButton = (
+  const actionButton = hasPermission(role.name, 'manageTeachers') && (
     <Button
       onClick={() =>
         router.push(routes.page_route.dashboard.direction.teachers.create)
@@ -443,7 +444,7 @@ export const TeacherDataSet = ({
       translationNamespace="components.dataset.teachers"
       actionButton={actionButton}
       expandedComponent={(data) =>
-        ExpandedComponent({ ...data, schools, token })
+        ExpandedComponent({ ...data, schools, token , role})
       }
       filterFunction={reportingFilter}
       selectedIndex={selectedIndex}

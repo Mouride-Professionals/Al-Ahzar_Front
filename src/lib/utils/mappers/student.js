@@ -86,6 +86,8 @@ export const mapStudentsDataTable = ({ students }) => {
           socialStatus,
           registrationComment,
           payments,
+          // optional identifier coming from students table
+          studentIdentifier,
         },
       } = student;
       let level = students.defaultLevel || 'N/A';
@@ -111,6 +113,8 @@ export const mapStudentsDataTable = ({ students }) => {
         id,
         firstname,
         lastname,
+        // expose student identifier for data tables (read-only, provided by backend)
+        student_identifier: studentIdentifier,
         level,
         parent_firstname: tutorFirstname,
         parent_lastname: tutorLastname,
@@ -138,6 +142,8 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
         id,
         attributes: {
           enrollmentDate,
+          // enrollmentNumber is provided by the backend on the enrollment entity
+          enrollmentNumber,
           schoolYear: {
             data: { id: schoolYearId },
           },
@@ -153,6 +159,8 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
                 type,
                 socialStatus,
                 registrationComment,
+                // optional identifier from student entity
+                studentIdentifer,
 
                 createdAt,
               },
@@ -187,6 +195,9 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
         id: studentId,
         firstname,
         lastname,
+        // expose backend-provided identifiers (read-only fields)
+        student_identifier: studentIdentifer,
+        enrollment_number: enrollmentNumber,
         schoolYear: schoolYearId,
         level: formattedLevel,
         parent_firstname: tutorFirstname,
