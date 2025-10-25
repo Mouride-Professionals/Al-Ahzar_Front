@@ -537,6 +537,63 @@ export const userCreationFormHandler = async ({
     setSubmitting(false);
   }
 };
+
+export const userUpdateFormHandler = async ({
+  userId,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  try {
+    const payload = {
+      username: data.username,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email,
+      role: data.role,
+    };
+
+    if (data.school) {
+      payload.school = data.school;
+    }
+
+    await updateUser({
+      user: userId,
+      payload,
+      token,
+    });
+
+    hasSucceeded(true);
+  } catch (err) {
+    console.error('Error updating user:', err);
+
+    if (err?.data) {
+      const { data: errorData } = err.data;
+
+      if (errorData?.message?.includes('exists')) {
+        setFieldError(
+          'registration',
+          forms.messages.registration.errors.already_exists
+        );
+        return;
+      }
+
+      setFieldError(
+        'registration',
+        errorData?.message || forms.messages.registration.errors.problem
+      );
+    } else {
+      setFieldError(
+        'registration',
+        err?.message || forms.messages.registration.errors.problem
+      );
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
 // export const userCreationFormHandler = async ({
 //   data,
 //   setSubmitting,

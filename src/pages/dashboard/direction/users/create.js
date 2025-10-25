@@ -2,7 +2,7 @@ import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateUserForm } from '@components/forms/user/create';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
-import { ROLES } from '@utils/roles';
+import { getAllowedSchools, ROLES } from '@utils/roles';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -71,36 +71,67 @@ export default function Create({ schools, role, token, roles }) {
   );
 }
 
+const DIRECTORIAL_ROLES = [
+  ROLES.DIRECTEUR_ETABLISSMENT,
+  ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
+];
+const SCHOOL_STAFF_ROLES = [
+  ROLES.SURVEILLANT_GENERAL,
+  ROLES.ADJOINT_SURVEILLANT_GENERAL,
+  ROLES.CAISSIER,
+  ROLES.ADJOINT_CAISSIER,
+];
+
 export const getServerSideProps = async ({ req }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
-  // Get current user info to extract their role.
-  const { role = null } = await serverFetch({
+  // Get current user info to extract their role and assigned school.
+  const currentUser = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
+  const role = currentUser.role ?? null;
+  const userSchoolId = currentUser.school?.id;
 
   // Fetch available schools with only name, id, and type.
-  const schools = await serverFetch({
+  const schoolsResponse = await serverFetch({
     uri:
       routes.api_route.alazhar.get.schools.all +
       '?fields[0]=name&fields[1]=id&fields[2]=type',
     user_token: token,
   });
-  //Fetch all roles
-  const { roles } = await serverFetch({
+
+  const filteredSchools =
+    Array.isArray(schoolsResponse?.data) && role
+      ? {
+          ...schoolsResponse,
+          data: getAllowedSchools(
+            role.name,
+            userSchoolId,
+            schoolsResponse.data
+          ),
+        }
+      : schoolsResponse;
+
+  // Fetch all roles
+  const { roles: availableRoles } = await serverFetch({
     uri: `${routes.api_route.alazhar.get.roles}?fields[0]=name&fields[1]=id&fields[2]=type`,
     user_token: token,
   });
 
-  // Filter  the roles that are  in ROLES only
-  const allowedRoles = Object.values(ROLES);
+  // Filter the roles by what the current user is allowed to manage.
+  const baseAllowedRoles = Object.values(ROLES).filter(
+    (roleName) => roleName !== ROLES.DIRECTEUR_GENERAL
+  );
 
-  const filteredRoles = roles.filter(
-    (role) =>
-      allowedRoles.includes(role.name) && role.name !== ROLES.DIRECTEUR_GENERAL
+  const allowedRoleNames = DIRECTORIAL_ROLES.includes(role?.name)
+    ? SCHOOL_STAFF_ROLES
+    : baseAllowedRoles;
+
+  const filteredRoles = (availableRoles || []).filter((availableRole) =>
+    allowedRoleNames.includes(availableRole.name)
   );
   // Map the filtered roles to a more usable format.
   const mappedRoles = filteredRoles.map((role) => ({
@@ -112,7 +143,7 @@ export const getServerSideProps = async ({ req }) => {
     props: {
       role,
       token,
-      schools,
+      schools: filteredSchools,
       roles: mappedRoles,
     },
   };

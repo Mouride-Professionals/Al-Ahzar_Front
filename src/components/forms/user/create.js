@@ -1,7 +1,7 @@
 import { Box, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
-import { userCreationFormHandler } from '@handlers';
+import { userCreationFormHandler, userUpdateFormHandler } from '@handlers';
 import { colors, forms } from '@theme';
 import { userCreationSchema } from '@utils/schemas';
 import { mapFormInitialValues } from '@utils/tools/mappers';
@@ -19,10 +19,35 @@ export const CreateUserForm = ({
 }) => {
     const router = useRouter();
     const t = useTranslations('components');
+    const userId = initialData?.id;
+
+    const sanitizedInitialData = { ...initialData };
+
+    if (sanitizedInitialData.role && typeof sanitizedInitialData.role === 'object') {
+        sanitizedInitialData.role =
+            sanitizedInitialData.role?.id ??
+            sanitizedInitialData.role?.value ??
+            '';
+    }
+
+    if (sanitizedInitialData.role !== undefined && sanitizedInitialData.role !== null && sanitizedInitialData.role !== '') {
+        sanitizedInitialData.role = String(sanitizedInitialData.role);
+    }
+
+    if (sanitizedInitialData.school && typeof sanitizedInitialData.school === 'object') {
+        sanitizedInitialData.school =
+            sanitizedInitialData.school?.id ??
+            sanitizedInitialData.school?.data?.id ??
+            '';
+    }
+
+    if (sanitizedInitialData.school !== undefined && sanitizedInitialData.school !== null && sanitizedInitialData.school !== '') {
+        sanitizedInitialData.school = String(sanitizedInitialData.school);
+    }
 
     const initialValues = mapFormInitialValues(
         userCreationSchema._nodes,
-        initialData
+        sanitizedInitialData
     );
 
     const {
@@ -46,23 +71,61 @@ export const CreateUserForm = ({
         },
     } = forms;
 
-    const schoolOptions = schools.data.map((school) => ({
+    const schoolOptions = (schools?.data || []).map((school) => ({
         name: school.attributes.name,
-        value: school.id,
+        value: String(school.id),
     }));
+    const roleOptions = (roles || []).map((option) => ({
+        ...option,
+        value: String(option.value),
+    }));
+    const isSingleSchool = schoolOptions.length === 1;
+
+    if (!initialValues.school && isSingleSchool) {
+        initialValues.school = schoolOptions[0].value;
+    }
+
+    const submitLabel = isEdit
+        ? t('forms.actions.user.edit')
+        : t('forms.actions.user.create');
 
     return (
         <Formik
             validationSchema={userCreationSchema}
             initialValues={initialValues}
             onSubmit={(values, { setSubmitting, setFieldError }) => {
-                userCreationFormHandler({
-                    token,
-                    data: values,
-                    setSubmitting,
-                    setFieldError,
-                    hasSucceeded: setHasSucceeded,
-                });
+                const normalizeId = (value) => {
+                    if (value === undefined || value === null || value === '') {
+                        return value;
+                    }
+                    const parsed = Number(value);
+                    return Number.isNaN(parsed) ? value : parsed;
+                };
+
+                const formattedValues = {
+                    ...values,
+                    role: normalizeId(values.role),
+                    school: normalizeId(values.school),
+                };
+
+                if (isEdit && userId) {
+                    userUpdateFormHandler({
+                        token,
+                        data: formattedValues,
+                        userId,
+                        setSubmitting,
+                        setFieldError,
+                        hasSucceeded: setHasSucceeded,
+                    });
+                } else {
+                    userCreationFormHandler({
+                        token,
+                        data: formattedValues,
+                        setSubmitting,
+                        setFieldError,
+                        hasSucceeded: setHasSucceeded,
+                    });
+                }
             }}
         >
             {({
@@ -154,7 +217,7 @@ export const CreateUserForm = ({
                                     {...role}
                                     label={t(role.label)}
                                     placeholder={t(role.placeholder)}
-                                    options={roles}
+                                    options={roleOptions}
                                     errors={errors}
                                     handleChange={handleChange}
                                     handleBlur={handleBlur}
@@ -174,6 +237,7 @@ export const CreateUserForm = ({
                                     handleBlur={handleBlur}
                                     touched={touched}
                                     value={values.school}
+                                    isDisabled={isSingleSchool}
                                 />
                             </WrapItem>
                         </Stack>
@@ -198,7 +262,7 @@ export const CreateUserForm = ({
                         <Box w={{ base: '100%', md: '20%' }}>
                             <FormSubmit
                                 uid={'userCreation'}
-                                submit_message={t('forms.actions.user.create')}
+                                submit_message={submitLabel}
                                 {...{
                                     touched,
                                     errors,

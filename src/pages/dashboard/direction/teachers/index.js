@@ -3,6 +3,7 @@ import { TeacherDataSet } from '@components/common/reports/teacher_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
+import { ROLES, getAllowedSchools } from '@utils/roles';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapTeachersDataTable } from '@utils/mappers/teacher';
 import Cookies from 'cookies';
@@ -48,7 +49,7 @@ export default function Dashboard({ kpis, role, token }) {
   ];
 
   const teachers = mapTeachersDataTable({ teachers: kpis[2] });
-  const schools = kpis[3]?.data?.map((school) => ({
+  const schools = (kpis[3]?.data || []).map((school) => ({
     name: school.attributes.name,
     id: school.id,
   }));
@@ -93,6 +94,11 @@ export default function Dashboard({ kpis, role, token }) {
   );
 }
 
+const DIRECTORIAL_ROLES = [
+  ROLES.DIRECTEUR_ETABLISSMENT,
+  ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
+];
+
 export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
@@ -127,7 +133,14 @@ export const getServerSideProps = async ({ req, res }) => {
     user_token: token,
   });
   const role = response.role;
-  const kpis = await Promise.all([
+  const userSchoolId = response.school?.id;
+
+  const [
+    classesResponse,
+    studentsResponse,
+    teachersResponse,
+    schoolsResponse,
+  ] = await Promise.all([
     serverFetch({
       uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
@@ -146,9 +159,37 @@ export const getServerSideProps = async ({ req, res }) => {
     }).catch(() => ({ data: [] })),
   ]);
 
+  const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
+
+  const filteredTeachers = isEstablishmentDirector
+    ? {
+        ...teachersResponse,
+        data: (teachersResponse?.data || []).filter(
+          (teacher) =>
+            teacher.attributes?.school?.data?.id === userSchoolId
+        ),
+      }
+    : teachersResponse;
+
+  const filteredSchools = isEstablishmentDirector
+    ? {
+        ...schoolsResponse,
+        data: getAllowedSchools(
+          role?.name,
+          userSchoolId,
+          schoolsResponse?.data || []
+        ),
+      }
+    : schoolsResponse;
+
   return {
     props: {
-      kpis,
+      kpis: [
+        classesResponse,
+        studentsResponse,
+        filteredTeachers,
+        filteredSchools,
+      ],
       role,
       token,
     },

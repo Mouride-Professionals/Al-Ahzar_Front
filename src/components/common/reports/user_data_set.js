@@ -106,6 +106,9 @@ const ExpandedComponent = ({ data, schools, token, role: userRole }) => {
     value: school.id,
     label: school.name,
   }));
+  const onEdit = () => {
+    router.push(`/dashboard/direction/users/${data.id}/edit`);
+  };
 
   return (
     <ScaleFade px={5} initialScale={0.9} in={true}>
@@ -186,11 +189,11 @@ const ExpandedComponent = ({ data, schools, token, role: userRole }) => {
             <HStack justifyContent={'flex-end'} mt={6}>
               {hasPermission(userRole.name, 'manageUsers') &&
                 data.role?.name !== userRole.name && (
-                  <Button onClick={null} colorScheme="orange" variant="outline">
+                  <Button onClick={onEdit} colorScheme="orange" variant="outline">
                     {t('edit')}
                   </Button>
                 )}
-              {!school&& !hasPermission(userRole.name, 'manageUsers') && (
+              {!school && hasPermission(userRole.name, 'manageUsers') && (
                 <Button
                   onClick={openDialog}
                   colorScheme="orange"
@@ -277,15 +280,17 @@ export const UserDataSet = ({
         item.username.toLowerCase().includes(needle.toLowerCase())
     );
 
-  const actionButton = role?.name && (
-    <Button
-      onClick={() => router.push('/dashboard/direction/users/create')}
-      colorScheme={'orange'}
-      bgColor={colors.primary.regular}
-    >
-      {t('createUser')}
-    </Button>
-  );
+  const actionButton =
+    role?.name &&
+    hasPermission(role.name, 'manageUsers') && (
+      <Button
+        onClick={() => router.push('/dashboard/direction/users/create')}
+        colorScheme={'orange'}
+        bgColor={colors.primary.regular}
+      >
+        {t('createUser')}
+      </Button>
+    );
 
   return (
     <DataTableLayout

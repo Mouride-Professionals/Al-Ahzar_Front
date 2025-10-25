@@ -2,7 +2,8 @@ import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
 import { UserDataSet } from '@components/common/reports/user_data_set';
 import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
+import { ROLES } from '@utils/roles';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapUsersDataTable } from '@utils/mappers/user';
 import Cookies from 'cookies';
@@ -14,6 +15,11 @@ import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 
+
+const DIRECTORIAL_ROLES = [
+  ROLES.DIRECTEUR_ETABLISSMENT,
+  ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
+];
 
 export default function Dashboard({ kpis, role, token }) {
   const t = useTranslations();
@@ -64,7 +70,7 @@ export default function Dashboard({ kpis, role, token }) {
   // Map the fetched users data to the desired shape.
   const users = mapUsersDataTable({ users: kpis[0] });
   // take all schools with only their name, id, and type for
-  const schools = kpis[4]?.data?.map((school) => ({
+  const schools = (kpis[4]?.data || []).map((school) => ({
     name: school.attributes.name,
     id: school.id,
   }));
@@ -118,7 +124,6 @@ export const getServerSideProps = async ({ req, res }) => {
     };
   }
 
-  // Fetch the user data from your Strapi endpoint.
   const {
     alazhar: {
       get: {
@@ -132,13 +137,21 @@ export const getServerSideProps = async ({ req, res }) => {
     },
   } = routes.api_route;
 
-  const response = await serverFetch({
+  const currentUser = await serverFetch({
     uri: me,
     user_token: token,
   });
-  const role = response.role;
 
-  const kpis = await Promise.all([
+  const role = currentUser.role;
+  const userSchoolId = currentUser.school?.id;
+
+  const [
+    usersResponse,
+    classesResponse,
+    studentsResponse,
+    teachersResponse,
+    schoolsResponse,
+  ] = await Promise.all([
     serverFetch({
       uri: `${allUsers}?populate=*&sort=createdAt:desc`,
       user_token: token,
@@ -161,9 +174,73 @@ export const getServerSideProps = async ({ req, res }) => {
     }).catch(() => ({ data: [] })),
   ]);
 
+  const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
+  const allowedUserRoles = [
+    ROLES.SURVEILLANT_GENERAL,
+    ROLES.ADJOINT_SURVEILLANT_GENERAL,
+    ROLES.CAISSIER,
+    ROLES.ADJOINT_CAISSIER,
+  ];
+
+  const matchesSchool = (entitySchool) => {
+    if (!userSchoolId || !entitySchool) {
+      return false;
+    }
+    if (typeof entitySchool === 'number') {
+      return entitySchool === userSchoolId;
+    }
+    if (entitySchool.id) {
+      return entitySchool.id === userSchoolId;
+    }
+    if (entitySchool.data?.id) {
+      return entitySchool.data.id === userSchoolId;
+    }
+    return false;
+  };
+
+  const getRoleName = (userRole) => {
+    if (!userRole) return undefined;
+    if (userRole.name) return userRole.name;
+    if (userRole.data?.attributes?.name) return userRole.data.attributes.name;
+    return undefined;
+  };
+
+  const filteredUsers =
+    isEstablishmentDirector && Array.isArray(usersResponse)
+      ? usersResponse.filter(
+          (user) =>
+            allowedUserRoles.includes(getRoleName(user.role)) &&
+            matchesSchool(user.school)
+        )
+      : usersResponse;
+
+  const filteredTeachers =
+    isEstablishmentDirector && teachersResponse?.data
+      ? {
+          ...teachersResponse,
+          data: teachersResponse.data.filter((teacher) =>
+            matchesSchool(teacher.attributes?.school)
+          ),
+        }
+      : teachersResponse;
+
+  const filteredSchools =
+    isEstablishmentDirector && schoolsResponse?.data
+      ? {
+          ...schoolsResponse,
+          data: schoolsResponse.data.filter((school) => matchesSchool(school)),
+        }
+      : schoolsResponse;
+
   return {
     props: {
-      kpis,
+      kpis: [
+        filteredUsers,
+        classesResponse,
+        studentsResponse,
+        filteredTeachers,
+        filteredSchools,
+      ],
       role,
       token,
     },

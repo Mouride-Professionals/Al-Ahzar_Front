@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
+import { getAllowedSchools, ROLES } from '@utils/roles';
 
 const {
   components: {
@@ -77,28 +78,47 @@ export default function Create({ schools, role, token }) {
   );
 }
 
+const DIRECTORIAL_ROLES = [
+  ROLES.DIRECTEUR_ETABLISSMENT,
+  ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
+];
+
 export const getServerSideProps = async ({ req }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
-  const { role = null } = await serverFetch({
+  const currentUser = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
+  const role = currentUser.role ?? null;
+  const userSchoolId = currentUser.school?.id;
 
-  const schools = await serverFetch({
+  const schoolsResponse = await serverFetch({
     uri:
       routes.api_route.alazhar.get.schools.all +
       '?fields[0]=name&fields[1]=id&fields[2]=type',
     user_token: token,
   });
 
+  const filteredSchools =
+    role && DIRECTORIAL_ROLES.includes(role.name)
+      ? {
+          ...schoolsResponse,
+          data: getAllowedSchools(
+            role.name,
+            userSchoolId,
+            schoolsResponse?.data || []
+          ),
+        }
+      : schoolsResponse;
+
   return {
     props: {
       role,
       token: token,
-      schools,
+      schools: filteredSchools,
     },
   };
 };
