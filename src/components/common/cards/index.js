@@ -1,31 +1,92 @@
-import { Box, Divider, HStack, Stack, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { colors, messages } from '@theme';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { BsCheck } from 'react-icons/bs';
+import { BsCheck, BsThreeDotsVertical } from 'react-icons/bs';
+import { MdEdit, MdVisibility } from 'react-icons/md';
 import { PrimaryButton, SecondaryButton } from '../button';
 
 export const ClassCard = ({
   goTo,
+  editTo,
   theme,
   section,
   students = Math.floor(Math.random() * 2 + 1),
   level,
+  description,
+  canEdit = false,
 }) => {
   const router = useRouter();
+  const t = useTranslations('components.cards.class');
+
+  const handleMenuClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleViewDetails = (e) => {
+    e.stopPropagation();
+    if (goTo) router.push(goTo);
+  };
+
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    if (editTo) router.push(editTo);
+  };
 
   return (
     <Stack
-      {...(goTo && {
-        _hover: { cursor: 'pointer' },
-        onClick: () => router.push(goTo),
-      })}
       bgColor={colors.white}
       py={4}
       px={5}
-      h={170}
+      h={description ? 200 : 170}
       w={140}
       borderRadius={10}
+      position="relative"
     >
+      {/* Three-dot menu */}
+      {(goTo || (canEdit && editTo)) && (
+        <Box position="absolute" top={2} right={2} zIndex={10}>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              icon={<BsThreeDotsVertical />}
+              variant="ghost"
+              size="sm"
+              aria-label="Options"
+              onClick={handleMenuClick}
+              _hover={{ bgColor: colors.gray.light }}
+            />
+            <MenuList>
+              {goTo && (
+                <MenuItem
+                  icon={<MdVisibility size={18} />}
+                  onClick={handleViewDetails}
+                >
+                  {t('viewDetails')}
+                </MenuItem>
+              )}
+              {canEdit && editTo && (
+                <MenuItem icon={<MdEdit size={18} />} onClick={handleEdit}>
+                  {t('editClass')}
+                </MenuItem>
+              )}
+            </MenuList>
+          </Menu>
+        </Box>
+      )}
+
       <VStack
         h={46}
         w={46}
@@ -46,9 +107,21 @@ export const ClassCard = ({
         {level}
       </Text>
 
+      {description && (
+        <Text
+          color={colors.gray.sport}
+          fontSize={15}
+          fontWeight={'600'}
+          noOfLines={2}
+          title={description}
+        >
+          {description}
+        </Text>
+      )}
       <Text color={colors.gray.regular} fontSize={16} fontWeight={'700'}>
         {messages.components.cards.class.students.replace('%number', students)}
       </Text>
+
     </Stack>
   );
 };
@@ -162,7 +235,7 @@ export const SchoolCreationCard = ({ title, message, cta }) => {
 
 export const StatCard = ({ icon, title, count }) => {
   return (
-    <Box bgColor={colors.white} borderRadius={10} h={95} p={5} minW={200} >
+    <Box bgColor={colors.white} borderRadius={10} h={95} p={5} minW={200}>
       <HStack>
         <VStack
           mr={2}

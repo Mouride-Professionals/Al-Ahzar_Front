@@ -1,15 +1,13 @@
 import { Box, HStack, Stack, Text, WrapItem } from '@chakra-ui/react';
 import { SecondaryButton } from '@components/common/button';
 import { FormInput, FormSubmit } from '@components/common/input/FormInput';
-import { createClassroomFormHandler } from '@handlers';
+import { updateClassroomFormHandler } from '@handlers';
 import { colors, forms } from '@theme';
 import { classCreationSchema } from '@utils/schemas';
-import { mapFormInitialValues } from '@utils/tools/mappers';
 import { ErrorMessage, Formik } from 'formik';
-import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 
-export const ClassCreationForm = ({ school, token, action }) => {
+export const ClassEditForm = ({ classData, token, action }) => {
   const t = useTranslations('components');
   const {
     inputs: {
@@ -19,17 +17,19 @@ export const ClassCreationForm = ({ school, token, action }) => {
     },
   } = forms;
 
-  const schoolYear = Cookies.get('selectedSchoolYear');
-
   return (
     <Formik
       validationSchema={classCreationSchema}
-      initialValues={mapFormInitialValues(classCreationSchema._nodes)}
+      initialValues={{
+        grade: classData?.cycle || '',
+        level: classData?.level || '',
+        letter: classData?.letter || '',
+        description: classData?.description || '',
+      }}
       onSubmit={(values, { setSubmitting, setFieldError }) => {
-        createClassroomFormHandler({
+        updateClassroomFormHandler({
           token,
-          school,
-          schoolYear,
+          classId: classData?.id,
           data: values,
           setSubmitting,
           setFieldError,
@@ -119,7 +119,7 @@ export const ClassCreationForm = ({ school, token, action }) => {
               style={{ color: colors.error }}
               render={(schoolCreation) => (
                 <Text color={colors.error}>
-                  {t('forms.messages.classroom.creation.errors.problem', {
+                  {t('forms.messages.classroom.editing.errors.problem', {
                     error: schoolCreation.schoolCreation,
                   })}
                 </Text>
@@ -137,8 +137,8 @@ export const ClassCreationForm = ({ school, token, action }) => {
             </Box>
             <Box w={'40%'}>
               <FormSubmit
-                uid={'registration'}
-                submit_message={t('forms.actions.class.create')}
+                uid={'classEdit'}
+                submit_message={t('forms.actions.class.edit')}
                 {...{
                   touched,
                   errors,

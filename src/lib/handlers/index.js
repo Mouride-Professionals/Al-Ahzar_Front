@@ -4,6 +4,7 @@ import {
   createClassroom,
   createSchool,
   getSchool,
+  updateClassroom,
   updateSchool,
 } from '@services/school';
 import { createSchoolYear, updateSchoolYear } from '@services/school_year';
@@ -346,6 +347,31 @@ export const createClassroomFormHandler = async ({
       );
       setSubmitting(false);
     });
+};
+
+export const updateClassroomFormHandler = async ({
+  classId,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  action,
+}) => {
+  try {
+    await updateClassroom({
+      classId,
+      payload: mapClassBody({ payload: data }),
+      token,
+    });
+    action(true);
+    // window.location.reload();
+  } catch (err) {
+    setFieldError(
+      'schoolCreation',
+      'Un problème est survenu lors de la modification'
+    );
+    setSubmitting(false);
+  }
 };
 
 export const monthValidationHandler = async ({ id, user_token }) => {
@@ -806,7 +832,7 @@ export const paymentCancellationHandler = async ({
     hasSucceeded(true);
   } catch (err) {
     console.log('Error cancelling payment:', err);
-    
+
     if (err?.data) {
       const { data } = err?.data;
       if (data?.message?.includes('not found')) {

@@ -133,7 +133,9 @@
         },
         "cards": {
             "class": {
-                "students": "{number} students"
+                "students": "{number} students",
+                "viewDetails": "View Details",
+                "editClass": "Edit Class"
             },
             "student": {
                 "confirmation": "Confirm Enrollment",
@@ -779,6 +781,10 @@
                         "letter": {
                             "placeholder": "Enter letter",
                             "label": "Letter"
+                        },
+                        "description": {
+                            "placeholder": "Brief description (max 50 characters)",
+                            "label": "Description"
                         }
                     },
                     "cancel": "Cancel",
@@ -1406,6 +1412,24 @@
                             "problem": "An error occurred while creating the expense"
                         }
                     }
+                },
+                "classroom": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "General Information"
+                        },
+                        "errors": {
+                            "already_exists": "This classroom is already registered",
+                            "problem": "An error occurred while creating the classroom"
+                        }
+                    },
+                    "editing": {
+                        "errors": {
+                            "not_found": "Classroom not found",
+                            "already_exists": "This classroom is already registered",
+                            "problem": "An error occurred while editing the classroom"
+                        }
+                    }
                 }
             },
             "actions": {
@@ -1498,7 +1522,8 @@
         "class": {
             "heading": "Primary Classes",
             "create": "Create Class",
-            "establishment": "School %name"
+            "establishment": "School %name",
+            "editClass": "Edit Class %name"
         },
         "stats": {
             "classes": "Total Classes",

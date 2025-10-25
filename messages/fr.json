@@ -133,7 +133,9 @@
         },
         "cards": {
             "class": {
-                "students": "{number} élèves"
+                "students": "{number} élèves",
+                "viewDetails": "Voir les détails",
+                "editClass": "Modifier la classe"
             },
             "student": {
                 "confirmation": "Confirmer l'inscription",
@@ -779,6 +781,10 @@
                         "letter": {
                             "placeholder": "Entrez la lettre",
                             "label": "Lettre"
+                        },
+                        "description": {
+                            "placeholder": "Brève description (max 50 caractères)",
+                            "label": "Description"
                         }
                     },
                     "cancel": "Annuler",
@@ -1405,6 +1411,24 @@
                             "problem": "Une erreur s’est produite lors de la création de la dépense"
                         }
                     }
+                },
+                "classroom": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "Informations générales"
+                        },
+                        "errors": {
+                            "already_exists": "Cette classe est déjà enregistrée",
+                            "problem": "Une erreur est survenue lors de la création de la classe"
+                        }
+                    },
+                    "editing": {
+                        "errors": {
+                            "not_found": "Classe introuvable",
+                            "already_exists": "Cette classe est déjà enregistrée",
+                            "problem": "Une erreur est survenue lors de la modification de la classe"
+                        }
+                    }
                 }
             },
             "actions": {
@@ -1497,7 +1521,8 @@
         "class": {
             "heading": "Classes primaires",
             "create": "Créer une classe",
-            "establishment": "École %name"
+            "establishment": "École %name",
+            "editClass": "Modifier la classe %name"
         },
         "stats": {
             "classes": "Total des classes",

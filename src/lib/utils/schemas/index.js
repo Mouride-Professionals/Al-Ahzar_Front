@@ -251,6 +251,9 @@ export const classCreationSchema = object({
   grade: string().trim().oneOf(classComplexity.allowedCycles).required(),
   level: string().trim().oneOf(classComplexity.allowedClassLevels).required(),
   letter: string().trim().oneOf(classComplexity.allowedLetter).required(),
+  description: string()
+    .trim()
+    .max(50, 'Description must be less than 50 characters'),
   schoolCreation: string(),
 });
 

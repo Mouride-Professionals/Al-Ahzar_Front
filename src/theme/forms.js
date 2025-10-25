@@ -380,6 +380,13 @@ module.exports = {
             select: true,
             options: mapOptions(classCreationSchema.fields.letter._whitelist),
           },
+          description: {
+            placeholder: 'forms.inputs.class.creation.description.placeholder',
+            label: 'forms.inputs.class.creation.description.label',
+            uid: 'description',
+            type: 'text',
+            maxLength: 50,
+          },
         },
       },
       school: {

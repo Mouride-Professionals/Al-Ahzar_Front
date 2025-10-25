@@ -255,6 +255,7 @@ export const mapClassesByLevel = ({ classes }) => {
         attributes: {
           level,
           letter,
+          description,
           enrollments: { data: enrollments },
         },
       } = item;
@@ -269,12 +270,14 @@ export const mapClassesByLevel = ({ classes }) => {
           existingLevel.students.push(enrollments.length);
           existingLevel.classId.push(id);
           existingLevel.sections.push(letter);
+          existingLevel.descriptions.push(description || '');
         } else {
           transformedData[category].push({
             classId: [id],
             students: [enrollments.length],
             name: level,
             sections: [letter],
+            descriptions: [description || ''],
           });
         }
       }
