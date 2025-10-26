@@ -1,9 +1,11 @@
 export const mapClassBody = ({ payload }) => {
-  const { level, letter, grade, name, school, schoolYear } = payload;
+  const { level, letter, grade, name, school, schoolYear, description } =
+    payload;
   return {
     data: {
       cycle: grade,
       name,
+      description,
       school: school,
       schoolYear: schoolYear,
       level,

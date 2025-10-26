@@ -3,13 +3,13 @@ import { RegistrationCard } from '@components/common/cards';
 import { CreateStudentForm } from '@components/forms/student/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
-import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 export default function Create({ classes, role, token, schoolYear }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
@@ -85,7 +85,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
-  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   const { role, school } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,

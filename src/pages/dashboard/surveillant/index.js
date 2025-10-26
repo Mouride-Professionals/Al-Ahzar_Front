@@ -5,13 +5,13 @@ import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
-import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
 import { HiAcademicCap } from 'react-icons/hi';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 export default function Dashboard({ kpis, role, token, schoolId }) {
   const t = useTranslations();
@@ -102,7 +102,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken; // Ensure token exists in session
-  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
   if (!token) {
     return {
       redirect: {

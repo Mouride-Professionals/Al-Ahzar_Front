@@ -4,6 +4,7 @@ import {
   createClassroom,
   createSchool,
   getSchool,
+  updateClassroom,
   updateSchool,
 } from '@services/school';
 import { createSchoolYear, updateSchoolYear } from '@services/school_year';
@@ -348,6 +349,31 @@ export const createClassroomFormHandler = async ({
     });
 };
 
+export const updateClassroomFormHandler = async ({
+  classId,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  action,
+}) => {
+  try {
+    await updateClassroom({
+      classId,
+      payload: mapClassBody({ payload: data }),
+      token,
+    });
+    action(true);
+    // window.location.reload();
+  } catch (err) {
+    setFieldError(
+      'schoolCreation',
+      'Un problème est survenu lors de la modification'
+    );
+    setSubmitting(false);
+  }
+};
+
 export const monthValidationHandler = async ({ id, user_token }) => {
   const payload = mapMonthCreationBody({ payload: id });
 
@@ -508,6 +534,63 @@ export const userCreationFormHandler = async ({
     }
   } finally {
     // Ensure the submitting state is reset
+    setSubmitting(false);
+  }
+};
+
+export const userUpdateFormHandler = async ({
+  userId,
+  data,
+  setSubmitting,
+  setFieldError,
+  token,
+  hasSucceeded,
+}) => {
+  try {
+    const payload = {
+      username: data.username,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email,
+      role: data.role,
+    };
+
+    if (data.school) {
+      payload.school = data.school;
+    }
+
+    await updateUser({
+      user: userId,
+      payload,
+      token,
+    });
+
+    hasSucceeded(true);
+  } catch (err) {
+    console.error('Error updating user:', err);
+
+    if (err?.data) {
+      const { data: errorData } = err.data;
+
+      if (errorData?.message?.includes('exists')) {
+        setFieldError(
+          'registration',
+          forms.messages.registration.errors.already_exists
+        );
+        return;
+      }
+
+      setFieldError(
+        'registration',
+        errorData?.message || forms.messages.registration.errors.problem
+      );
+    } else {
+      setFieldError(
+        'registration',
+        err?.message || forms.messages.registration.errors.problem
+      );
+    }
+  } finally {
     setSubmitting(false);
   }
 };
@@ -806,7 +889,7 @@ export const paymentCancellationHandler = async ({
     hasSucceeded(true);
   } catch (err) {
     console.log('Error cancelling payment:', err);
-    
+
     if (err?.data) {
       const { data } = err?.data;
       if (data?.message?.includes('not found')) {

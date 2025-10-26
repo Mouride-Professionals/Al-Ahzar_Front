@@ -2,7 +2,6 @@ import { Box, Grid, HStack, Heading, Stack, Text } from '@chakra-ui/react';
 import { PrimaryButton } from '@components/common/button';
 import { ClassCard } from '@components/common/cards';
 import { colors, messages } from '@theme';
-import { ACCESS_CREATION } from '@utils/mappers/classes';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { hasPermission } from '@utils/roles';
 import { ClassTitle } from '@utils/tools/mappers';
@@ -95,11 +94,22 @@ export const ClassesList = ({
                             _class.classId[idx]
                           )
                     }
+                    editTo={
+                      hasPermission(role.name, 'manageClasses') &&
+                      ACCESS_ROUTES[role.name].classes?.edit
+                        ? ACCESS_ROUTES[role.name].classes.edit.replace(
+                            '%id',
+                            _class.classId[idx]
+                          )
+                        : null
+                    }
+                    canEdit={hasPermission(role.name, 'manageClasses')}
                     {...(listOf === 'intermediate' && { theme: colors.purple })}
                     {...(listOf === 'upperIntermediate' && {
                       theme: colors.pink,
                     })}
                     students={_class.students[idx]}
+                    description={_class.descriptions?.[idx]}
                     section={section}
                     level={ClassTitle(_class.name)}
                     key={`class-${section}-${_class.classId[idx]}`}

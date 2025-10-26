@@ -81,3 +81,19 @@ export const createClassroom = async ({ payload, token }) => {
     user_token: token,
   });
 };
+
+export const updateClassroom = async ({ classId, payload, token }) => {
+  const {
+    alazhar: {
+      update: { classroom },
+    },
+  } = routes.api_route;
+  return await fetcher({
+    uri: classroom.replace('%id', classId),
+    options: {
+      method: 'PUT',
+      body: payload,
+    },
+    user_token: token,
+  });
+};

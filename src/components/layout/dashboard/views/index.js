@@ -90,7 +90,13 @@ export const DesktopDashboardLayoutView = ({
               >
                 <PopoverTrigger>
                   <HStack _hover={{ cursor: 'pointer' }} onClick={onToggle}>
-                    <Box h={50} w={50} pos={'relative'}>
+                    <Box
+                      h={50}
+                      w={50}
+                      pos={'relative'}
+                      borderRadius={'full'}
+                      overflow={'hidden'}
+                    >
                       <Image {...images.dashboard.avatar} alt={'logo'} fill />
                     </Box>
                     <Stack>
@@ -298,4 +304,3 @@ export const MobileDashboardLayoutView = ({
     </VStack>
   );
 };
-

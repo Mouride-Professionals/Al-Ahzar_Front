@@ -2,6 +2,7 @@ import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateTeacherForm } from '@components/forms/teacher/create'; // Reuse form
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
+import { getAllowedSchools, ROLES } from '@utils/roles';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -78,28 +79,78 @@ export default function Edit({ teacher, schools, role, token }) {
   );
 }
 
+const DIRECTORIAL_ROLES = [
+  ROLES.DIRECTEUR_ETABLISSMENT,
+  ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
+];
+
 export const getServerSideProps = async ({ req, params }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
+  if (!token) {
+    return {
+      redirect: {
+        destination: routes.page_route.auth?.initial || '/user/auth',
+        permanent: false,
+      },
+    };
+  }
+
+  const currentUser = await serverFetch({
+    uri: routes.api_route.alazhar.get.me,
+    user_token: token,
+  });
+  const role = currentUser.role ?? null;
+  const userSchoolId = currentUser.school?.id;
+
   // Fetch teacher data by ID
-  const teacher = await serverFetch({
+  const teacherResponse = await serverFetch({
     uri: `${routes.api_route.alazhar.get.teachers.all}/${params.id}?populate[school][fields][0]=name&populate[school][fields][1]=id`,
     user_token: token,
   });
 
-  const schools = await serverFetch({
+  const teacherData = teacherResponse?.data || null;
+  const teacherSchoolId =
+    teacherData?.attributes?.school?.data?.id ?? null;
+
+  if (
+    DIRECTORIAL_ROLES.includes(role?.name) &&
+    teacherSchoolId &&
+    teacherSchoolId !== userSchoolId
+  ) {
+    return {
+      redirect: {
+        destination: routes.page_route.dashboard.direction.teachers.all,
+        permanent: false,
+      },
+    };
+  }
+
+  const schoolsResponse = await serverFetch({
     uri: `${routes.api_route.alazhar.get.schools.all}?fields[0]=name&fields[1]=id&fields[2]=type`,
     user_token: token,
   });
 
+  const filteredSchools =
+    role && DIRECTORIAL_ROLES.includes(role.name)
+      ? {
+          ...schoolsResponse,
+          data: getAllowedSchools(
+            role.name,
+            userSchoolId,
+            schoolsResponse?.data || []
+          ),
+        }
+      : schoolsResponse;
+
   return {
     props: {
-      role: session?.role || null,
+      role,
       token: token,
-      teacher: teacher?.data || null, // Preload teacher data
-      schools,
+      teacher: teacherData, // Preload teacher data
+      schools: filteredSchools,
     },
   };
 };

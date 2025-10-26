@@ -133,7 +133,9 @@
         },
         "cards": {
             "class": {
-                "students": "{number} طلاب"
+                "students": "{number} طلاب",
+                "viewDetails": "عرض التفاصيل",
+                "editClass": "تعديل الفصل"
             },
             "student": {
                 "confirmation": "تأكيد التسجيل",
@@ -779,6 +781,10 @@
                         "letter": {
                             "placeholder": "أدخل القسم",
                             "label": "القسم"
+                        },
+                        "description": {
+                            "placeholder": "وصف موجز (50 حرفًا كحد أقصى)",
+                            "label": "وصف"
                         }
                     }
                 },
@@ -1403,6 +1409,24 @@
                             "problem": "حدث خطأ أثناء إنشاء المصروف"
                         }
                     }
+                },
+                "classroom": {
+                    "creation": {
+                        "info": {
+                            "generalInfoMessage": "معلومات عامة"
+                        },
+                        "errors": {
+                            "already_exists": "هذا الفصل مسجل بالفعل",
+                            "problem": "حدث خطأ أثناء إنشاء الفصل"
+                        }
+                    },
+                    "editing": {
+                        "errors": {
+                            "not_found": "لم يتم العثور على الفصل",
+                            "already_exists": "هذا الفصل مسجل بالفعل",
+                            "problem": "حدث خطأ أثناء تعديل الفصل"
+                        }
+                    }
                 }
             },
             "actions": {
@@ -1495,7 +1519,8 @@
         "class": {
             "heading": "الفصول الابتدائية",
             "create": "إنشاء فصل",
-            "establishment": "مدرسة %name"
+            "establishment": "مدرسة %name",
+            "editClass": "تعديل الفصل %name"
         },
         "stats": {
             "classes": "إجمالي الفصول",
@@ -1579,5 +1604,21 @@
                 "description": "تم استيراد {count} طالب بنجاح"
             }
         }
+    },
+    "pwa": {
+        "installTitle": "ثبّت تطبيق الأزهر على شاشتك الرئيسية",
+        "ios": {
+            "step1": "اضغط على أيقونة المشاركة في أسفل متصفح سفاري.",
+            "step2": "اختر «إضافة إلى الشاشة الرئيسية».",
+            "step3": "اضغط «إضافة» للتأكيد.",
+            "ok": "حسناً"
+        },
+        "android": {
+            "hint": "اضغط «تثبيت» لإضافة التطبيق إلى شاشتك الرئيسية.",
+            "install": "تثبيت"
+        }
+    },
+    "common": {
+        "close": "إغلاق"
     }
 }

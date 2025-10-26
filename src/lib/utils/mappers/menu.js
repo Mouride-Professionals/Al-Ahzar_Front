@@ -25,12 +25,16 @@ export const ACCESS_ROUTES = {
     finance: cashier.finance,
     classes: surveillant.classes,
     students: surveillant.students,
+    users: direction.users,
+    teachers: direction.teachers,
   }, // Combines caissier and surveillant_general routes
   [ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT]: {
     initial: cashier.initial,
     finance: cashier.finance,
     classes: surveillant.classes,
     students: surveillant.students,
+    users: direction.users,
+    teachers: direction.teachers,
   }, // Same access as Directeur Etablissement
   // SGF roles - read-only finance access via direction dashboard
   [ROLES.SECRETAIRE_GENERALE_FINANCES]: direction,

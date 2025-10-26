@@ -30,6 +30,7 @@ export const themeRoutes = {
         initial: '/dashboard/surveillant',
         classes: {
           detail: '/dashboard/surveillant/classes/%id',
+          edit: '/dashboard/surveillant/classes/%id/edit',
           all: '/dashboard/surveillant/classes',
         },
         students: {
@@ -50,7 +51,6 @@ export const themeRoutes = {
             all: '/dashboard/direction/schools/%id/classes',
             detail: '/dashboard/direction/schools/%id/classes/%classId',
             create: '/dashboard/direction/schools/%id/classes/create',
-            edit: '/dashboard/direction/schools/%id/classes/%classId/edit',
           },
         },
         teachers: {
@@ -152,6 +152,7 @@ export const themeRoutes = {
       update: {
         student: '/students/%id',
         enrollment: '/enrollments/%id',
+        classroom: '/classes/%id',
         school: '/schools/%id',
         teacher: '/teachers/%id',
         school_year: '/school-years/%id',

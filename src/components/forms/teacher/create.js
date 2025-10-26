@@ -23,14 +23,14 @@ export const CreateTeacherForm = ({
   const direction = router.locale === 'ar' ? 'rtl' : 'ltr';
 
   const { id, attributes: teacherData } = initialData;
-  const schoolOptions = schools.data.map((school) => ({
+  const schoolOptions = (schools?.data || []).map((school) => ({
     name: school.attributes.name,
     value: school.id,
   }));
   const [selectedContractType, setSelectedContractType] = useState(teacherData?.contractType || '');
 
   const initialValues = mapFormInitialValues(teacherRecruitmentSchema._nodes, teacherData);
-  if (isEdit) {
+  if (isEdit && teacherData?.school?.data?.id) {
     initialValues.school = teacherData.school.data.id;
   }
 
