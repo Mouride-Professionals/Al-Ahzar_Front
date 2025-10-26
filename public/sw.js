@@ -26,10 +26,27 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  if (request.method !== 'GET' || !request.url.startsWith(self.location.origin)) {
+  // Don't cache non-GET requests
+  if (
+    request.method !== 'GET' ||
+    !request.url.startsWith(self.location.origin)
+  ) {
     return;
   }
 
+  // **NEW: Don't cache API calls, _next data, or dynamic routes**
+  const url = new URL(request.url);
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.pathname.includes('/_next/data/') ||
+    url.search.includes('_rsc=') // Next.js 13+ RSC requests
+  ) {
+    // Let API calls go straight to network, no caching
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // Cache static assets only
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -40,7 +57,9 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           if (response && response.status === 200) {
             const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+            caches
+              .open(CACHE_NAME)
+              .then((cache) => cache.put(request, responseClone));
           }
           return response;
         })

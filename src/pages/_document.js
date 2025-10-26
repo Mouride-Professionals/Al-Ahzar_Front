@@ -10,6 +10,7 @@ export default function Document() {
       <Head>
         <meta name="application-name" content="Al Azhar Dashboard" />
         <meta name="theme-color" content="#fd6101" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Al Azhar" />
