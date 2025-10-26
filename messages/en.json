@@ -1607,5 +1607,21 @@
                 "description": "{count} students imported successfully"
             }
         }
+    },
+    "pwa": {
+        "installTitle": "Install Al Azhar on your home screen",
+        "ios": {
+            "step1": "Tap the share icon at the bottom of Safari.",
+            "step2": "Select “Add to Home Screen”.",
+            "step3": "Confirm by tapping “Add”.",
+            "ok": "Got it"
+        },
+        "android": {
+            "hint": "Tap “Install” to pin the application to your home screen.",
+            "install": "Install"
+        }
+    },
+    "common": {
+        "close": "Close"
     }
 }

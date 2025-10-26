@@ -1606,5 +1606,21 @@
                 "description": "{count} étudiants importés avec succès"
             }
         }
+    },
+    "pwa": {
+        "installTitle": "Installer Al Azhar sur votre écran d’accueil",
+        "ios": {
+            "step1": "Touchez l’icône de partage en bas de Safari.",
+            "step2": "Sélectionnez « Ajouter à l’écran d’accueil ».",
+            "step3": "Confirmez en appuyant sur « Ajouter ».",
+            "ok": "Compris"
+        },
+        "android": {
+            "hint": "Touchez « Installer » pour épingler l’application sur votre écran d’accueil.",
+            "install": "Installer"
+        }
+    },
+    "common": {
+        "close": "Fermer"
     }
 }

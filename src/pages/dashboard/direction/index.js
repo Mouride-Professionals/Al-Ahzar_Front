@@ -5,7 +5,6 @@ import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapSchoolsDataTable } from '@utils/mappers/school';
-import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { FaSuitcase, FaUser } from 'react-icons/fa';
@@ -13,6 +12,7 @@ import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 
 export default function Dashboard({ kpis, role, token }) {
@@ -97,8 +97,6 @@ export const getServerSideProps = async ({ req, res }) => {
   const session = await getToken({ req, secret });
   const token = session?.accessToken; // Ensure token exists in session
 
-  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
-
   if (!token) {
     return {
       redirect: {
@@ -107,6 +105,9 @@ export const getServerSideProps = async ({ req, res }) => {
       },
     };
   }
+
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   const {
     alazhar: {

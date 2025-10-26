@@ -3,6 +3,7 @@ import '../styles/globals.css';
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import RTLProvider from '@components/RTLProvider';
+import AddToHomePrompt from '@components/pwa/AddToHomePrompt';
 import { SchoolYearProvider } from '@utils/context/school_year_context';
 import { SessionProvider } from 'next-auth/react';
 import { NextIntlClientProvider } from 'next-intl';
@@ -29,7 +30,6 @@ export default function AlAzhar({ Component, pageProps }) {
   const locale = router.locale || 'ar';
   const [mounted, setMounted] = useState(false);
 
-
   // Set <html dir> dynamically
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -39,6 +39,26 @@ export default function AlAzhar({ Component, pageProps }) {
     setMounted(true);
   }, [locale, mounted]);
 
+  useEffect(() => {
+    if (
+      typeof window === 'undefined' ||
+      !('serviceWorker' in navigator) ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return;
+    }
+
+    const registerServiceWorker = async () => {
+      try {
+        await navigator.serviceWorker.register('/sw.js');
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Service worker registration failed', error);
+      }
+    };
+
+    registerServiceWorker();
+  }, []);
 
   // Load messages for the current locale
   let messages;
@@ -66,6 +86,7 @@ export default function AlAzhar({ Component, pageProps }) {
               <SchoolYearProvider>
                 <RTLProvider>
                   <Component {...pageProps} />
+                  <AddToHomePrompt />
                 </RTLProvider>
               </SchoolYearProvider>
             </Suspense>

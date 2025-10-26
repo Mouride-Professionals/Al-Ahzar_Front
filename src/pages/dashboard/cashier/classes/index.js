@@ -14,10 +14,10 @@ import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
-import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 const {
   pages: { dashboard },
@@ -88,7 +88,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
-  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   const {
     alazhar: {

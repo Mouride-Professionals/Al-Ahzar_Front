@@ -14,6 +14,15 @@ const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req) {
   const url = req.nextUrl.clone();
+  const { pathname } = url;
+
+  if (
+    /\.(?:png|jpe?g|gif|svg|webp|ico)$/.test(pathname) ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/favicon')
+  ) {
+    return NextResponse.next();
+  }
 
   const {
     auth: { initial: loginRoute },

@@ -47,6 +47,7 @@ import {
   YAxis,
 } from 'recharts';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 const FinanceDashboard = ({
   role,
@@ -515,9 +516,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
-  const Cookies = require('cookies');
-  const cookies = new Cookies(req, res);
-  const activeSchoolYear = cookies.get('selectedSchoolYear');
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   if (!token) {
     return {

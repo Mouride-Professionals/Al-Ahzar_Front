@@ -14,11 +14,11 @@ import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { mapClassesByLevel } from '@utils/mappers/student';
-import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 export default function Classes({ classes, role, schoolId, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,7 +83,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
-  const activeSchoolYear = new Cookies(req, res).get('selectedSchoolYear');
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   const {
     alazhar: {
@@ -102,7 +103,9 @@ export const getServerSideProps = async ({ req, res }) => {
   const { role, school: { id: schoolId } } = userResponse;
 
   const classesResponse = await serverFetch({
-    uri: classrooms.replace('%schoolId', schoolId).replace('%activeSchoolYear', activeSchoolYear),
+    uri: classrooms
+      .replace('%schoolId', schoolId)
+      .replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
 

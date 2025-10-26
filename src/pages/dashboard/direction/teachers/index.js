@@ -6,7 +6,6 @@ import { colors, routes } from '@theme';
 import { ROLES, getAllowedSchools } from '@utils/roles';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapTeachersDataTable } from '@utils/mappers/teacher';
-import Cookies from 'cookies';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -16,6 +15,7 @@ import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
 import Loading from '../../loading';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 export default function Dashboard({ kpis, role, token }) {
   const [loading, setLoading] = useState(true);
@@ -104,8 +104,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const session = await getToken({ req, secret });
 
   const token = session?.accessToken; // Ensure token exists in session
-  const cookies = new Cookies(req, res);
-  const activeSchoolYear = cookies.get('selectedSchoolYear');
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   if (!token) {
     return {

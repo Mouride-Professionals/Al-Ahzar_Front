@@ -1,0 +1,23 @@
+{
+  "name": "Al Azhar Dashboard",
+  "short_name": "Al Azhar",
+  "description": "Suivi et gestion des établissements Al Azhar.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#fd6101",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

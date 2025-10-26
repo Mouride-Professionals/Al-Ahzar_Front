@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 const {
   components: {
@@ -79,13 +80,14 @@ export default function Edit({ student, classes, role, token, schoolYear }) {
   );
 }
 
-export const getServerSideProps = async ({ req, params }) => {
+export const getServerSideProps = async ({ req, res, params }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
 
   // Get current school year from cookies or default
-  const schoolYear = req.cookies.selectedSchoolYear || null;
+  const schoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   const { role, school } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
