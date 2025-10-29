@@ -249,6 +249,24 @@
                 "enrolledOn": "Enrolled on",
                 "studentsEnrolled": "Enrolled Students",
                 "studentsNotEnrolled": "Unenrolled Students",
+                "exportSheetName": "Students",
+                "exportHeaders": {
+                    "student_identifier": "Student ID",
+                    "firstname": "First Name",
+                    "lastname": "Last Name",
+                    "level": "Class",
+                    "type": "Enrollment Type",
+                    "socialStatus": "Social Status",
+                    "guardian": "Guardian",
+                    "guardian_phone": "Guardian Phone",
+                    "registered_at": "Registration Date",
+                    "enrollment_date": "Start Date",
+                    "enrollment_number": "Enrollment Number",
+                    "registrationComment": "Comment",
+                    "isCurrentMonthPaid": "Current Month Paid",
+                    "yes": "Yes",
+                    "no": "No"
+                },
                 "cta": {
                     "filter": "",
                     "export": ""

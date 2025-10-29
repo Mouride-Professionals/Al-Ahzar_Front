@@ -3,7 +3,7 @@
 import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { FormExport, FormFilter, FormSearch } from '@components/common/input/FormInput';
 import { colors } from '@theme';
-import { downloadCSV } from '@utils/csv';
+import { downloadExcel } from '@utils/csv';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -39,6 +39,41 @@ export const DataTableLayout = ({
     }
   }, [filtered, translationNamespace]);
 
+  const studentExportOptions = useMemo(() => {
+    if (translationNamespace !== 'components.dataset.students' || !filtered.length) return undefined;
+    const studentKeys = ['firstname', 'student_identifier', 'parent_firstname'];
+    const firstRow = filtered[0];
+
+    if (!firstRow || !studentKeys.every((key) => Object.prototype.hasOwnProperty.call(firstRow, key))) {
+      return undefined;
+    }
+
+    const label = (key, fallback) => t(`exportHeaders.${key}`, { fallback });
+
+    return {
+      sheetName: t('exportSheetName', { fallback: 'Students' }),
+      labels: {
+        student_identifier: label('student_identifier', 'Student ID'),
+        firstname: label('firstname', 'First Name'),
+        lastname: label('lastname', 'Last Name'),
+        level: label('level', 'Class'),
+        type: label('type', 'Enrollment Type'),
+        socialStatus: label('socialStatus', 'Social Status'),
+        guardian: label('guardian', 'Guardian'),
+        guardian_phone: label('guardian_phone', 'Guardian Phone'),
+        registered_at: label('registered_at', 'Registration Date'),
+        enrollment_date: label('enrollment_date', 'Start Date'),
+        enrollment_number: label('enrollment_number', 'Enrollment Number'),
+        registrationComment: label('registrationComment', 'Comment'),
+        isCurrentMonthPaid: label('isCurrentMonthPaid', 'Current Month Paid'),
+      },
+      booleanLabels: {
+        true: label('yes', 'Yes'),
+        false: label('no', 'No'),
+      },
+    };
+  }, [filtered, t, translationNamespace]);
+
   const subHeaderComponentMemo = useMemo(() => (
     <Wrap
       align="center"
@@ -65,7 +100,7 @@ export const DataTableLayout = ({
           <HStack pl={{ base: 0, md: 4 }}>
             {extraSubHeaderComponents}
             {/* <FormFilter onExport={() => {}} /> */}
-            <FormExport onExport={() => downloadCSV(filtered)} />
+            <FormExport onExport={() => downloadExcel(filtered, studentExportOptions)} />
           </HStack>
         </HStack>
       </WrapItem>
@@ -73,7 +108,7 @@ export const DataTableLayout = ({
         {actionButton && role?.name && actionButton}
       </WrapItem>
     </Wrap>
-  ), [filterText, selectedIndex, filtered, role, t, actionButton, extraSubHeaderComponents]);
+  ), [filterText, selectedIndex, filtered, role, t, actionButton, extraSubHeaderComponents, studentExportOptions]);
 
   const handleRowExpandToggle = (row) => {
     setExpandedRow((prev) => (prev?.id === row.id ? null : row));

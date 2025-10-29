@@ -249,6 +249,24 @@
                 "enrolledOn": "Inscrit le",
                 "studentsEnrolled": "Élèves inscrits",
                 "studentsNotEnrolled": "Élèves non inscrits",
+                "exportSheetName": "Élèves",
+                "exportHeaders": {
+                    "student_identifier": "Identifiant élève",
+                    "firstname": "Prénom",
+                    "lastname": "Nom",
+                    "level": "Classe",
+                    "type": "Type d'inscription",
+                    "socialStatus": "Statut social",
+                    "guardian": "Tuteur",
+                    "guardian_phone": "Téléphone du tuteur",
+                    "registered_at": "Date d'inscription",
+                    "enrollment_date": "Date de rentrée",
+                    "enrollment_number": "N° d'inscription",
+                    "registrationComment": "Commentaire",
+                    "isCurrentMonthPaid": "Mois courant payé",
+                    "yes": "Oui",
+                    "no": "Non"
+                },
                 "cta": {
                     "filter": "",
                     "export": ""

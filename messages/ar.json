@@ -249,6 +249,24 @@
                 "enrolledOn": "مسجل في",
                 "studentsEnrolled": "الطلاب المسجلون",
                 "studentsNotEnrolled": "الطلاب غير المسجلين",
+                "exportSheetName": "الطلاب",
+                "exportHeaders": {
+                    "student_identifier": "معرّف الطالب",
+                    "firstname": "الاسم الأول",
+                    "lastname": "اسم العائلة",
+                    "level": "الصف",
+                    "type": "نوع التسجيل",
+                    "socialStatus": "الحالة الاجتماعية",
+                    "guardian": "ولي الأمر",
+                    "guardian_phone": "هاتف ولي الأمر",
+                    "registered_at": "تاريخ التسجيل",
+                    "enrollment_date": "تاريخ الالتحاق",
+                    "enrollment_number": "رقم التسجيل",
+                    "registrationComment": "ملاحظة",
+                    "isCurrentMonthPaid": "الشهر الحالي مدفوع",
+                    "yes": "نعم",
+                    "no": "لا"
+                },
                 "cta": {
                     "filter": "",
                     "export": ""
