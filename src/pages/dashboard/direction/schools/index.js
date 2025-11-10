@@ -1,209 +1,232 @@
-// import { Stack, Text, Wrap } from '@chakra-ui/react';
-// import { SchoolDataSet } from '@components/common/reports/school_data_set';
-// import { Statistics } from '@components/func/lists/Statistic';
-// import { DashboardLayout } from '@components/layout/dashboard';
-// import { colors, messages, routes } from '@theme';
-// import { SCHOOLS_COLUMNS } from '@utils/mappers/kpi';
-// import { mapSchoolsDataTable } from '@utils/mappers/school';
-// import { getToken } from 'next-auth/jwt';
-// import { FaSuitcase } from 'react-icons/fa';
-// import { HiAcademicCap } from 'react-icons/hi';
-// import { LuSchool } from 'react-icons/lu';
-// import { SiGoogleclassroom } from 'react-icons/si';
-// import { serverFetch } from 'src/lib/api';
+import { HStack, Skeleton, Stack, Text, Wrap } from '@chakra-ui/react';
+import { DashboardLayout } from '@components/layout/dashboard';
+import { colors, routes } from '@theme';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
+import { useTableColumns } from '@utils/mappers/kpi';
+import { mapSchoolsDataTable } from '@utils/mappers/school';
+import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
+import { useMemo } from 'react';
+import { FaSuitcase } from 'react-icons/fa';
+import { HiAcademicCap } from 'react-icons/hi';
+import { LuSchool } from 'react-icons/lu';
+import { SiGoogleclassroom } from 'react-icons/si';
+import { serverFetch } from 'src/lib/api';
 
-// const {
-//   pages: {
-//     dashboard,
-//     stats: {
-//       classes,
-//       students: studentsStat,
-//       teachers,
-//       schools: schoolsStat,
-//       amount,
-//     },
-//   },
-//   components: {
-//     menu,
-//     dataset: { schools: schoolsDataset },
-//   },
-// } = messages;
+const StatisticsFallback = () => (
+  <HStack w="100%">
+    <Stack direction={{ base: 'column', md: 'row' }} spacing={6} w="100%">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <Stack
+          key={index}
+          bgColor={colors.white}
+          borderRadius="lg"
+          boxShadow="sm"
+          p={6}
+          flex={1}
+        >
+          <Skeleton height="24px" mb={2} />
+          <Skeleton height="16px" />
+        </Stack>
+      ))}
+    </Stack>
+  </HStack>
+);
 
-// export default function Dashboard({ kpis, role, token }) {
-//   const cardStats = [
-//     {
-//       count: amount.classes.replace(`%number`, kpis[0]?.data?.length),
-//       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-//       title: classes,
-//     },
-//     {
-//       count: amount.students.replace(`%number`, kpis[1]?.data?.length),
-//       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-//       title: studentsStat,
-//     },
-//     {
-//       count: amount.teachers.replace(`%number`, kpis[2]?.data?.length ?? 0),
-//       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-//       title: teachers,
-//     },
-//     {
-//       count: amount.schools.replace(`%number`, kpis[3]?.data?.length),
-//       icon: <LuSchool color={colors.primary.regular} size={25} />,
-//       title: schoolsStat,
-//     },
-//   ];
+const TableFallback = () => (
+  <Stack
+    bgColor={colors.white}
+    w="100%"
+    p={6}
+    borderRadius="lg"
+    boxShadow="sm"
+    spacing={4}
+  >
+    {Array.from({ length: 5 }).map((_, index) => (
+      <Skeleton key={index} height="18px" />
+    ))}
+    <Skeleton height="200px" borderRadius="md" />
+  </Stack>
+);
 
-//   const schools = mapSchoolsDataTable({ schools: kpis[3] });
+const Statistics = dynamic(
+  () =>
+    import('@components/func/lists/Statistic').then((mod) => mod.Statistics),
+  { ssr: false, loading: () => <StatisticsFallback /> }
+);
 
-//   return (
-//       <DashboardLayout
-//         title={dashboard.initial.title}
-//         currentPage={menu.classes}
-//         role={role}
-//         token={token}
-//       >
-//         <Wrap mt={10} spacing={20.01}>
-//           <Statistics cardStats={cardStats} />
-
-//           <Text
-//             color={colors.secondary.regular}
-//             fontSize={20}
-//             fontWeight={'700'}
-//             pt={10}
-//           >
-//             {schoolsDataset.title}
-//           </Text>
-
-//           <Stack bgColor={colors.white} w={'100%'}>
-//             <SchoolDataSet
-//               {...{ role, token }}
-//               data={schools}
-//               columns={SCHOOLS_COLUMNS}
-//             />
-//           </Stack>
-//         </Wrap>
-//       </DashboardLayout>
-//   );
-// }
-
-// export const getServerSideProps = async ({ req }) => {
-//   const secret = process.env.NEXTAUTH_SECRET;
-//   const session = await getToken({ req, secret });
-
-//   const token = session?.accessToken; // Ensure token exists in session
-
-//   if (!token) {
-//     return {
-//       redirect: {
-//         destination: 'user/auth',
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   const {
-//     alazhar: {
-//       get: {
-//         me,
-//         class: { all: classrooms },
-//         students: { all: allStudents },
-//         teachers,
-//         schools: { all: allSchools },
-//       },
-//     },
-//   } = routes.api_route;
-
-//   const response = await serverFetch({
-//     uri: me,
-//     user_token: token,
-//   });
-
-//   const role = response.role;
-
-//   const kpis = await Promise.all([
-//     serverFetch({
-//       uri: classrooms.split('pageSize')[0],
-//       user_token: token,
-//     }),
-
-//     serverFetch({
-//       uri: allStudents,
-//       user_token: token,
-//     }),
-//     serverFetch({
-//       uri: teachers,
-//       user_token: token,
-//     }).catch(() => ({ data: [] })),
-//     serverFetch({
-//       uri: `${allSchools}?sort=createdAt:desc&populate=responsible`,
-//       user_token: token,
-//     }).catch(() => ({ data: [] })),
-//   ]);
-
-//   return {
-//     props: {
-//       kpis,
-//       role,
-//       token,
-//     },
-//   };
-// };
-
-import { SchoolDataSet } from "@components/common/reports/school_data_set";
-import DashboardPage from "@components/layout/dashboard/views/dashboard_page";
-import { messages, routes } from "@theme";
-import { useTableColumns } from "@utils/mappers/kpi";
-import { mapSchoolsDataTable } from "@utils/mappers/school";
-import { getToken } from "next-auth/jwt";
-import { FaSuitcase } from "react-icons/fa";
-import { HiAcademicCap } from "react-icons/hi";
-import { LuSchool } from "react-icons/lu";
-import { SiGoogleclassroom } from "react-icons/si";
-import { serverFetch } from "src/lib/api";
-
-const {
-  pages: { dashboard, stats: { classes, students, teachers, schools: schoolsStat, amount }, },
-  
-  components: { menu, dataset: schoolsDataset },
-} = messages;
+const SchoolDataSet = dynamic(
+  () =>
+    import('@components/common/reports/school_data_set').then(
+      (mod) => mod.SchoolDataSet
+    ),
+  { ssr: false, loading: () => <TableFallback /> }
+);
 
 export default function SchoolsDashboard({ kpis, role, token }) {
-  const cardStats = [
-    { count: amount.classes.replace(`%number`, kpis[0]?.data?.length), icon: <SiGoogleclassroom size={25} />, title: classes },
-    { count: amount.students.replace(`%number`, kpis[1]?.data?.length), icon: <HiAcademicCap size={25} />, title: students },
-    { count: amount.teachers.replace(`%number`, kpis[2]?.data?.length), icon: <FaSuitcase size={25} />, title: teachers },
-    { count: amount.schools.replace(`%number`, kpis[3]?.data?.length), icon: <LuSchool size={25} />, title: schoolsStat },
-  ];
+  const t = useTranslations();
 
-  const schools = mapSchoolsDataTable({ schools: kpis[3] });
+  const schoolsResponse = kpis[0];
+  const classesResponse = kpis[1];
+  const studentsResponse = kpis[2];
+  const teachersResponse = kpis[3];
+
+  const cardStats = useMemo(
+    () => [
+      {
+        count: t('pages.stats.amount.classes').replace(
+          `%number`,
+          classesResponse?.meta?.pagination?.total ??
+            classesResponse?.data?.length ??
+            0
+        ),
+        icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.classes'),
+      },
+      {
+        count: t('pages.stats.amount.students').replace(
+          `%number`,
+          studentsResponse?.meta?.pagination?.total ??
+            studentsResponse?.data?.length ??
+            0
+        ),
+        icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.students'),
+      },
+      {
+        count: t('pages.stats.amount.teachers').replace(
+          `%number`,
+          teachersResponse?.meta?.pagination?.total ??
+            teachersResponse?.data?.length ??
+            0
+        ),
+        icon: <FaSuitcase color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.teachers'),
+      },
+      {
+        count: t('pages.stats.amount.schools').replace(
+          `%number`,
+          schoolsResponse?.meta?.pagination?.total ??
+            schoolsResponse?.data?.length ??
+            0
+        ),
+        icon: <LuSchool color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.schools'),
+      },
+    ],
+    [classesResponse, studentsResponse, teachersResponse, schoolsResponse, t]
+  );
+  const schools = mapSchoolsDataTable({ schools: schoolsResponse });
+  const schoolPagination = schoolsResponse?.meta?.pagination || null;
+  const baseSchoolsRoute = `${routes.api_route.alazhar.get.schools.all}?sort=createdAt:desc&populate=responsible`;
   const { SCHOOLS_COLUMNS } = useTableColumns();
 
   return (
-    <DashboardPage
-      title={dashboard.initial.title}
-      currentPage={menu.schools}
-      cardStats={cardStats}
-      datasetTitle={schoolsDataset.title}
-      DataSetComponent={SchoolDataSet}
-      datasetProps={{ data: schools, role, token, columns: SCHOOLS_COLUMNS }}
-    />
+    <DashboardLayout
+      title={t('pages.dashboard.initial.title')}
+      currentPage={t('components.menu.schools')}
+      role={role}
+      token={token}
+    >
+      <Wrap mt={10} spacing={20.01}>
+        <HStack w="100%">
+          <Statistics cardStats={cardStats} />
+        </HStack>
+
+        <Text
+          color={colors.secondary.regular}
+          fontSize={20}
+          fontWeight={'700'}
+          pt={10}
+        >
+          {t('components.dataset.schools.title')}
+        </Text>
+
+        <Stack bgColor={colors.white} w={'100%'}>
+          <SchoolDataSet
+            data={schools}
+            initialPagination={schoolPagination}
+            baseRoute={baseSchoolsRoute}
+            role={role}
+            token={token}
+            columns={SCHOOLS_COLUMNS}
+          />
+        </Stack>
+      </Wrap>
+    </DashboardLayout>
   );
 }
 
-export const getServerSideProps = async ({ req }) => {
-  const token = (await getToken({ req, secret: process.env.NEXTAUTH_SECRET }))?.accessToken;
-  if (!token) return { redirect: { destination: "user/auth", permanent: false } };
+export const getServerSideProps = async ({ req, res }) => {
+  const secret = process.env.NEXTAUTH_SECRET;
+  const session = await getToken({ req, secret });
+  const token = session?.accessToken;
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
-  const { alazhar: { get: { me, class: { all: classrooms }, students: { all: allStudents }, teachers: { all: teachers }, schools: { all: allSchools } } } } = routes.api_route;
+  if (!token) {
+    return {
+      redirect: {
+        destination: 'user/auth',
+        permanent: false,
+      },
+    };
+  }
 
-  const role = (await serverFetch({ uri: me, user_token: token })).role;
-  const kpis = await Promise.all([
-    serverFetch({ uri: classrooms.split("pageSize")[0], user_token: token }),
-    serverFetch({ uri: allStudents, user_token: token }),
-    serverFetch({ uri: teachers, user_token: token }).catch(() => ({ data: [] })),
-    serverFetch({ uri: allSchools, user_token: token }).catch(() => ({ data: [] })),
-  ]);
+  const {
+    alazhar: {
+      get: {
+        me,
+        classes: { allWithoutSchoolId: classrooms },
+        students: { allWithoutSchoolId: allStudents },
+        teachers: { all: allTeachers },
+        schools: { all: allSchools },
+      },
+    },
+  } = routes.api_route;
 
-  return { props: { kpis, role, token } };
+  const { role } = await serverFetch({
+    uri: me,
+    user_token: token,
+  });
+
+  const countQuery = '&pagination[page]=1&pagination[pageSize]=1&fields[0]=id';
+
+  const [schoolsResponse, classesResponse, studentsResponse, teachersResponse] =
+    await Promise.all([
+      serverFetch({
+        uri: `${allSchools}?sort=createdAt:desc&populate=responsible&pagination[page]=1&pagination[pageSize]=50`,
+        user_token: token,
+        cacheTtl: 5 * 60 * 1000,
+      }).catch(() => ({ data: [] })),
+      serverFetch({
+        uri: `${classrooms.replace('%activeSchoolYear', activeSchoolYear)}${countQuery}`,
+        user_token: token,
+        cacheTtl: 5 * 60 * 1000,
+      }),
+      serverFetch({
+        uri: `${allStudents.replace('%activeSchoolYear', activeSchoolYear)}${countQuery}`,
+        user_token: token,
+        cacheTtl: 5 * 60 * 1000,
+      }),
+      serverFetch({
+        uri: `${allTeachers}?sort=createdAt:desc&populate=school${countQuery}`,
+        user_token: token,
+        cacheTtl: 5 * 60 * 1000,
+      }).catch(() => ({ data: [] })),
+    ]);
+
+  return {
+    props: {
+      kpis: [
+        schoolsResponse,
+        classesResponse,
+        studentsResponse,
+        teachersResponse,
+      ],
+      role,
+      token,
+    },
+  };
 };
-

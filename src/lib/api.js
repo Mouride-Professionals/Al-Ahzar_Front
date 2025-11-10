@@ -1,9 +1,13 @@
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
+import { getCachedValue, setCachedValue } from './utils/serverCache';
+import { getCachedSession } from './utils/sessionCache';
 
 // Crée une instance Axios avec la configuration de base
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_STRAPI_BASE_URL || 'https://al-ahzar-backend-xeuc.onrender.com/api', //'http://109.123.246.253:1338/api', // URL de base pour les appels API
+  baseURL:
+    process.env.NEXT_PUBLIC_STRAPI_BASE_URL ||
+    'https://al-ahzar-backend-xeuc.onrender.com/api', //'http://109.123.246.253:1338/api', // URL de base pour les appels API
   timeout: 10000, // Temps limite pour une requête
   headers: {
     'Content-Type': 'application/json',
@@ -15,7 +19,8 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     try {
-      const session = await getSession(); // Retrieve the session
+      // Use cached session instead of fetching every time
+      const session = await getCachedSession(getSession);
       if (session?.user?.accessToken) {
         config.headers.Authorization = `Bearer ${session.user.accessToken}`;
       }
@@ -30,22 +35,17 @@ api.interceptors.request.use(
   }
 );
 
-
 // api.interceptors.request.use(async (config) => {
 //   // Fetch the active school year from localStorage or API
-
-
 
 //   // Append schoolYear to requests that need it
 //   if (config.url.includes('%activeSchoolYear') && activeSchoolYear) {
 //     config.url = config.url.replace('%activeSchoolYear', activeSchoolYear);
 
-
 //   }
 
 //   return config;
 // }, (error) => Promise.reject(error));
-
 
 // Middleware pour gérer les erreurs des réponses API
 api.interceptors.response.use(
@@ -76,7 +76,22 @@ api.interceptors.response.use(
 );
 
 //    serverFetcher method
-export const serverFetch = async ({ uri, user_token }) => {
+export const serverFetch = async ({
+  uri,
+  user_token,
+  cacheKey,
+  cacheTtl = 60000,
+  skipCache = false,
+} = {}) => {
+  const shouldUseCache = typeof window === 'undefined' && !skipCache;
+  const cacheIdentifier = cacheKey || `${user_token ?? 'public'}::${uri}`;
+
+  if (shouldUseCache) {
+    const cached = getCachedValue(cacheIdentifier);
+    if (cached !== undefined) {
+      return cached;
+    }
+  }
 
   try {
     const response = await api.get(uri, {
@@ -84,20 +99,23 @@ export const serverFetch = async ({ uri, user_token }) => {
         Authorization: `Bearer ${user_token}`,
       },
     });
+    if (shouldUseCache) {
+      setCachedValue(cacheIdentifier, response.data, cacheTtl);
+    }
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error.response || error.message);
-    return error.response?.data?.error?.message ||
+    return (
+      error.response?.data?.error?.message ||
       error.message ||
-      'API request failed';
+      'API request failed'
+    );
   }
 };
 
 // Fetcher method
 export const fetcher = async ({ uri, options = {}, user_token }) => {
-
   try {
-
     const { method = 'GET', body, headers, params } = options;
 
     const response = await api({
@@ -117,7 +135,10 @@ export const fetcher = async ({ uri, options = {}, user_token }) => {
     // Throw a custom error object with more details
     throw {
       status: error.response?.status || 500, // HTTP status code
-      message: error.response?.data?.error?.message || error.message || 'API request failed',
+      message:
+        error.response?.data?.error?.message ||
+        error.message ||
+        'API request failed',
       data: error.response?.data || null, // Additional error data
     };
   }

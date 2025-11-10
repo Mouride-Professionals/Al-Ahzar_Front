@@ -10,10 +10,17 @@ import { serverFetch } from '../api';
 
 export default function useCustomRedirect() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({
+    required: false,
+    refetchOnWindowFocus: false,
+    // The following options avoid background polling
+    refetchInterval: 0,
+    refetchIntervalWhenOffline: false,
+  });
   const [role, setRole] = useState(null);
   const [forcePasswordChange, setForcePasswordChange] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [hasFetchedUser, setHasFetchedUser] = useState(false);
   const toast = useToast({
     position: 'top',
     duration: 5000,
@@ -37,6 +44,10 @@ export default function useCustomRedirect() {
       return;
     }
 
+    if (hasFetchedUser) {
+      return;
+    }
+
     const fetchUserRole = async () => {
       try {
         const userResponse = await serverFetch({
@@ -52,6 +63,7 @@ export default function useCustomRedirect() {
         setRole(userResponse.role);
         setForcePasswordChange(userResponse.forcePasswordChange);
         setIsInitialized(true);
+        setHasFetchedUser(true);
 
         if (userResponse.forcePasswordChange) {
           const settingsPath = `${routes.page_route.dashboard.settings}?forcePasswordChange=true`;
@@ -76,7 +88,17 @@ export default function useCustomRedirect() {
     };
 
     fetchUserRole();
-  }, [session, status, router, toast, currentPath]);
+  }, [session, status, router, toast, currentPath, hasFetchedUser]);
+
+  // Reset local flags if session transitions to unauthenticated
+  useEffect(() => {
+    if (status !== 'authenticated') {
+      setRole(null);
+      setForcePasswordChange(false);
+      setIsInitialized(false);
+      setHasFetchedUser(false);
+    }
+  }, [status]);
 
   useEffect(() => {
     // Only proceed if user data is initialized and no force password change

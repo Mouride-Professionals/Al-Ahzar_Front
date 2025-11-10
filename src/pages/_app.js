@@ -5,12 +5,13 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import RTLProvider from '@components/RTLProvider';
 import AddToHomePrompt from '@components/pwa/AddToHomePrompt';
 import { SchoolYearProvider } from '@utils/context/school_year_context';
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider, useSession } from 'next-auth/react';
 import { NextIntlClientProvider } from 'next-intl';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Suspense, useEffect, useState } from 'react';
 import { MediaContextProvider } from '../lib/utils/media';
+import { clearSessionCache } from '../lib/utils/sessionCache';
 import Loading from './dashboard/loading';
 
 const theme = (locale) =>
@@ -24,6 +25,22 @@ const theme = (locale) =>
       error: '#e53e3e',
     },
   });
+
+// Wrapper to monitor session changes and clear cache
+function SessionMonitor({ children }) {
+  const { data: session, status } = useSession();
+  const [previousStatus, setPreviousStatus] = useState(status);
+
+  useEffect(() => {
+    // Clear session cache when status changes (login/logout)
+    if (previousStatus !== status) {
+      clearSessionCache();
+      setPreviousStatus(status);
+    }
+  }, [status, previousStatus]);
+
+  return <>{children}</>;
+}
 
 export default function AlAzhar({ Component, pageProps }) {
   const router = useRouter();
@@ -76,22 +93,29 @@ export default function AlAzhar({ Component, pageProps }) {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <SessionProvider session={pageProps.session}>
-        <ChakraProvider theme={theme(locale)}>
-          <Head>
-            <title>{process.env.NEXT_PUBLIC_SITENAME}</title>
-          </Head>
-          <MediaContextProvider disableDynamicMediaQueries>
-            <Suspense fallback={<Loading />}>
-              <SchoolYearProvider>
-                <RTLProvider>
-                  <Component {...pageProps} />
-                  <AddToHomePrompt />
-                </RTLProvider>
-              </SchoolYearProvider>
-            </Suspense>
-          </MediaContextProvider>
-        </ChakraProvider>
+      <SessionProvider
+        session={pageProps.session}
+        refetchOnWindowFocus={false}
+        refetchInterval={0}
+        refetchWhenOffline={false}
+      >
+        <SessionMonitor>
+          <ChakraProvider theme={theme(locale)}>
+            <Head>
+              <title>{process.env.NEXT_PUBLIC_SITENAME}</title>
+            </Head>
+            <MediaContextProvider disableDynamicMediaQueries>
+              <Suspense fallback={<Loading />}>
+                <SchoolYearProvider>
+                  <RTLProvider>
+                    <Component {...pageProps} />
+                    <AddToHomePrompt />
+                  </RTLProvider>
+                </SchoolYearProvider>
+              </Suspense>
+            </MediaContextProvider>
+          </ChakraProvider>
+        </SessionMonitor>
       </SessionProvider>
     </NextIntlClientProvider>
   );

@@ -1,5 +1,3 @@
-import { utils, writeFile } from 'xlsx';
-
 const DEFAULT_STUDENT_LABELS = {
   student_identifier: 'Student ID',
   firstname: 'First Name',
@@ -140,7 +138,22 @@ export const downloadCSV = (array) => {
   link.click();
 };
 
-export const downloadExcel = (array, options = {}) => {
+let xlsxModulePromise;
+
+const loadXlsxModule = async () => {
+  if (typeof window === 'undefined') return null;
+  if (!xlsxModulePromise) {
+    xlsxModulePromise = import('xlsx');
+  }
+  try {
+    return await xlsxModulePromise;
+  } catch (err) {
+    xlsxModulePromise = undefined;
+    throw err;
+  }
+};
+
+export const downloadExcel = async (array, options = {}) => {
   if (typeof window === 'undefined' || !Array.isArray(array) || !array.length) return;
 
   const normalizedOptions =
@@ -150,6 +163,14 @@ export const downloadExcel = (array, options = {}) => {
 
   const dataset = prepareExportDataset(array, datasetOptions);
   if (!dataset.length) return;
+
+  const xlsx = await loadXlsxModule();
+  if (!xlsx) return;
+
+  const utils = xlsx.utils ?? xlsx?.default?.utils;
+  const writeFile = xlsx.writeFile ?? xlsx?.default?.writeFile;
+
+  if (!utils || !writeFile) return;
 
   const worksheet = utils.json_to_sheet(dataset);
   const workbook = utils.book_new();

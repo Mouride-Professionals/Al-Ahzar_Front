@@ -19,14 +19,16 @@ import {
 } from '@chakra-ui/react';
 import { DataTableLayout } from '@components/layout/data_table';
 import { colors } from '@theme';
-import { reportingFilter } from '@utils/mappers/kpi';
+import { mapUsersDataTable } from '@utils/mappers/user';
 import { hasPermission } from '@utils/roles';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
+import { fetcher } from 'src/lib/api';
+import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
 
 const ExpandedComponent = ({ data, schools, token, role: userRole }) => {
   const t = useTranslations('components.dataset.users');
@@ -259,18 +261,22 @@ export const UserDataSet = ({
   columns,
   selectedIndex = 0,
   token,
+  initialPagination = null,
+  baseRoute = '/users?populate=*&sort=createdAt:desc',
 }) => {
   const t = useTranslations('components.dataset.users');
-  const [filterText, setFilterText] = useState('');
-  const filtered = useMemo(
-    () =>
-      reportingFilter({
-        data,
-        position: selectedIndex,
-        needle: filterText,
-      }),
-    [data, filterText, selectedIndex]
+  const fallbackPageSize = initialPagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
+
+  const [users, setUsers] = useState(data ?? []);
+  const [paginationState, setPaginationState] = useState(
+    initialPagination || {
+      page: 1,
+      pageSize: fallbackPageSize,
+      pageCount: 1,
+      total: data?.length || 0,
+    }
   );
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const router = useRouter();
 
   const filterFunction = ({ data, needle }) =>
@@ -279,6 +285,35 @@ export const UserDataSet = ({
         item.username &&
         item.username.toLowerCase().includes(needle.toLowerCase())
     );
+
+  const goToPage = useCallback(
+    async (targetPage, pageSizeOverride) => {
+      const pageSize = pageSizeOverride || paginationState?.pageSize || fallbackPageSize;
+      setIsLoadingPage(true);
+      try {
+        const response = await fetcher({
+          uri: `${baseRoute}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
+          user_token: token,
+        });
+
+        const mapped = mapUsersDataTable({ users: response });
+        setUsers(mapped);
+        setPaginationState(
+          response.meta?.pagination || {
+            page: targetPage,
+            pageSize,
+            pageCount: paginationState?.pageCount,
+            total: paginationState?.total,
+          }
+        );
+      } catch (error) {
+        console.error('Error loading users page:', error);
+      } finally {
+        setIsLoadingPage(false);
+      }
+    },
+    [baseRoute, token, paginationState?.pageCount, paginationState?.total, paginationState?.pageSize, fallbackPageSize]
+  );
 
   const actionButton =
     role?.name &&
@@ -292,10 +327,24 @@ export const UserDataSet = ({
       </Button>
     );
 
+  const paginationConfig = useMemo(
+    () => ({
+      rowsPerPage: paginationState?.pageSize || fallbackPageSize,
+      rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+      currentPage: paginationState?.page || 1,
+      totalRows: paginationState?.total || users.length,
+      onChangePage: (page) => goToPage(page),
+      onRowsPerPageChange: (newSize) => goToPage(1, newSize),
+      isServerSide: true,
+      isLoadingPage,
+    }),
+    [paginationState?.page, paginationState?.pageSize, paginationState?.total, users.length, goToPage, fallbackPageSize, isLoadingPage]
+  );
+
   return (
     <DataTableLayout
       columns={columns}
-      data={filtered}
+      data={users}
       role={role}
       token={token}
       translationNamespace="components.dataset.users"
@@ -306,10 +355,7 @@ export const UserDataSet = ({
       filterFunction={filterFunction}
       defaultSortFieldId="username"
       selectedIndex={selectedIndex}
-      paginationProps={{
-        rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 20],
-      }}
+      paginationProps={paginationConfig}
     />
   );
 };

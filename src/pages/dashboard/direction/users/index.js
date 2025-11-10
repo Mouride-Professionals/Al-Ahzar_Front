@@ -1,76 +1,153 @@
-import { HStack, Stack, Text, Wrap } from '@chakra-ui/react';
-import { UserDataSet } from '@components/common/reports/user_data_set';
-import { Statistics } from '@components/func/lists/Statistic';
+import { HStack, Skeleton, Stack, Text, Wrap } from '@chakra-ui/react';
 import { DashboardLayout } from '@components/layout/dashboard';
+import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
 import { colors, routes } from '@theme';
-import { ROLES } from '@utils/roles';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapUsersDataTable } from '@utils/mappers/user';
+import { ROLES } from '@utils/roles';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
+import { useMemo } from 'react';
 import { FaSuitcase, FaUser } from 'react-icons/fa'; // icon for user
 import { HiAcademicCap } from 'react-icons/hi';
 import { LuSchool } from 'react-icons/lu';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
-import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
+const StatisticsFallback = () => (
+  <HStack w="100%">
+    <Stack direction={{ base: 'column', md: 'row' }} spacing={6} w="100%">
+      {Array.from({ length: 2 }).map((_, index) => (
+        <Stack
+          key={index}
+          bgColor={colors.white}
+          borderRadius="lg"
+          boxShadow="sm"
+          p={6}
+          flex={1}
+        >
+          <Skeleton height="24px" mb={2} />
+          <Skeleton height="16px" />
+        </Stack>
+      ))}
+    </Stack>
+  </HStack>
+);
+
+const TableFallback = () => (
+  <Stack
+    bgColor={colors.white}
+    w="100%"
+    p={6}
+    borderRadius="lg"
+    boxShadow="sm"
+    spacing={4}
+  >
+    {Array.from({ length: 5 }).map((_, index) => (
+      <Skeleton key={index} height="18px" />
+    ))}
+    <Skeleton height="200px" borderRadius="md" />
+  </Stack>
+);
+
+const Statistics = dynamic(
+  () =>
+    import('@components/func/lists/Statistic').then((mod) => mod.Statistics),
+  { ssr: false, loading: () => <StatisticsFallback /> }
+);
+
+const UserDataSet = dynamic(
+  () =>
+    import('@components/common/reports/user_data_set').then(
+      (mod) => mod.UserDataSet
+    ),
+  { ssr: false, loading: () => <TableFallback /> }
+);
 
 const DIRECTORIAL_ROLES = [
   ROLES.DIRECTEUR_ETABLISSMENT,
   ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
 ];
 
-export default function Dashboard({ kpis, role, token }) {
+export default function Dashboard({ kpis, role, token, userQueryParams = '' }) {
   const t = useTranslations();
 
-  const cardStats = [
-    {
-      count: t('pages.stats.amount.users').replace(
-        `%number`,
-        kpis[0]?.length ?? 0
-      ),
-      icon: <FaUser color={colors.primary.regular} size={25} />,
-      title: t('pages.stats.users'),
-    },
-    {
-      count: t('pages.stats.amount.classes').replace(
-        `%number`,
-        kpis[1]?.data?.length ?? 0
-      ),
-      icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
-      title: t('pages.stats.classes'),
-    },
-    {
-      count: t('pages.stats.amount.students').replace(
-        `%number`,
-        kpis[2]?.data?.length ?? 0
-      ),
-      icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
-      title: t('pages.stats.students'),
-    },
-    {
-      count: t('pages.stats.amount.teachers').replace(
-        `%number`,
-        kpis[3]?.data?.length ?? 0
-      ),
-      icon: <FaSuitcase color={colors.primary.regular} size={25} />,
-      title: t('pages.stats.teachers'),
-    },
-    {
-      count: t('pages.stats.amount.schools').replace(
-        `%number`,
-        kpis[4]?.data?.length ?? 0
-      ),
-      icon: <LuSchool color={colors.primary.regular} size={25} />,
-      title: t('pages.stats.schools'),
-    },
-  ];
+  const usersResponse = kpis[0];
+  const classesResponse = kpis[1];
+  const studentsResponse = kpis[2];
+  const teachersResponse = kpis[3];
+  const schoolsResponse = kpis[4];
 
-  // Map the fetched users data to the desired shape.
-  const users = mapUsersDataTable({ users: kpis[0] });
+  const cardStats = useMemo(
+    () => [
+      {
+        count: t('pages.stats.amount.users').replace(
+          `%number`,
+          usersResponse?.meta?.pagination?.total ??
+            usersResponse?.data?.length ??
+            0
+        ),
+        icon: <FaUser color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.users'),
+      },
+      {
+        count: t('pages.stats.amount.classes').replace(
+          `%number`,
+          classesResponse?.meta?.pagination?.total ??
+            classesResponse?.data?.length ??
+            0
+        ),
+        icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.classes'),
+      },
+      {
+        count: t('pages.stats.amount.students').replace(
+          `%number`,
+          studentsResponse?.meta?.pagination?.total ??
+            studentsResponse?.data?.length ??
+            0
+        ),
+        icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.students'),
+      },
+      {
+        count: t('pages.stats.amount.teachers').replace(
+          `%number`,
+          teachersResponse?.meta?.pagination?.total ??
+            teachersResponse?.data?.length ??
+            0
+        ),
+        icon: <FaSuitcase color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.teachers'),
+      },
+      {
+        count: t('pages.stats.amount.schools').replace(
+          `%number`,
+          schoolsResponse?.meta?.pagination?.total ??
+            schoolsResponse?.data?.length ??
+            0
+        ),
+        icon: <LuSchool color={colors.primary.regular} size={25} />,
+        title: t('pages.stats.schools'),
+      },
+    ],
+    [
+      classesResponse,
+      schoolsResponse,
+      studentsResponse,
+      teachersResponse,
+      t,
+      usersResponse,
+    ]
+  );
+
+  const users = mapUsersDataTable({ users: usersResponse });
+  const userPagination = usersResponse?.meta?.pagination || null;
+  const baseUsersRoute = `${routes.api_route.alazhar.get.users.all}?populate=*&sort=createdAt:desc${userQueryParams}`;
   // take all schools with only their name, id, and type for
-  const schools = (kpis[4]?.data || []).map((school) => ({
+  const schools = (schoolsResponse?.data || []).map((school) => ({
     name: school.attributes.name,
     id: school.id,
   }));
@@ -99,6 +176,8 @@ export default function Dashboard({ kpis, role, token }) {
           <UserDataSet
             {...{ role, token }}
             data={users}
+            initialPagination={userPagination}
+            baseRoute={baseUsersRoute}
             columns={USER_COLUMNS}
             schools={schools}
           />
@@ -145,6 +224,8 @@ export const getServerSideProps = async ({ req, res }) => {
   const role = currentUser.role;
   const userSchoolId = currentUser.school?.id;
 
+  const defaultPageSize = DEFAULT_ROWS_PER_PAGE;
+
   const [
     usersResponse,
     classesResponse,
@@ -153,24 +234,29 @@ export const getServerSideProps = async ({ req, res }) => {
     schoolsResponse,
   ] = await Promise.all([
     serverFetch({
-      uri: `${allUsers}?populate=*&sort=createdAt:desc`,
+      uri: `${allUsers}?populate=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=${defaultPageSize}`,
       user_token: token,
+      cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
       uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
+      cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
       uri: allStudents.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
+      cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
       uri: allTeachers + '?sort=createdAt:desc&populate=school',
       user_token: token,
+      cacheTtl: 5 * 60 * 1000,
     }).catch(() => ({ data: [] })),
     serverFetch({
       uri: allSchools,
       user_token: token,
+      cacheTtl: 5 * 60 * 1000,
     }).catch(() => ({ data: [] })),
   ]);
 
@@ -181,6 +267,23 @@ export const getServerSideProps = async ({ req, res }) => {
     ROLES.CAISSIER,
     ROLES.ADJOINT_CAISSIER,
   ];
+
+  const schoolFilterQuery =
+    isEstablishmentDirector && userSchoolId
+      ? `&filters[school][id][$eq]=${userSchoolId}`
+      : '';
+
+  const roleFilterQuery =
+    isEstablishmentDirector && allowedUserRoles.length
+      ? allowedUserRoles
+          .map(
+            (roleName, idx) =>
+              `&filters[$or][${idx}][role][name][$eq]=${encodeURIComponent(roleName)}`
+          )
+          .join('')
+      : '';
+
+  const usersQueryParams = `${schoolFilterQuery}${roleFilterQuery}`;
 
   const matchesSchool = (entitySchool) => {
     if (!userSchoolId || !entitySchool) {
@@ -205,14 +308,33 @@ export const getServerSideProps = async ({ req, res }) => {
     return undefined;
   };
 
-  const filteredUsers =
-    isEstablishmentDirector && Array.isArray(usersResponse)
-      ? usersResponse.filter(
-          (user) =>
-            allowedUserRoles.includes(getRoleName(user.role)) &&
-            matchesSchool(user.school)
-        )
-      : usersResponse;
+  const filteredUsers = (() => {
+    if (!isEstablishmentDirector || !usersResponse?.data) {
+      return usersResponse;
+    }
+
+    const filteredData = usersResponse.data.filter(
+      (user) =>
+        allowedUserRoles.includes(getRoleName(user.role)) &&
+        matchesSchool(user.school)
+    );
+
+    const pageSize =
+      usersResponse.meta?.pagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
+
+    return {
+      ...usersResponse,
+      data: filteredData,
+      meta: {
+        ...(usersResponse.meta || {}),
+        pagination: {
+          ...(usersResponse.meta?.pagination || {}),
+          total: filteredData.length,
+          pageCount: Math.max(1, Math.ceil(filteredData.length / pageSize)),
+        },
+      },
+    };
+  })();
 
   const filteredTeachers =
     isEstablishmentDirector && teachersResponse?.data
@@ -243,6 +365,7 @@ export const getServerSideProps = async ({ req, res }) => {
       ],
       role,
       token,
+      userQueryParams: usersQueryParams,
     },
   };
 };

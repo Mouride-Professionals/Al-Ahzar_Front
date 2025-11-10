@@ -21,13 +21,16 @@ import { DataTableLayout } from '@components/layout/data_table';
 import { assignTeacher } from '@services/teacher';
 import { colors, routes } from '@theme';
 import { reportingFilter } from '@utils/mappers/kpi';
+import { mapTeachersDataTable } from '@utils/mappers/teacher';
+import { hasPermission } from '@utils/roles';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
+import { fetcher } from 'src/lib/api';
 import { BoxZone } from '../cards/boxZone';
-import { hasPermission } from '@utils/roles';
+import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
 
 const ExpandedComponent = ({ data, schools, token, role }) => {
   const t = useTranslations('components.dataset.teachers');
@@ -419,9 +422,51 @@ export const TeacherDataSet = ({
   columns,
   selectedIndex = 0,
   token,
+  initialPagination = null,
+  baseRoute = '/teachers?sort=createdAt:desc&populate=school',
 }) => {
   const t = useTranslations('components.dataset.teachers');
+  const fallbackPageSize = initialPagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
+
+  const [teachers, setTeachers] = useState(data ?? []);
+  const [paginationState, setPaginationState] = useState(
+    initialPagination || {
+      page: 1,
+      pageSize: fallbackPageSize,
+      pageCount: 1,
+      total: data?.length || 0,
+    }
+  );
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const router = useRouter();
+
+  const goToPage = useCallback(
+    async (targetPage, pageSizeOverride) => {
+      const pageSize = pageSizeOverride || paginationState?.pageSize || fallbackPageSize;
+      setIsLoadingPage(true);
+      try {
+        const response = await fetcher({
+          uri: `${baseRoute}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
+          user_token: token,
+        });
+        const mapped = mapTeachersDataTable({ teachers: response });
+        setTeachers(mapped);
+        setPaginationState(
+          response.meta?.pagination || {
+            page: targetPage,
+            pageSize,
+            pageCount: paginationState?.pageCount,
+            total: paginationState?.total,
+          }
+        );
+      } catch (error) {
+        console.error('Error loading teachers page:', error);
+      } finally {
+        setIsLoadingPage(false);
+      }
+    },
+    [baseRoute, token, paginationState?.pageCount, paginationState?.total, paginationState?.pageSize, fallbackPageSize]
+  );
 
   const actionButton = hasPermission(role.name, 'manageTeachers') && (
     <Button
@@ -435,19 +480,34 @@ export const TeacherDataSet = ({
     </Button>
   );
 
+  const paginationConfig = useMemo(
+    () => ({
+      rowsPerPage: paginationState?.pageSize || fallbackPageSize,
+      rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+      currentPage: paginationState?.page || 1,
+      totalRows: paginationState?.total || teachers.length,
+      onChangePage: (page) => goToPage(page),
+      onRowsPerPageChange: (newSize) => goToPage(1, newSize),
+      isServerSide: true,
+      isLoadingPage,
+    }),
+    [paginationState?.page, paginationState?.pageSize, paginationState?.total, teachers.length, goToPage, fallbackPageSize, isLoadingPage]
+  );
+
   return (
     <DataTableLayout
       columns={columns}
-      data={data}
+      data={teachers}
       role={role}
       token={token}
       translationNamespace="components.dataset.teachers"
       actionButton={actionButton}
       expandedComponent={(data) =>
-        ExpandedComponent({ ...data, schools, token , role})
+        ExpandedComponent({ ...data, schools, token, role })
       }
       filterFunction={reportingFilter}
       selectedIndex={selectedIndex}
+      paginationProps={paginationConfig}
     />
   );
 };

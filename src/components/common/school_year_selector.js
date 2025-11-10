@@ -32,6 +32,7 @@ export const SchoolYearSelector = ({ token }) => {
 
   // Fetch school years
   const fetchSchoolYears = async () => {
+    if (!token) return;
     setLoading(true);
     try {
       const response = await serverFetch({
@@ -70,7 +71,7 @@ export const SchoolYearSelector = ({ token }) => {
       setCurrentSchoolYear(savedSchoolYear);
       setSchoolYear(savedSchoolYear);
     }
-    if (schoolYears.length === 0 || !savedSchoolYear) {
+    if ((schoolYears.length === 0 || !savedSchoolYear) && token) {
       fetchSchoolYears();
     }
   }, [token]);

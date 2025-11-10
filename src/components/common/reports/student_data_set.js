@@ -26,14 +26,15 @@ import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { hasPermission } from '@utils/roles';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
+import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BsCheck2Circle } from 'react-icons/bs';
 import { PiUserDuotone, PiUsersDuotone } from 'react-icons/pi';
 import { SlClose } from 'react-icons/sl';
-import { serverFetch } from 'src/lib/api';
+import { fetcher, serverFetch } from 'src/lib/api';
 import { BoxZone } from '../cards/boxZone';
 
 // simple in-memory cache to avoid refetching school year months repeatedly
@@ -63,7 +64,6 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
     type,
     socialStatus,
     registrationComment,
-    studentIdentifier,
     payments: { data: payment_history },
   } = data;
 
@@ -77,7 +77,6 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
   const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
   const [isAddPaymentOpen, setAddPaymentOpen] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState('');
-  const [isSubmitting, setSubmitting] = useState(false);
   const [fieldError, setFieldError] = useState('');
   const [hasSucceeded, setHasSucceeded] = useState(false);
   const [showAllPayments, setShowAllPayments] = useState(false);
@@ -771,28 +770,57 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 export const DataSet = ({
   role,
   data = [],
+  initialPagination = null,
   schoolId = '',
   classrooms = [],
   columns,
   selectedIndex = 0,
   token,
 }) => {
+  const fallbackPageSize = initialPagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
+
+  const defaultPagination = initialPagination || {
+    page: 1,
+    pageSize: fallbackPageSize,
+    pageCount: 1,
+    total: data?.length || 0,
+  };
+  console.log('initialpagination', initialPagination);
+
   const [students, setStudents] = useState(data ?? []);
+  const [paginationState, setPaginationState] = useState(defaultPagination);
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [filterByOldStudents, setFilterByOldStudents] = useState(false);
   const t = useTranslations('components.dataset.students');
   const router = useRouter();
   const schoolYear = Cookies.get('selectedSchoolYear');
+  const pageSizeFallback = fallbackPageSize;
+
+  const resetToInitialData = () => {
+    setStudents(data ?? []);
+    setPaginationState(
+      initialPagination || {
+        page: 1,
+        pageSize: pageSizeFallback,
+        pageCount: 1,
+        total: data?.length || 0,
+      }
+    );
+  };
 
   const handleFilter = async () => {
     if (filterByOldStudents) {
       setFilterByOldStudents(false);
-      setStudents(data);
+      resetToInitialData();
       return;
     }
+    const pageSize = paginationState?.pageSize || pageSizeFallback;
     const response = await serverFetch({
-      uri: routes.api_route.alazhar.get.students.allWithoutSchoolYear
-        .replace('%schoolId', schoolId)
-        .replace('%activeSchoolYear', schoolYear),
+      uri:
+        routes.api_route.alazhar.get.students.allWithoutSchoolYear
+          .replace('%schoolId', schoolId)
+          .replace('%activeSchoolYear', schoolYear) +
+        `&pagination[page]=1&pagination[pageSize]=${pageSize}`,
       user_token: token,
     });
 
@@ -801,6 +829,14 @@ export const DataSet = ({
     });
 
     setStudents(studentsList);
+    setPaginationState(
+      response.meta?.pagination || {
+        page: 1,
+        pageSize,
+        pageCount: 1,
+        total: studentsList.length,
+      }
+    );
     setFilterByOldStudents(true);
   };
 
@@ -848,6 +884,56 @@ export const DataSet = ({
     </Button>
   );
 
+  const getBaseRoute = () =>
+    (filterByOldStudents
+      ? routes.api_route.alazhar.get.students.allWithoutSchoolYear
+      : routes.api_route.alazhar.get.students.all)
+      .replace('%schoolId', schoolId)
+      .replace('%activeSchoolYear', schoolYear || '');
+
+  const currentPageSize = paginationState?.pageSize || pageSizeFallback;
+
+  const goToPage = useCallback(
+    async (targetPage, pageSizeOverride) => {
+      if (!token) return;
+      const pageSize = pageSizeOverride || currentPageSize;
+
+      setIsLoadingPage(true);
+      try {
+        const response = await fetcher({
+          uri: `${getBaseRoute()}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
+          user_token: token,
+        });
+
+        const studentsList = mapStudentsDataTableForEnrollments({
+          enrollments: response,
+        });
+
+        setStudents(studentsList);
+        setPaginationState((prev) => response.meta?.pagination || { ...prev, page: targetPage, pageSize });
+      } catch (error) {
+        console.error('Error loading students page:', error);
+      } finally {
+        setIsLoadingPage(false);
+      }
+    },
+    [token, filterByOldStudents, schoolId, schoolYear, currentPageSize]
+  );
+
+  const paginationConfig = useMemo(
+    () => ({
+      rowsPerPage: currentPageSize,
+      rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+      currentPage: paginationState?.page || 1,
+      totalRows: paginationState?.total || students.length,
+      onChangePage: (page) => goToPage(page),
+      onRowsPerPageChange: (newSize, page) => goToPage(page || 1, newSize),
+      isServerSide: true,
+      isLoadingPage,
+    }),
+    [currentPageSize, paginationState?.page, paginationState?.total, students.length, goToPage, isLoadingPage]
+  );
+
   return (
     <DataTableLayout
       columns={columns}
@@ -863,10 +949,7 @@ export const DataSet = ({
       defaultSortFieldId="registered_at"
       extraSubHeaderComponents={extraSubHeaderComponents}
       selectedIndex={selectedIndex}
-      paginationProps={{
-        rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 20, 50],
-      }}
+      paginationProps={paginationConfig}
     />
   );
 };

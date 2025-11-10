@@ -6,19 +6,48 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Skeleton,
+  Stack,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ClassCreationForm } from '@components/forms/class/create';
-import { ClassesList } from '@components/func/lists/Classes';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { mapClassesByLevel } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
 import { SiGoogleclassroom } from 'react-icons/si';
 import { serverFetch } from 'src/lib/api';
-import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
+
+const ClassFormFallback = () => (
+  <Stack spacing={4} p={4}>
+    {Array.from({ length: 5 }).map((_, index) => (
+      <Skeleton key={index} height="60px" />
+    ))}
+  </Stack>
+);
+
+const ClassListFallback = () => (
+  <Stack spacing={4} w="100%">
+    <Skeleton height="40px" />
+    <Skeleton height="200px" />
+  </Stack>
+);
+
+const ClassCreationForm = dynamic(
+  () =>
+    import('@components/forms/class/create').then(
+      (mod) => mod.ClassCreationForm
+    ),
+  { ssr: false, loading: () => <ClassFormFallback /> }
+);
+
+const ClassesList = dynamic(
+  () => import('@components/func/lists/Classes').then((mod) => mod.ClassesList),
+  { ssr: false, loading: () => <ClassListFallback /> }
+);
 
 export default function Classes({ classes, role, schoolId, token }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,7 +60,12 @@ export default function Classes({ classes, role, schoolId, token }) {
       role={role}
       token={token}
     >
-      <Modal size={{ base: 'full', md: '2xl' }} onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal
+        size={{ base: 'full', md: '2xl' }}
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader bgColor={colors.secondary.light}>
@@ -107,6 +141,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
       .replace('%schoolId', idSchool)
       .replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
+    cacheTtl: 5 * 60 * 1000,
   });
 
   const classes = mapClassesByLevel({

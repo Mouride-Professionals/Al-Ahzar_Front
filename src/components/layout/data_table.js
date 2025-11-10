@@ -1,13 +1,25 @@
 'use client';
 
-import { Box, HStack, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, HStack, Skeleton, Wrap, WrapItem } from '@chakra-ui/react';
 import { FormExport, FormFilter, FormSearch } from '@components/common/input/FormInput';
 import { colors } from '@theme';
 import { downloadExcel } from '@utils/csv';
+import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
+
+const DataTableFallback = () => (
+  <Box w="100%" minH="200px">
+    <Skeleton h="100%" borderRadius="10px" />
+  </Box>
+);
+
+const DataTable = dynamic(() => import('react-data-table-component'), {
+  ssr: false,
+  loading: DataTableFallback,
+});
 
 export const DataTableLayout = ({
   columns,
@@ -21,6 +33,7 @@ export const DataTableLayout = ({
   defaultSortFieldId = 'createdAt',
   extraSubHeaderComponents,
   selectedIndex = 0,
+  paginationProps,
   ...rest
 }) => {
   const t = useTranslations(translationNamespace);
@@ -114,6 +127,38 @@ export const DataTableLayout = ({
     setExpandedRow((prev) => (prev?.id === row.id ? null : row));
   };
 
+  const paginationHandlers = useMemo(() => {
+    if (!paginationProps) {
+      return {
+        paginationPerPage: DEFAULT_ROWS_PER_PAGE,
+        paginationRowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+        paginationDefaultPage: 1,
+      };
+    }
+    const {
+      onChangePage,
+      onRowsPerPageChange,
+      isServerSide,
+      isLoadingPage,
+      rowsPerPage,
+      rowsPerPageOptions,
+      currentPage,
+      totalRows,
+    } = paginationProps;
+
+    return {
+      paginationServer: Boolean(isServerSide),
+      paginationTotalRows: totalRows,
+      paginationPerPage: rowsPerPage,
+      paginationRowsPerPageOptions: rowsPerPageOptions,
+      paginationDefaultPage: currentPage,
+      onChangeRowsPerPage: (newPerPage, page) =>
+        onRowsPerPageChange?.(newPerPage, page),
+      onChangePage: (page, total) => onChangePage?.(page, total),
+      progressPending: isLoadingPage,
+    };
+  }, [paginationProps]);
+
   return (
     <Box overflowX="auto" w="100%">
       <DataTable
@@ -131,6 +176,8 @@ export const DataTableLayout = ({
         expandableRowsHideExpander
         onRowClicked={handleRowExpandToggle}
         pagination
+        
+        {...paginationHandlers}
         highlightOnHover
         responsive
         customStyles={{
