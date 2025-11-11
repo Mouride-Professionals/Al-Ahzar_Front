@@ -109,7 +109,7 @@ export default function AlAzhar({ Component, pageProps }) {
                 <SchoolYearProvider>
                   <RTLProvider>
                     <Component {...pageProps} />
-                    <AddToHomePrompt />
+                    {/* <AddToHomePrompt /> */}
                   </RTLProvider>
                 </SchoolYearProvider>
               </Suspense>
