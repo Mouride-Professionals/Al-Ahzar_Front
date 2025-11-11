@@ -40,10 +40,6 @@ export const PaymentCancellationModal = ({
 
     setIsSubmitting(true);
     setError('');
-    console.log(
-      'paymentCancellationHandler in PaymentCancellationModal',
-      paymentId
-    );
 
     await paymentCancellationHandler({
       paymentId,

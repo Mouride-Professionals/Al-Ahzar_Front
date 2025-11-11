@@ -138,7 +138,6 @@ export default function TemplateDownloadStep({ onNext }) {
         setIsDownloading(true);
         try {
             const blob = await downloadTemplate({ token: session.user.accessToken });
-            console.log('Downloaded blob:', blob);
 
             if (blob && blob.size > 0) {
                 // Create download link

@@ -163,7 +163,6 @@ const FinanceDashboard = ({
 
   // Payment cancellation handler
   const handleCancelPayment = (payment) => {
-    console.log('handleCancelPayment in FinanceDashboard', payment);
 
     setSelectedPayment(payment);
     setIsCancelModalOpen(true);

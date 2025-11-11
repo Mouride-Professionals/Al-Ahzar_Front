@@ -3,13 +3,13 @@ import { RegistrationCard } from '@components/common/cards';
 import { CreateStudentForm } from '@components/forms/student/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
-import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 export default function Create({ classes, role, token, schoolYear }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);
@@ -99,8 +99,6 @@ export const getServerSideProps = async ({ req, res }) => {
       .replace('%activeSchoolYear', activeSchoolYear),
     user_token: token,
   });
-
-  console.log('classes in create', classes);
 
   return {
     props: {

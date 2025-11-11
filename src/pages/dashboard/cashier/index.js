@@ -87,7 +87,6 @@ export default function Dashboard({ kpis, role, token, schoolId }) {
 
   const { STUDENTS_COLUMNS } = useTableColumns();
   const studentsResponse = kpis[1];
-  console.log('class response:', kpis[0]);
 
   const students = mapStudentsDataTableForEnrollments({
     enrollments: studentsResponse,

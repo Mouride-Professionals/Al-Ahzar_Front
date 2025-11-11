@@ -8,12 +8,12 @@ import Cookies from 'js-cookie';
 import { signOut } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { serverFetch } from 'src/lib/api';
 
 export const SchoolYearSelector = ({ token }) => {
   const router = useRouter();
-  const { schoolYear, setSchoolYear } = useSchoolYear();
+  const { setSchoolYear } = useSchoolYear();
   const [triggerRedirect, setTriggerRedirect] = useState(false);
   const [schoolYears, setSchoolYears] = useState([]);
   const [currentSchoolYear, setCurrentSchoolYear] = useState(
@@ -32,7 +32,7 @@ export const SchoolYearSelector = ({ token }) => {
   const cacheTtlMs = 5 * 60 * 1000; // 5 minutes
 
   // Fetch school years
-  const fetchSchoolYears = async () => {
+  const fetchSchoolYears = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     try {
@@ -65,7 +65,9 @@ export const SchoolYearSelector = ({ token }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, allSchoolYears, cacheTtlMs, router, setSchoolYear]);
+
+  const hasSchoolYears = schoolYears.length > 0;
 
   useEffect(() => {
     const savedSchoolYear = Cookies.get('selectedSchoolYear');
@@ -73,13 +75,13 @@ export const SchoolYearSelector = ({ token }) => {
       setCurrentSchoolYear(savedSchoolYear);
       setSchoolYear(savedSchoolYear);
     }
-    if ((schoolYears.length === 0 || !savedSchoolYear) && token) {
+    if ((hasSchoolYears === false || !savedSchoolYear) && token) {
       fetchSchoolYears();
     }
-  }, [token]);
+  }, [token, fetchSchoolYears, hasSchoolYears, setSchoolYear]);
 
   // Fetch user role and redirect
-  const fetchUserRole = async () => {
+  const fetchUserRole = useCallback(async () => {
     try {
       const response = await serverFetch({
         uri: meEndpoint,
@@ -132,7 +134,7 @@ export const SchoolYearSelector = ({ token }) => {
       signOut({ redirect: false });
       router.push('/user/auth');
     }
-  };
+  }, [meEndpoint, router, token]);
 
   useEffect(() => {
     if (!triggerRedirect) return;
@@ -143,7 +145,7 @@ export const SchoolYearSelector = ({ token }) => {
     }
     fetchUserRole();
     setTriggerRedirect(false);
-  }, [triggerRedirect, router, token]);
+  }, [triggerRedirect, router, token, fetchUserRole]);
 
   const handleSchoolYearChange = (selectedYear) => {
     setSchoolYear(selectedYear);

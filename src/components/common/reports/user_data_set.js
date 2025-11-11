@@ -289,7 +289,6 @@ export const UserDataSet = ({
   const goToPage = useCallback(
     async (targetPage, pageSizeOverride) => {
       const pageSize = pageSizeOverride || paginationState?.pageSize || fallbackPageSize;
-      console.log('pageSize',pageSize);
       
       setIsLoadingPage(true);
       try {

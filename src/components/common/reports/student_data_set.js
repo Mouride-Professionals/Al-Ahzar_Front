@@ -786,7 +786,6 @@ export const DataSet = ({
     pageCount: 1,
     total: data?.length || 0,
   };
-  console.log('initialpagination', initialPagination);
 
   const [students, setStudents] = useState(data ?? []);
   const [paginationState, setPaginationState] = useState(defaultPagination);

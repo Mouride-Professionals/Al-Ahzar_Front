@@ -275,7 +275,6 @@ export const getServerSideProps = async ({ req, res }) => {
       cacheTtl: 5 * 60 * 1000,
     }).catch(() => ({ data: [] })),
   ]);
-  console.log('userresponses', usersResponse.length, 'token', token);
 
   const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
   const allowedUserRoles = [

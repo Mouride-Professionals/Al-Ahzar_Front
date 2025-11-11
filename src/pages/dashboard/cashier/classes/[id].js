@@ -35,7 +35,6 @@ export default function Class({
   schoolId,
   classId,
 }) {
-  console.log('detailclass:', detail);
 
   const { school, _class } = mapDetail(detail.data.attributes);
   const { STUDENTS_COLUMNS } = useTableColumns();
@@ -111,7 +110,6 @@ export const getServerSideProps = async ({ query, req, res }) => {
     `${classroomAttributes?.level ?? ''} ${classroomAttributes?.letter ?? ''}`.trim();
 
   let studentsResponse = classroomAttributes?.enrollments;
-  console.log('schoolIdd:', schoolId, 'activeSchoolYear:', activeSchoolYear);
 
   if (schoolId && activeSchoolYear) {
     const baseStudentsRoute = routes.api_route.alazhar.get.students.all
