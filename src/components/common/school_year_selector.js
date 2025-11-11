@@ -29,6 +29,7 @@ export const SchoolYearSelector = ({ token }) => {
     },
   } = routes.api_route;
   const t = useTranslations('components.layout.header');
+  const cacheTtlMs = 5 * 60 * 1000; // 5 minutes
 
   // Fetch school years
   const fetchSchoolYears = async () => {
@@ -38,6 +39,7 @@ export const SchoolYearSelector = ({ token }) => {
       const response = await serverFetch({
         uri: allSchoolYears,
         user_token: token,
+        cacheTtl: cacheTtlMs,
       });
 
       if (!response || !response.data) {

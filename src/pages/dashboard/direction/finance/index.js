@@ -113,7 +113,6 @@ const FinanceDashboard = ({
   const paymentTypeData = paymentSummary?.paymentTypeBreakdown ?? [];
   const expenseMonthlyData = expenseSummary?.monthlyBreakdown ?? [];
   const expenseCategoryData = expenseSummary?.totalByCategory ?? {};
-
   const expectedMonths = useMemo(() => {
     if (!schoolYearData?.startDate || !schoolYearData?.endDate) return [];
     return generateExpectedMonths(schoolYearData.startDate, schoolYearData.endDate);
@@ -132,6 +131,7 @@ const FinanceDashboard = ({
       };
     });
   }, [activeTab, expectedMonths, paymentMonthlyData, expenseMonthlyData]);
+console.log('chartdata',chartData);
 
   const pieData = useMemo(() => {
     if (activeTab === 'payments') {
@@ -608,8 +608,8 @@ export const getServerSideProps = async ({ req, res }) => {
     },
   } = routes.api_route;
 
-  const response = await serverFetch({ uri: me, user_token: token });
-  const role = response.role;
+  const currentUser = await serverFetch({ uri: me, user_token: token });
+  const role = currentUser.role;
 
   // Fetch initial data (system-wide), schools list, and school year data
   const cacheTtlMs = 5 * 60 * 1000;
