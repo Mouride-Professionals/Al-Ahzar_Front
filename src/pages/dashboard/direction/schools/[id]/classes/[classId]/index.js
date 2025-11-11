@@ -2,20 +2,16 @@ import { Stack, Text } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
-import {  useTableColumns } from '@utils/mappers/kpi';
-import {  mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
+import { useTableColumns } from '@utils/mappers/kpi';
+import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
 import { serverFetch } from 'src/lib/api';
 
 const mapDetail = (payload) => ({
-  school: payload.school.data.attributes.name,
-  _class: `${payload.level} ${payload.letter}`,
-  students: mapStudentsDataTableForEnrollments({
-    enrollments: {
-      ...payload.enrollments,
-      defaultLevel: `${payload.level} ${payload.letter}`,
-    },
-  }),
+  school: payload.school?.data?.attributes?.name ?? '',
+  _class: `${payload.level} ${payload.letter}`.trim(),
 });
 
 const {
@@ -30,9 +26,18 @@ const {
   },
 } = messages;
 
-export default function Class({ detail, role, token }) {
-  const { school, _class, students } = mapDetail(detail.data.attributes);
+export default function Class({
+  detail,
+  role,
+  token,
+  students: initialStudents,
+  studentPagination,
+  schoolId,
+  classId,
+}) {
+  const { school, _class } = mapDetail(detail.data.attributes);
   const { STUDENTS_COLUMNS } = useTableColumns();
+  const classFilter = classId ? `&filters[class][id][$eq]=${classId}` : '';
   return (
     <DashboardLayout
       title={establishment.replace('%name', `${school} - ${_class}`)}
@@ -49,18 +54,38 @@ export default function Class({ detail, role, token }) {
         {title}
       </Text>
       <Stack bgColor={colors.white} w={'100%'}>
-        <DataSet role={role} data={students} columns={STUDENTS_COLUMNS} />
+        <DataSet
+          role={role}
+          data={initialStudents}
+          initialPagination={studentPagination}
+          schoolId={schoolId}
+          columns={STUDENTS_COLUMNS}
+          token={token}
+          additionalFilters={classFilter}
+        />
       </Stack>
     </DashboardLayout>
   );
 }
 
-export const getServerSideProps = async ({ query, req }) => {
-  const { classId: id } = query;
+export const getServerSideProps = async ({ query, req, res }) => {
+  const { classId } = query;
 
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
   const token = session?.accessToken;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: 'user/auth',
+        permanent: false,
+      },
+    };
+  }
+
+  const activeSchoolYear =
+    (await ensureActiveSchoolYear({ req, res, token })) || '';
 
   const { role } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
@@ -68,20 +93,48 @@ export const getServerSideProps = async ({ query, req }) => {
   });
 
   const detail = await serverFetch({
-    uri: routes.api_route.alazhar.get.classes.detail.replace('%id', id),
+    uri: routes.api_route.alazhar.get.classes.detail.replace('%id', classId),
     user_token: token,
   });
-//  const classes= await serverFetch({
-//     uri: classrooms.replace('%activeSchoolYear', activeSchoolYear).replace('%schoolId', response.school?.id),
-//     user_token: token,
-//   });
+  const classroomAttributes = detail?.data?.attributes || {};
+  const schoolId =
+    classroomAttributes?.school?.data?.id || classroomAttributes?.school?.id || null;
 
+  const defaultLevel = `${classroomAttributes?.level ?? ''} ${classroomAttributes?.letter ?? ''}`.trim();
+
+  let studentsResponse = classroomAttributes?.enrollments;
+
+  if (schoolId && activeSchoolYear) {
+    const baseStudentsRoute = routes.api_route.alazhar.get.students.all
+      .replace('%activeSchoolYear', activeSchoolYear)
+      .replace('%schoolId', schoolId);
+
+    const pageSize = DEFAULT_ROWS_PER_PAGE;
+
+    studentsResponse = await serverFetch({
+      uri: `${baseStudentsRoute}&filters[class][id][$eq]=${classId}&pagination[page]=1&pagination[pageSize]=${pageSize}`,
+      user_token: token,
+    }).catch(() => classroomAttributes?.enrollments);
+  }
+
+  const students = mapStudentsDataTableForEnrollments({
+    enrollments: {
+      ...(studentsResponse || {}),
+      defaultLevel,
+    },
+  });
+
+  const studentPagination = studentsResponse?.meta?.pagination || null;
 
   return {
     props: {
       detail,
       role,
       token,
+      students,
+      studentPagination,
+      schoolId,
+      classId,
     },
   };
 };

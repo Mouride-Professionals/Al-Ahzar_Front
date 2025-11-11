@@ -776,6 +776,7 @@ export const DataSet = ({
   columns,
   selectedIndex = 0,
   token,
+  additionalFilters = '',
 }) => {
   const fallbackPageSize = initialPagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
 
@@ -820,7 +821,8 @@ export const DataSet = ({
         routes.api_route.alazhar.get.students.allWithoutSchoolYear
           .replace('%schoolId', schoolId)
           .replace('%activeSchoolYear', schoolYear) +
-        `&pagination[page]=1&pagination[pageSize]=${pageSize}`,
+        `&pagination[page]=1&pagination[pageSize]=${pageSize}` +
+        additionalFilters,
       user_token: token,
     });
 
@@ -885,11 +887,12 @@ export const DataSet = ({
   );
 
   const getBaseRoute = () =>
-    (filterByOldStudents
+    ((filterByOldStudents
       ? routes.api_route.alazhar.get.students.allWithoutSchoolYear
       : routes.api_route.alazhar.get.students.all)
       .replace('%schoolId', schoolId)
-      .replace('%activeSchoolYear', schoolYear || '');
+      .replace('%activeSchoolYear', schoolYear || '')) +
+    additionalFilters;
 
   const currentPageSize = paginationState?.pageSize || pageSizeFallback;
 
@@ -917,7 +920,7 @@ export const DataSet = ({
         setIsLoadingPage(false);
       }
     },
-    [token, filterByOldStudents, schoolId, schoolYear, currentPageSize]
+    [token, filterByOldStudents, schoolId, schoolYear, currentPageSize, additionalFilters]
   );
 
   const paginationConfig = useMemo(

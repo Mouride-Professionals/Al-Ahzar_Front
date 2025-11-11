@@ -485,13 +485,13 @@ export const TeacherDataSet = ({
       rowsPerPage: paginationState?.pageSize || fallbackPageSize,
       rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
       currentPage: paginationState?.page || 1,
-      totalRows: paginationState?.total || teachers.length,
+      totalRows: paginationState?.total || teachers?.length,
       onChangePage: (page) => goToPage(page),
       onRowsPerPageChange: (newSize) => goToPage(1, newSize),
       isServerSide: true,
       isLoadingPage,
     }),
-    [paginationState?.page, paginationState?.pageSize, paginationState?.total, teachers.length, goToPage, fallbackPageSize, isLoadingPage]
+    [paginationState?.page, paginationState?.pageSize, paginationState?.total, teachers?.length, goToPage, fallbackPageSize, isLoadingPage]
   );
 
   return (

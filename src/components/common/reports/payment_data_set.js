@@ -13,7 +13,11 @@ import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { dateFormatter } from '@utils/tools/mappers';
 import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BoxZone } from '../cards/boxZone';
+import { mapPaymentsDataTable } from '@utils/mappers/payment';
+import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
+import { fetcher } from 'src/lib/api';
 
 // PaymentExpandedComponent: Expanded row component for payment transactions details
 const PaymentExpandedComponent = ({ data, role, onCancelPayment }) => {
@@ -143,26 +147,96 @@ export const PaymentDataSet = ({
   selectedIndex = 0,
   token,
   onCancelPayment,
+  initialPagination = null,
+  baseRoute = '',
 }) => {
-  const filterFunction = ({ data, needle }) =>
+  const fallbackPageSize = initialPagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
+
+  const [payments, setPayments] = useState(data ?? []);
+  const [paginationState, setPaginationState] = useState(
+    initialPagination || {
+      page: 1,
+      pageSize: fallbackPageSize,
+      pageCount: 1,
+      total: data?.length || 0,
+    }
+  );
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
+
+  useEffect(() => {
+    setPayments(data ?? []);
+    setPaginationState(
+      initialPagination || {
+        page: 1,
+        pageSize: fallbackPageSize,
+        pageCount: 1,
+        total: data?.length || 0,
+      }
+    );
+  }, [data, initialPagination, fallbackPageSize]);
+
+  const filterFunction = ({ data: rows, needle }) =>
     reportingFilter({
-      data,
+      data: rows,
       position: selectedIndex,
       needle,
     });
 
   const handleCancelPayment = (paymentId) => {
-    console.log('handleCancelPayment in PaymentDataSet', paymentId);
-
     if (onCancelPayment) {
       onCancelPayment(paymentId);
     }
   };
 
+  const currentPageSize = paginationState?.pageSize || fallbackPageSize;
+
+  const goToPage = useCallback(
+    async (targetPage, pageSizeOverride) => {
+      if (!token || !baseRoute) return;
+      const pageSize = pageSizeOverride || currentPageSize;
+      setIsLoadingPage(true);
+      try {
+        const response = await fetcher({
+          uri: `${baseRoute}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
+          user_token: token,
+        });
+        const mapped = mapPaymentsDataTable({ payments: response });
+        setPayments(mapped);
+        setPaginationState(
+          response.meta?.pagination || {
+            page: targetPage,
+            pageSize,
+            pageCount: paginationState?.pageCount || 1,
+            total: paginationState?.total || mapped.length,
+          }
+        );
+      } catch (error) {
+        console.error('Error loading payments page:', error);
+      } finally {
+        setIsLoadingPage(false);
+      }
+    },
+    [token, baseRoute, currentPageSize, paginationState?.pageCount, paginationState?.total]
+  );
+
+  const paginationConfig = useMemo(
+    () => ({
+      rowsPerPage: currentPageSize,
+      rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+      currentPage: paginationState?.page || 1,
+      totalRows: paginationState?.total || payments.length,
+      onChangePage: (page) => goToPage(page),
+      onRowsPerPageChange: (newSize, page) => goToPage(page || 1, newSize),
+      isServerSide: Boolean(baseRoute),
+      isLoadingPage,
+    }),
+    [currentPageSize, paginationState?.page, paginationState?.total, payments.length, goToPage, baseRoute, isLoadingPage]
+  );
+
   return (
     <DataTableLayout
       columns={columns}
-      data={data}
+      data={payments}
       role={role}
       token={token}
       translationNamespace="components.dataset.payments"
@@ -176,10 +250,7 @@ export const PaymentDataSet = ({
       filterFunction={filterFunction}
       defaultSortFieldId="monthOf"
       selectedIndex={selectedIndex}
-      paginationProps={{
-        rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 20, 50],
-      }}
+      paginationProps={paginationConfig}
     />
   );
 };

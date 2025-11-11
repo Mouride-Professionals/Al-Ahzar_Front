@@ -514,7 +514,9 @@
                 "monthly_expenses_trend": "اتجاه المصروفات الشهرية",
                 "expenses_by_category": "توزيع المصروفات حسب الفئة",
                 "expenses_history": "سجل المصروفات",
-                "payments_history": "سجل الدفعات"
+                "payments_history": "سجل الدفعات",
+                "noExpenses": "لا توجد مصروفات مسجلة لهذه الفترة.",
+                "noPayments": "لا توجد مدفوعات مسجلة لهذه الفترة."
             }
         },
         "modals": {

@@ -1,9 +1,10 @@
 import {
   Box,
+  Flex,
   Heading,
   HStack,
   Select,
-  Skeleton,
+  Spinner,
   Stack,
   Tab,
   TabList,
@@ -14,6 +15,8 @@ import {
   useToast,
   Wrap,
 } from '@chakra-ui/react';
+import { ExpenseDataSet } from '@components/common/reports/expense_data_set';
+import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { generateExpectedMonths, getMonthName } from '@utils/date';
@@ -21,9 +24,8 @@ import { mapExpensesDataTable } from '@utils/mappers/expense';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapPaymentType } from '@utils/tools/mappers';
 import { getToken } from 'next-auth/jwt';
-import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FaCalendarCheck,
   FaCalendarPlus,
@@ -31,62 +33,19 @@ import {
 } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { SiCashapp } from 'react-icons/si';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { serverFetch } from 'src/lib/api';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
-
-const StatisticsFallback = () => (
-  <HStack w="100%">
-    <Stack direction={{ base: 'column', md: 'row' }} spacing={6} w="100%">
-      {Array.from({ length: 2 }).map((_, index) => (
-        <Stack
-          key={index}
-          bgColor={colors.white}
-          borderRadius="lg"
-          boxShadow="sm"
-          p={6}
-          flex={1}
-        >
-          <Skeleton height="24px" mb={2} />
-          <Skeleton height="16px" />
-        </Stack>
-      ))}
-    </Stack>
-  </HStack>
-);
-
-const DataSetFallback = () => (
-  <Stack bgColor={colors.white} w="100%" p={6} borderRadius="lg" boxShadow="sm" spacing={4}>
-    {Array.from({ length: 5 }).map((_, index) => (
-      <Skeleton key={index} height="20px" />
-    ))}
-    <Skeleton height="200px" borderRadius="md" />
-  </Stack>
-);
-
-const ChartFallback = () => <Skeleton height="320px" borderRadius="md" w="100%" />;
-
-const Statistics = dynamic(
-  () => import('@components/func/lists/Statistic').then((mod) => mod.Statistics),
-  { ssr: false, loading: StatisticsFallback }
-);
-
-const ExpenseDataSet = dynamic(
-  () => import('@components/common/reports/expense_data_set').then((mod) => mod.ExpenseDataSet),
-  { ssr: false, loading: DataSetFallback }
-);
-
-const ResponsiveContainer = dynamic(
-  () => import('recharts').then((mod) => mod.ResponsiveContainer),
-  { ssr: false, loading: ChartFallback }
-);
-const BarChart = dynamic(() => import('recharts').then((mod) => mod.BarChart), { ssr: false });
-const Bar = dynamic(() => import('recharts').then((mod) => mod.Bar), { ssr: false });
-const XAxis = dynamic(() => import('recharts').then((mod) => mod.XAxis), { ssr: false });
-const YAxis = dynamic(() => import('recharts').then((mod) => mod.YAxis), { ssr: false });
-const Tooltip = dynamic(() => import('recharts').then((mod) => mod.Tooltip), { ssr: false });
-const PieChart = dynamic(() => import('recharts').then((mod) => mod.PieChart), { ssr: false });
-const Pie = dynamic(() => import('recharts').then((mod) => mod.Pie), { ssr: false });
-const Cell = dynamic(() => import('recharts').then((mod) => mod.Cell), { ssr: false });
 
 const FinanceDashboard = ({
   role,
@@ -99,53 +58,18 @@ const FinanceDashboard = ({
 }) => {
   const t = useTranslations();
   const toast = useToast();
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('payments');
   const [selectedSchool, setSelectedSchool] = useState('all');
   const [paymentSummary, setPaymentSummary] = useState(initialPaymentKpis);
   const [expenseSummary, setExpenseSummary] = useState(initialExpenseKpis);
+  const [chartData, setChartData] = useState([]);
+  const [pieData, setPieData] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [expenseData, setExpenseData] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [, setHasSucceeded] = useState(false);
+  const [hasSucceeded, setHasSucceeded] = useState(false);
 
-  const { EXPENSES_COLUMNS } = useTableColumns();
-
-  const paymentMonthlyData = paymentSummary?.monthlyBreakdown ?? [];
-  const paymentTypeData = paymentSummary?.paymentTypeBreakdown ?? [];
-  const expenseMonthlyData = expenseSummary?.monthlyBreakdown ?? [];
-  const expenseCategoryData = expenseSummary?.totalByCategory ?? {};
-  const expectedMonths = useMemo(() => {
-    if (!schoolYearData?.startDate || !schoolYearData?.endDate) return [];
-    return generateExpectedMonths(schoolYearData.startDate, schoolYearData.endDate);
-  }, [schoolYearData?.startDate, schoolYearData?.endDate]);
-
-  const chartData = useMemo(() => {
-    const dataset = activeTab === 'payments' ? paymentMonthlyData : expenseMonthlyData;
-    const months = expectedMonths.length ? expectedMonths : dataset.map((item) => item.month);
-    if (!months.length) return [];
-
-    return months.map((month) => {
-      const found = dataset.find((item) => item.month === month);
-      return {
-        month: getMonthName(month),
-        amount: found ? Number(found.total) : 0,
-      };
-    });
-  }, [activeTab, expectedMonths, paymentMonthlyData, expenseMonthlyData]);
-console.log('chartdata',chartData);
-
-  const pieData = useMemo(() => {
-    if (activeTab === 'payments') {
-      return (paymentTypeData || []).map((item) => ({
-        name: mapPaymentType[item.paymentType] || item.paymentType,
-        value: Number(item.total) || 0,
-      }));
-    }
-
-    return Object.entries(expenseCategoryData || {}).map(([category, total]) => ({
-      name: category,
-      value: Number(total) || 0,
-    }));
-  }, [activeTab, paymentTypeData, expenseCategoryData]);
+  const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
 
   // School options for dropdown
   const schoolOptions = [
@@ -241,7 +165,6 @@ console.log('chartdata',chartData);
     const rAmount = outerRadius + 20;
     const xAmount = cx + rAmount * Math.cos(-midAngle * RADIAN);
     const yAmount = cy + rAmount * Math.sin(-midAngle * RADIAN);
-    if (!pieData[index]) return null;
 
     return (
       <g>
@@ -260,8 +183,9 @@ console.log('chartdata',chartData);
   };
 
   useEffect(() => {
+    // debounceFetch();
     const fetchData = async () => {
-      setIsFetching(true);
+      setLoading(true);
       const {
         alazhar: {
           get: {
@@ -316,13 +240,53 @@ console.log('chartdata',chartData);
             console.error('Error fetching expense data:', error);
             expenseDataResult = [];
           }
-        } else {
-          expenseDataResult = [];
         }
 
         setPaymentSummary(paymentStatsData);
         setExpenseSummary(expenseStatsData);
         setExpenseData(expenseDataResult);
+
+        // Generate expected months from school year dates
+        const expectedMonths = generateExpectedMonths(
+          schoolYearData?.startDate,
+          schoolYearData?.endDate
+        );
+        const paymentMonthlyData = paymentStatsData?.monthlyBreakdown || [];
+        const paymentTypeData = paymentStatsData?.paymentTypeBreakdown || [];
+        const expenseMonthlyData = expenseStatsData?.monthlyBreakdown || [];
+        const expenseCategoryData = expenseStatsData?.totalByCategory || {};
+
+        const updateChartData = (data) => {
+          const chart = expectedMonths.map((m) => {
+            const found = data.find((item) => item.month === m);
+            return { month: getMonthName(m), amount: found ? found.total : 0 };
+          });
+          setChartData(chart);
+        };
+
+        const updatePieData = (data, isExpense = false) => {
+          if (isExpense) {
+            const pie = Object.entries(data).map(([category, total]) => ({
+              name: category,
+              value: total,
+            }));
+            setPieData(pie);
+          } else {
+            const pie = data.map((item) => ({
+              name: mapPaymentType[item.paymentType],
+              value: item.total,
+            }));
+            setPieData(pie);
+          }
+        };
+
+        if (activeTab === 'payments') {
+          updateChartData(paymentMonthlyData);
+          updatePieData(paymentTypeData);
+        } else {
+          updateChartData(expenseMonthlyData);
+          updatePieData(expenseCategoryData, true);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
         toast({
@@ -333,12 +297,28 @@ console.log('chartdata',chartData);
           isClosable: true,
         });
       } finally {
-        setIsFetching(false);
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [selectedSchool, token, activeSchoolYear, toast]);
+  }, [
+    selectedSchool,
+    activeTab,
+    token,
+    activeSchoolYear,
+    toast,
+    schoolYearData?.startDate,
+    schoolYearData?.endDate,
+  ]);
+
+  if (loading) {
+    return (
+      <Flex justify="center" align="center" minH="80vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
 
   return (
     <DashboardLayout
@@ -373,14 +353,18 @@ console.log('chartdata',chartData);
           <TabList ml={4}>
             <Tab
               color={
-                activeTab === 'payments' ? colors.primary.regular : colors.primary.regular
+                activeTab === 'payments'
+                  ? colors.primary.regular
+                  : colors.primary.regular
               }
             >
               {t('components.dataset.finance.payments_tab')}
             </Tab>
             <Tab
               color={
-                activeTab === 'expenses' ? colors.primary.regular : colors.primary.regular
+                activeTab === 'expenses'
+                  ? colors.primary.regular
+                  : colors.primary.regular
               }
             >
               {t('components.dataset.finance.expenses_tab')}
@@ -392,7 +376,7 @@ console.log('chartdata',chartData);
             <TabPanel>
               <Wrap spacing={20.01}>
                 <HStack w="100%">
-                  {isFetching ? <StatisticsFallback /> : <Statistics cardStats={paymentStats} />}
+                  <Statistics cardStats={paymentStats} />
                 </HStack>
 
                 <HStack w="100%">
@@ -406,18 +390,14 @@ console.log('chartdata',chartData);
                     <Heading size="md" mb={4}>
                       {t('components.dataset.finance.monthly_payments_trend')}
                     </Heading>
-                    {isFetching ? (
-                      <ChartFallback />
-                    ) : (
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={chartData}>
-                          <XAxis dataKey="month" />
-                          <YAxis />
-                          <Tooltip />
-                          <Bar dataKey="amount" fill="#3182CE" barSize={20} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData}>
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="amount" fill="#3182CE" barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </Box>
                 </HStack>
                 <HStack w="100%">
@@ -433,29 +413,25 @@ console.log('chartdata',chartData);
                         'components.dataset.finance.annual_payments_distribution'
                       )}
                     </Heading>
-                    {isFetching ? (
-                      <ChartFallback />
-                    ) : (
-                      <ResponsiveContainer width="100%" height={350}>
-                        <PieChart>
-                          <Pie
-                            dataKey="value"
-                            data={pieData}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={140}
-                            label={renderCustomizedLabel}
-                          >
-                            {pieData.map((entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={pieColors[index]}
-                              />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={350}>
+                      <PieChart>
+                        <Pie
+                          dataKey="value"
+                          data={pieData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={140}
+                          label={renderCustomizedLabel}
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={pieColors[index]}
+                            />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
                   </Box>
                 </HStack>
               </Wrap>
@@ -466,11 +442,11 @@ console.log('chartdata',chartData);
               <Wrap spacing={20.01}>
                 {/* Statistics */}
                 <HStack w="100%">
-                  {isFetching ? <StatisticsFallback /> : <Statistics cardStats={expenseStats} />}
+                  <Statistics cardStats={expenseStats} />
                 </HStack>
 
                 {/* Expense Data Table - Only show when specific school is selected */}
-                {selectedSchool !== 'all' && (
+                {selectedSchool !== 'all' && expenseData.length > 0 && (
                   <>
                     <HStack w="100%">
                       <Text
@@ -482,27 +458,15 @@ console.log('chartdata',chartData);
                       </Text>
                     </HStack>
                     <Stack bgColor={colors.white} w="100%">
-                      {isFetching ? (
-                        <DataSetFallback />
-                      ) : expenseData.length ? (
-                        <ExpenseDataSet
-                          role={role}
-                          data={expenseData}
-                          columns={EXPENSES_COLUMNS}
-                          token={token}
-                          schoolId={selectedSchool}
-                          schoolYearId={activeSchoolYear}
-                          setHasSucceeded={setHasSucceeded}
-                        />
-                      ) : (
-                        <Box p={6}>
-                          <Text color={colors.gray.regular}>
-                            {t('components.dataset.finance.noExpenses', {
-                              fallback: 'No expenses recorded yet.',
-                            })}
-                          </Text>
-                        </Box>
-                      )}
+                      <ExpenseDataSet
+                        role={role}
+                        data={expenseData}
+                        columns={EXPENSES_COLUMNS}
+                        token={token}
+                        schoolId={selectedSchool}
+                        schoolYearId={activeSchoolYear}
+                        setHasSucceeded={setHasSucceeded}
+                      />
                     </Stack>
                   </>
                 )}
@@ -519,18 +483,14 @@ console.log('chartdata',chartData);
                     <Heading size="md" mb={4}>
                       {t('components.dataset.finance.monthly_expenses_trend')}
                     </Heading>
-                    {isFetching ? (
-                      <ChartFallback />
-                    ) : (
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={chartData}>
-                          <XAxis dataKey="month" />
-                          <YAxis />
-                          <Tooltip />
-                          <Bar dataKey="amount" fill="#E53E3E" barSize={20} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData}>
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="amount" fill="#E53E3E" barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </Box>
                 </HStack>
 
@@ -546,29 +506,25 @@ console.log('chartdata',chartData);
                     <Heading size="md" mb={4}>
                       {t('components.dataset.finance.expenses_by_category')}
                     </Heading>
-                    {isFetching ? (
-                      <ChartFallback />
-                    ) : (
-                      <ResponsiveContainer width="100%" height={350}>
-                        <PieChart>
-                          <Pie
-                            dataKey="value"
-                            data={pieData}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={140}
-                            label={renderCustomizedLabel}
-                          >
-                            {pieData.map((entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={pieColors[index]}
-                              />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={350}>
+                      <PieChart>
+                        <Pie
+                          dataKey="value"
+                          data={pieData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={140}
+                          label={renderCustomizedLabel}
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={pieColors[index]}
+                            />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
                   </Box>
                 </HStack>
               </Wrap>
@@ -608,28 +564,24 @@ export const getServerSideProps = async ({ req, res }) => {
     },
   } = routes.api_route;
 
-  const currentUser = await serverFetch({ uri: me, user_token: token });
-  const role = currentUser.role;
+  const response = await serverFetch({ uri: me, user_token: token });
+  const role = response.role;
 
   // Fetch initial data (system-wide), schools list, and school year data
-  const cacheTtlMs = 5 * 60 * 1000;
   const [schoolsData, initialPaymentKpis, initialExpenseKpis, schoolYearData] =
     await Promise.all([
-      serverFetch({ uri: schoolsRoute, user_token: token, cacheTtl: cacheTtlMs }),
+      serverFetch({ uri: schoolsRoute, user_token: token }),
       serverFetch({
         uri: financeStats.replace('%activeSchoolYear', activeSchoolYear),
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }),
       serverFetch({
         uri: expenseStats.replace('%activeSchoolYear', activeSchoolYear),
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }),
       serverFetch({
         uri: schoolYearRoute.replace('%id', activeSchoolYear),
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }).catch(() => null), // Handle case where school year data might not be available
     ]);
 

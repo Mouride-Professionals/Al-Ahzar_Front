@@ -35,6 +35,38 @@ export const generateExpectedMonths = (startDate, endDate) => {
 };
 
 /**
+ * Normalize any month-like value into a 1-12 month index.
+ * Accepts numbers, numeric strings, Date objects, or ISO strings.
+ * @param {number|string|Date|null|undefined} value
+ * @returns {number|null}
+ */
+export const normalizeMonthIndex = (value) => {
+  if (value === null || value === undefined) return null;
+
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.getMonth() + 1;
+  }
+
+  if (typeof value === 'string') {
+    const numeric = Number(value);
+    if (!Number.isNaN(numeric)) {
+      return numeric;
+    }
+
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.getMonth() + 1;
+    }
+  }
+
+  return null;
+};
+
+/**
  * Get month name from month number
  * @param {number} monthNum - Month number (1-12)
  * @returns {string} Short month name

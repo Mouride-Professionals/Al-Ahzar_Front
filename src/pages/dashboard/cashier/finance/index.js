@@ -1,8 +1,9 @@
 import {
   Box,
+  Flex,
   Heading,
   HStack,
-  Skeleton,
+  Spinner,
   Stack,
   Tab,
   TabList,
@@ -13,7 +14,11 @@ import {
   useToast,
   Wrap,
 } from '@chakra-ui/react';
+import { ExpenseDataSet } from '@components/common/reports/expense_data_set';
+import { PaymentDataSet } from '@components/common/reports/payment_data_set';
+import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
+import { PaymentCancellationModal } from '@components/modals/paymentCancellationModal';
 import { colors, routes } from '@theme';
 import { generateExpectedMonths, getMonthName } from '@utils/date';
 import { mapExpensesDataTable } from '@utils/mappers/expense';
@@ -21,7 +26,6 @@ import { useTableColumns } from '@utils/mappers/kpi';
 import { mapPaymentsDataTable } from '@utils/mappers/payment';
 import { mapPaymentType } from '@utils/tools/mappers';
 import { getToken } from 'next-auth/jwt';
-import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -31,81 +35,20 @@ import {
 } from 'react-icons/fa';
 import { HiAcademicCap } from 'react-icons/hi';
 import { SiCashapp } from 'react-icons/si';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { serverFetch } from 'src/lib/api';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
-
-const StatisticsFallback = () => (
-  <HStack w="100%">
-    <Stack
-      direction={{ base: 'column', md: 'row' }}
-      spacing={6}
-      w="100%"
-    >
-      {Array.from({ length: 2 }).map((_, index) => (
-        <Stack
-          key={index}
-          bgColor={colors.white}
-          borderRadius="lg"
-          boxShadow="sm"
-          p={6}
-          flex={1}
-        >
-          <Skeleton height="24px" mb={2} />
-          <Skeleton height="16px" />
-        </Stack>
-      ))}
-    </Stack>
-  </HStack>
-);
-
-const DataSetFallback = () => (
-  <Stack bgColor={colors.white} w="100%" p={6} borderRadius="lg" boxShadow="sm" spacing={4}>
-    {Array.from({ length: 5 }).map((_, index) => (
-      <Skeleton key={index} height="20px" />
-    ))}
-    <Skeleton height="200px" borderRadius="md" />
-  </Stack>
-);
-
-const ModalFallback = () => null;
-
-const Statistics = dynamic(
-  () => import('@components/func/lists/Statistic').then((mod) => mod.Statistics),
-  { ssr: false, loading: StatisticsFallback }
-);
-
-const PaymentDataSet = dynamic(
-  () => import('@components/common/reports/payment_data_set').then((mod) => mod.PaymentDataSet),
-  { ssr: false, loading: DataSetFallback }
-);
-
-const ExpenseDataSet = dynamic(
-  () => import('@components/common/reports/expense_data_set').then((mod) => mod.ExpenseDataSet),
-  { ssr: false, loading: DataSetFallback }
-);
-
-const PaymentCancellationModal = dynamic(
-  () =>
-    import('@components/modals/paymentCancellationModal').then(
-      (mod) => mod.PaymentCancellationModal
-    ),
-  { ssr: false, loading: ModalFallback }
-);
-
-const ChartFallback = () => <Skeleton height="300px" borderRadius="md" w="100%" />;
-
-const ResponsiveContainer = dynamic(
-  () => import('recharts').then((mod) => mod.ResponsiveContainer),
-  { ssr: false, loading: ChartFallback }
-);
-const BarChart = dynamic(() => import('recharts').then((mod) => mod.BarChart), { ssr: false });
-const Bar = dynamic(() => import('recharts').then((mod) => mod.Bar), { ssr: false });
-const XAxis = dynamic(() => import('recharts').then((mod) => mod.XAxis), { ssr: false });
-const YAxis = dynamic(() => import('recharts').then((mod) => mod.YAxis), { ssr: false });
-const Tooltip = dynamic(() => import('recharts').then((mod) => mod.Tooltip), { ssr: false });
-const PieChart = dynamic(() => import('recharts').then((mod) => mod.PieChart), { ssr: false });
-const Pie = dynamic(() => import('recharts').then((mod) => mod.Pie), { ssr: false });
-const Cell = dynamic(() => import('recharts').then((mod) => mod.Cell), { ssr: false });
+import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
 
 const FinanceDashboard = ({
   role,
@@ -118,78 +61,105 @@ const FinanceDashboard = ({
 }) => {
   const t = useTranslations();
   const toast = useToast();
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('payments');
+  const [paymentSummary, setPaymentSummary] = useState();
+  const [expenseSummary, setExpenseSummary] = useState();
+  const [chartData, setChartData] = useState([]);
+  const [pieData, setPieData] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [expenseTransactions, setExpenseTransactions] = useState([]);
+  const [hasSucceeded, setHasSucceeded] = useState(false);
 
   // Payment cancellation modal state
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
+  const paymentPagination = paymentKpis?.[0]?.meta?.pagination || null;
+  const paymentBaseRoute = useMemo(() => {
+    if (!schoolYearId || !schoolId) return '';
+    return routes.api_route.alazhar.get.finance.all
+      .replace('%activeSchoolYear', schoolYearId)
+      .replace('%schoolId', schoolId);
+  }, [schoolYearId, schoolId]);
 
-  const paymentSummary = paymentKpis?.[1];
-  const expenseSummary = expenseKpis?.[1];
-
-  const paymentMonthlyData = paymentSummary?.monthlyBreakdown ?? [];
-  const paymentTypeData = paymentSummary?.paymentTypeBreakdown ?? [];
-
-  const expenseMonthlyData = expenseSummary?.monthlyBreakdown ?? [];
-  const expenseCategoryData = expenseSummary?.totalByCategory ?? {};
-
-  const basePaymentTransactions = useMemo(
-    () => mapPaymentsDataTable({ payments: paymentKpis?.[0] || { data: [] } }),
-    [paymentKpis]
-  );
-
-  const baseExpenseTransactions = useMemo(
-    () => mapExpensesDataTable({ expenses: expenseKpis?.[0] || { data: [] } }),
-    [expenseKpis]
-  );
-
-  const [activeTab, setActiveTab] = useState('payments');
-  const [, setHasSucceeded] = useState(false);
-  const [transactions, setTransactions] = useState(basePaymentTransactions);
-  const [expenseTransactions, setExpenseTransactions] = useState(baseExpenseTransactions);
+  const expensePagination = expenseKpis?.[0]?.meta?.pagination || null;
+  const expenseBaseRoute = useMemo(() => {
+    if (!schoolYearId || !schoolId) return '';
+    return routes.api_route.alazhar.get.expenses.all
+      .replace('%activeSchoolYear', schoolYearId)
+      .replace('%schoolId', schoolId);
+  }, [schoolYearId, schoolId]);
 
   useEffect(() => {
-    setTransactions(basePaymentTransactions);
-  }, [basePaymentTransactions]);
+    if (paymentKpis && expenseKpis) {
+      setPaymentSummary(paymentKpis[1]);
 
-  useEffect(() => {
-    setExpenseTransactions(baseExpenseTransactions);
-  }, [baseExpenseTransactions]);
+      // Map payments data inside useEffect to avoid dependency issues
+      const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
+      setTransactions(payments);
 
-  const expectedMonths = useMemo(() => {
-    if (!schoolYearData?.startDate || !schoolYearData?.endDate) return [];
-    return generateExpectedMonths(schoolYearData.startDate, schoolYearData.endDate);
-  }, [schoolYearData?.startDate, schoolYearData?.endDate]);
+      // Map expenses data inside useEffect to avoid dependency issues
+      const expenses = mapExpensesDataTable({ expenses: expenseKpis[0] });
+      setExpenseTransactions(expenses);
 
-  const chartData = useMemo(() => {
-    const dataset = activeTab === 'payments' ? paymentMonthlyData : expenseMonthlyData;
-    const months = expectedMonths.length ? expectedMonths : dataset.map((item) => item.month);
+      // Generate expected months from school year dates
+      const expectedMonths = generateExpectedMonths(
+        schoolYearData?.startDate,
+        schoolYearData?.endDate
+      );
+      const paymentMonthlyData = paymentKpis[1]?.monthlyBreakdown || [];
+      const paymentTypeData = paymentKpis[1]?.paymentTypeBreakdown || [];
 
-    if (!months.length) return [];
+      setExpenseSummary(expenseKpis[1]);
+      const expenseMonthlyData = expenseKpis[1]?.monthlyBreakdown || [];
+      const expenseCategoryData = expenseKpis[1]?.totalByCategory || {};
 
-    return months.map((month) => {
-      const found = dataset.find((item) => item.month === month);
-      return {
-        month: getMonthName(month),
-        amount: found ? Number(found.total) : 0,
+      const updateChartData = (data) => {
+        const chart = expectedMonths.map((m) => {
+          const found = data.find((item) => item.month === m);
+          return {
+            month: getMonthName(m),
+            amount: found ? found.total : 0,
+          };
+        });
+        setChartData(chart);
       };
-    });
-  }, [activeTab, expectedMonths, paymentMonthlyData, expenseMonthlyData]);
 
-  const pieData = useMemo(() => {
-    if (activeTab === 'payments') {
-      return (paymentTypeData || []).map((item) => ({
-        name: mapPaymentType[item.paymentType] || item.paymentType,
-        value: Number(item.total) || 0,
-      }));
+      const updatePieData = (data, isExpense = false) => {
+        if (isExpense) {
+          const pie = Object.entries(data).map(([category, total]) => ({
+            name: category,
+            value: total,
+          }));
+          setPieData(pie);
+        } else {
+          const pie = data.map((item) => ({
+            name: mapPaymentType[item.paymentType],
+            value: item.total,
+          }));
+          setPieData(pie);
+        }
+      };
+
+      if (activeTab === 'payments') {
+        updateChartData(paymentMonthlyData);
+        updatePieData(paymentTypeData);
+      } else {
+        updateChartData(expenseMonthlyData, true);
+        updatePieData(expenseCategoryData, true);
+      }
+
+      setLoading(false);
     }
-
-    return Object.entries(expenseCategoryData || {}).map(([category, total]) => ({
-      name: category,
-      value: Number(total) || 0,
-    }));
-  }, [activeTab, paymentTypeData, expenseCategoryData]);
+  }, [
+    paymentKpis,
+    expenseKpis,
+    activeTab,
+    schoolYearData?.startDate,
+    schoolYearData?.endDate,
+  ]);
 
   // Payment cancellation handler
   const handleCancelPayment = (payment) => {
@@ -206,7 +176,7 @@ const FinanceDashboard = ({
 
   const handleCancelSuccess = () => {
     // Refresh the transactions data
-    const payments = mapPaymentsDataTable({ payments: paymentKpis?.[0] || { data: [] } });
+    const payments = mapPaymentsDataTable({ payments: paymentKpis[0] });
     setTransactions(payments);
     handleCancelModalClose();
 
@@ -217,6 +187,14 @@ const FinanceDashboard = ({
       isClosable: true,
     });
   };
+
+  if (loading) {
+    return (
+      <Flex justify="center" align="center" minH="80vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
 
   // Finance card statistics (all UI text is internationalized)
   const paymentStats = [
@@ -325,7 +303,6 @@ const FinanceDashboard = ({
     const rAmount = outerRadius + offset;
     const xAmount = cx + rAmount * Math.cos(-midAngle * RADIAN);
     const yAmount = cy + rAmount * Math.sin(-midAngle * RADIAN);
-    if (!pieData[index]) return null;
 
     return (
       <g>
@@ -396,6 +373,8 @@ const FinanceDashboard = ({
                   columns={PAYMENTS_COLUMNS}
                   token={token}
                   onCancelPayment={handleCancelPayment}
+                  initialPagination={paymentPagination}
+                  baseRoute={paymentBaseRoute}
                 />
               </Stack>
               <HStack w="100%">
@@ -477,6 +456,8 @@ const FinanceDashboard = ({
                   schoolId={schoolId}
                   schoolYearId={schoolYearId}
                   setHasSucceeded={setHasSucceeded}
+                  initialPagination={expensePagination}
+                  baseRoute={expenseBaseRoute}
                 />
               </Stack>
               <HStack w="100%">
@@ -586,48 +567,44 @@ export const getServerSideProps = async ({ req, res }) => {
   const schoolId = response.school.id;
 
   // Fetch KPIs for payments and expenses, and school year data
-  const cacheTtlMs = 5 * 60 * 1000;
+  const pageSize = DEFAULT_ROWS_PER_PAGE;
 
   const [paymentKpis, expenseKpis, schoolYearData] = await Promise.all([
     Promise.all([
       serverFetch({
         uri: payments
           .replace('%activeSchoolYear', activeSchoolYear)
-          .replace('%schoolId', schoolId),
+          .replace('%schoolId', schoolId) +
+          `&pagination[page]=1&pagination[pageSize]=${pageSize}`,
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }),
       serverFetch({
         uri: financeStats
           .replace('%activeSchoolYear', activeSchoolYear)
           .replace('%schoolId', schoolId),
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }),
     ]),
     Promise.all([
       serverFetch({
         uri: expenses
           .replace('%activeSchoolYear', activeSchoolYear)
-          .replace('%schoolId', schoolId),
+          .replace('%schoolId', schoolId) +
+          `&pagination[page]=1&pagination[pageSize]=${pageSize}`,
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }),
       serverFetch({
         uri: expenseStats
           .replace('%activeSchoolYear', activeSchoolYear)
           .replace('%schoolId', schoolId),
         user_token: token,
-        cacheTtl: cacheTtlMs,
       }),
     ]),
     serverFetch({
       uri: schoolYearRoute.replace('%id', activeSchoolYear),
       user_token: token,
-      cacheTtl: cacheTtlMs,
     }).catch(() => null), // Handle case where school year data might not be available
   ]);
-  console.log('paymentKpis, expenseKpis', paymentKpis, expenseKpis);
 
   return {
     props: {

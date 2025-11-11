@@ -1,5 +1,6 @@
 import { HStack, Skeleton, Stack, Text, Wrap } from '@chakra-ui/react';
 import { DashboardLayout } from '@components/layout/dashboard';
+import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
 import { colors, routes } from '@theme';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { useTableColumns } from '@utils/mappers/kpi';
@@ -168,7 +169,7 @@ export const getServerSideProps = async ({ req, res }) => {
   const role = response.role;
 
   const cacheTtlMs = 5 * 60 * 1000; // cache classrooms & students for 5 minutes
-  const enrollmentPageSize = 25;
+  const enrollmentPageSize = DEFAULT_ROWS_PER_PAGE;
 
   const kpis = await Promise.all([
     serverFetch({

@@ -85,9 +85,7 @@ export default function Dashboard({ kpis, role, token, userQueryParams = '' }) {
       {
         count: t('pages.stats.amount.users').replace(
           `%number`,
-          usersResponse?.meta?.pagination?.total ??
-            usersResponse?.data?.length ??
-            0
+          usersResponse?.meta?.pagination?.total ?? usersResponse?.length ?? 0
         ),
         icon: <FaUser color={colors.primary.regular} size={25} />,
         title: t('pages.stats.users'),
@@ -122,6 +120,10 @@ export default function Dashboard({ kpis, role, token, userQueryParams = '' }) {
         icon: <FaSuitcase color={colors.primary.regular} size={25} />,
         title: t('pages.stats.teachers'),
       },
+      // directorial cant see schools
+      ...(DIRECTORIAL_ROLES.includes(role.name)
+        ? []
+        : [ 
       {
         count: t('pages.stats.amount.schools').replace(
           `%number`,
@@ -132,6 +134,7 @@ export default function Dashboard({ kpis, role, token, userQueryParams = '' }) {
         icon: <LuSchool color={colors.primary.regular} size={25} />,
         title: t('pages.stats.schools'),
       },
+      ]),
     ],
     [
       classesResponse,
@@ -225,7 +228,20 @@ export const getServerSideProps = async ({ req, res }) => {
   const userSchoolId = currentUser.school?.id;
 
   const defaultPageSize = DEFAULT_ROWS_PER_PAGE;
+  const userBaseRoute = userSchoolId
+    ? `${allUsers}?filters[school][id][$eq]=${userSchoolId}&`
+    : `${allUsers}?`;
 
+    const classroomBaseRoute = userSchoolId
+    ? `${classrooms}&filters[school][id][$eq]=${userSchoolId}`
+    : `${classrooms}`;
+
+    const studentsBaseRoute = userSchoolId
+      ? `${allStudents}&filters[class][school][id][$eq]=${userSchoolId}`
+      : `${allStudents}`;
+      const teachersBaseRoute = userSchoolId
+      ? `${allTeachers}?filters[school][id][$eq]=${userSchoolId}`
+      : `${allTeachers}`;
   const [
     usersResponse,
     classesResponse,
@@ -234,22 +250,22 @@ export const getServerSideProps = async ({ req, res }) => {
     schoolsResponse,
   ] = await Promise.all([
     serverFetch({
-      uri: `${allUsers}?populate=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=${defaultPageSize}`,
+      uri: `${userBaseRoute}populate=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=${defaultPageSize}`,
       user_token: token,
       cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
-      uri: classrooms.replace('%activeSchoolYear', activeSchoolYear),
+      uri: classroomBaseRoute.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
       cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
-      uri: allStudents.replace('%activeSchoolYear', activeSchoolYear),
+      uri: studentsBaseRoute.replace('%activeSchoolYear', activeSchoolYear),
       user_token: token,
       cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
-      uri: allTeachers + '?sort=createdAt:desc&populate=school',
+      uri: teachersBaseRoute + '?sort=createdAt:desc&populate=school',
       user_token: token,
       cacheTtl: 5 * 60 * 1000,
     }).catch(() => ({ data: [] })),
@@ -259,6 +275,7 @@ export const getServerSideProps = async ({ req, res }) => {
       cacheTtl: 5 * 60 * 1000,
     }).catch(() => ({ data: [] })),
   ]);
+  console.log('userresponses', usersResponse.length, 'token', token);
 
   const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
   const allowedUserRoles = [

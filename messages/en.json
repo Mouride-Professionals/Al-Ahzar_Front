@@ -514,7 +514,9 @@
                 "monthly_expenses_trend": "Monthly Expenses Trend",
                 "expenses_by_category": "Expenses by Category",
                 "expenses_history": "Expenses History",
-                "payments_history": "Payments History"
+                "payments_history": "Payments History",
+                "noExpenses": "No expenses found for this period.",
+                "noPayments": "No payments found for this period."
             }
         },
         "modals": {

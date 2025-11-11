@@ -99,13 +99,13 @@ export const themeRoutes = {
         classes: {
           all: `/classes?filters[school][id][$eq]=%schoolId&filters[schoolYear][id][$eq]=%activeSchoolYear&populate=enrollments.student`,
           allWithoutSchoolId: `/classes?filters[schoolYear][id][$eq]=%activeSchoolYear&populate=enrollments.student`,
-          detail: `/classes/%id?populate=enrollments.student,enrollments.payments,school,enrollments.schoolYear`,
+          detail: `/classes/%id?populate=school`,
         },
 
         students: {
           allWithoutSchoolYear: `/enrollments?filters[class][school][id][$eq]=%schoolId&filters[class][schoolYear][id][$lt]=%activeSchoolYear&sort=enrollmentDate:desc&populate=student,payments,class,schoolYear`,
-          all: `/enrollments?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[class][school][id][$eq]=%schoolId&sort=enrollmentDate:desc&populate=student,payments,class,schoolYear`,
-          allWithoutSchoolId: `/enrollments?filters[schoolYear][id][$eq]=%activeSchoolYear&sort=enrollmentDate:desc&populate=student,payments,class,schoolYear`,
+          all: `/enrollments?filters[schoolYear][id][$eq]=%activeSchoolYear&filters[class][school][id][$eq]=%schoolId&sort=updatedAt:desc&populate=student,payments,class,schoolYear`,
+          allWithoutSchoolId: `/enrollments?filters[schoolYear][id][$eq]=%activeSchoolYear&sort=updatedAt:desc`,
           detail: '/enrollments/%id?populate=class,student,payments,schoolYear',
         },
         teachers: {

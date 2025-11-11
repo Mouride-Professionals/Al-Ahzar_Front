@@ -12,8 +12,11 @@ import { ExpenseCreationModal } from "@components/modals/expenseCreationModal";
 import { ACCESS_ROUTES } from "@utils/mappers/menu";
 import { dateFormatter } from "@utils/tools/mappers";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BoxZone } from "../cards/boxZone";
+import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
+import { fetcher } from 'src/lib/api';
+import { mapExpensesDataTable } from '@utils/mappers/expense';
 
 // ExpenseExpandedComponent: Expanded row component for expense details
 const ExpenseExpandedComponent = ({ data }) => {
@@ -72,16 +75,41 @@ export const ExpenseDataSet = ({
   schoolId,
   schoolYearId,
   setHasSucceeded,
-  selectedIndex = 0
+  selectedIndex = 0,
+  initialPagination = null,
+  baseRoute = '',
 }) => {
   const t = useTranslations('components.dataset.expenses');
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+  const fallbackPageSize = initialPagination?.pageSize || DEFAULT_ROWS_PER_PAGE;
+  const [expenses, setExpenses] = useState(data ?? []);
+  const [paginationState, setPaginationState] = useState(
+    initialPagination || {
+      page: 1,
+      pageSize: fallbackPageSize,
+      pageCount: 1,
+      total: data?.length || 0,
+    }
+  );
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
+
+  useEffect(() => {
+    setExpenses(data ?? []);
+    setPaginationState(
+      initialPagination || {
+        page: 1,
+        pageSize: fallbackPageSize,
+        pageCount: 1,
+        total: data?.length || 0,
+      }
+    );
+  }, [data, initialPagination, fallbackPageSize]);
 
   const openExpenseModal = () => setIsExpenseModalOpen(true);
   const closeExpenseModal = () => setIsExpenseModalOpen(false);
 
-  const filterFunction = ({ data, needle }) =>
-    data.filter(
+  const filterFunction = ({ data: rows, needle }) =>
+    rows.filter(
       (item) =>
         (item.category &&
           item.category.toLowerCase().includes(needle.toLowerCase())) ||
@@ -99,11 +127,56 @@ export const ExpenseDataSet = ({
     </Button>
   );
 
+  const currentPageSize = paginationState?.pageSize || fallbackPageSize;
+
+  const goToPage = useCallback(
+    async (targetPage, pageSizeOverride) => {
+      if (!token || !baseRoute) return;
+      const pageSize = pageSizeOverride || currentPageSize;
+      setIsLoadingPage(true);
+      try {
+        const response = await fetcher({
+          uri: `${baseRoute}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
+          user_token: token,
+        });
+        const mapped = mapExpensesDataTable({ expenses: response });
+        setExpenses(mapped);
+        setPaginationState(
+          response.meta?.pagination || {
+            page: targetPage,
+            pageSize,
+            pageCount: paginationState?.pageCount || 1,
+            total: paginationState?.total || mapped.length,
+          }
+        );
+      } catch (error) {
+        console.error('Error loading expenses page:', error);
+      } finally {
+        setIsLoadingPage(false);
+      }
+    },
+    [token, baseRoute, currentPageSize, paginationState?.pageCount, paginationState?.total]
+  );
+
+  const paginationConfig = useMemo(
+    () => ({
+      rowsPerPage: currentPageSize,
+      rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+      currentPage: paginationState?.page || 1,
+      totalRows: paginationState?.total || expenses.length,
+      onChangePage: (page) => goToPage(page),
+      onRowsPerPageChange: (newSize, page) => goToPage(page || 1, newSize),
+      isServerSide: Boolean(baseRoute),
+      isLoadingPage,
+    }),
+    [currentPageSize, paginationState?.page, paginationState?.total, expenses.length, goToPage, baseRoute, isLoadingPage]
+  );
+
   return (
     <>
       <DataTableLayout
         columns={columns}
-        data={data}
+        data={expenses}
         role={role}
         token={token}
         translationNamespace="components.dataset.expenses"
@@ -114,10 +187,7 @@ export const ExpenseDataSet = ({
         filterFunction={filterFunction}
         defaultSortFieldId="expenseDate"
         selectedIndex={selectedIndex}
-        paginationProps={{
-          rowsPerPage: 10,
-          rowsPerPageOptions: [5, 10, 20, 50],
-        }}
+        paginationProps={paginationConfig}
       />
 
       <ExpenseCreationModal

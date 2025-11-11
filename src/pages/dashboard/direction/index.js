@@ -208,7 +208,7 @@ export const getServerSideProps = async ({ req, res }) => {
       cacheTtl: cacheTtlMs,
     }),
     serverFetch({
-      uri: `${teachers}${countQuery}`,
+      uri: `${teachers}?sort=createdAt:desc${countQuery}`,
       user_token: token,
       cacheTtl: cacheTtlMs,
     }).catch(() => ({ data: [] })),

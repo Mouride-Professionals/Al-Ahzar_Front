@@ -1,5 +1,6 @@
 import { HStack, Skeleton, Stack, Text, Wrap } from '@chakra-ui/react';
 import { DashboardLayout } from '@components/layout/dashboard';
+import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
 import { colors, routes } from '@theme';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { useTableColumns } from '@utils/mappers/kpi';
@@ -70,7 +71,12 @@ const DIRECTORIAL_ROLES = [
   ROLES.ADJOINT_DIRECTEUR_ETABLISSMENT,
 ];
 
-export default function Dashboard({ kpis, role, token }) {
+export default function Dashboard({
+  kpis,
+  role,
+  token,
+  teacherQueryParams = '',
+}) {
   const t = useTranslations();
 
   const teachersResponse = kpis[0];
@@ -114,6 +120,10 @@ export default function Dashboard({ kpis, role, token }) {
         icon: <FaSuitcase color={colors.primary.regular} size={25} />,
         title: t('pages.stats.teachers'),
       },
+      // directorial cant see schools
+      ...(DIRECTORIAL_ROLES.includes(role.name)
+        ? []
+        : [
       {
         count: t('pages.stats.amount.schools').replace(
           '%number',
@@ -124,12 +134,13 @@ export default function Dashboard({ kpis, role, token }) {
         icon: <LuSchool color={colors.primary.regular} size={25} />,
         title: t('pages.stats.schools'),
       },
+    ]),
     ],
     [classesResponse, studentsResponse, teachersResponse, schoolsResponse, t]
   );
   const teachers = mapTeachersDataTable({ teachers: teachersResponse });
   const teacherPagination = teachersResponse?.meta?.pagination || null;
-  const baseTeachersRoute = `${routes.api_route.alazhar.get.teachers.all}?sort=createdAt:desc&populate=school`;
+  const baseTeachersRoute = `${routes.api_route.alazhar.get.teachers.all}?sort=createdAt:desc&populate=school${teacherQueryParams}`;
 
   const schools = (schoolsResponse?.data || []).map((school) => ({
     name: school.attributes.name,
@@ -199,29 +210,43 @@ export const getServerSideProps = async ({ req, res }) => {
     },
   } = routes.api_route;
 
-  const response = await serverFetch({
+  const currentUser = await serverFetch({
     uri: me,
     user_token: token,
   });
-  const role = response.role;
-  const userSchoolId = response.school?.id;
+  const role = currentUser.role;
+  const userSchoolId = currentUser.school?.id;
+  const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
+  const teacherFilterQuery =
+    isEstablishmentDirector && userSchoolId
+      ? `&filters[school][id][$eq]=${userSchoolId}`
+      : '';
+  const teacherPageSize = DEFAULT_ROWS_PER_PAGE;
 
   const countQuery = '&pagination[page]=1&pagination[pageSize]=1&fields[0]=id';
+
+  const classroomBaseRoute = userSchoolId
+    ? `${classrooms}&filters[school][id][$eq]=${userSchoolId}`
+    : `${classrooms}`;
+
+  const studentsBaseRoute = userSchoolId
+    ? `${allStudents}&filters[class][school][id][$eq]=${userSchoolId}`
+    : `${allStudents}`;
 
   const [teachersResponse, classesResponse, studentsResponse, schoolsResponse] =
     await Promise.all([
       serverFetch({
-        uri: `${allTeachers}?sort=createdAt:desc&populate=school&pagination[page]=1&pagination[pageSize]=50`,
+        uri: `${allTeachers}?sort=createdAt:desc&populate=school${teacherFilterQuery}&pagination[page]=1&pagination[pageSize]=${teacherPageSize}`,
         user_token: token,
         cacheTtl: 5 * 60 * 1000,
       }).catch(() => ({ data: [] })),
       serverFetch({
-        uri: `${classrooms.replace('%activeSchoolYear', activeSchoolYear)}${countQuery}`,
+        uri: `${classroomBaseRoute.replace('%activeSchoolYear', activeSchoolYear)}${countQuery}`,
         user_token: token,
         cacheTtl: 5 * 60 * 1000,
       }),
       serverFetch({
-        uri: `${allStudents.replace('%activeSchoolYear', activeSchoolYear)}${countQuery}`,
+        uri: `${studentsBaseRoute.replace('%activeSchoolYear', activeSchoolYear)}${countQuery}`,
         user_token: token,
         cacheTtl: 5 * 60 * 1000,
       }),
@@ -231,17 +256,6 @@ export const getServerSideProps = async ({ req, res }) => {
         cacheTtl: 5 * 60 * 1000,
       }).catch(() => ({ data: [] })),
     ]);
-
-  const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
-
-  const filteredTeachers = isEstablishmentDirector
-    ? {
-        ...teachersResponse,
-        data: (teachersResponse?.data || []).filter(
-          (teacher) => teacher.attributes?.school?.data?.id === userSchoolId
-        ),
-      }
-    : teachersResponse;
 
   const filteredSchools = isEstablishmentDirector
     ? {
@@ -257,13 +271,14 @@ export const getServerSideProps = async ({ req, res }) => {
   return {
     props: {
       kpis: [
-        teachersResponse,
-        classesResponse,
-        studentsResponse,
-        filteredSchools,
+        teachersResponse || [],
+        classesResponse || [],
+        studentsResponse || [],
+        filteredSchools || [],
       ],
       role,
       token,
+      teacherQueryParams: teacherFilterQuery,
     },
   };
 };

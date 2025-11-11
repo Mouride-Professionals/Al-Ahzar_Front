@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 // Filter function remains unchanged (locale-agnostic)
 export const reportingFilter = ({ data, needle }) => {
-  return data.filter(
+  return data?.filter(
     (item) =>
       item.firstname &&
       item.firstname.toLowerCase().includes(needle.toLowerCase())

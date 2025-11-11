@@ -47,7 +47,7 @@ export const DataTableLayout = ({
   );
 
   useEffect(() => {
-    if (filtered.length) {
+    if (filtered?.length) {
       localStorage.setItem(`${translationNamespace}_data`, JSON.stringify(filtered));
     }
   }, [filtered, translationNamespace]);

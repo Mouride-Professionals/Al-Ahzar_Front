@@ -514,7 +514,9 @@
                 "monthly_expenses_trend": "Tendance des dépenses mensuelles",
                 "expenses_by_category": "Dépenses par catégorie",
                 "expenses_history": "Historique des dépenses",
-                "payments_history": "Historique des paiements"
+                "payments_history": "Historique des paiements",
+                "noExpenses": "Aucune dépense enregistrée pour cette période.",
+                "noPayments": "Aucun paiement enregistré pour cette période."
             }
         },
         "modals": {

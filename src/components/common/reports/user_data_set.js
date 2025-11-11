@@ -27,7 +27,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { PiUserDuotone } from 'react-icons/pi';
 import Select from 'react-select';
 import { BoxZone } from '../cards/boxZone';
-import { fetcher } from 'src/lib/api';
+import { fetcher, serverFetch } from 'src/lib/api';
 import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
 
 const ExpandedComponent = ({ data, schools, token, role: userRole }) => {
@@ -289,9 +289,11 @@ export const UserDataSet = ({
   const goToPage = useCallback(
     async (targetPage, pageSizeOverride) => {
       const pageSize = pageSizeOverride || paginationState?.pageSize || fallbackPageSize;
+      console.log('pageSize',pageSize);
+      
       setIsLoadingPage(true);
       try {
-        const response = await fetcher({
+        const response = await serverFetch({
           uri: `${baseRoute}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
           user_token: token,
         });

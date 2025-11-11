@@ -22,22 +22,22 @@ export default function Dashboard({ kpis, role, token }) {
 
   const cardStats = [
     {
-      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.data?.length ?? 0),
+      count: t('pages.stats.amount.classes').replace('%number', kpis[0]?.meta?.pagination?.total ?? kpis[0]?.data?.length ?? 0),
       icon: <SiGoogleclassroom color={colors.primary.regular} size={25} />,
       title: t('pages.stats.classes'),
     },
     {
-      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.data?.length ?? 0),
+      count: t('pages.stats.amount.students').replace('%number', kpis[1]?.meta?.pagination?.total ?? kpis[1]?.data?.length ?? 0),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: t('pages.stats.students'),
     },
     {
-      count: t('pages.stats.amount.teachers').replace('%number', kpis[2]?.data?.length ?? 0),
+      count: t('pages.stats.amount.teachers').replace('%number', kpis[2]?.meta?.pagination?.total ?? kpis[2]?.data?.length ?? 0),
       icon: <FaSuitcase color={colors.primary.regular} size={25} />,
       title: t('pages.stats.teachers'),
     },
     {
-      count: t('pages.stats.amount.schools').replace('%number', kpis[3]?.data?.length ?? 0),
+      count: t('pages.stats.amount.schools').replace('%number', kpis[3]?.meta?.pagination?.total ?? kpis[3]?.data?.length ?? 0),
       icon: <LuSchool color={colors.primary.regular} size={25} />,
       title: t('pages.stats.schools'),
     },
