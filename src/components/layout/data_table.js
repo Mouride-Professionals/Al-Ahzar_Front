@@ -1,14 +1,17 @@
 'use client';
 
 import { Box, HStack, Skeleton, Wrap, WrapItem } from '@chakra-ui/react';
-import { FormExport, FormFilter, FormSearch } from '@components/common/input/FormInput';
+import { FormExport, FormSearch } from '@components/common/input/FormInput';
+import {
+  DEFAULT_ROWS_PER_PAGE,
+  ROWS_PER_PAGE_OPTIONS,
+} from '@constants/pagination';
 import { colors } from '@theme';
 import { downloadExcel } from '@utils/csv';
-import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
 
 const DataTableFallback = () => (
   <Box w="100%" minH="200px">
@@ -48,16 +51,28 @@ export const DataTableLayout = ({
 
   useEffect(() => {
     if (filtered?.length) {
-      localStorage.setItem(`${translationNamespace}_data`, JSON.stringify(filtered));
+      localStorage.setItem(
+        `${translationNamespace}_data`,
+        JSON.stringify(filtered)
+      );
     }
   }, [filtered, translationNamespace]);
 
   const studentExportOptions = useMemo(() => {
-    if (translationNamespace !== 'components.dataset.students' || !filtered.length) return undefined;
+    if (
+      translationNamespace !== 'components.dataset.students' ||
+      !filtered.length
+    )
+      return undefined;
     const studentKeys = ['firstname', 'student_identifier', 'parent_firstname'];
     const firstRow = filtered[0];
 
-    if (!firstRow || !studentKeys.every((key) => Object.prototype.hasOwnProperty.call(firstRow, key))) {
+    if (
+      !firstRow ||
+      !studentKeys.every((key) =>
+        Object.prototype.hasOwnProperty.call(firstRow, key)
+      )
+    ) {
       return undefined;
     }
 
@@ -87,41 +102,56 @@ export const DataTableLayout = ({
     };
   }, [filtered, t, translationNamespace]);
 
-  const subHeaderComponentMemo = useMemo(() => (
-    <Wrap
-      align="center"
-      justify={{ base: 'center', md: 'space-between' }}
-      my={3}
-      w="100%"
-      spacing={{ base: 2, sm: 4 }}
-    >
-      <WrapItem w={{ base: '100%', md: '70%' }}>
-        <HStack
-          w="100%"
-          alignItems="center"
-          justifyContent={{ base: 'center', md: 'flex-start' }}
-          flexWrap={{ base: 'wrap', md: 'nowrap' }}
-          spacing={{ base: 2, md: 4 }}
-        >
-          <Box w={{ base: '100%', sm: '60%' }}>
-            <FormSearch
-              placeholder={t('searchPlaceholder')}
-              keyUp={(e) => setFilterText(e.target.value)}
-              h={{ base: 40, sm: 50 }}
-            />
-          </Box>
-          <HStack pl={{ base: 0, md: 4 }}>
-            {extraSubHeaderComponents}
-            {/* <FormFilter onExport={() => {}} /> */}
-            <FormExport onExport={() => downloadExcel(filtered, studentExportOptions)} />
+  const subHeaderComponentMemo = useMemo(
+    () => (
+      <Wrap
+        align="center"
+        justify={{ base: 'center', md: 'space-between' }}
+        my={3}
+        w="100%"
+        spacing={{ base: 2, sm: 4 }}
+      >
+        <WrapItem w={{ base: '100%', md: '70%' }}>
+          <HStack
+            w="100%"
+            alignItems="center"
+            justifyContent={{ base: 'center', md: 'flex-start' }}
+            flexWrap={{ base: 'wrap', md: 'nowrap' }}
+            spacing={{ base: 2, md: 4 }}
+          >
+            <Box w={{ base: '100%', sm: '60%' }}>
+              <FormSearch
+                placeholder={t('searchPlaceholder')}
+                keyUp={(e) => setFilterText(e.target.value)}
+                h={{ base: 40, sm: 50 }}
+              />
+            </Box>
+            <HStack pl={{ base: 0, md: 4 }}>
+              {extraSubHeaderComponents}
+              {/* <FormFilter onExport={() => {}} /> */}
+              <FormExport
+                onExport={() => downloadExcel(filtered, studentExportOptions)}
+              />
+            </HStack>
           </HStack>
-        </HStack>
-      </WrapItem>
-      <WrapItem w={{ base: '100%', md: '25%' }} justifyContent={{ base: 'center', md: 'flex-end' }}>
-        {actionButton && role?.name && actionButton}
-      </WrapItem>
-    </Wrap>
-  ), [filterText, selectedIndex, filtered, role, t, actionButton, extraSubHeaderComponents, studentExportOptions]);
+        </WrapItem>
+        <WrapItem
+          w={{ base: '100%', md: '25%' }}
+          justifyContent={{ base: 'center', md: 'flex-end' }}
+        >
+          {actionButton && role?.name && actionButton}
+        </WrapItem>
+      </Wrap>
+    ),
+    [
+      filtered,
+      role,
+      t,
+      actionButton,
+      extraSubHeaderComponents,
+      studentExportOptions,
+    ]
+  );
 
   const handleRowExpandToggle = (row) => {
     setExpandedRow((prev) => (prev?.id === row.id ? null : row));
@@ -162,7 +192,11 @@ export const DataTableLayout = ({
   return (
     <Box overflowX="auto" w="100%">
       <DataTable
-        style={{ width: '100%', backgroundColor: colors.white, borderRadius: 10 }}
+        style={{
+          width: '100%',
+          backgroundColor: colors.white,
+          borderRadius: 10,
+        }}
         columns={columns}
         data={filtered}
         defaultCanSort
@@ -176,7 +210,6 @@ export const DataTableLayout = ({
         expandableRowsHideExpander
         onRowClicked={handleRowExpandToggle}
         pagination
-        
         {...paginationHandlers}
         highlightOnHover
         responsive

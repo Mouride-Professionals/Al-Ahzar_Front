@@ -843,7 +843,7 @@ export const DataSet = ({
 
   const getFilterLabel = useMemo(() => {
     return t('filterLabel');
-  }, [filterByOldStudents, t]);
+  }, [t]);
 
   // Custom filter for students dataset: search firstname, lastname and student identifier (matricule)
   const studentFilterFunction = ({ data, needle }) => {
@@ -885,13 +885,16 @@ export const DataSet = ({
     </Button>
   );
 
-  const getBaseRoute = () =>
-    ((filterByOldStudents
-      ? routes.api_route.alazhar.get.students.allWithoutSchoolYear
-      : routes.api_route.alazhar.get.students.all)
-      .replace('%schoolId', schoolId)
-      .replace('%activeSchoolYear', schoolYear || '')) +
-    additionalFilters;
+  const baseRoute = useMemo(
+    () =>
+      ((filterByOldStudents
+        ? routes.api_route.alazhar.get.students.allWithoutSchoolYear
+        : routes.api_route.alazhar.get.students.all)
+        .replace('%schoolId', schoolId)
+        .replace('%activeSchoolYear', schoolYear || '')) +
+      additionalFilters,
+    [filterByOldStudents, schoolId, schoolYear, additionalFilters]
+  );
 
   const currentPageSize = paginationState?.pageSize || pageSizeFallback;
 
@@ -903,7 +906,7 @@ export const DataSet = ({
       setIsLoadingPage(true);
       try {
         const response = await fetcher({
-          uri: `${getBaseRoute()}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
+          uri: `${baseRoute}&pagination[page]=${targetPage}&pagination[pageSize]=${pageSize}`,
           user_token: token,
         });
 
@@ -919,7 +922,7 @@ export const DataSet = ({
         setIsLoadingPage(false);
       }
     },
-    [token, filterByOldStudents, schoolId, schoolYear, currentPageSize, additionalFilters]
+    [token, baseRoute, currentPageSize]
   );
 
   const paginationConfig = useMemo(

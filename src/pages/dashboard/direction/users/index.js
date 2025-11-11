@@ -143,6 +143,7 @@ export default function Dashboard({ kpis, role, token, userQueryParams = '' }) {
       teachersResponse,
       t,
       usersResponse,
+      role.name,
     ]
   );
 
@@ -240,8 +241,8 @@ export const getServerSideProps = async ({ req, res }) => {
       ? `${allStudents}&filters[class][school][id][$eq]=${userSchoolId}`
       : `${allStudents}`;
       const teachersBaseRoute = userSchoolId
-      ? `${allTeachers}?filters[school][id][$eq]=${userSchoolId}`
-      : `${allTeachers}`;
+      ? `${allTeachers}?filters[school][id][$eq]=${userSchoolId}&`
+      : `${allTeachers}?`;
   const [
     usersResponse,
     classesResponse,
@@ -265,7 +266,7 @@ export const getServerSideProps = async ({ req, res }) => {
       cacheTtl: 5 * 60 * 1000,
     }),
     serverFetch({
-      uri: teachersBaseRoute + '?sort=createdAt:desc&populate=school',
+      uri: teachersBaseRoute + 'sort=createdAt:desc&populate=school',
       user_token: token,
       cacheTtl: 5 * 60 * 1000,
     }).catch(() => ({ data: [] })),

@@ -20,6 +20,7 @@ import { Statistics } from '@components/func/lists/Statistic';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { generateExpectedMonths, getMonthName } from '@utils/date';
+import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { mapExpensesDataTable } from '@utils/mappers/expense';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapPaymentType } from '@utils/tools/mappers';
@@ -45,7 +46,6 @@ import {
   YAxis,
 } from 'recharts';
 import { serverFetch } from 'src/lib/api';
-import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 
 const FinanceDashboard = ({
   role,

@@ -136,7 +136,7 @@ export default function Dashboard({
       },
     ]),
     ],
-    [classesResponse, studentsResponse, teachersResponse, schoolsResponse, t]
+    [classesResponse, studentsResponse, teachersResponse, schoolsResponse, t, role.name]
   );
   const teachers = mapTeachersDataTable({ teachers: teachersResponse });
   const teacherPagination = teachersResponse?.meta?.pagination || null;

@@ -278,7 +278,7 @@ export const useTableColumns = () => {
   const TEACHERS_COLUMNS = [
     {
       name: t('teachers.columns.full_name'),
-      selector: (row) => `${row.lastname}, ${row.firstname} `,
+      selector: (row) => `${row.firstname} ${row.lastname} `,
       desc: true,
       sortable: true,
       reorder: true,

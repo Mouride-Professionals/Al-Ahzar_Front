@@ -28,7 +28,7 @@ const theme = (locale) =>
 
 // Wrapper to monitor session changes and clear cache
 function SessionMonitor({ children }) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [previousStatus, setPreviousStatus] = useState(status);
 
   useEffect(() => {

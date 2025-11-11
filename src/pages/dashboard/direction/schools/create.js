@@ -2,14 +2,13 @@ import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { SchoolCreationCard } from '@components/common/cards';
 import { CreateSchoolForm } from '@components/forms/school/creationForm';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { getToken } from 'next-auth/jwt';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
-
 
 export default function Create({ schools, role, token }) {
   const [hasSucceeded, setHasSucceeded] = useState(false);

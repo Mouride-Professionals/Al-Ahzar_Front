@@ -356,7 +356,7 @@ export const UserDataSet = ({
       filterFunction={filterFunction}
       defaultSortFieldId="username"
       selectedIndex={selectedIndex}
-      paginationProps={paginationConfig}
+      // paginationProps={paginationConfig}
     />
   );
 };
