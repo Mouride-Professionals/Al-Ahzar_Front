@@ -20,17 +20,20 @@ import AddPaymentModal from '@components/forms/student/addPaymentForm';
 import MonthlyPaymentModal from '@components/forms/student/monthlyPaymentForm';
 import { DataTableLayout } from '@components/layout/data_table';
 import ReEnrollmentModal from '@components/modals/enrollmentModal';
+import {
+  DEFAULT_ROWS_PER_PAGE,
+  ROWS_PER_PAGE_OPTIONS,
+} from '@constants/pagination';
 import { addPaymentFormHandler, monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { hasPermission } from '@utils/roles';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
-import { DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTIONS } from '@constants/pagination';
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BsCheck2Circle } from 'react-icons/bs';
 import { PiUserDuotone, PiUsersDuotone } from 'react-icons/pi';
 import { SlClose } from 'react-icons/sl';
@@ -845,22 +848,6 @@ export const DataSet = ({
     return t('filterLabel');
   }, [t]);
 
-  // Custom filter for students dataset: search firstname, lastname and student identifier (matricule)
-  const studentFilterFunction = ({ data, needle }) => {
-    if (!needle || !data) return data;
-    const q = String(needle).toLowerCase();
-    return data.filter((item) => {
-      const first = String(item.firstname || '').toLowerCase();
-      const last = String(item.lastname || '').toLowerCase();
-      const sid = String(item.student_identifier || '').toLowerCase();
-      return (
-        (first && first.includes(q)) ||
-        (last && last.includes(q)) ||
-        (sid && sid.includes(q))
-      );
-    });
-  };
-
   const extraSubHeaderComponents = hasPermission(
     role.name,
     'manageStudents'
@@ -885,16 +872,53 @@ export const DataSet = ({
     </Button>
   );
 
-  const baseRoute = useMemo(
-    () =>
-      ((filterByOldStudents
+  const [searchTerm, setSearchTerm] = useState('');
+  const hasMountedRef = useRef(false);
+
+  const buildSearchFilters = useCallback((searchTerm) => {
+    if (!searchTerm || !searchTerm.trim()) {
+      return '';
+    }
+
+    const terms = searchTerm.trim().split(/\s+/); // Split by whitespace
+
+    if (terms.length === 1) {
+      // Single term: search in firstname, lastname, or student_identifier
+      const term = encodeURIComponent(terms[0]);
+      return `&filters[$or][0][student][firstname][$containsi]=${term}&filters[$or][1][student][lastname][$containsi]=${term}&filters[$or][2][student][studentIdentifer][$containsi]=${term}`;
+    }
+
+    // Multiple terms: each term must match in either firstname OR lastname
+    let filterString = '';
+    terms.forEach((term, index) => {
+      const encodedTerm = encodeURIComponent(term);
+      filterString += `&filters[$and][${index}][$or][0][student][firstname][$containsi]=${encodedTerm}`;
+      filterString += `&filters[$and][${index}][$or][1][student][lastname][$containsi]=${encodedTerm}`;
+    });
+
+    return filterString;
+  }, []);
+
+  const baseRoute = useMemo(() => {
+    const base = (
+      filterByOldStudents
         ? routes.api_route.alazhar.get.students.allWithoutSchoolYear
-        : routes.api_route.alazhar.get.students.all)
-        .replace('%schoolId', schoolId)
-        .replace('%activeSchoolYear', schoolYear || '')) +
-      additionalFilters,
-    [filterByOldStudents, schoolId, schoolYear, additionalFilters]
-  );
+        : routes.api_route.alazhar.get.students.all
+    )
+      .replace('%schoolId', schoolId)
+      .replace('%activeSchoolYear', schoolYear || '');
+
+    const searchFilters = buildSearchFilters(searchTerm);
+
+    return base + additionalFilters + searchFilters;
+  }, [
+    filterByOldStudents,
+    schoolId,
+    schoolYear,
+    additionalFilters,
+    searchTerm,
+    buildSearchFilters,
+  ]);
 
   const currentPageSize = paginationState?.pageSize || pageSizeFallback;
 
@@ -915,7 +939,10 @@ export const DataSet = ({
         });
 
         setStudents(studentsList);
-        setPaginationState((prev) => response.meta?.pagination || { ...prev, page: targetPage, pageSize });
+        setPaginationState(
+          (prev) =>
+            response.meta?.pagination || { ...prev, page: targetPage, pageSize }
+        );
       } catch (error) {
         console.error('Error loading students page:', error);
       } finally {
@@ -924,6 +951,14 @@ export const DataSet = ({
     },
     [token, baseRoute, currentPageSize]
   );
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+    goToPage(1);
+  }, [searchTerm, goToPage]);
 
   const paginationConfig = useMemo(
     () => ({
@@ -936,7 +971,14 @@ export const DataSet = ({
       isServerSide: true,
       isLoadingPage,
     }),
-    [currentPageSize, paginationState?.page, paginationState?.total, students.length, goToPage, isLoadingPage]
+    [
+      currentPageSize,
+      paginationState?.page,
+      paginationState?.total,
+      students.length,
+      goToPage,
+      isLoadingPage,
+    ]
   );
 
   return (
@@ -950,7 +992,8 @@ export const DataSet = ({
       expandedComponent={(data) =>
         ExpandedComponent({ ...data, classrooms, role, user_token: token })
       }
-      filterFunction={studentFilterFunction}
+      filterFunction={null}
+      onSearchChange={setSearchTerm}
       defaultSortFieldId="registered_at"
       extraSubHeaderComponents={extraSubHeaderComponents}
       selectedIndex={selectedIndex}

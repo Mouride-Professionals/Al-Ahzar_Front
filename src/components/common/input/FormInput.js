@@ -3,9 +3,10 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  IconButton,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
   Select,
   Text,
   Textarea,
@@ -17,6 +18,7 @@ import { useTranslations } from 'next-intl';
 import { BsFiletypeXlsx } from 'react-icons/bs';
 import { CiFilter } from 'react-icons/ci';
 import { FiSearch } from 'react-icons/fi';
+import { IoClose } from 'react-icons/io5';
 
 export const FormInput = ({
   select,
@@ -111,19 +113,52 @@ export const FormSubmit = ({
   );
 };
 
-export const FormSearch = ({ placeholder, keyUp }) => {
+export const FormSearch = ({
+  placeholder,
+  onChange,
+  onSearch,
+  value,
+  onClear,
+}) => {
   const t = useTranslations('components.formInput');
+  const showClear = value && value.trim().length > 0;
+
   return (
     <InputGroup>
-      <InputLeftElement alignSelf={'center'} h={'100%'} width={'4.5rem'}>
-        <FiSearch size={20} />
-      </InputLeftElement>
       <Input
         ml={3}
         h={45.01}
-        onKeyUp={keyUp}
+        onChange={onChange}
+        value={value}
         placeholder={placeholder || t('search')}
+        pr={showClear ? '7.5rem' : '4.5rem'}
       />
+      <InputRightElement
+        alignSelf={'center'}
+        h={'100%'}
+        width={showClear ? '7.5rem' : '4.5rem'}
+      >
+        {showClear && (
+          <IconButton
+            aria-label={'Clear'}
+            icon={<IoClose size={20} />}
+            variant="ghost"
+            onClick={onClear}
+            h="100%"
+            color={colors.gray.regular}
+            px={2}
+          />
+        )}
+        <IconButton
+          aria-label={t('search', { fallback: 'Search' })}
+          icon={<FiSearch size={20} />}
+          variant="ghost"
+          onClick={onSearch}
+          h="100%"
+          color={colors.primary.regular}
+          px={2}
+        />
+      </InputRightElement>
     </InputGroup>
   );
 };

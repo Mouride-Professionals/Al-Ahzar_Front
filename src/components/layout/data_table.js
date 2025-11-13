@@ -1,6 +1,14 @@
 'use client';
 
-import { Box, HStack, Skeleton, Wrap, WrapItem } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  HStack,
+  Skeleton,
+  Spinner,
+  Wrap,
+  WrapItem,
+} from '@chakra-ui/react';
 import { FormExport, FormSearch } from '@components/common/input/FormInput';
 import {
   DEFAULT_ROWS_PER_PAGE,
@@ -11,7 +19,7 @@ import { downloadExcel } from '@utils/csv';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const DataTableFallback = () => (
   <Box w="100%" minH="200px">
@@ -33,30 +41,79 @@ export const DataTableLayout = ({
   actionButton,
   expandedComponent,
   filterFunction,
+  onSearchChange = () => {},
   defaultSortFieldId = 'createdAt',
   extraSubHeaderComponents,
   selectedIndex = 0,
   paginationProps,
+  searchDebounceMs = 800, // New prop for configurable debounce time
   ...rest
 }) => {
   const t = useTranslations(translationNamespace);
   const router = useRouter();
   const [filterText, setFilterText] = useState('');
+  const [debouncedFilterText, setDebouncedFilterText] = useState('');
   const [expandedRow, setExpandedRow] = useState(null);
+  const debounceTimerRef = useRef(null);
 
-  const filtered = useMemo(
-    () => filterFunction({ data, position: selectedIndex, needle: filterText }),
-    [data, filterText, selectedIndex, filterFunction]
-  );
-
+  // Debounce effect for automatic search
   useEffect(() => {
-    if (filtered?.length) {
-      localStorage.setItem(
-        `${translationNamespace}_data`,
-        JSON.stringify(filtered)
-      );
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
-  }, [filtered, translationNamespace]);
+
+    debounceTimerRef.current = setTimeout(() => {
+      setDebouncedFilterText(filterText.trim());
+    }, searchDebounceMs);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [filterText, searchDebounceMs]);
+
+  // Trigger search when debounced value changes
+  useEffect(() => {
+    if (debouncedFilterText !== undefined) {
+      onSearchChange?.(debouncedFilterText);
+    }
+  }, [debouncedFilterText, onSearchChange]);
+
+  // Handle immediate search (when user clicks search button)
+  const handleSearch = useCallback(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    const trimmedValue = filterText.trim();
+    setDebouncedFilterText(trimmedValue);
+    onSearchChange?.(trimmedValue);
+  }, [filterText, onSearchChange]);
+
+  // Handle input change
+  const handleInputChange = useCallback((e) => {
+    setFilterText(e.target.value);
+  }, []);
+
+  // Handle clear search
+  const handleClear = useCallback(() => {
+    setFilterText('');
+    setDebouncedFilterText('');
+    onSearchChange?.('');
+  }, [onSearchChange]);
+
+  // Use debounced value for filtering
+  const filtered = useMemo(
+    () =>
+      filterFunction
+        ? filterFunction({
+            data,
+            position: selectedIndex,
+            needle: debouncedFilterText,
+          })
+        : data,
+    [data, debouncedFilterText, selectedIndex, filterFunction]
+  );
 
   const studentExportOptions = useMemo(() => {
     if (
@@ -64,7 +121,7 @@ export const DataTableLayout = ({
       !filtered.length
     )
       return undefined;
-    const studentKeys = ['firstname', 'student_identifier', 'parent_firstname'];
+    const studentKeys = ['firstname', 'studentIdentifer', 'parent_firstname'];
     const firstRow = filtered[0];
 
     if (
@@ -105,7 +162,7 @@ export const DataTableLayout = ({
   const subHeaderComponentMemo = useMemo(
     () => (
       <Wrap
-        align="center"
+        alignItems="center"
         justify={{ base: 'center', md: 'space-between' }}
         my={3}
         w="100%"
@@ -119,16 +176,16 @@ export const DataTableLayout = ({
             flexWrap={{ base: 'wrap', md: 'nowrap' }}
             spacing={{ base: 2, md: 4 }}
           >
-            <Box w={{ base: '100%', sm: '60%' }}>
-              <FormSearch
-                placeholder={t('searchPlaceholder')}
-                keyUp={(e) => setFilterText(e.target.value)}
-                h={{ base: 40, sm: 50 }}
-              />
-            </Box>
+            <FormSearch
+              placeholder={t('searchPlaceholder')}
+              value={filterText}
+              onChange={handleInputChange}
+              onSearch={handleSearch}
+              onClear={handleClear}
+              h={{ base: 40, sm: 50 }}
+            />
             <HStack pl={{ base: 0, md: 4 }}>
               {extraSubHeaderComponents}
-              {/* <FormFilter onExport={() => {}} /> */}
               <FormExport
                 onExport={() => downloadExcel(filtered, studentExportOptions)}
               />
@@ -150,6 +207,10 @@ export const DataTableLayout = ({
       actionButton,
       extraSubHeaderComponents,
       studentExportOptions,
+      filterText,
+      handleInputChange,
+      handleSearch,
+      handleClear,
     ]
   );
 
@@ -185,12 +246,14 @@ export const DataTableLayout = ({
       onChangeRowsPerPage: (newPerPage, page) =>
         onRowsPerPageChange?.(newPerPage, page),
       onChangePage: (page, total) => onChangePage?.(page, total),
-      progressPending: isLoadingPage,
+      // Let us show our own overlay instead of letting RDT hide the table
     };
   }, [paginationProps]);
 
+  const showOverlay = Boolean(paginationProps?.isLoadingPage);
+
   return (
-    <Box overflowX="auto" w="100%">
+    <Box overflowX="auto" w="100%" position="relative">
       <DataTable
         style={{
           width: '100%',
@@ -237,6 +300,17 @@ export const DataTableLayout = ({
         expandableRowsComponent={expandedComponent}
         {...rest}
       />
+
+      {showOverlay && (
+        <Center
+          position="absolute"
+          inset={0}
+          bg="rgba(255,255,255,0.65)"
+          zIndex={1}
+        >
+          <Spinner size="lg" color={colors.primary.regular} thickness="4px" />
+        </Center>
+      )}
     </Box>
   );
 };

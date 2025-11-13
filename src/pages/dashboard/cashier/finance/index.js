@@ -1,9 +1,8 @@
 import {
   Box,
-  Flex,
   Heading,
   HStack,
-  Spinner,
+  Skeleton,
   Stack,
   Tab,
   TabList,
@@ -76,6 +75,39 @@ const FinanceDashboard = ({
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   const { PAYMENTS_COLUMNS, EXPENSES_COLUMNS } = useTableColumns();
+  const skeletonBlock = (height) => (
+    <Skeleton h={height} borderRadius="md" w="100%" startColor={colors.gray.light} endColor={colors.gray.highlight} />
+  );
+
+  const chartSkeleton = () => (
+    <Box w="100%" minW="0" minH="300px" position="relative" borderRadius="md" overflow="hidden">
+      <Skeleton position="absolute" inset={0} startColor={colors.gray.light} endColor={colors.gray.highlight} />
+      <Box position="absolute" bottom={4} left={4} right={4} display="flex" alignItems="flex-end" justifyContent="space-between" height="220px">
+        {[45, 60, 35, 70, 50].map((h, idx) => (
+          <Skeleton key={idx} w="12%" h={`${h}%`} borderRadius="sm" startColor={colors.gray.highlight} endColor={colors.gray.light} />
+        ))}
+      </Box>
+    </Box>
+  );
+
+  const pieSkeleton = () => (
+    <Box w="100%" minW="0" minH="350px" position="relative" borderRadius="md">
+      <Skeleton circle h="240px" w="240px" position="absolute" top="50%" left="50%" transform="translate(-50%, -50%)" startColor={colors.gray.light} endColor={colors.gray.highlight} />
+      {[15, 90, 160].map((deg, idx) => (
+        <Skeleton
+          key={idx}
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform={`translate(-50%, -50%) rotate(${deg}deg)`}
+          h="2px"
+          w="200px"
+          startColor={colors.gray.highlight}
+          endColor={colors.gray.light}
+        />
+      ))}
+    </Box>
+  );
   const paymentPagination = paymentKpis?.[0]?.meta?.pagination || null;
   const paymentBaseRoute = useMemo(() => {
     if (!schoolYearId || !schoolId) return '';
@@ -186,14 +218,6 @@ const FinanceDashboard = ({
       isClosable: true,
     });
   };
-
-  if (loading) {
-    return (
-      <Flex justify="center" align="center" minH="80vh">
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
 
   // Finance card statistics (all UI text is internationalized)
   const paymentStats = [
@@ -356,7 +380,9 @@ const FinanceDashboard = ({
           <TabPanel>
             <Wrap spacing={20.01}>
               <HStack w="100%">
-                <Statistics cardStats={paymentStats} />
+                {loading ? skeletonBlock('140px') : (
+                  <Statistics cardStats={paymentStats} />
+                )}
               </HStack>
               <Text
                 color={colors.secondary.regular}
@@ -388,14 +414,18 @@ const FinanceDashboard = ({
                   <Heading size="md" mb={4}>
                     {t('components.dataset.finance.monthly_payments_trend')}
                   </Heading>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={chartData}>
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="amount" fill="#3182CE" barSize={20} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {loading ? (
+                    skeletonBlock('300px')
+                  ) : (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData}>
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="amount" fill="#3182CE" barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
                 </Box>
               </HStack>
               <HStack w="100%">
@@ -412,22 +442,26 @@ const FinanceDashboard = ({
                       'components.dataset.finance.annual_payments_distribution'
                     )}
                   </Heading>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <PieChart>
-                      <Pie
-                        dataKey="value"
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={140}
-                        label={renderCustomizedLabel}
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={pieColors[index]} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
+                  {loading ? (
+                    skeletonBlock('350px')
+                  ) : (
+                    <ResponsiveContainer width="100%" height={350}>
+                      <PieChart>
+                        <Pie
+                          dataKey="value"
+                          data={pieData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={140}
+                          label={renderCustomizedLabel}
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={pieColors[index]} />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
                 </Box>
               </HStack>
             </Wrap>
@@ -437,7 +471,9 @@ const FinanceDashboard = ({
           <TabPanel>
             <Wrap spacing={20.01}>
               <HStack w="100%">
-                <Statistics cardStats={expenseStats} />
+                {loading ? skeletonBlock('140px') : (
+                  <Statistics cardStats={expenseStats} />
+                )}
               </HStack>
               <Text
                 color={colors.secondary.regular}
@@ -470,14 +506,18 @@ const FinanceDashboard = ({
                   <Heading size="md" mb={4}>
                     {t('components.dataset.finance.monthly_expenses_trend')}
                   </Heading>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={chartData}>
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="amount" fill="#E53E3E" barSize={20} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {loading ? (
+                    skeletonBlock('300px')
+                  ) : (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData}>
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="amount" fill="#E53E3E" barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
                 </Box>
               </HStack>
               <HStack w="100%">
@@ -491,22 +531,26 @@ const FinanceDashboard = ({
                   <Heading size="md" mb={4}>
                     {t('components.dataset.finance.expenses_by_category')}
                   </Heading>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <PieChart>
-                      <Pie
-                        dataKey="value"
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={140}
-                        label={renderCustomizedLabel}
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={pieColors[index]} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
+                  {loading ? (
+                    skeletonBlock('350px')
+                  ) : (
+                    <ResponsiveContainer width="100%" height={350}>
+                      <PieChart>
+                        <Pie
+                          dataKey="value"
+                          data={pieData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={140}
+                          label={renderCustomizedLabel}
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={pieColors[index]} />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
                 </Box>
               </HStack>
             </Wrap>
