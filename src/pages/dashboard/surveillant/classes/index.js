@@ -95,6 +95,8 @@ export const getServerSideProps = async ({ req, res }) => {
     },
   } = routes.api_route;
 
+  const classroomsPageSize = 100;
+
   const userResponse = await serverFetch({
     uri: me,
     user_token: token,
@@ -103,9 +105,12 @@ export const getServerSideProps = async ({ req, res }) => {
   const { role, school: { id: schoolId } } = userResponse;
 
   const classesResponse = await serverFetch({
-    uri: classrooms
+    uri: `${classrooms
       .replace('%schoolId', schoolId)
-      .replace('%activeSchoolYear', activeSchoolYear),
+      .replace(
+        '%activeSchoolYear',
+        activeSchoolYear
+      )}&pagination[page]=1&pagination[pageSize]=${classroomsPageSize}`,
     user_token: token,
   });
 

@@ -2,29 +2,18 @@ import { Stack, Text } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
-import { colors, messages, routes } from '@theme';
+import { colors, routes } from '@theme';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
 import { getToken } from 'next-auth/jwt';
+import { useTranslations } from 'next-intl';
 import { serverFetch } from 'src/lib/api';
 
 const mapDetail = (payload) => ({
   school: payload.school?.data?.attributes?.name ?? '',
   _class: `${payload.level} ${payload.letter}`.trim(),
 });
-
-const {
-  pages: {
-    class: { establishment },
-  },
-  components: {
-    menu,
-    dataset: {
-      students: { title },
-    },
-  },
-} = messages;
 
 export default function Class({
   detail,
@@ -35,14 +24,17 @@ export default function Class({
   schoolId,
   classId,
 }) {
-
+  const t = useTranslations();
   const { school, _class } = mapDetail(detail.data.attributes);
   const { STUDENTS_COLUMNS } = useTableColumns();
   const classFilter = classId ? `&filters[class][id][$eq]=${classId}` : '';
   return (
     <DashboardLayout
-      title={establishment.replace('%name', `${school} - ${_class}`)}
-      currentPage={menu.classes}
+      title={t('pages.class.establishment').replace(
+        '%name',
+        `${school} - ${_class}`
+      )}
+      currentPage={t('components.menu.classes')}
       role={role}
       token={token}
     >
@@ -52,7 +44,7 @@ export default function Class({
         fontWeight={'700'}
         py={5}
       >
-        {title}
+        {t('components.dataset.students.title')}
       </Text>
       <Stack bgColor={colors.white} w={'100%'}>
         <DataSet
@@ -88,12 +80,10 @@ export const getServerSideProps = async ({ query, req, res }) => {
   const activeSchoolYear =
     (await ensureActiveSchoolYear({ req, res, token })) || '';
 
-  const currentUser = await serverFetch({
+  const { role } = await serverFetch({
     uri: routes.api_route.alazhar.get.me,
     user_token: token,
   });
-
-  const role = currentUser.role;
 
   const detail = await serverFetch({
     uri: routes.api_route.alazhar.get.classes.detail.replace('%id', id),

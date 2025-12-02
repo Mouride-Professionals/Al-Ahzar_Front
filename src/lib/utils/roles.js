@@ -40,6 +40,7 @@ export const hasPermission = (role, permission) => {
       createExpense: true,
       viewHome: true,
       managePayments: true,
+      viewClasses: true,
     },
     [ROLES.SURVEILLANT_GENERAL]: {
       manageStudents: true,

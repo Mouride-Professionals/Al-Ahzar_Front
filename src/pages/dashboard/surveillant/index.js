@@ -197,14 +197,17 @@ export const getServerSideProps = async ({ req, res }) => {
   const schoolId = response.school?.id;
   const cacheTtlMs = 5 * 60 * 1000;
   const enrollmentPageSize = DEFAULT_ROWS_PER_PAGE;
+  const classroomsPageSize = 100;
 
   const kpis = await Promise.all([
     serverFetch({
-      uri: classrooms
+      uri: `${classrooms
         .replace('%activeSchoolYear', activeSchoolYear)
-        .replace('%schoolId', schoolId),
+        .replace(
+          '%schoolId',
+          schoolId
+        )}&pagination[page]=1&pagination[pageSize]=${classroomsPageSize}`,
       user_token: token,
-      cacheTtl: cacheTtlMs,
     }),
 
     serverFetch({

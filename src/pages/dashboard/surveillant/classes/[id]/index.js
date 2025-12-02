@@ -1,8 +1,8 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
 import { DashboardLayout } from '@components/layout/dashboard';
-import { colors, routes } from '@theme';
 import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
+import { colors, routes } from '@theme';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
@@ -28,34 +28,37 @@ export default function Class({
   const { school, _class } = mapDetail(detail.data.attributes);
   const { STUDENTS_COLUMNS } = useTableColumns();
   const classFilter = classId ? `&filters[class][id][$eq]=${classId}` : '';
-    return(
-      <DashboardLayout
-        title={t('pages.class.establishment').replace('%name', `${school} - ${_class}`)}
-        currentPage={t('components.menu.classes')}
-        role={role}
-        token={token}
+  return (
+    <DashboardLayout
+      title={t('pages.class.establishment').replace(
+        '%name',
+        `${school} - ${_class}`
+      )}
+      currentPage={t('components.menu.classes')}
+      role={role}
+      token={token}
+    >
+      <Text
+        color={colors.secondary.regular}
+        fontSize={20}
+        fontWeight={'700'}
+        py={5}
       >
-        <Text
-          color={colors.secondary.regular}
-          fontSize={20}
-          fontWeight={'700'}
-          py={5}
-        >
-          {t('components.dataset.students.title')}
-        </Text>
-        <Stack bgColor={colors.white} w={'100%'}>
-          <DataSet
-            role={role}
-            data={initialStudents}
-            initialPagination={studentPagination}
-            schoolId={schoolId}
-            columns={STUDENTS_COLUMNS}
-            token={token}
-            additionalFilters={classFilter}
-          />
-        </Stack>
-      </DashboardLayout>
-    );
+        {t('components.dataset.students.title')}
+      </Text>
+      <Stack bgColor={colors.white} w={'100%'}>
+        <DataSet
+          role={role}
+          data={initialStudents}
+          initialPagination={studentPagination}
+          schoolId={schoolId}
+          columns={STUDENTS_COLUMNS}
+          token={token}
+          additionalFilters={classFilter}
+        />
+      </Stack>
+    </DashboardLayout>
+  );
 }
 
 export const getServerSideProps = async ({ query, req, res }) => {
@@ -89,9 +92,12 @@ export const getServerSideProps = async ({ query, req, res }) => {
 
   const classroomAttributes = detail?.data?.attributes || {};
   const schoolId =
-    classroomAttributes?.school?.data?.id || classroomAttributes?.school?.id || null;
+    classroomAttributes?.school?.data?.id ||
+    classroomAttributes?.school?.id ||
+    null;
 
-  const defaultLevel = `${classroomAttributes?.level ?? ''} ${classroomAttributes?.letter ?? ''}`.trim();
+  const defaultLevel =
+    `${classroomAttributes?.level ?? ''} ${classroomAttributes?.letter ?? ''}`.trim();
 
   let studentsResponse = classroomAttributes?.enrollments;
 
