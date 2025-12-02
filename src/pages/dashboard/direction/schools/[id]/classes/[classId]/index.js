@@ -1,5 +1,6 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { DataSet } from '@components/common/reports/student_data_set';
+import { BackButton } from '@components/common/navigation/BackButton';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { DEFAULT_ROWS_PER_PAGE } from '@constants/pagination';
@@ -45,6 +46,7 @@ export default function Class({
       role={role}
       token={token}
     >
+      <BackButton mb={4} />
       <Text
         color={colors.secondary.regular}
         fontSize={20}

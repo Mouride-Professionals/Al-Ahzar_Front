@@ -60,6 +60,7 @@ const ExpandedComponent = ({ data, role, user_token }) => {
   const schoolBannerUrl = banner === null ? images.logo.src : images.logo.src; // Replace with actual banner URL logic if available
 
   const t = useTranslations('components.dataset.schools');
+  const translate = useTranslations();
 
   return (
     <ScaleFade px={{ base: 3, md: 5 }} initialScale={0.9} in={true}>
@@ -189,6 +190,21 @@ const ExpandedComponent = ({ data, role, user_token }) => {
                 </VStack>
               </SimpleGrid>
               <HStack justifyContent="flex-end" spacing={2}>
+                <Button
+                  onClick={() =>
+                    router.push(
+                      routes.page_route.dashboard.direction.schools.detail.replace(
+                        '%id',
+                        data.id
+                      )
+                    )
+                  }
+                  colorScheme="orange"
+                  bgColor={colors.primary.regular}
+                  size={{ base: 'sm', md: 'md' }}
+                >
+                  {translate('components.schoolList.viewDetails')}
+                </Button>
                 <Button
                   onClick={() => router.push(all.replace('%id', data.id))}
                   colorScheme="orange"

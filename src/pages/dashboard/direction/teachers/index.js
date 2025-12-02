@@ -181,7 +181,7 @@ export default function Dashboard({
   );
 }
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ req, res, query }) => {
   const secret = process.env.NEXTAUTH_SECRET;
   const session = await getToken({ req, secret });
 
@@ -215,22 +215,25 @@ export const getServerSideProps = async ({ req, res }) => {
     user_token: token,
   });
   const role = currentUser.role;
+  const requestedSchoolId = query?.schoolId;
   const userSchoolId = currentUser.school?.id;
   const isEstablishmentDirector = DIRECTORIAL_ROLES.includes(role?.name);
-  const teacherFilterQuery =
-    isEstablishmentDirector && userSchoolId
-      ? `&filters[school][id][$eq]=${userSchoolId}`
-      : '';
+  const filterSchoolId = isEstablishmentDirector
+    ? userSchoolId
+    : requestedSchoolId || userSchoolId || null;
+  const teacherFilterQuery = filterSchoolId
+    ? `&filters[school][id][$eq]=${filterSchoolId}`
+    : '';
   const teacherPageSize = DEFAULT_ROWS_PER_PAGE;
 
   const countQuery = '&pagination[page]=1&pagination[pageSize]=1&fields[0]=id';
 
-  const classroomBaseRoute = userSchoolId
-    ? `${classrooms}&filters[school][id][$eq]=${userSchoolId}`
+  const classroomBaseRoute = filterSchoolId
+    ? `${classrooms}&filters[school][id][$eq]=${filterSchoolId}`
     : `${classrooms}`;
 
-  const studentsBaseRoute = userSchoolId
-    ? `${allStudents}&filters[class][school][id][$eq]=${userSchoolId}`
+  const studentsBaseRoute = filterSchoolId
+    ? `${allStudents}&filters[class][school][id][$eq]=${filterSchoolId}`
     : `${allStudents}`;
 
   const [teachersResponse, classesResponse, studentsResponse, schoolsResponse] =

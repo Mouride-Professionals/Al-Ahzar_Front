@@ -44,7 +44,7 @@ export const themeRoutes = {
         initial: '/dashboard/direction',
         schools: {
           all: '/dashboard/direction/schools',
-          detail: '/dashboard//direction/schools/%id',
+          detail: '/dashboard/direction/schools/%id',
           create: '/dashboard/direction/schools/create',
           edit: '/dashboard/direction/schools/%id/edit',
           classes: {

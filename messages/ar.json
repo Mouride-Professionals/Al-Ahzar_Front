@@ -1,5 +1,6 @@
 {
     "components": {
+        "back": "رجوع",
         "authentication": {
             "title": "{title}",
             "form": {
@@ -280,10 +281,16 @@
                     "enrollment": "التسجيل",
                     "enrollment_number": "رقم الجلوس",
                     "current_month": "الشهر الحالي",
+                    "not_confirmed": "لم يتم التأكيد بعد",
                     "paid": "مدفوع",
                     "not_paid": "غير مدفوع",
                     "na": "N/A"
-                }
+                },
+                "success_title": "تم تسجيل الدفع",
+                "success_description": "تم حفظ الدفع بنجاح.",
+                "error_title": "فشل الدفع",
+                "error_description_monthly": "تعذر تسجيل الدفع الشهري.",
+                "error_description_add": "تعذر إضافة الدفع."
             },
             "schools": {
                 "title": "قائمة المدارس",

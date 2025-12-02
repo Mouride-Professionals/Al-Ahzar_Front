@@ -95,7 +95,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 
   const handleMonthlyPayment = async (values, setSubmitting, setFieldError) => {
     try {
-      await monthlyPaymentFormHandler({
+      const success = await monthlyPaymentFormHandler({
         data: {
           enrollmentId: enrollment_id,
           ...values,
@@ -105,17 +105,18 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
         hasSucceeded: setHasSucceeded,
         token: user_token,
       });
-      if (hasSucceeded) {
+      if (success) {
         toast({
-          title: 'Paiement mensuel réussi',
-          description: 'Le paiement mensuel a été enregistré avec succès.',
+          title: tPayments('success_title'),
+          description: tPayments('success_description'),
           status: 'success',
         });
         router.refresh();
-      } else if (fieldError) {
+      } else {
         toast({
-          title: 'Paiement mensuel échoué',
-          description: fieldError,
+          title: tPayments('error_title'),
+          description:
+            fieldError || tPayments('error_description_monthly'),
           status: 'error',
         });
       }
@@ -132,22 +133,26 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
 
   const handleAddPayment = async (values, setSubmitting, setFieldError) => {
     try {
-      await addPaymentFormHandler({
+      const success = await addPaymentFormHandler({
         data: values,
         setSubmitting,
         setFieldError,
         token: user_token,
         hasSucceeded: setHasSucceeded,
       });
-      if (hasSucceeded) {
+      if (success) {
         toast({
-          title: 'Paiement ajouté',
-          description: 'Le paiement a été ajouté avec succès.',
+          title: tPayments('success_title'),
+          description: tPayments('success_description'),
           status: 'success',
         });
         router.refresh();
-      } else if (fieldError) {
-        toast({ title: 'Erreur', description: fieldError, status: 'error' });
+      } else {
+        toast({
+          title: tPayments('error_title'),
+          description: fieldError || tPayments('error_description_add'),
+          status: 'error',
+        });
       }
     } catch (err) {
       console.error('Error adding payment:', err);

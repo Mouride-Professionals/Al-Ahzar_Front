@@ -1,5 +1,6 @@
 {
     "components": {
+        "back": "Back",
         "authentication": {
             "title": "{title}",
             "form": {
@@ -271,6 +272,11 @@
                     "filter": "",
                     "export": ""
                 },
+                "success_title": "Payment recorded",
+                "success_description": "Payment saved successfully.",
+                "error_title": "Payment failed",
+                "error_description_monthly": "Could not record monthly payment.",
+                "error_description_add": "Could not add payment.",
                 "columns": {
                     "student": "Student",
                     "student_identifier": "Student ID",
@@ -279,9 +285,10 @@
                     "parent_phone": "Guardian Phone",
                     "enrollment": "Enrollment",
                     "enrollment_number": "Enrollment #",
-                    "current_month": "Current Month",
-                    "paid": "Paid",
-                    "not_paid": "Not Paid",
+                "current_month": "Current Month",
+                "not_confirmed": "Not yet confirmed",
+                "paid": "Paid",
+                "not_paid": "Not Paid",
                     "na": "N/A"
                 }
             },

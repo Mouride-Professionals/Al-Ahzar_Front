@@ -101,13 +101,15 @@ export const mapStudentsDataTable = ({ students }) => {
 
       var current_month = new Date().toLocaleDateString().split('/')[0];
 
-      const isCurrentMonthPaid = payments?.data?.find(
+      const paymentRecords = payments?.data || [];
+      const isCurrentMonthPaid = paymentRecords.find(
         (rp) =>
           new Date(rp.attributes.monthOf).toLocaleDateString().split('/')[0] ===
           current_month
       )
         ? true
         : false;
+      const enrollmentConfirmed = paymentRecords.length > 0;
 
       return {
         id,
@@ -125,6 +127,7 @@ export const mapStudentsDataTable = ({ students }) => {
         registrationComment,
         payments,
         isCurrentMonthPaid,
+        enrollmentConfirmed,
       };
     });
   }
@@ -183,13 +186,15 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
       }
       const currentMonth = new Date().toLocaleDateString().split('/')[0];
 
-      const isCurrentMonthPaid = payments?.data?.find(
+      const paymentRecords = payments?.data || [];
+      const isCurrentMonthPaid = paymentRecords.find(
         (rp) =>
           new Date(rp.attributes.monthOf).toLocaleDateString().split('/')[0] ===
           currentMonth
       )
         ? true
         : false;
+      const enrollmentConfirmed = paymentRecords.length > 0;
 
       return {
         id: studentId,
@@ -215,6 +220,7 @@ export const mapStudentsDataTableForEnrollments = ({ enrollments }) => {
         enrollment_id: id,
         payments,
         isCurrentMonthPaid,
+        enrollmentConfirmed,
       };
     });
   }

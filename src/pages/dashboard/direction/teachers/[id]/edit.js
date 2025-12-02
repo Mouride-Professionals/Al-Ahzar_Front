@@ -1,12 +1,12 @@
-import { HStack, Stack, Text, VStack } from '@chakra-ui/react';
+import { Box, HStack, Stack, Text, VStack } from '@chakra-ui/react';
 import { CreateTeacherForm } from '@components/forms/teacher/create'; // Reuse form
+import { BackButton } from '@components/common/navigation/BackButton';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, messages, routes } from '@theme';
 import { getAllowedSchools, ROLES } from '@utils/roles';
 import { getToken } from 'next-auth/jwt';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { BsArrowLeftShort } from 'react-icons/bs';
 import { serverFetch } from 'src/lib/api';
 
 const {
@@ -41,8 +41,6 @@ export default function Edit({ teacher, schools, role, token }) {
         w={'100%'}
       >
         <HStack
-          _hover={{ cursor: 'pointer' }}
-          onClick={() => router.back()}
           alignItems={'center'}
           px={5}
           bgColor={colors.secondary.light}
@@ -50,11 +48,13 @@ export default function Edit({ teacher, schools, role, token }) {
           borderTopRightRadius={10}
           h={90}
           w={'100%'}
+          justifyContent="space-between"
         >
-          <BsArrowLeftShort size={40} />
+          <BackButton />
           <Text fontSize={20} fontWeight={'700'}>
             {modification}
           </Text>
+          <Box w={10} />
         </HStack>
         <Stack
           bgColor={colors.white}

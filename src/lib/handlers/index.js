@@ -235,17 +235,21 @@ export const monthlyPaymentFormHandler = async ({
     });
 
     await createPayment({ payload, token });
-    setHasSucceeded(true);
+    if (typeof setHasSucceeded === 'function') {
+      setHasSucceeded(true);
+    }
+    return true;
   } catch (err) {
     if (err?.data) {
       const { data } = err?.data;
       if (data?.message?.includes('exists')) {
         setFieldError('payment', forms.messages.payment.errors.already_exists);
         setSubmitting(false);
-        return;
+        return false;
       }
     }
     setFieldError('payment', forms.messages.payment.errors.problem);
+    return false;
   } finally {
     setSubmitting(false);
   }
@@ -261,7 +265,10 @@ export const addPaymentFormHandler = async ({
   try {
     const payload = mapPaymentBody({ data });
     await createPayment({ payload, token });
-    hasSucceeded(true);
+    if (typeof hasSucceeded === 'function') {
+      hasSucceeded(true);
+    }
+    return true;
   } catch (err) {
     console.error('Error adding payment:', err);
     if (err?.data) {
@@ -269,10 +276,11 @@ export const addPaymentFormHandler = async ({
       if (errorData?.message?.includes('exists')) {
         setFieldError('payment', forms.messages.payment.errors.already_exists);
         setSubmitting(false);
-        return;
+        return false;
       }
     }
     setFieldError('payment', forms.messages.payment.errors.problem);
+    return false;
   } finally {
     setSubmitting(false);
   }

@@ -76,24 +76,36 @@ export const useTableColumns = () => {
       desc: true,
       sortable: true,
       reorder: true,
-      cell: ({ isCurrentMonthPaid }) => (
-        <Badge
-          bgColor={
-            isCurrentMonthPaid ? colors.secondary.soft : colors.red.light
-          }
-          color={
-            isCurrentMonthPaid ? colors.secondary.regular : colors.red.regular
-          }
-          variant={'subtle'}
-          py={1}
-          px={3}
-          borderRadius={50}
-        >
-          {isCurrentMonthPaid
+      cell: ({ isCurrentMonthPaid, enrollmentConfirmed }) => {
+        const isPending = !enrollmentConfirmed;
+        const bgColor = isPending
+          ? colors.yellow.light
+          : isCurrentMonthPaid
+            ? colors.secondary.soft
+            : colors.red.light;
+        const color = isPending
+          ? colors.yellow.regular
+          : isCurrentMonthPaid
+            ? colors.secondary.regular
+            : colors.red.regular;
+        const label = isPending
+          ? t('students.columns.not_confirmed')
+          : isCurrentMonthPaid
             ? t('students.columns.paid')
-            : t('students.columns.not_paid')}
-        </Badge>
-      ),
+            : t('students.columns.not_paid');
+        return (
+          <Badge
+            bgColor={bgColor}
+            color={color}
+            variant={'subtle'}
+            py={1}
+            px={3}
+            borderRadius={50}
+          >
+            {label}
+          </Badge>
+        );
+      },
     },
   ];
 

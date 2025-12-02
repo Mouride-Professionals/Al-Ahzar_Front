@@ -11,6 +11,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import { BackButton } from '@components/common/navigation/BackButton';
 import { DashboardLayout } from '@components/layout/dashboard';
 import { colors, routes } from '@theme';
 import { ensureActiveSchoolYear } from '@utils/helpers/serverSchoolYear';
@@ -60,6 +61,7 @@ export default function Classes({ classes, role, schoolId, token }) {
       role={role}
       token={token}
     >
+      <BackButton mb={4} />
       <Modal
         size={{ base: 'full', md: '2xl' }}
         onClose={onClose}

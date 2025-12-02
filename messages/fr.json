@@ -1,5 +1,6 @@
 {
     "components": {
+        "back": "Retour",
         "authentication": {
             "title": "{title}",
             "form": {
@@ -280,10 +281,16 @@
                     "enrollment": "Inscription",
                     "enrollment_number": "N° d'inscription",
                     "current_month": "Mois actuel",
+                    "not_confirmed": "Non confirmé",
                     "paid": "Payé",
                     "not_paid": "Non payé",
                     "na": "N/D"
-                }
+                },
+                "success_title": "Paiement enregistré",
+                "success_description": "Paiement sauvegardé avec succès.",
+                "error_title": "Échec du paiement",
+                "error_description_monthly": "Impossible d'enregistrer le paiement mensuel.",
+                "error_description_add": "Impossible d'ajouter le paiement."
             },
             "schools": {
                 "title": "Liste des écoles",
