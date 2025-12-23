@@ -1,6 +1,21 @@
 export function formatMoney(amount, options = {}) {
-  return amount.toLocaleString('fr-FR', options);
+  const {
+    locale = 'fr-FR',
+    minimumFractionDigits = 0,
+    maximumFractionDigits = 0,
+    ...rest
+  } = options;
+  const value = Number(amount);
+  if (!Number.isFinite(value)) return '0';
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits,
+    maximumFractionDigits,
+    ...rest,
+  }).format(value);
 }
+
+export const formatMoneyWithCurrency = (amount, options = {}) =>
+  `${formatMoney(amount, options)} FCFA`;
 
 export function formatPhoneNumber(phone) {
   

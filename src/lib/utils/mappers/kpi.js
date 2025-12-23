@@ -2,6 +2,7 @@
 
 import { Badge } from '@chakra-ui/react';
 import { colors } from '@theme';
+import { formatMoneyWithCurrency } from '@utils/mappers/formatters';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -124,10 +125,11 @@ export const useTableColumns = () => {
     },
     {
       name: t('payments.columns.amount'),
-      selector: (row) => row.amount,
+      selector: (row) => Number(row.amount ?? 0),
       desc: true,
       sortable: true,
       reorder: true,
+      cell: (row) => formatMoneyWithCurrency(row.amount),
     },
     {
       name: t('payments.columns.type'),
@@ -202,9 +204,10 @@ export const useTableColumns = () => {
     },
     {
       name: t('expenses.columns.amount'),
-      selector: (row) => `${row.amount} FCFA`,
+      selector: (row) => Number(row.amount ?? 0),
       sortable: true,
       id: 'amount',
+      cell: (row) => formatMoneyWithCurrency(row.amount),
     },
     {
       name: t('expenses.columns.category'),

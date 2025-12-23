@@ -21,6 +21,7 @@ import { PaymentCancellationModal } from '@components/modals/paymentCancellation
 import { colors, routes } from '@theme';
 import { generateExpectedMonths, getMonthName } from '@utils/date';
 import { mapExpensesDataTable } from '@utils/mappers/expense';
+import { formatMoney } from '@utils/mappers/formatters';
 import { useTableColumns } from '@utils/mappers/kpi';
 import { mapPaymentsDataTable } from '@utils/mappers/payment';
 import { mapPaymentType } from '@utils/tools/mappers';
@@ -224,7 +225,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        paymentSummary?.yearPaymentTotal ?? 0
+        formatMoney(paymentSummary?.yearPaymentTotal ?? 0)
       ),
       icon: <SiCashapp color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.annual_payments'),
@@ -232,7 +233,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        paymentSummary?.enrollmentPaymentTotal ?? 0
+        formatMoney(paymentSummary?.enrollmentPaymentTotal ?? 0)
       ),
       icon: <HiAcademicCap color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.total_enrollments'),
@@ -240,7 +241,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        paymentSummary?.monthlyPaymentTotal ?? 0
+        formatMoney(paymentSummary?.monthlyPaymentTotal ?? 0)
       ),
       icon: <FaCalendarPlus color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.total_monthly'),
@@ -248,7 +249,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        paymentSummary?.previousMonthPaymentTotal ?? 0
+        formatMoney(paymentSummary?.previousMonthPaymentTotal ?? 0)
       ),
       icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.previous_month'),
@@ -256,7 +257,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        paymentSummary?.currentMonthPaymentTotal ?? 0
+        formatMoney(paymentSummary?.currentMonthPaymentTotal ?? 0)
       ),
       icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.current_month'),
@@ -267,7 +268,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        expenseSummary?.yearExpenseTotal ?? 0
+        formatMoney(expenseSummary?.yearExpenseTotal ?? 0)
       ),
       icon: <SiCashapp color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.annual_expenses'),
@@ -275,7 +276,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        expenseSummary?.currentMonthExpenseTotal ?? 0
+        formatMoney(expenseSummary?.currentMonthExpenseTotal ?? 0)
       ),
       icon: <FaCalendarCheck color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.current_month'),
@@ -283,7 +284,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        expenseSummary?.previousMonthExpenseTotal ?? 0
+        formatMoney(expenseSummary?.previousMonthExpenseTotal ?? 0)
       ),
       icon: <FaRegCalendarAlt color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.previous_month'),
@@ -291,7 +292,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        expenseSummary?.salaryExpenseTotal ?? 0
+        formatMoney(expenseSummary?.salaryExpenseTotal ?? 0)
       ),
       icon: <SiCashapp color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.salaries'),
@@ -299,7 +300,7 @@ const FinanceDashboard = ({
     {
       count: t('pages.stats.amount.finance').replace(
         '%number',
-        expenseSummary?.totalByCategory?.Maintenance ?? 0
+        formatMoney(expenseSummary?.totalByCategory?.Maintenance ?? 0)
       ),
       icon: <SiCashapp color={colors.primary.regular} size={25} />,
       title: t('components.dataset.finance.maintenance'),
@@ -337,7 +338,7 @@ const FinanceDashboard = ({
           dominantBaseline="central"
           fontSize={12}
         >
-          {`${pieData[index].name}: ${Number(pieData[index].value).toLocaleString()} FCFA`}
+          {`${pieData[index].name}: ${formatMoney(pieData[index].value)} FCFA`}
         </text>
       </g>
     );

@@ -28,6 +28,7 @@ import { addPaymentFormHandler, monthlyPaymentFormHandler } from '@handlers';
 import { colors, routes } from '@theme';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
 import { mapStudentsDataTableForEnrollments } from '@utils/mappers/student';
+import { formatMoneyWithCurrency } from '@utils/mappers/formatters';
 import { hasPermission } from '@utils/roles';
 import { dateFormatter, mapPaymentType } from '@utils/tools/mappers';
 import Cookies from 'js-cookie';
@@ -494,7 +495,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                     }
                                     color={cancelled ? 'gray.400' : 'inherit'}
                                   >
-                                    {amount} FCFA
+                                    {formatMoneyWithCurrency(amount)}
                                   </Text>
                                   {cancelled ? (
                                     <HStack spacing={1}>
@@ -619,7 +620,7 @@ const ExpandedComponent = ({ data, classrooms, role, user_token }) => {
                                           cancelled ? 'gray.400' : 'inherit'
                                         }
                                       >
-                                        {amount} FCFA
+                                        {formatMoneyWithCurrency(amount)}
                                       </Text>
                                       {cancelled ? (
                                         <HStack spacing={1}>

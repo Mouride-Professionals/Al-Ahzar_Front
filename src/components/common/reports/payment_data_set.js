@@ -11,6 +11,7 @@ import {
 import { DataTableLayout } from '@components/layout/data_table';
 import { reportingFilter } from '@utils/mappers/kpi';
 import { ACCESS_ROUTES } from '@utils/mappers/menu';
+import { formatMoneyWithCurrency } from '@utils/mappers/formatters';
 import { dateFormatter } from '@utils/tools/mappers';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -69,7 +70,9 @@ const PaymentExpandedComponent = ({ data, role, onCancelPayment }) => {
                 <Text fontWeight="bold" fontSize={{ base: 'sm', md: 'md' }}>
                   {t('amount')}
                 </Text>
-                <Text fontSize={{ base: 'sm', md: 'md' }}>{amount} FCFA</Text>
+                <Text fontSize={{ base: 'sm', md: 'md' }}>
+                  {formatMoneyWithCurrency(amount)}
+                </Text>
               </GridItem>
               <GridItem>
                 <Text fontWeight="bold" fontSize={{ base: 'sm', md: 'md' }}>

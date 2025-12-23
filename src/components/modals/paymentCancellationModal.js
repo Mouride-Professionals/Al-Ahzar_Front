@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { paymentCancellationHandler } from '@handlers';
 import { colors } from '@theme';
+import { formatMoneyWithCurrency } from '@utils/mappers/formatters';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { MdCancel } from 'react-icons/md';
@@ -91,7 +92,7 @@ export const PaymentCancellationModal = ({
                   </Text>
                   <Text>
                     <strong>{t('components.dataset.payments.amount')}:</strong>{' '}
-                    {paymentDetails.amount} FCFA
+                    {formatMoneyWithCurrency(paymentDetails.amount)}
                   </Text>
                   <Text>
                     <strong>{t('components.dataset.payments.date')}:</strong>{' '}
