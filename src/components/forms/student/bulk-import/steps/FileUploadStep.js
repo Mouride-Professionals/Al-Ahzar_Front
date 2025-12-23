@@ -32,7 +32,40 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FaFileCsv, FaFileExcel, FaFileUpload } from 'react-icons/fa';
-import * as XLSX from 'xlsx';
+import Papa from 'papaparse';
+
+const loadExcelJs = async () => {
+  const module = await import('exceljs');
+  return module?.default ?? module;
+};
+
+const parseCsvData = (text) => {
+  const parsed = Papa.parse(text, { skipEmptyLines: true });
+  if (parsed.errors?.length) {
+    throw new Error(parsed.errors[0]?.message || 'CSV parsing error');
+  }
+  return parsed.data;
+};
+
+const parseXlsxData = async (arrayBuffer) => {
+  const ExcelJS = await loadExcelJs();
+  const Workbook = ExcelJS?.Workbook ?? ExcelJS;
+  if (!Workbook) {
+    throw new Error('Excel parser unavailable');
+  }
+  const workbook = new Workbook();
+  await workbook.xlsx.load(arrayBuffer);
+  const worksheet = workbook.worksheets[0];
+  if (!worksheet) return [];
+
+  const sheetValues = worksheet.getSheetValues();
+  return sheetValues
+    .slice(1)
+    .map((row) => (Array.isArray(row) ? row.slice(1) : []))
+    .filter((row) =>
+      row.some((cell) => cell !== null && cell !== undefined && cell !== '')
+    );
+};
 
 export default function FileUploadStep({
   onFileUpload,
@@ -97,10 +130,18 @@ export default function FileUploadStep({
       // Store the actual file object
       setActualFile(file);
 
-      const data = await file.arrayBuffer();
-      const workbook = XLSX.read(data);
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      let jsonData = [];
+
+      if (extension === 'csv') {
+        const text = await file.text();
+        jsonData = parseCsvData(text);
+      } else if (extension === 'xlsx') {
+        const data = await file.arrayBuffer();
+        jsonData = await parseXlsxData(data);
+      } else {
+        throw new Error('Unsupported file type');
+      }
 
       // Create preview data (first 5 rows)
       const headers = jsonData[0] || [];
@@ -142,7 +183,6 @@ export default function FileUploadStep({
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
         '.xlsx',
       ],
-      'application/vnd.ms-excel': ['.xls'],
       'text/csv': ['.csv'],
     },
     maxSize: 10 * 1024 * 1024, // 10MB

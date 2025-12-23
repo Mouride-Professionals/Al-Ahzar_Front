@@ -138,17 +138,17 @@ export const downloadCSV = (array) => {
   link.click();
 };
 
-let xlsxModulePromise;
+let excelJsModulePromise;
 
-const loadXlsxModule = async () => {
+const loadExcelJsModule = async () => {
   if (typeof window === 'undefined') return null;
-  if (!xlsxModulePromise) {
-    xlsxModulePromise = import('xlsx');
+  if (!excelJsModulePromise) {
+    excelJsModulePromise = import('exceljs');
   }
   try {
-    return await xlsxModulePromise;
+    return await excelJsModulePromise;
   } catch (err) {
-    xlsxModulePromise = undefined;
+    excelJsModulePromise = undefined;
     throw err;
   }
 };
@@ -164,18 +164,19 @@ export const downloadExcel = async (array, options = {}) => {
   const dataset = prepareExportDataset(array, datasetOptions);
   if (!dataset.length) return;
 
-  const xlsx = await loadXlsxModule();
-  if (!xlsx) return;
+  const exceljsModule = await loadExcelJsModule();
+  if (!exceljsModule) return;
 
-  const utils = xlsx.utils ?? xlsx?.default?.utils;
-  const writeFile = xlsx.writeFile ?? xlsx?.default?.writeFile;
+  const ExcelJS = exceljsModule?.default ?? exceljsModule;
+  const Workbook = ExcelJS?.Workbook ?? ExcelJS;
+  if (!Workbook) return;
 
-  if (!utils || !writeFile) return;
+  const workbook = new Workbook();
+  const worksheet = workbook.addWorksheet(sheetName.slice(0, 31) || 'Sheet1');
 
-  const worksheet = utils.json_to_sheet(dataset);
-  const workbook = utils.book_new();
-
-  utils.book_append_sheet(workbook, worksheet, sheetName.slice(0, 31) || 'Sheet1');
+  const headers = Object.keys(dataset[0] || {});
+  worksheet.columns = headers.map((header) => ({ header, key: header }));
+  worksheet.addRows(dataset);
 
   const defaultFilename =
     new Date().toLocaleDateString().split('/').reverse().join('_') +
@@ -186,5 +187,16 @@ export const downloadExcel = async (array, options = {}) => {
     ? finalName
     : `${finalName}.xlsx`;
 
-  writeFile(workbook, sanitizedFilename, { bookType: 'xlsx' });
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = sanitizedFilename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
 };

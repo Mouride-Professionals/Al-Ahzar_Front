@@ -24,7 +24,10 @@ import { useState } from 'react';
 import { FaDownload, FaExclamationTriangle, FaFileExcel } from 'react-icons/fa';
 import { MdCheckCircle } from 'react-icons/md';
 import { downloadTemplate } from 'src/lib/services/bulkImport';
-import * as XLSX from 'xlsx';
+const loadExcelJs = async () => {
+    const module = await import('exceljs');
+    return module?.default ?? module;
+};
 
 export default function TemplateDownloadStep({ onNext }) {
     const t = useTranslations('bulkImport');
@@ -33,7 +36,7 @@ export default function TemplateDownloadStep({ onNext }) {
     const [isDownloading, setIsDownloading] = useState(false);
 
     // Fallback function to generate template locally if API fails
-    const generateLocalTemplate = () => {
+    const generateLocalTemplate = async () => {
         // Create sample data for the template
         const sampleData = [
             {
@@ -77,12 +80,16 @@ export default function TemplateDownloadStep({ onNext }) {
             }
         ];
 
-        // Create workbook and worksheet
-        const workbook = XLSX.utils.book_new();
-        const worksheet = XLSX.utils.json_to_sheet(sampleData);
+        const ExcelJS = await loadExcelJs();
+        const Workbook = ExcelJS?.Workbook ?? ExcelJS;
+        if (!Workbook) return;
 
-        // Add the worksheet to workbook
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Élèves');
+        // Create workbook and worksheet
+        const workbook = new Workbook();
+        const worksheet = workbook.addWorksheet('Élèves');
+        const headers = Object.keys(sampleData[0] || {});
+        worksheet.columns = headers.map((header) => ({ header, key: header }));
+        worksheet.addRows(sampleData);
 
         // Create instructions worksheet
         const instructions = [
@@ -107,11 +114,22 @@ export default function TemplateDownloadStep({ onNext }) {
             ['5. Gardez seulement l\'onglet "Élèves" avec vos données']
         ];
 
-        const instructionsWs = XLSX.utils.aoa_to_sheet(instructions);
-        XLSX.utils.book_append_sheet(workbook, instructionsWs, 'Instructions');
+        const instructionsWs = workbook.addWorksheet('Instructions');
+        instructions.forEach((row) => instructionsWs.addRow(row));
 
         // Download the file
-        XLSX.writeFile(workbook, 'modele_import_eleves_al_azhar.xlsx');
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'modele_import_eleves_al_azhar.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
 
         toast({
             title: t('steps.download.notifications.downloadSuccess.title'),
@@ -159,12 +177,12 @@ export default function TemplateDownloadStep({ onNext }) {
                 });
             } else {
                 console.warn('No valid blob received, falling back to local template');
-                generateLocalTemplate();
+                await generateLocalTemplate();
             }
         } catch (error) {
             console.warn('API template download failed, using local template:', error);
             // Fallback to local generation
-            generateLocalTemplate();
+            await generateLocalTemplate();
         } finally {
             setIsDownloading(false);
         }
