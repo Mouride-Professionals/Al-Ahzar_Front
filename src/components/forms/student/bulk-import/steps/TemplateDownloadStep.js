@@ -25,8 +25,8 @@ import { FaDownload, FaExclamationTriangle, FaFileExcel } from 'react-icons/fa';
 import { MdCheckCircle } from 'react-icons/md';
 import { downloadTemplate } from 'src/lib/services/bulkImport';
 const loadExcelJs = async () => {
-    const module = await import('exceljs');
-    return module?.default ?? module;
+    const excelJsModule = await import('exceljs');
+    return excelJsModule?.default ?? excelJsModule;
 };
 
 export default function TemplateDownloadStep({ onNext }) {

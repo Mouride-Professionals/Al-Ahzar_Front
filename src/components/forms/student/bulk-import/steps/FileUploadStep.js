@@ -35,8 +35,8 @@ import { FaFileCsv, FaFileExcel, FaFileUpload } from 'react-icons/fa';
 import Papa from 'papaparse';
 
 const loadExcelJs = async () => {
-  const module = await import('exceljs');
-  return module?.default ?? module;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule?.default ?? excelJsModule;
 };
 
 const parseCsvData = (text) => {
